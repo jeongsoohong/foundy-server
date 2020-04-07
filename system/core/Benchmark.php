@@ -130,20 +130,4 @@ class CI_Benchmark {
 		return '{memory_usage}';
 	}
 
-    // --------------------------------------------------------------------
-    /**
-     * Set a benchmark marker
-     *
-     * Multiple calls to this function can be made so that several
-     * execution points can be timed.
-     *
-     * @param	string	$name	Marker name
-     * @return	void
-     */
-    //This function originally was not here
-    public function mark_time($point1='')
-    {
-        $this->marker[$point1] = microtime(TRUE);
-    }
-
 }
