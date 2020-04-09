@@ -1,48 +1,48 @@
 <script>
 	var base_url = "<?php echo base_url(); ?>";
-	var product_added = "<?php echo translate('product_added_to_cart'); ?>";
-	var added_to_cart = "<?php echo translate('added_to_cart'); ?>";
-	var quantity_exceeds = "<?php echo translate('product_quantity_exceed_availability!'); ?>";
-	var product_already = "<?php echo translate('product_already_added_to_cart!'); ?>";
-	var wishlist_add = "<?php echo translate('product_added_to_wishlist'); ?>";
-	var wishlist_add1 = "<?php echo translate('wished'); ?>";
-	var wishlist_adding = "<?php echo translate('wishing..'); ?>";
-	var wishlist_remove = "<?php echo translate('product_removed_from_wishlist'); ?>";
-	var compare_add = "<?php echo translate('product_added_to_compared'); ?>";
-	var compare_add1 = "<?php echo translate('compared'); ?>";
-	var compare_adding = "<?php echo translate('working..'); ?>";
-	var compare_remove = "<?php echo translate('product_removed_from_compare'); ?>";
-	var compare_cat_full = "<?php echo translate('compare_category_full'); ?>";
-	var compare_already = "<?php echo translate('product_already_added_to_compare'); ?>";
-	var rated_success = "<?php echo translate('product_rated_successfully'); ?>";
-	var rated_fail = "<?php echo translate('product_rating_failed'); ?>";
-	var rated_already = "<?php echo translate('you_already_rated_this_product'); ?>";
-	var working = "<?php echo translate('working..'); ?>";
-	var subscribe_already = "<?php echo translate('you_already_subscribed'); ?>";
-	var subscribe_success = "<?php echo translate('you_subscribed_successfully'); ?>";
-	var subscribe_sess = "<?php echo translate('you_already_subscribed_thrice_from_this_browser'); ?>";
-	var logging = "<?php echo translate('logging_in..'); ?>";
-	var login_success = "<?php echo translate('you_logged_in_successfully'); ?>";
-	var login_fail = "<?php echo translate('login_failed!_try_again!'); ?>";
-	var logup_success = "<?php echo translate('you_have_registered_successfully'); ?>";
-	var logup_fail = "<?php echo translate('registration_failed!_try_again!'); ?>";
-	var logging = "<?php echo translate('logging_in..'); ?>";
-	var submitting = "<?php echo translate('submitting..'); ?>";
-	var email_sent = "<?php echo translate('email_sent_successfully'); ?>";
-	var email_noex = "<?php echo translate('email_does_not_exist!'); ?>";
-	var email_fail = "<?php echo translate('email_sending_failed!'); ?>";
-	var logging = "<?php echo translate('logging_in'); ?>";
-	var cart_adding = "<?php echo translate('adding_to_cart..'); ?>";
-	var cart_product_removed = "<?php echo translate('product_removed_from_cart'); ?>";
-	var required = "<?php echo translate('the_field_is_required'); ?>";
-	var mbn = "<?php echo translate('must_be_a_number'); ?>";
-	var mbe = "<?php echo translate('must_be_a_valid_email_address'); ?>";
-	var valid_email = "<?php echo translate('enter_a_valid_email_address'); ?>";
-	var applying = "<?php echo translate('applying..'); ?>";
-	var coupon_not_valid = "<?php echo translate('coupon_not_valid'); ?>";
-	var coupon_discount_successful = "<?php echo translate('coupon_discount_successful'); ?>";
-	var currency = "<?php echo currency(); ?>";
-	var exchange = Number(<?php echo exchange(); ?>);
+	var product_added = "<?php echo ('product_added_to_cart'); ?>";
+	var added_to_cart = "<?php echo ('added_to_cart'); ?>";
+	var quantity_exceeds = "<?php echo ('product_quantity_exceed_availability!'); ?>";
+	var product_already = "<?php echo ('product_already_added_to_cart!'); ?>";
+	var wishlist_add = "<?php echo ('product_added_to_wishlist'); ?>";
+	var wishlist_add1 = "<?php echo ('wished'); ?>";
+	var wishlist_adding = "<?php echo ('wishing..'); ?>";
+	var wishlist_remove = "<?php echo ('product_removed_from_wishlist'); ?>";
+	var compare_add = "<?php echo ('product_added_to_compared'); ?>";
+	var compare_add1 = "<?php echo ('compared'); ?>";
+	var compare_adding = "<?php echo ('working..'); ?>";
+	var compare_remove = "<?php echo ('product_removed_from_compare'); ?>";
+	var compare_cat_full = "<?php echo ('compare_category_full'); ?>";
+	var compare_already = "<?php echo ('product_already_added_to_compare'); ?>";
+	var rated_success = "<?php echo ('product_rated_successfully'); ?>";
+	var rated_fail = "<?php echo ('product_rating_failed'); ?>";
+	var rated_already = "<?php echo ('you_already_rated_this_product'); ?>";
+	var working = "<?php echo ('working..'); ?>";
+	var subscribe_already = "<?php echo ('you_already_subscribed'); ?>";
+	var subscribe_success = "<?php echo ('you_subscribed_successfully'); ?>";
+	var subscribe_sess = "<?php echo ('you_already_subscribed_thrice_from_this_browser'); ?>";
+	var logging = "<?php echo ('logging_in..'); ?>";
+	var login_success = "<?php echo ('you_logged_in_successfully'); ?>";
+	var login_fail = "<?php echo ('login_failed!_try_again!'); ?>";
+	var logup_success = "<?php echo ('you_have_registered_successfully'); ?>";
+	var logup_fail = "<?php echo ('registration_failed!_try_again!'); ?>";
+	var logging = "<?php echo ('logging_in..'); ?>";
+	var submitting = "<?php echo ('submitting..'); ?>";
+	var email_sent = "<?php echo ('email_sent_successfully'); ?>";
+	var email_noex = "<?php echo ('email_does_not_exist!'); ?>";
+	var email_fail = "<?php echo ('email_sending_failed!'); ?>";
+	var logging = "<?php echo ('logging_in'); ?>";
+	var cart_adding = "<?php echo ('adding_to_cart..'); ?>";
+	var cart_product_removed = "<?php echo ('product_removed_from_cart'); ?>";
+	var required = "<?php echo ('the_field_is_required'); ?>";
+	var mbn = "<?php echo ('must_be_a_number'); ?>";
+	var mbe = "<?php echo ('must_be_a_valid_email_address'); ?>";
+	var valid_email = "<?php echo ('enter_a_valid_email_address'); ?>";
+	var applying = "<?php echo ('applying..'); ?>";
+	var coupon_not_valid = "<?php echo ('coupon_not_valid'); ?>";
+	var coupon_discount_successful = "<?php echo ('coupon_discount_successful'); ?>";
+	var currency = "";
+	var exchange = Number("1");
 
 	var $j = jQuery.noConflict();
 	var $ = jQuery.noConflict();
@@ -936,10 +936,10 @@
 					$.ajax({
 						url: base_url+'home/wishlist/add/'+product,
 						beforeSend: function() {
-							button.html('<span><?php echo translate('working...'); ?></span>');
+							button.html('<span><?php echo ('working...'); ?></span>');
 						},
 						success: function(data) {
-							button.html('<span><?php echo translate('favored'); ?></span>');
+							button.html('<span><?php echo ('favored'); ?></span>');
 							button.removeClass("wish_it");
 							button.addClass("wished_it");
 							button.closest('ul').data('originalTitle',wishlist_add1);
@@ -1095,11 +1095,11 @@
 					here.removeClass('disabled');
 					if(data == 'done'){
 						$('.closeModal').click();
-						notify('<?php echo translate('successful_login'); ?>','success','bottom','right');
+						notify('<?php echo ('successful_login'); ?>','success','bottom','right');
 						setTimeout(function(){reload_page()}, 2000);
 						//sound('successful_login');
 					} else if(data == 'failed'){
-						notify('<?php echo translate('login_failed'); ?>','warning','bottom','right');
+						notify('<?php echo ('login_failed'); ?>','warning','bottom','right');
 						//sound('unsuccessful_login');
 					} else {
 						notify(data,'warning','bottom','right');
@@ -1118,7 +1118,7 @@
 			var here = $(this); // alert div for show alert message
 			var text = here.html(); // alert div for show alert message
 			var form = here.closest('form');
-			var logging = '<?php echo translate('working'); ?>...';
+			var logging = '<?php echo ('working'); ?>...';
 			//var form = $(this);
 			var formdata = false;
 			if (window.FormData){
@@ -1132,7 +1132,7 @@
 			var amount = Number(form.find($("[name='amount']")).val());
 			//console.log('--'+amount+'--'+meth+'--');
 			if(meth == '' || amount == ''){
-				notify('<?php echo translate('fill_all_fields_correctly'); ?>','warning','bottom','right');
+				notify('<?php echo ('fill_all_fields_correctly'); ?>','warning','bottom','right');
 			} else {
 				$.ajax({
 					url: form.attr('action'), // form action url
@@ -1152,11 +1152,11 @@
 						here.removeClass('disabled');
 						if(data == 'done'){
 							$('.closeModal').click();
-							notify('<?php echo translate('deposit_request_sent'); ?>','success','bottom','right');
+							notify('<?php echo ('deposit_request_sent'); ?>','success','bottom','right');
 							//setTimeout(function(){wish_listed('0');}, 2000);
 							wallet_listed('0');
 						} else if(data == 'failed'){
-							notify('<?php echo translate('deposit_request_sending_failed'); ?>','warning','bottom','right');
+							notify('<?php echo ('deposit_request_sending_failed'); ?>','warning','bottom','right');
 						} else {
 							notify(data,'warning','bottom','right');
 						}
@@ -1174,7 +1174,7 @@
 			var here = $(this); // alert div for show alert message
 			var text = here.html(); // alert div for show alert message
 			var form = here.closest('form');
-			var logging = '<?php echo translate('working'); ?>...';
+			var logging = '<?php echo ('working'); ?>...';
 			//var form = $(this);
 			var formdata = false;
 			if (window.FormData){
@@ -1183,7 +1183,7 @@
 			var payment_info = form.find($("[name='payment_info']")).val();
 
 			if(payment_info == ''){
-				notify('<?php echo translate('fill_all_fields_correctly'); ?>','warning','bottom','right');
+				notify('<?php echo ('fill_all_fields_correctly'); ?>','warning','bottom','right');
 			} else {
 				$.ajax({
 					url: form.attr('action'), // form action url
@@ -1203,11 +1203,11 @@
 						here.removeClass('disabled');
 						if(data == 'done'){
 							$('.closeModal').click();
-							notify('<?php echo translate('payment_info_sent'); ?>','success','bottom','right');
+							notify('<?php echo ('payment_info_sent'); ?>','success','bottom','right');
 							//setTimeout(function(){wish_listed('0');}, 2000);
 							wallet_listed('0');
 						} else if(data == 'failed'){
-							notify('<?php echo translate('payment_info_sending_failed'); ?>','warning','bottom','right');
+							notify('<?php echo ('payment_info_sending_failed'); ?>','warning','bottom','right');
 						} else {
 							notify(data,'warning','bottom','right');
 						}

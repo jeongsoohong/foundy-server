@@ -34,5 +34,9 @@ class Home extends CI_Controller
         $this->load->view('front/index', $page_data);
     }
 
+    function top_bar_right()
+    {
+        $this->load->view('front/components/top_bar_right.php');
+    }
 
 }

@@ -123,12 +123,13 @@ a:hover .btn-play,
     background-color: #7d7d7d
 ;   
 }
-@media (max-width: 991px) { 
-	  .navigation {
-		border-left: solid 1px #7d7d7d;
-		background-color: #7d7d7d;
-	  }  
-    .sf-menu > li > a:hover {       
+/*
+@media (max-width: 991px) {
+    .navigation {
+        border-left: solid 1px #7d7d7d;
+        background-color: #7d7d7d;
+    }
+    .sf-menu > li > a:hover {
         color: #ffffff;
     }  
 	.sf-menu > li > a:hover {
@@ -144,6 +145,7 @@ a:hover .btn-play,
 		color: #ffffff;
 	} 
 }
+*/
 .footer {
     border-top: solid 10px #7d7d7d
 ;   

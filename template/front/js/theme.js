@@ -68,6 +68,7 @@ jQuery(document).ready(function () {
         }
     });
     $('.menu-toggle-close').on('click', function () {
+        console.log(navigation.hasClass('opened'));
         if (navigation.hasClass('opened')) {
             navigation.removeClass('opened').addClass('closed');
         } else {

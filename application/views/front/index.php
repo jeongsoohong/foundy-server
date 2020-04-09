@@ -9,9 +9,7 @@
 <body id="home" class="wide">
 <!-- PRELOADER -->
 <?php
-//$preloader = '1';
-//includes 'preloader/preloader_'.$preloader.'.php';
-//includes 'preloader.php';
+include 'preloader.php';
 ?>
 
 <!-- WRAPPER -->
@@ -23,10 +21,15 @@
     ?>
     <!-- /HEADER -->
 
+    <div id="to-top" class="to-top"><i class="fa fa-angle-up"></i></div>
+
 </div>
 <!-- /WRAPPER -->
 <?php
 include 'script_texts.php';
+?>
+<?php
+include 'includes/bottom/index.php';
 ?>
 
 
