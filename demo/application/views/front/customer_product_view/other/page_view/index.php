@@ -4,7 +4,7 @@
 	foreach($product_details as $row){
 		include 'product_detail.php';
 		include 'product_specification.php';
-		// include 'related_products.php';
+		// includes 'related_products.php';
 	?>
 	<section class="page-section">
 	    <div class="container">

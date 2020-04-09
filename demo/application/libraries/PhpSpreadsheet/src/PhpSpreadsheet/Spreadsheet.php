@@ -98,7 +98,7 @@ class Spreadsheet
     private $hasMacros = false;
 
     /**
-     * macrosCode : all macros code as binary data (the vbaProject.bin file, this include form, code,  etc.), null if no macro.
+     * macrosCode : all macros code as binary data (the vbaProject.bin file, this includes form, code,  etc.), null if no macro.
      *
      * @var string
      */

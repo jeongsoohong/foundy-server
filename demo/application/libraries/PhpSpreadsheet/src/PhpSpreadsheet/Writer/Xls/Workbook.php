@@ -986,7 +986,7 @@ class Workbook extends BIFFwriter
     }
 
     /**
-     * Handling of the SST continue blocks is complicated by the need to include an
+     * Handling of the SST continue blocks is complicated by the need to includes an
      * additional continuation byte depending on whether the string is split between
      * blocks or whether it starts at the beginning of the block. (There are also
      * additional complications that will arise later when/if Rich Strings are

@@ -113,7 +113,7 @@ abstract class BaseReader implements IReader
 
     /**
      * Read charts in workbook?
-     *        If this is true, then the Reader will include any charts that exist in the workbook.
+     *        If this is true, then the Reader will includes any charts that exist in the workbook.
      *      Note that a ReadDataOnly value of false overrides, and charts won't be read regardless of the IncludeCharts value.
      *        If false (the default) it will ignore any charts defined in the workbook file.
      *
@@ -126,7 +126,7 @@ abstract class BaseReader implements IReader
 
     /**
      * Set read charts in workbook
-     *        Set to true, to advise the Reader to include any charts that exist in the workbook.
+     *        Set to true, to advise the Reader to includes any charts that exist in the workbook.
      *      Note that a ReadDataOnly value of false overrides, and charts won't be read regardless of the IncludeCharts value.
      *        Set to false (the default) to discard charts.
      *

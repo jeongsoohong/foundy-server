@@ -15,7 +15,7 @@ class Drawing extends WriterPart
      * Write drawings to XML format.
      *
      * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $pWorksheet
-     * @param bool $includeCharts Flag indicating if we should include drawing details for charts
+     * @param bool $includeCharts Flag indicating if we should includes drawing details for charts
      *
      * @throws WriterException
      *

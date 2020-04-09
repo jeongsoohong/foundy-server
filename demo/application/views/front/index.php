@@ -34,7 +34,7 @@
 <!-- PRELOADER -->
 <?php
 $preloader = '1';
-//include 'preloader/preloader_'.$preloader.'.php';
+//includes 'preloader/preloader_'.$preloader.'.php';
 include 'preloader.php';
 ?>
 <!-- /PRELOADER -->

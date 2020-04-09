@@ -537,7 +537,7 @@
 
   /**
    * Get the children comments from a ul. If recursive is true,
-   * recursively include childrens' children.
+   * recursively includes childrens' children.
    */
   function getChildren(ul, recursive) {
     var children = [];

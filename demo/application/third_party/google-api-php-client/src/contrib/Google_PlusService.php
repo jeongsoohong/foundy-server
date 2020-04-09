@@ -33,7 +33,7 @@
      *
      * @opt_param string orderBy Specifies how to order search results.
      * @opt_param string pageToken The continuation token, used to page through large result sets. To get the next page of results, set this parameter to the value of "nextPageToken" from the previous response. This token may be of any length.
-     * @opt_param string maxResults The maximum number of activities to include in the response, used for paging. For any response, the actual number returned may be less than the specified maxResults.
+     * @opt_param string maxResults The maximum number of activities to includes in the response, used for paging. For any response, the actual number returned may be less than the specified maxResults.
      * @opt_param string language Specify the preferred language to search with. See search language codes for available values.
      * @return Google_ActivityFeed
      */
@@ -55,7 +55,7 @@
      * @param array $optParams Optional parameters.
      *
      * @opt_param string pageToken The continuation token, used to page through large result sets. To get the next page of results, set this parameter to the value of "nextPageToken" from the previous response.
-     * @opt_param string maxResults The maximum number of activities to include in the response, used for paging. For any response, the actual number returned may be less than the specified maxResults.
+     * @opt_param string maxResults The maximum number of activities to includes in the response, used for paging. For any response, the actual number returned may be less than the specified maxResults.
      * @return Google_ActivityFeed
      */
     public function listActivities($userId, $collection, $optParams = array()) {
@@ -105,7 +105,7 @@
      * @param array $optParams Optional parameters.
      *
      * @opt_param string pageToken The continuation token, used to page through large result sets. To get the next page of results, set this parameter to the value of "nextPageToken" from the previous response.
-     * @opt_param string maxResults The maximum number of comments to include in the response, used for paging. For any response, the actual number returned may be less than the specified maxResults.
+     * @opt_param string maxResults The maximum number of comments to includes in the response, used for paging. For any response, the actual number returned may be less than the specified maxResults.
      * @opt_param string sortOrder The order in which to sort the list of comments.
      * @return Google_CommentFeed
      */
@@ -158,7 +158,7 @@
      * @param array $optParams Optional parameters.
      *
      * @opt_param string pageToken The continuation token, used to page through large result sets. To get the next page of results, set this parameter to the value of "nextPageToken" from the previous response.
-     * @opt_param string maxResults The maximum number of people to include in the response, used for paging. For any response, the actual number returned may be less than the specified maxResults.
+     * @opt_param string maxResults The maximum number of people to includes in the response, used for paging. For any response, the actual number returned may be less than the specified maxResults.
      * @return Google_PeopleFeed
      */
     public function listByActivity($activityId, $collection, $optParams = array()) {
@@ -178,7 +178,7 @@
      * @param array $optParams Optional parameters.
      *
      * @opt_param string pageToken The continuation token, used to page through large result sets. To get the next page of results, set this parameter to the value of "nextPageToken" from the previous response. This token may be of any length.
-     * @opt_param string maxResults The maximum number of people to include in the response, used for paging. For any response, the actual number returned may be less than the specified maxResults.
+     * @opt_param string maxResults The maximum number of people to includes in the response, used for paging. For any response, the actual number returned may be less than the specified maxResults.
      * @opt_param string language Specify the preferred language to search with. See search language codes for available values.
      * @return Google_PeopleFeed
      */

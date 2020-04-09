@@ -58,7 +58,8 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array();
+
+$autoload['libraries'] = array('session', 'xmlrpc', 'cart');
 
 /*
 | -------------------------------------------------------------------
@@ -89,7 +90,7 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array();
+$autoload['helper'] = array('url', 'file', 'form','language','cookie');
 
 /*
 | -------------------------------------------------------------------
@@ -113,7 +114,7 @@ $autoload['config'] = array();
 |
 |	$autoload['language'] = array('lang1', 'lang2');
 |
-| NOTE: Do not include the "_lang" part of your file.  For example
+| NOTE: Do not includes the "_lang" part of your file.  For example
 | "codeigniter_lang.php" would be referenced as array('codeigniter');
 |
 */

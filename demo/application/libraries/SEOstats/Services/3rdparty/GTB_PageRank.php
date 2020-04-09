@@ -597,7 +597,7 @@ try {
     print_n("To lookup the Google (Toolbar) PageRank, create a new object of the class 'GTB_PageRank'.");
     print_n("For this example, the object is assigned to the variable '\$_url'.");
     print_cbb();							# BEGIN code block
-    print_n("include ('GTB_PageRank.php');");
+    print_n("includes ('GTB_PageRank.php');");
     print_n("try {");
     print_n("  \$_url = new GTB_PageRank('$url');");
     print_n("}");

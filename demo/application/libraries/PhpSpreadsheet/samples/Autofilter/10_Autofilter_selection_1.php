@@ -99,7 +99,7 @@ $spreadsheet->getActiveSheet()->freezePane('A2');
 
 // Set autofilter range
 $helper->log('Set autofilter range');
-// Always include the complete filter range!
+// Always includes the complete filter range!
 // Excel does support setting only the caption
 // row, but that's not a best practise...
 $spreadsheet->getActiveSheet()->setAutoFilter($spreadsheet->getActiveSheet()->calculateWorksheetDimension());

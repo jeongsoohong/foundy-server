@@ -14,7 +14,7 @@ class ContentTypes extends WriterPart
      * Write content types to XML format.
      *
      * @param Spreadsheet $spreadsheet
-     * @param bool $includeCharts Flag indicating if we should include drawing details for charts
+     * @param bool $includeCharts Flag indicating if we should includes drawing details for charts
      *
      * @throws WriterException
      *

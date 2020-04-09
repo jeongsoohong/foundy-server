@@ -425,7 +425,7 @@ class Shipment
     }
 
     /**
-     * If called, returned prices will include negotiated rates (discounts will be applied).
+     * If called, returned prices will includes negotiated rates (discounts will be applied).
      */
     public function showNegotiatedRates()
     {

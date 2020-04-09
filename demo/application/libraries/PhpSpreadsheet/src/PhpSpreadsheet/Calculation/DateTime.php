@@ -231,7 +231,7 @@ class DateTime
      *
      * @category Date/Time Functions
      *
-     * @param int $year The value of the year argument can include one to four digits.
+     * @param int $year The value of the year argument can includes one to four digits.
      *                                Excel interprets the year argument according to the configured
      *                                date system: 1900 or 1904.
      *                                If year is between 0 (zero) and 1899 (inclusive), Excel adds that

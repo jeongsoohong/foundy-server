@@ -800,7 +800,7 @@ class CI_Loader {
 	 *
 	 * Return a list of all package paths.
 	 *
-	 * @param	bool	$include_base	Whether to include BASEPATH (default: FALSE)
+	 * @param	bool	$include_base	Whether to includes BASEPATH (default: FALSE)
 	 * @return	array
 	 */
 	public function get_package_paths($include_base = FALSE)
@@ -965,7 +965,7 @@ class CI_Loader {
 		}
 		else
 		{
-			include($_ci_path); // include() vs include_once() allows for multiple views with the same name
+			include($_ci_path); // includes() vs include_once() allows for multiple views with the same name
 		}
 
 		log_message('info', 'File loaded: '.$_ci_path);

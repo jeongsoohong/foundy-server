@@ -24,7 +24,7 @@ namespace Composer\Autoload;
  *     // activate the autoloader
  *     $loader->register();
  *
- *     // to enable searching the include path (eg. for PEAR packages)
+ *     // to enable searching the includes path (eg. for PEAR packages)
  *     $loader->setUseIncludePath(true);
  *
  * In this example, if you try to use a class in the Symfony\Component
@@ -231,7 +231,7 @@ class ClassLoader
     }
 
     /**
-     * Turns on searching the include path for class files.
+     * Turns on searching the includes path for class files.
      *
      * @param bool $useIncludePath
      */
@@ -241,7 +241,7 @@ class ClassLoader
     }
 
     /**
-     * Can be used to check if the autoloader uses the include path to check
+     * Can be used to check if the autoloader uses the includes path to check
      * for classes.
      *
      * @return bool
@@ -425,7 +425,7 @@ class ClassLoader
             }
         }
 
-        // PSR-0 include paths.
+        // PSR-0 includes paths.
         if ($this->useIncludePath && $file = stream_resolve_include_path($logicalPathPsr0)) {
             return $file;
         }
@@ -435,7 +435,7 @@ class ClassLoader
 }
 
 /**
- * Scope isolated include.
+ * Scope isolated includes.
  *
  * Prevents access to $this/self from included files.
  */

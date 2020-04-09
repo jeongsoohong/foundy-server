@@ -638,7 +638,7 @@ class AutoFilter
                         $ruleType = $rule->getRuleType();
                         $ruleValues[] = $rule->getValue();
                     }
-                    //    Test if we want to include blanks in our filter criteria
+                    //    Test if we want to includes blanks in our filter criteria
                     $blanks = false;
                     $ruleDataSet = array_filter($ruleValues);
                     if (count($ruleValues) != count($ruleDataSet)) {

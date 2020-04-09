@@ -49,7 +49,7 @@ abstract class BaseWriter implements IWriter
 
     /**
      * Set write charts in workbook
-     *        Set to true, to advise the Writer to include any charts that exist in the PhpSpreadsheet object.
+     *        Set to true, to advise the Writer to includes any charts that exist in the PhpSpreadsheet object.
      *        Set to false (the default) to ignore charts.
      *
      * @param bool $pValue

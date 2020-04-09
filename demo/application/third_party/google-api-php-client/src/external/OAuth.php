@@ -177,7 +177,7 @@ class apiClientOAuthRequest {
     }
     // next check for the auth header, we need to do some extra stuff
     // if that is the case, namely suck in the parameters from GET or POST
-    // so that we can include them in the signature
+    // so that we can includes them in the signature
     else if (@substr($request_headers['Authorization'], 0, 5) == "OAuth") {
       $header_parameters = apiClientOAuthRequest::split_header($request_headers['Authorization']);
       if ($http_method == "GET") {

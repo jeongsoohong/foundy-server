@@ -33,7 +33,7 @@ if (! ini_get('date.timezone') && function_exists('date_default_timezone_set')) 
   date_default_timezone_set('UTC');
 }
 
-// hack around with the include paths a bit so the library 'just works'
+// hack around with the includes paths a bit so the library 'just works'
 set_include_path(dirname(__FILE__) . PATH_SEPARATOR . get_include_path());
 
 require_once "config.php";
@@ -44,7 +44,7 @@ if (file_exists(dirname(__FILE__)  . '/local_config.php')) {
   $apiConfig = array_merge($defaultConfig, $apiConfig);
 }
 
-// Include the top level classes, they each include their own dependencies
+// Include the top level classes, they each includes their own dependencies
 require_once 'service/Google_Model.php';
 require_once 'service/Google_Service.php';
 require_once 'service/Google_ServiceResource.php';
@@ -229,7 +229,7 @@ class Google_Client {
   }
 
   /**
-   * @param string $accessType Possible values for access_type include:
+   * @param string $accessType Possible values for access_type includes:
    *  {@code "offline"} to request offline access from the user. (This is the default value)
    *  {@code "online"} to request online access from the user.
    */
@@ -238,7 +238,7 @@ class Google_Client {
   }
 
   /**
-   * @param string $approvalPrompt Possible values for approval_prompt include:
+   * @param string $approvalPrompt Possible values for approval_prompt includes:
    *  {@code "force"} to force the approval UI to appear. (This is the default value)
    *  {@code "auto"} to request auto-approval when possible.
    */

@@ -1158,7 +1158,7 @@ class Worksheet extends WriterPart
      *
      * @param XMLWriter $objWriter XML Writer
      * @param PhpspreadsheetWorksheet $pSheet Worksheet
-     * @param bool $includeCharts Flag indicating if we should include drawing details for charts
+     * @param bool $includeCharts Flag indicating if we should includes drawing details for charts
      */
     private function writeDrawings(XMLWriter $objWriter, PhpspreadsheetWorksheet $pSheet, $includeCharts = false)
     {
