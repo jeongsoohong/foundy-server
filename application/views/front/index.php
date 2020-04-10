@@ -21,6 +21,20 @@ include 'preloader.php';
     ?>
     <!-- /HEADER -->
 
+    <!-- CONTENT AREA -->
+    <div class="content-area" page_name="<?= $page_name?>">
+        <?php
+        include $page_name.'/index.php';
+        ?>
+    </div>
+    <!-- /CONTENT AREA -->
+
+    <!-- FOOTER -->
+    <?php
+    //include 'footer/footer.php';
+    ?>
+    <!-- /FOOTER -->
+
     <div id="to-top" class="to-top"><i class="fa fa-angle-up"></i></div>
 
 </div>
@@ -31,7 +45,6 @@ include 'script_texts.php';
 <?php
 include 'includes/bottom/index.php';
 ?>
-
 
 </body>
 </html>

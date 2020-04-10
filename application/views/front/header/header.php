@@ -14,7 +14,7 @@
             </div>
         </div>
     </div>
-    <div class="navigation-wrapper navigation-sticky">
+    <div class="navigation-wrapper" id="navbar">
         <div class="container" style="height: 40px;">
             <!-- Navigation -->
             <nav class="navigation clearfix">
@@ -31,10 +31,40 @@
                     <li class="">
                         <a href="<?php echo base_url(); ?>home">SHOP</a>
                     </li>
+                    <li class="">
+                        <a href="<?php echo base_url(); ?>home/login">LOGIN</a>
+                    </li>
                 </ul>
             </nav>
             <!-- /Navigation -->
         </div>
     </div>
 </header>
+
+<script type="text/javascript">
+    window.onscroll = function() {
+        var navbar = document.getElementById("navbar");
+        var sticky = navbar.offsetTop;
+
+        console.log('sticky : ' + sticky + ', pageYOffset : ' + window.pageYOffset);
+
+        if (window.pageYOffset > sticky) {
+            navbar.classList.add("navigation-sticky");
+        } else {
+            navbar.classList.remove("navigation-sticky");
+        }
+    }
+</script>
+
+<style>
+    .navigation-sticky {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 100;
+    }
+/*    .navigation-sticky + .content {
+        padding-top: 60px;
+    }*/
+</style>
 <!-- /HEADER -->

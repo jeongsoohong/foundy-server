@@ -25,7 +25,3 @@ include $asset_page.'.php';
 ?>
 
 
-<form id="cart_form_singl">
-    <input type="hidden" name="color" value="">
-    <input type="hidden" name="qty" value="1">
-</form>
