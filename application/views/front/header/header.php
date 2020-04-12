@@ -19,20 +19,22 @@
             <!-- Navigation -->
             <nav class="navigation clearfix">
                 <ul class="nav sf-menu">
-                    <li class="">
+                    <li class="find">
                         <a href="<?php echo base_url(); ?>home">FIND</a>
                     </li>
-                    <li class="">
+                    <li class="life">
                         <a href="<?php echo base_url(); ?>home">LIFE</a>
                     </li>
-                    <li class="">
+                    <li class="earth">
                         <a href="<?php echo base_url(); ?>home">EARTH</a>
                     </li>
-                    <li class="">
+                    <li class="shop">
                         <a href="<?php echo base_url(); ?>home">SHOP</a>
                     </li>
-                    <li class="">
-                        <a href="<?php echo base_url(); ?>home/login">LOGIN</a>
+                    <li class="<?php if ($this->session->userdata('user_login') == 'yes') { echo ('user'); } else { echo ('login'); } ?>">
+                        <a href="<?php echo base_url(); if ($this->session->userdata('user_login') == 'yes') { echo ('home/user'); } else { echo ('home/login'); } ?>">
+                            <?php if ($this->session->userdata('user_login') == 'yes') { echo ('USER'); } else { echo ('LOGIN'); } ?>
+                       </a>
                     </li>
                 </ul>
             </nav>
@@ -42,11 +44,12 @@
 </header>
 
 <script type="text/javascript">
+
     window.onscroll = function() {
         var navbar = document.getElementById("navbar");
         var sticky = navbar.offsetTop;
 
-        console.log('sticky : ' + sticky + ', pageYOffset : ' + window.pageYOffset);
+        //console.log('sticky : ' + sticky + ', pageYOffset : ' + window.pageYOffset);
 
         if (window.pageYOffset > sticky) {
             navbar.classList.add("navigation-sticky");
@@ -54,6 +57,7 @@
             navbar.classList.remove("navigation-sticky");
         }
     }
+
 </script>
 
 <style>

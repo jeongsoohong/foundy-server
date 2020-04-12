@@ -36,8 +36,98 @@ class Home extends CI_Controller
 
     public function login()
     {
-        $type = $this->uri->segment(3);
-        if (!strncmp($type, "kakao", 5)) {
+        if ($this->session->userdata('user_login') == "yes") {
+            redirect('home', 'refresh');
+        }
+
+        $login_type = $this->uri->segment(3);
+
+        if (!strncmp($login_type, "kakao", 5)) {
+            //header('Content-Type: application/json; charset=UTF-8');
+            $result = array();
+            $redirect_url = base_url();
+
+            if (!isset($_POST) || !isset($_POST['id'])) {
+                $redirect_url .= "home/login";
+                $result['status'] = 'error';
+                $result['message'] = "오류가 발생했습니다. 다시 로그인해주세요.";
+                $result['redirect_url'] = $redirect_url;
+            } else {
+
+                $connected_at = $_POST['connected_at'];
+                $properties= $_POST['properties'];
+                $kakao_account = $_POST['kakao_account'];
+                $profile = $kakao_account['profile'];
+
+                $user_id = (int)$_POST['id'];
+
+                $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
+
+                //if ($user_data->num_rows()) {
+                if (empty($user_data)) {
+                    $user_type = 'general';
+                    $username = '';
+                    $nickname = $profile['nickname'];
+                    $gender = $kakao_account['gender'];
+                    $email = $kakao_account['email'];
+                    $phone = '';
+                    $address1 = '';
+                    $address2 = '';
+                    $thumbnail_image_url = $profile['thumbnail_image_url'];
+                    $profile_image_url = $profile['profile_image_url'];
+                    $password = '';
+                    $last_login = 'NOW()';
+                    $create_at = $connected_at;
+
+                    $ins = array(
+                        'user_id' => $user_id,
+                        'user_type' => $user_type,
+                        'username' => $username,
+                        'nickname' => $nickname,
+                        'gender' => $gender,
+                        'email' => $email,
+                        'phone' => $phone,
+                        'address1' => $address1,
+                        'address2' => $address2,
+                        'thumbnail_image_url' => $thumbnail_image_url,
+                        'profile_image_url' => $profile_image_url,
+                        'password' => $password,
+                        'last_login' => date("Y-m-d H:i:s"),
+                        'create_at' => $create_at,
+                    );
+
+                    $this->db->insert('user',$ins);
+                    $result['message'] = "첫 방문을 환영합니다.";
+                } else {
+
+                    $email = $user_data->email;
+                    $user_type = $user_data->user_type;
+                    $nickname = $user_data->nickname;
+                    $thumbnail_image_url = $user_data->thumbnail_image_url;
+                    $profile_image_url = $user_data->profile_image_url;
+
+                    $this->db->update('user', array('last_login' => date("Y-m-d H:i:s")), array('user_id' => $user_id));
+                    $result['message'] = "로그인해주셔서 감사합니다.";
+                }
+
+                $this->session->set_userdata('user_login', 'yes');
+                $this->session->set_userdata('user_id', $user_id);
+                $this->session->set_userdata('email', $email);
+                $this->session->set_userdata('user_type', $user_type);
+                $this->session->set_userdata('nickname', $nickname);
+                $this->session->set_userdata('thumbnail_image_url', $thumbnail_image_url);
+                $this->session->set_userdata('profile_image_url', $profile_image_url);
+
+                $redirect_url .= 'home';
+                $result['status'] = 'success';
+                $result['redirect_url'] = $redirect_url;
+            }
+
+            echo json_encode($result);
+            exit;
+        } else if (!strncmp($login_type, "kakao/rest", 5)) { /* kakao rest api를 이용한 간편 로그인 방법 - 사용 안함 */
+
+            redirect('home', 'refresh');
 
             if (!isset($_GET["code"])) {
                 $base_url = base_url();
@@ -96,13 +186,49 @@ class Home extends CI_Controller
 
             curl_close($ch);
 
-            $base_url = base_url();
-            echo ("<script>alert('로그인해 주셔서 감사합니다.'); window.location.href='${base_url}home';</script>");
+            $this->session->set_userdata('user_login', 'yes');
+
+            //$base_url = base_url();
+            //echo ("<script>alert('로그인해 주셔서 감사합니다.'); window.location.href='${base_url}home';</script>");
         } else {
             $page_data['page_name'] = "user/login";
             $page_data['asset_page'] = "login";
             $page_data['page_title'] = "login";
             $this->load->view('front/index', $page_data);
         }
+    }
+
+    function user()
+    {
+        if ($this->session->userdata('user_login') != "yes") {
+            redirect(base_url() . 'home', 'refresh');
+        }
+
+        $view_type = $this->uri->segment(3);
+
+        $page_data['user_id'] = $this->session->userdata('user_id');
+        $page_data['email'] = $this->session->userdata('email');
+        $page_data['user_type'] = $this->session->userdata('user_type');
+        $page_data['nickname'] = $this->session->userdata('nickname');
+        $page_data['profile_image_url'] = $this->session->userdata('profile_image_url');
+        $page_data['thumbnail_image_url'] = $this->session->userdata('thumbname_image_url');
+
+        $page_data['page_name'] = "user";
+        $page_data['asset_page'] = "user_profile";
+        $page_data['page_title'] = "my_profile";
+        $this->load->view('front/index', $page_data);
+
+    }
+
+    /* FUNCTION: Logout set */
+    function logout()
+    {
+        $redirect_url = base_url();
+        $this->session->sess_destroy();
+        $result['status'] = 'success';
+        $result['redirect_url'] = $redirect_url;
+        $result['message'] = "로그아웃 되었습니다.";
+        echo json_encode($result);
+        exit;
     }
 }

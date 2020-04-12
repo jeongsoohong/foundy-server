@@ -32,34 +32,24 @@
 <script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
 <script type="text/javascript">
 
-    Kakao.init('a7e336b59aed62d0e46dae8a8c55da21');
+    document.addEventListener("DOMContentLoaded", function() {
+        // @details 카카오톡 Developer API 사이트에서 발급받은 JavaScript Key
+        Kakao.init('a7e336b59aed62d0e46dae8a8c55da21');
+        //console.log("DOMContentLoaded : " +  Kakao.isInitialized());
 
-    $('.kakao-login').click(function(e) {
-
-        Kakao.Auth.authorize({
-            redirectUri: 'http://10.0.4.56/home/login/kakao'
-        })
-
-        // UI code below
-        console.log('token : ' + getToken())
-
-        function getToken() {
+/*        function getToken() {
             const token = getCookie('authorize-access-token')
             if(token) {
                 Kakao.Auth.setAccessToken(token)
-                console.log('login success. token: ' + Kakao.Auth.getAccessToken());
+                //console.log('login success. token: ' + Kakao.Auth.getAccessToken());
+                alert('login success. token: ' + Kakao.Auth.getAccessToken());
             }
         }
         function getCookie(name) {
             const value = "; " + document.cookie;
             const parts = value.split("; " + name + "=");
             if (parts.length === 2) return parts.pop().split(";").shift();
-        }
-    })
-
-    document.addEventListener("DOMContentLoaded", function() {
-        // @details 카카오톡 Developer API 사이트에서 발급받은 JavaScript Key
-        console.log("DOMContentLoaded : " +  Kakao.isInitialized());
+        }*/
 
         // @breif 카카오 로그인 버튼을 생성합니다.
         Kakao.Auth.createLoginButton({
@@ -68,13 +58,101 @@
             size : 'medium',
             lang : 'kr',
             success : function( authObj ) {
-                console.log( 'auth : ' + JSON.stringify(authObj) );
+                //console.log( 'auth : ' + JSON.stringify(authObj) );
+                // UI code below
+                //console.log('token : ' + getToken())
+
+                Kakao.API.request({
+                    url: "/v2/user/me",
+                    success: function(user_data) {
+
+                        var base_url = '<?php echo base_url(); ?>';
+
+                        $.ajax({
+                            url : base_url + '/home/login/kakao',
+                            type : 'post',
+                            data : user_data,
+                            // contentType: "application/json; charset=utf-8",//보낼 데이터 방식
+                            //CI에서 POST방식으로 할 경우에는 이것을 체크하면 안된다.
+                            //왜냐하면, json 방식은 body 안으로 전송되므로 body 를 통해 읽어들여야 한다. 그러므로
+                            //이방식으로 체크 되면 URLencoded format이 아닌 post로 받아올 수 없다
+                            //contentType: 'application/json',
+                            dataType : 'json', // 받을 데이터 방식
+                            success : function(res) {
+                                if (res.status === 'success') {
+                                    alert(res.message);
+                                    window.location.href = res.redirect_url;
+                                } else {
+                                    alert(res.message);
+                                    window.location.href = res.redirect_url;
+                                }
+                            },
+                            error: function(xhr, status, error){
+                                alert(error);
+                                window.location.href = base_url + 'home/login';
+                            }
+                        });
+
+                        //console.log(Kakao.Auth.getAccessToken());
+                        //alert(JSON.stringify(res));
+                    },
+                    fail: function(error) {
+                        alert(JSON.stringify(error));
+                    }
+                });
             },
             fail : function( error ) {
-                alert( 'fail : ' + JSON.stringify( error ));
+                alert( 'login fail : ' + JSON.stringify(error));
             }
         });
     });
+
+    /*
+        $('.kakao-login').click(function(e) {
+
+            // rest api 사용 1
+            function loginWithKakao() {
+                Kakao.Auth.login({
+                    success: function(authObj) {
+                        Kakao.API.request({
+                            url: "https://kapi.kakao.com/v2/user/me",
+                            success: function(res) {
+                                alert(res);
+                            },
+                            fail: function(error) {
+                                alert(JSON.stringify(error));
+                            }
+                        });
+                        alert(JSON.stringify(authObj));
+                    },
+                    fail: function(err) {
+                        alert(JSON.stringify(err));
+                    },
+                })
+            }
+
+            // rest api 사용 2
+            Kakao.Auth.authorize({
+                redirectUri: 'http://10.0.4.56/home/login/kakao'
+            })
+
+            // UI code below
+            console.log('token : ' + getToken())
+
+            function getToken() {
+                const token = getCookie('authorize-access-token')
+                if(token) {
+                    Kakao.Auth.setAccessToken(token)
+                    console.log('login success. token: ' + Kakao.Auth.getAccessToken());
+                }
+            }
+            function getCookie(name) {
+                const value = "; " + document.cookie;
+                const parts = value.split("; " + name + "=");
+                if (parts.length === 2) return parts.pop().split(";").shift();
+            }
+        })*/
+
 </script>
 
 <style>
