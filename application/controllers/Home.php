@@ -231,4 +231,26 @@ class Home extends CI_Controller
         echo json_encode($result);
         exit;
     }
+
+    /* FUNCTION: Unregister set */
+    function unregister()
+    {
+        if ($this->session->userdata('user_login') != "yes") {
+            $this->session->set_flashdata('alert', "login first!");
+            redirect(base_url() . 'home', 'refresh');
+        }
+
+        $user_id = $this->session->userdata('user_id');
+
+        $this->db->where('user_id', $user_id);
+        $this->db->delete('user');
+
+        $redirect_url = base_url();
+        $this->session->sess_destroy();
+        $result['status'] = 'success';
+        $result['redirect_url'] = $redirect_url;
+        $result['message'] = "회원탈퇴 되었습니다.";
+        echo json_encode($result);
+        exit;
+    }
 }

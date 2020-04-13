@@ -98,6 +98,7 @@
                             <a class="pnav_info" href="#"><li class="active">개인정보 보호정책</li></a>
                             <a class="pnav_info" href="#"><li class="active">버전 정보</li></a>
                             <a class="pnav_info logout" href="#"><li class="active">로그아웃</li></a>
+                            <a class="pnav_info unregister" href="#"><li class="active">회원탈퇴</li></a>
                         </ul>
                     </div>
                 </div>
@@ -197,6 +198,49 @@
 
             });
         }
+    })
+
+    $('.unregister').click(function(e) {
+        Kakao.init('a7e336b59aed62d0e46dae8a8c55da21');
+        Kakao.API.request({
+            url: '/v1/user/unlink',
+            success: function(response) {
+                console.log(response);
+
+                var base_url = '<?php echo base_url(); ?>';
+
+                //alert('logout: ' + Kakao.Auth.getAccessToken());
+
+                $.ajax({
+                    url : base_url + '/home/unregister',
+                    //type : 'post',
+                    //data : user_data,
+                    // contentType: "application/json; charset=utf-8",//보낼 데이터 방식
+                    //CI에서 POST방식으로 할 경우에는 이것을 체크하면 안된다.
+                    //왜냐하면, json 방식은 body 안으로 전송되므로 body 를 통해 읽어들여야 한다. 그러므로
+                    //이방식으로 체크 되면 URLencoded format이 아닌 post로 받아올 수 없다
+                    //contentType: 'application/json',
+                    dataType : 'json', // 받을 데이터 방식
+                    success : function(res) {
+                        if (res.status === 'success') {
+                            alert(res.message);
+                            window.location.href = res.redirect_url;
+                        } else {
+                            alert(res.message);
+                            window.location.href = res.redirect_url;
+                        }
+                    },
+                    error: function(xhr, status, error){
+                        alert(error);
+                        window.location.href = base_url + 'home/login';
+                    }
+                });
+
+            },
+            fail: function(error) {
+                console.log(error);
+            },
+        });
     })
 
 </script>
