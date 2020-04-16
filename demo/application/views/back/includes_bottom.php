@@ -121,17 +121,6 @@
     <?php
     	}
 	?>
-	<?php
-	    $audios = scandir('uploads/audio/admin/');
-	    foreach ($audios as $row) {
-	        if($row !== '' && $row !== '.' && $row !== '..'){
-	            $row = str_replace('.mp3', '', $row);
-	?>
-	<audio style='display:none;' id='<?php echo $row; ?>' ><source type="audio/mpeg" src="<?php echo base_url(); ?>uploads/audio/admin/<?php echo $row; ?>.mp3"></audio>
-	<?php
-	        }
-	    }
-	?>
     <script type="text/javascript">
     	setInterval(sale_check, 300000);
     	setInterval(session_check, 600000);

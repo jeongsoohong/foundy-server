@@ -56,7 +56,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <?php 
+                                                    <?php
                                                         echo $this->crud_model->select_html2('category', 'category', 'category_name', 'add', 'form-control selectpicker', '', '', '', 'get_sub_cat', '', translate('category'));
                                                     ?>
                                                 </div>
@@ -85,7 +85,7 @@
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <div class="input-group">
-                                                        <?php 
+                                                        <?php
                                                             $currency = $this->db->get_where('business_settings', array('type' => 'currency'))->row()->value;
                                                             $currency_symbol = $this->db->get_where('currency_settings', array('currency_settings_id' => $currency))->row()->symbol;
                                                         ?>
@@ -115,7 +115,8 @@
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="">
-                                                    <textarea class="form-control txt_editor" name="description" placeholder="<?php echo translate('description');?>" data-toggle="tooltip" title="<?php echo translate('description');?>" style="height: 300px;"></textarea>
+                                                    <textarea class="form-control txt_editor summernotes" data-height='700' data-name='text' class="required" ></textarea>
+<!--                                                    <textarea class="form-control txt_editor" name="description" placeholder="<?php //echo translate('description');?>" data-toggle="tooltip" title="<?php //echo translate('description');?>" style="height: 300px;"></textarea>-->
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
@@ -182,7 +183,7 @@
     }
 
 	$(document).ready(function(){
-		tooltip_set();
+		//tooltip_set();
         $('.selectpicker').selectpicker();
         $('.selectpicker').tooltip();
 
@@ -191,12 +192,12 @@
                 +'<div class="parent_div">'
                 +'  <div class="col-md-5">'
                 +'      <div class="form-group">'
-                +'          <input class="form-control" name="ad_field_names[]" value="" type="text" placeholder="<?php echo translate("field_name");?>" data-toggle="tooltip" title="<?php echo translate("field_name");?>">'
+                +'          <input class="form-control" name="ad_field_names[]" value="" type="text" placeholder="<?php /*echo translate("field_name");*/?>" data-toggle="tooltip" title="<?php /*echo translate("field_name");*/?>">'
                 +'      </div>'
                 +'  </div>'
                 +'  <div class="col-md-5">'
                 +'        <div class="form-group">'
-                +'          <input class="form-control" name="ad_field_values[]" value="" type="text" placeholder="<?php echo translate("details");?>" data-toggle="tooltip" title="<?php echo translate("details");?>">'
+                +'          <input class="form-control" name="ad_field_values[]" value="" type="text" placeholder="<?php /*echo translate("details");*/?>" data-toggle="tooltip" title="<?php /*echo translate("details");*/?>">'
                 +'      </div>'
                 +'  </div>'
                 +'  <div class="col-md-2">'
@@ -209,7 +210,7 @@
         });
 
         $(".open_modal").click(function(){
-            $(".post_amount").html("<?=$upload_amount?>");
+            $(".post_amount").html("<?/*=$upload_amount*/?>");
         });
 
         $(".post_confirm").click(function(){
@@ -218,14 +219,15 @@
         });
 	});
 
-    $(function () {
+/*    $(function () {
         //bootstrap WYSIHTML5 - text editor
         $('.txt_editor').wysihtml5({
             toolbar: {
-                "image": false // Button to insert an image.
+                "image": true, // Button to insert an image.
+                "video": true
             }
         });
-    })
+    })*/
 
     function get_sub_cat(category_id) {
         ajax_load(base_url+'home/get_dropdown_by_id/sub_category/category/'+category_id+'/sub_category_name/0','post_sub_category', 'set_elements');
@@ -235,4 +237,46 @@
     {
         $(e).parent().parent().parent().remove();
     }
+</script>
+<script src="<?php /*echo base_url(); */?>template/back/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.summernotes').each(function() {
+            var now = $(this);
+            var h = now.data('height');
+            var n = now.data('name');
+            now.closest('div').append('<input type="hidden" class="val" name="' + n + '">');
+            now.summernote({
+                /*                toolbar: [
+                                    ['style', ['style']],
+                                    ['font', ['bold', 'underline', 'clear']],
+                                    ['fontname', ['fontname']],
+                                    ['color', ['color']],
+                                    ['para', ['ul', 'ol', 'paragraph']],
+                                    ['view', ['codeview', 'help']],
+                                ],*/
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['fontname', ['fontname']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']],
+                ],
+                height: h,
+                onChange: function() {
+                    now.closest('div').find('.val').val(now.code());
+                }
+            });
+            now.closest('div').find('.val').val(now.code());
+        });
+    });
+
+    var base_url = '<?php /*echo base_url(); */?>';
+    var user_type = 'admin';
+    var module = 'newsletter';
+    var list_cont_func = 'list';
+    var dlt_cont_func = 'delete';
 </script>

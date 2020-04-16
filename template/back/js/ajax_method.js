@@ -115,7 +115,7 @@
 	function ajax_modal(type,title,noty,form_id,id){
 		modal_form(title,noty,form_id);
 		ajax_load(base_url+''+user_type+'/'+module+'/'+type+'/'+id,'form','form');
-		sound('ajax_load');
+		//sound('ajax_load');
 	}
 
 	function ajax_set_list(extra){

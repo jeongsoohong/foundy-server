@@ -14,11 +14,17 @@
                     <div id="profile_content">
                         <div class="information-title" style="margin-bottom: 0px;">프로필</div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-12" style="padding-bottom: 10px; ">
                                 <div class="recent-post" style="background: #fff;border: 1px solid #e0e0e0;">
                                     <div class="media">
-                                        <a class="pull-left media-link" href="#" style="height: 124px;">
-                                            <div class="media-object img-bg" id="blah" style="background-image: url('<?php echo $profile_image_url; ?>'); background-size: cover;background-position-x: center; background-position-y: top; width: 100px; height: 124px;"></div>
+                                        <a class="pull-left media-link" href="#" style="height: 124px; float:left !important;">
+                                            <div class="media-object img-bg" id="blah" style="background-image: url('<?php
+                                            if (empty($profile_image_url) || $profile_image_url == '') {
+                                                echo base_url() . '/uploads/user/default.jpg';
+                                            } else {
+                                                echo $profile_image_url;
+                                            }
+                                            ?>'); background-size: cover; background-position-x: center; background-position-y: top; width: 100px; height: 124px;"></div>
                                             <span id="inppic" class="set_image">
                                     <label class="" for="imgInp">
                                         <span><i class="fa fa-pencil" style="cursor: pointer;"></i></span>
@@ -32,27 +38,32 @@
                                 </span>
                                             </form>
                                         </a>
-                                        <div class="media-body" style="padding-right: 20px">
-                                            <table class="table table-condensed" style="font-size: 14px; margin-bottom: 0px">
+                                        <div class="media-body" style="padding-right: 10px">
+                                            <table class="table table-condensed" style="font-size: 12px; margin-bottom: 0px">
                                                 <tr>
                                                     <td><b>별명</b></td>
                                                     <td align="left"><?php echo $nickname; ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>이메일</b></td>
-                                                    <td><?php echo $email; ?></td>
+                                                    <td><b></b></td>
+                                                    <td></td>
                                                 </tr>
                                                 <tr>
                                                     <td><b>구분</b></td>
                                                     <td><?php if ($user_type == 'general') { echo '일반회원'; } else { echo '비회원'; }?></td>
+                                                    <td><b></b></td>
+                                                    <td></td>
                                                 </tr>
                                                 <tr>
                                                     <td><b>팔로워</b></td>
                                                     <td>0</td>
-                                                </tr>
-                                                <tr>
                                                     <td><b>팔로잉</b></td>
                                                     <td>0</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>INSTAGRAM</b></td>
+                                                    <td><b>YouTube</b></td>
+                                                    <td><b></b></td>
+                                                    <td></td>
+                                                </tr>
                                                 </tr>
                                             </table>
                                         </div>
@@ -61,18 +72,18 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="row">
-                                    <div class="col-md-4" style="padding-top: 10px; ">
+                                    <div class="col-md-6" style="padding-top: 10px; ">
                                         <h3 class="block-title"><span>MY STUDIO</span></h3>
-                                        <div class="widget widget-categories" style="padding-bottom:25px">
+                                        <div class="widget widget-categories" style="padding-bottom:10px; ">
                                             <ul class="profile_ul">
                                                 <li><a href="#">자이요가 한남점</b></a></li>
                                                 <li><a href="#">청담요가</b></a></li>
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                        <div class="col-md-6" style="padding-top: 10px; ">
                                         <h3 class="block-title"><span>Online Class</span></h3>
-                                        <div class="widget widget-categories" style="padding-bottom:25px">
+                                        <div class="widget widget-categories" style="padding-bottom:10px; ">
                                             <ul class="profile_ul">
                                                 <li><a href="#">부진 / 숨쉬는 고래 (요가&영상)</a></li>
                                                 <li><a href="#">춤추는 필라테스 (필라테스&영상)</a></li>
@@ -87,7 +98,7 @@
                 <div class="col-lg-3 col-md-3">
                     <input type="hidden" id="state" value="normal" />
                     <div class="widget account-details">
-                        <div class="information-title" style="margin-bottom: 0px;">더보기</div>
+                        <div class="information-title" style="margin-bottom: 0px; margin-top: 0px;">더보기</div>
                         <ul class="pleft_nav">
                             <a class="pnav_info" href="#"><li class="active">프로필 수정</li></a>
                             <a class="pnav_info" href="#"><li class="active">공지사항</li></a>
@@ -99,6 +110,11 @@
                             <a class="pnav_info" href="#"><li class="active">버전 정보</li></a>
                             <a class="pnav_info logout" href="#"><li class="active">로그아웃</li></a>
                             <a class="pnav_info unregister" href="#"><li class="active">회원탈퇴</li></a>
+                        </ul>
+                        <div class="information-title" style="margin-bottom: 0px; margin-top: 0px;">문의</div>
+                        <ul class="pleft_nav">
+                            <a class="pnav_info" href="#"><li class="active">센터 문의</li></a>
+                            <a class="pnav_info" href="#"><li class="active">샵 문의</li></a>
                         </ul>
                     </div>
                 </div>
@@ -160,6 +176,54 @@
 <script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
 <script type="text/javascript">
 
+    function abnv(thiss){
+        $('#savepic').hide();
+        $('#inppic').hide();
+        $('#'+thiss).show();
+    }
+    function change_state(va){
+        $('#state').val(va);
+    }
+
+    $('.user-profile-img').on('mouseenter',function(){
+        //$('.pic_changer').show('fast');
+    });
+
+    //$('.set_image').on('click',function(){
+    //    $('#imgInp').click();
+    //});
+
+    $('.user-profile-img').on('mouseleave',function(){
+        if($('#state').val() == 'normal'){
+            //$('.pic_changer').hide('fast');
+        }
+    });
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                $('#blah').css('backgroundImage', "url('"+e.target.result+"')");
+                $('#blah').css('backgroundSize', "cover");
+            }
+            reader.readAsDataURL(input.files[0]);
+            abnv('savepic');
+            change_state('saving');
+        }
+    }
+
+    $("#imgInp").change(function() {
+        readURL(this);
+    });
+
+
+    window.addEventListener("keydown", checkKeyPressed, false);
+
+    function checkKeyPressed(e) {
+        if (e.keyCode == "13") {
+            $(":focus").closest('form').find('.submit_button').click();
+        }
+    }
     $('.logout').click(function(e) {
         Kakao.init('a7e336b59aed62d0e46dae8a8c55da21');
         if (!Kakao.Auth.getAccessToken()) {

@@ -90,13 +90,23 @@
 			var n = now.data('name');
 			now.closest('div').append('<input type="hidden" class="val" name="' + n + '">');
 			now.summernote({
-                toolbar: [
+/*                toolbar: [
                     ['style', ['style']],
                     ['font', ['bold', 'underline', 'clear']],
                     ['fontname', ['fontname']],
                     ['color', ['color']],
                     ['para', ['ul', 'ol', 'paragraph']],
                     ['view', ['codeview', 'help']],
+                ],*/
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['fontname', ['fontname']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']],
                 ],
 				height: h,
 				onChange: function() {
