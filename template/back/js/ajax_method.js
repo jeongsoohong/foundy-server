@@ -120,13 +120,13 @@
 
 	function ajax_set_list(extra){
 		ajax_load(base_url+''+user_type+'/'+module+'/'+list_cont_func+'/'+extra,'list','first');
-		sound('ajax_load');
+		//sound('ajax_load');
 	}
 
 	function ajax_set_full(type,title,noty,form_id,id){
 		//full_form(title,noty,form_id);
 		ajax_load(base_url+''+user_type+'/'+module+'/'+type+'/'+id,'list','form');
-		sound('ajax_load');
+		//sound('ajax_load');
 	}
 
 	$('#multi_dlt_btn').on('click', function(){
@@ -148,7 +148,7 @@
 					container : 'floating',
 					timer : 3000
 				});
-				sound('delete');
+				//sound('delete');
 			}else{
 				$.activeitNoty({
 					type: 'danger',
@@ -157,7 +157,7 @@
 					container : 'floating',
 					timer : 3000
 				});
-				sound('cancelled');
+				//sound('cancelled');
 			};
 		});
 	}
@@ -175,7 +175,7 @@
 					container : 'floating',
 					timer : 3000
 				});
-				sound('delete');
+				//sound('delete');
 			}else{
 				$.activeitNoty({
 					type: 'danger',
@@ -184,7 +184,7 @@
 					container : 'floating',
 					timer : 3000
 				});
-				sound('cancelled');
+				//sound('cancelled');
 			};
 		});
 	}
@@ -202,7 +202,7 @@
 					container : 'floating',
 					timer : 3000
 				});
-				sound('done');
+				//sound('done');
 			} else {
 				$.activeitNoty({
 					type: 'danger',
@@ -211,7 +211,7 @@
 					container : 'floating',
 					timer : 3000
 				});
-				sound('cancelled');
+				//sound('cancelled');
 			};
 
 		});
@@ -231,7 +231,7 @@
 					container : 'floating',
 					timer : 3000
 				});
-				sound('delete');
+				//sound('delete');
 			}else{
 				$.activeitNoty({
 					type: 'danger',
@@ -240,7 +240,7 @@
 					container : 'floating',
 					timer : 3000
 				});
-				sound('cancelled');
+				//sound('cancelled');
 			};
 
 		});
@@ -286,7 +286,7 @@
                     if(here.closest('div').find('.require_alert').length){
 
                     } else {
-                        sound('form_submit_problem');
+                        //sound('form_submit_problem');
                         here.closest('div').append(''
                             +'  <span id="'+take+'" class="label label-danger require_alert" >'
                             +'      '+txt
@@ -298,7 +298,7 @@
                     if(here.closest('div').find('.require_alert').length){
 
                     } else {
-                        sound('form_submit_problem');
+                        //sound('form_submit_problem');
                         here.closest('div').append(''
                             +'  <span id="'+take+'" class="label label-danger require_alert" >'
                             +'      *Required'
@@ -321,7 +321,7 @@
 					if(here.closest('div').find('.require_alert').length){
 						
 					} else {
-						sound('form_submit_problem');
+						//sound('form_submit_problem');
 						here.closest('div').append(''
 							+'  <span id="'+take+'" class="label label-danger require_alert" >'
 							+'      *'+mbe
@@ -365,7 +365,7 @@
                 }
             });
         } else {
-            sound('form_submit_problem');
+            //sound('form_submit_problem');
             return false;
         }
     });
@@ -409,7 +409,7 @@
                     if(here.closest('div').find('.require_alert').length){
 
                     } else {
-                        sound('form_submit_problem');
+                        //sound('form_submit_problem');
                         here.closest('div').append(''
                             +'  <span id="'+take+'" class="label label-danger require_alert" >'
                             +'      '+txt
@@ -421,7 +421,7 @@
                     if(here.closest('div').find('.require_alert').length){
 
                     } else {
-                        sound('form_submit_problem');
+                        //sound('form_submit_problem');
                         here.closest('div').append(''
                             +'  <span id="'+take+'" class="label label-danger require_alert" >'
                             +'      *Required'
@@ -446,7 +446,7 @@
 					if(here.closest('div').find('.require_alert').length){
 	
 					} else {
-						sound('form_submit_problem');
+						//sound('form_submit_problem');
 						here.closest('div').append(''
 							+'  <span id="'+take+'" class="require_alert" >'
 							+'      *'+mbe
@@ -502,7 +502,7 @@
 				return false;
 			}
 		} else {
-			sound('form_submit_problem');
+			//sound('form_submit_problem');
 			if(form_id == 'product_add' || form_id == 'product_edit'){
 				var ih = $('.require_alert').last().closest('.tab-pane').attr('id');
 				$("[href=#"+ih+"]").click();
@@ -524,7 +524,7 @@
 						if(form_submit(form_id,noty) !== false){
 							return false;
 						} else {
-							sound('form_submit_problem');
+							//sound('form_submit_problem');
 							return false;
 						}
 					}
@@ -540,12 +540,12 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('cancelled');
+						//sound('cancelled');
 					}
 				}
 			}
 		});
-		sound('modal_opened');
+		//sound('modal_opened');
 	}
 
 	$("body").on('change','.required',function(){
@@ -586,7 +586,7 @@
 							timer : 3000
 						});
 						// setTimeout(function(){ ajax_set_list(); }, 500);
-						sound('published');
+						//sound('published');
 					  } else {
 						$.activeitNoty({
 							type: 'danger',
@@ -595,7 +595,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('unpublished');
+						//sound('unpublished');
 					  }
 					  //alert(changeCheckbox.checked);
 					};
@@ -614,7 +614,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('featured');
+						//sound('featured');
 					  } else {
 						$.activeitNoty({
 							type: 'danger',
@@ -623,7 +623,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('unfeatured');
+						//sound('unfeatured');
 					  }
 					  //alert(changeCheckbox.checked);
 					};
@@ -642,7 +642,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('featured');
+						//sound('featured');
 					  } else {
 						$.activeitNoty({
 							type: 'danger',
@@ -651,7 +651,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('unfeatured');
+						//sound('unfeatured');
 					  }
 					  //alert(changeCheckbox.checked);
 					};
@@ -670,7 +670,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('featured');
+						//sound('featured');
 					  } else {
 						$.activeitNoty({
 							type: 'danger',
@@ -679,7 +679,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('unfeatured');
+						//sound('unfeatured');
 					  }
 					  //alert(changeCheckbox.checked);
 					};
@@ -700,7 +700,7 @@
 							timer : 3000
 						});
 						// setTimeout(function(){ ajax_set_list(); }, 500);
-						sound('published');
+						//sound('published');
 					  } else {
 						$.activeitNoty({
 							type: 'danger',
@@ -709,7 +709,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('unpublished');
+						//sound('unpublished');
 					  }
 					  //alert(changeCheckbox.checked);
 					};
@@ -728,7 +728,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('featured');
+						//sound('featured');
 					  } else {
 						$.activeitNoty({
 							type: 'danger',
@@ -737,7 +737,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('unfeatured');
+						//sound('unfeatured');
 					  }
 					  //alert(changeCheckbox.checked);
 					};
@@ -756,7 +756,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('featured');
+						//sound('featured');
 					  } else {
 						$.activeitNoty({
 							type: 'danger',
@@ -765,7 +765,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('unfeatured');
+						//sound('unfeatured');
 					  }
 					  //alert(changeCheckbox.checked);
 					};
@@ -785,7 +785,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('published');
+						//sound('published');
 					  } else {
 						$.activeitNoty({
 							type: 'danger',
@@ -794,7 +794,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('unpublished');
+						//sound('unpublished');
 					  }
 					  //alert(changeCheckbox.checked);
 					};
@@ -814,7 +814,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('published');
+						//sound('published');
 					  } else {
 						$.activeitNoty({
 							type : 'danger',
@@ -823,7 +823,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('unpublished');
+						//sound('unpublished');
 					  }
 					  //alert(changeCheckbox.checked);
 					};
@@ -857,7 +857,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('published');
+						//sound('published');
 					  } else {
 						if(set == 'g_login_set'){
 							ntsds = glds;
@@ -878,7 +878,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('unpublished');
+						//sound('unpublished');
 					  }
 					  //alert(changeCheckbox.checked);
 					};
@@ -901,7 +901,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('published');
+						//sound('published');
 					  } else {
 						$.activeitNoty({
 							type : 'danger',
@@ -910,7 +910,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('unpublished');
+						//sound('unpublished');
 					  }
 					  //alert(changeCheckbox.checked);
 					};
@@ -932,7 +932,7 @@
 								container : 'floating',
 								timer : 3000
 							});
-							sound('published');
+							//sound('published');
 						} else {
 							$.activeitNoty({
 								type : 'danger',
@@ -941,7 +941,7 @@
 								container : 'floating',
 								timer : 3000
 							});
-							sound('unpublished');
+							//sound('unpublished');
 						}
 						//alert(changeCheckbox.checked);
 					};
@@ -963,7 +963,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('published');
+						//sound('published');
 					  } else {
 						$.activeitNoty({
 							type : 'danger',
@@ -972,7 +972,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('unpublished');
+						//sound('unpublished');
 					  }
 					  //alert(changeCheckbox.checked);
 					};
@@ -994,7 +994,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('published');
+						//sound('published');
 					  } else {
 						$.activeitNoty({
 							type : 'danger',
@@ -1003,7 +1003,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('unpublished');
+						//sound('unpublished');
 					  }
 					};
 				});
@@ -1023,7 +1023,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('published');
+						//sound('published');
 					  } else {
 						$.activeitNoty({
 							type : 'danger',
@@ -1032,7 +1032,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('unpublished');
+						//sound('unpublished');
 					  }
 					};
 				});
@@ -1052,7 +1052,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('published');
+						//sound('published');
 					  } else {
 						$.activeitNoty({
 							type : 'danger',
@@ -1061,7 +1061,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('unpublished');
+						//sound('unpublished');
 					  }
 					};
 				});
@@ -1081,7 +1081,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('published');
+						//sound('published');
 					  } else {
 						$.activeitNoty({
 							type : 'danger',
@@ -1090,7 +1090,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('unpublished');
+						//sound('unpublished');
 					  }
 					};
 				});
@@ -1110,7 +1110,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('published');
+						//sound('published');
 					  } else {
 						$.activeitNoty({
 							type: 'danger',
@@ -1119,7 +1119,7 @@
 							container : 'floating',
 							timer : 3000
 						});
-						sound('unpublished');
+						//sound('unpublished');
 					  }
 					  //alert(changeCheckbox.checked);
 					};

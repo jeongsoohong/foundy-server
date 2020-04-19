@@ -10,9 +10,9 @@
     <link href="<?php echo base_url(); ?>template/front/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>template/front/css/theme.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>template/front/css/theme-<?php echo $theme; ?>.css" rel="stylesheet" id="theme-config-link">
-    <?php 
+    <?php
         $font =  $this->db->get_where('ui_settings',array('type' => 'font'))->row()->value;
-    ?>  
+    ?>
     <link href='https://fonts.googleapis.com/css?family=<?php echo $font; ?>:400,500,600,700,800,900' rel='stylesheet' type='text/css'>
     <style>
         *{

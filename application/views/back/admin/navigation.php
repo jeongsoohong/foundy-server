@@ -43,6 +43,59 @@
                                 </li>
                             </ul>
                         </li>
+<!--                        <li --><?php //if($page_name=="center" || $page_name=="center_category" ){?>
+<!--                            class="active-sub"-->
+<!--                        --><?php //} ?><!-- >-->
+<!--                            <a href="#">-->
+<!--                                <i class="fa fa-user"></i>-->
+<!--                                <span class="menu-title">-->
+<!--                                    스튜디오-->
+<!--                                </span>-->
+<!--                                <i class="fa arrow"></i>-->
+<!--                            </a>-->
+<!--                            <ul class="collapse --><?php //if($page_name=="center" || $page_name=="center_category"){ echo 'in'; } ?><!--" >-->
+<!--                                <!--Menu list item-->-->
+<!--                                <li --><?php //if($page_name=="center_category"){?><!-- class="active-link" --><?php //} ?><!-- >-->
+<!--                                    <a href="--><?php //echo base_url(); ?><!--admin/center_category/">-->
+<!--                                        <i class="fa fa-circle fs_i"></i>-->
+<!--                                        센터 카테고리-->
+<!--                                    </a>-->
+<!--                                </li>-->
+<!--                                <li --><?php //if($page_name=="center"){?><!-- class="active-link" --><?php //} ?><!-- >-->
+<!--                                    <a href="--><?php //echo base_url(); ?><!--admin/center/">-->
+<!--                                        <i class="fa fa-circle fs_i"></i>-->
+<!--                                        센터 보기-->
+<!--                                    </a>-->
+<!--                                </li>-->
+<!--                            </ul>-->
+<!--                        </li>-->
+<!--                        <li --><?php //if($page_name=="online" || $page_name=="online_category" ){?>
+<!--                            class="active-sub"-->
+<!--                        --><?php //} ?><!-- >-->
+<!--                            <a href="#">-->
+<!--                                <i class="fa fa-user"></i>-->
+<!--                                <span class="menu-title">-->
+<!--                                    온라인 클래스-->
+<!--                                </span>-->
+<!--                                <i class="fa arrow"></i>-->
+<!--                            </a>-->
+<!--                            <ul class="collapse --><?php //if($page_name=="online" || $page_name=="online_category"){ echo 'in'; } ?><!--" >-->
+<!--                                <!--Menu list item-->-->
+<!--                                <li --><?php //if($page_name=="center_category"){?><!-- class="active-link" --><?php //} ?><!-- >-->
+<!--                                    <a href="--><?php //echo base_url(); ?><!--admin/online_category/">-->
+<!--                                        <i class="fa fa-circle fs_i"></i>-->
+<!--                                        온라인 클래스 카테고리-->
+<!--                                    </a>-->
+<!--                                </li>-->
+<!--                                <li --><?php //if($page_name=="center"){?><!-- class="active-link" --><?php //} ?><!-- >-->
+<!--                                    <a href="--><?php //echo base_url(); ?><!--admin/online/">-->
+<!--                                        <i class="fa fa-circle fs_i"></i>-->
+<!--                                        온라인 클래스 보기-->
+<!--                                    </a>-->
+<!--                                </li>-->
+<!--                            </ul>-->
+<!--                        </li>-->
+                    </ul>
                 </div>
             </div>
         </div>

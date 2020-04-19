@@ -23,27 +23,54 @@ elseif($count==4){
 $banner_size = 1;
 ?>
 
-<!-- BREADCRUMBS -->
-<section class="page-section breadcrumbs" style="padding-top: 0px; padding-bottom: 0px; ">
+<!-- /PAGE -->
+<section class="page-section breadcrumbs" style="padding-top: 0px !important; padding-bottom: 0px !important; height:
+50px !important;">
     <div class="container">
-        <div class="page-header">
-            <h2 class="section-title section-title-lg">
-                <span>
-                    Search The Studio
-                </span>
-            </h2>
+        <div class="page-header" style="margin-bottom: 0px; ">
+            <span>
+                <img src="<?php echo base_url(); ?>uploads/banner_image/header01.png" alt="" style="object-fit:
+                cover !important; height: 50px !important;"/>
+            </span>
         </div>
     </div>
 </section>
 <!-- /BREADCRUMBS -->
-<section class="page-section" style="padding-top: 0px; padding-bottom: 0px;">
+<section class="page-section" style="margin-top: 0px !important; margin-bottom: 0px !important; padding-top: 0px
+!important; padding-bottom: 0px !important;">
     <div class="container">
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="thumbnail my-2 no-scale no-border no-padding thumbnail-banner size-1x<?php echo $banner_size; ?>">
                     <div class="media">
                         <a class="media-link" href="/">
-                            <div class="img-bg image_delay" data-src="<?php echo base_url(); ?>/uploads/banner_image/banner01_370x120.jpg" style="background-image: url('<?php echo base_url(); ?>/uploads/banner_image/banner01_370x120.jpg')"></div>
+                            <div class="img-bg image_delay" data-src="<?php echo base_url();
+                            ?>uploads/banner_image/yoga banner.png" style="background-image: url('<?php echo base_url
+                            (); ?>uploads/banner_image/yoga banner.png'); background-repeat: no-repeat;
+                                    background-size: cover;">
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+    </div>
+</section>
+<!-- BREADCRUMBS -->
+<!-- BREADCRUMBS -->
+<section class="page-section" style="margin-top: 0px !important; margin-bottom: 0px !important; padding-top: 0px
+    !important; padding-bottom: 0px !important;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="thumbnail my-2 no-scale no-border no-padding thumbnail-banner size-1x<?php echo $banner_size; ?>">
+                    <div class="media">
+                        <a class="media-link" href="/">
+                            <div class="img-bg image_delay" data-src="<?php echo base_url();
+                            ?>uploads/banner_image/pilates banner.png" style="background-image: url('<?php echo
+                            base_url(); ?>uploads/banner_image/pilates banner.png'); background-repeat: no-repeat;
+                                    background-size: cover;">
+
+                            </div>
                         </a>
                     </div>
                 </div>
@@ -51,42 +78,31 @@ $banner_size = 1;
         </div>
     </div>
 </section>
-<section class="page-section" style="padding-top: 0px; padding-bottom: 0px;">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="thumbnail my-2 no-scale no-border no-padding thumbnail-banner size-1x<?php echo $banner_size; ?>">
-                    <div class="media">
-                        <a class="media-link" href="/">
-                            <div class="img-bg image_delay" data-src="<?php echo base_url(); ?>/uploads/banner_image/banner02_370x120.jpg" style="background-image: url('<?php echo base_url(); ?>/uploads/banner_image/banner02_370x120.jpg')"></div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 <!-- BREADCRUMBS -->
-<section class="page-section breadcrumbs" style="padding-top: 0px; padding-bottom: 0px;">
+<section class="page-section breadcrumbs" style="padding-top: 0px !important; padding-bottom: 0px !important; height:
+50px !important;">
     <div class="container">
-        <div class="page-header">
-            <h2 class="section-title section-title-lg">
-                <span>
-                    Online Class
-                </span>
-            </h2>
+        <div class="page-header" style="margin-bottom: 0px; ">
+            <span>
+                <img src="<?php echo base_url(); ?>uploads/banner_image/header02.png" alt="" style="object-fit:
+                cover !important; height: 50px !important;"/>
+            </span>
         </div>
     </div>
 </section>
 <!-- /BREADCRUMBS -->
-<section class="page-section" style="padding-top: 0px; padding-bottom: 0px;">
+<section class="page-section" style="margin-top: 0px !important; margin-bottom: 0px !important; padding-top: 0px
+    !important; padding-bottom: 0px !important;">
     <div class="container">
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="thumbnail my-2 no-scale no-border no-padding thumbnail-banner size-1x<?php echo $banner_size; ?>">
                     <div class="media">
                         <a class="media-link" href="/">
-                            <div class="img-bg image_delay" data-src="<?php echo base_url(); ?>/uploads/banner_image/banner03_370x120.jpg" style="background-image: url('<?php echo base_url(); ?>/uploads/banner_image/banner03_370x120.jpg')"></div>
+                            <div class="img-bg image_delay" data-src="<?php echo base_url();
+                            ?>uploads/banner_image/online class banner.png" style="background-image: url('<?php echo
+                            base_url(); ?>uploads/banner_image/online class banner.png'); background-repeat:
+                                    no-repeat; background-size: cover;"></div>
                         </a>
                     </div>
                 </div>

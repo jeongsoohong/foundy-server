@@ -20,24 +20,24 @@
 
                             <div class="form-group btm_border">
                                 <label class="col-sm-4 control-label" for="demo-hor-1">
-                                    <?php echo translate('blog_title');?>
+                                    <?php echo ('blog_title');?>
                                         </label>
                                 <div class="col-sm-6">
-                                    <input type="text" name="title" id="demo-hor-1" value="<?php echo $row['title']; ?>" placeholder="<?php echo translate('blog_title');?>" class="form-control required">
+                                    <input type="text" name="title" id="demo-hor-1" value="<?php echo $row['title']; ?>" placeholder="<?php echo ('제목');?>" class="form-control required">
                                 </div>
                             </div>
                             
                             <div class="form-group btm_border">
-                                <label class="col-sm-4 control-label" for="demo-hor-2"><?php echo translate('category');?></label>
+                                <label class="col-sm-4 control-label" for="demo-hor-2"><?php echo ('카테고리');?></label>
                                 <div class="col-sm-6">
                                     <?php echo $this->crud_model->select_html('blog_category','blog_category','name','edit','demo-chosen-select required',$row['blog_category'],'','','get_cat'); ?>
                                 </div>
                             </div>
                             
                             <div class="form-group btm_border">
-                                <label class="col-sm-4 control-label" for="demo-hor-12"><?php echo translate('images');?></label>
+                                <label class="col-sm-4 control-label" for="demo-hor-12"><?php echo ('소개사진');?></label>
                                 <div class="col-sm-6">
-                                    <span class="pull-left btn btn-default btn-file"> <?php echo translate('choose_file');?>
+                                    <span class="pull-left btn btn-default btn-file"> <?php echo ('파일열기');?>
                                         <input type="file" name="img" onchange="preview(this);" id="demo-hor-inputpass" class="form-control">
                                     </span>
                                     <br><br>
@@ -46,19 +46,26 @@
                                     </span>
                                 </div>
                             </div>
-                            
-                            <div class="form-group btm_border">
+
+<!--                            <div class="form-group btm_border">
                                 <label class="col-sm-4 control-label" for="demo-hor-14">
-                                    <?php echo translate('summery');?>
+                                    <?php /*echo ('소개글');*/?>
                                         </label>
                                 <div class="col-sm-6">
-                                    <textarea rows="9" class="summernotes" data-height="200" data-name="summery"><?php echo $row['summery']; ?></textarea>
+                                    <textarea rows="9" class="summernotes" data-height="200" data-name="summery"><?php /*echo $row['summery']; */?></textarea>
                                 </div>
                             </div>
-                            
+-->
+                            <div class="form-group btm_border">
+                                <label class="col-sm-4 control-label" for="demo-hor-1"><?php echo ('소개글');?></label>
+                                <div class="col-sm-6">
+                                    <input type="text" name="summery" id="demo-hor-1" placeholder="<?php echo ('소개글');?>" class="form-control required" value="<?php echo $row['summery']; ?>">
+                                </div>
+                            </div>
+
                             <div class="form-group btm_border">
                                 <label class="col-sm-4 control-label" for="demo-hor-14">
-                                    <?php echo translate('description');?>
+                                    <?php echo ('상세정보');?>
                                         </label>
                                 <div class="col-sm-6">
                                     <textarea rows="9" class="summernotes" data-height="300" data-name="description"><?php echo $row['description']; ?></textarea>
@@ -66,14 +73,14 @@
                             </div>
 
                             <div class="form-group btm_border">
-                                <label class="col-sm-4 control-label" for="demo-hor-1"><?php echo translate('author');?></label>
+                                <label class="col-sm-4 control-label" for="demo-hor-1"><?php echo ('작성자');?></label>
                                 <div class="col-sm-6">
-                                    <input type="text" name="author" value="<?php echo $row['author']; ?>" id="demo-hor-1" placeholder="<?php echo translate('author');?>" class="form-control ">
+                                    <input type="text" name="author" value="<?php echo $row['author']; ?>" id="demo-hor-1" placeholder="<?php echo ('작성자');?>" class="form-control ">
                                 </div>
                             </div>
 
                             <div class="form-group btm_border">
-                                <label class="col-sm-4 control-label" for="demo-hor-1"><?php echo translate('date');?></label>
+                                <label class="col-sm-4 control-label" for="demo-hor-1"><?php echo ('작성일');?></label>
                                 <div class="col-sm-6">
                                     <input type="date" name="date" value="<?php echo $row['date']; ?>" id="demo-hor-1" class="form-control">
                                 </div>
@@ -91,11 +98,11 @@
                 <div class="row">
                     <div class="col-md-11">
                     	<span class="btn btn-purple btn-labeled fa fa-refresh pro_list_btn pull-right" 
-                            onclick="ajax_set_full('edit','<?php echo translate('edit_blog'); ?>','<?php echo translate('successfully_edited!'); ?>','blog_edit','<?php echo $row['blog_id']; ?>') "><?php echo translate('reset');?>
+                            onclick="ajax_set_full('edit','<?php echo ('edit_blog'); ?>','<?php echo ('정상적으로 리셋되었습니다!'); ?>','blog_edit','<?php echo $row['blog_id']; ?>') "><?php echo ('리셋');?>
                         </span>
                      </div>
                      <div class="col-md-1">
-                     	<span class="btn btn-success btn-md btn-labeled fa fa-wrench pull-right enterer" onclick="form_submit('blog_edit','<?php echo translate('successfully_edited!'); ?>');proceed('to_add');" ><?php echo translate('edit');?></span> 
+                     	<span class="btn btn-success btn-md btn-labeled fa fa-wrench pull-right enterer" onclick="form_submit('blog_edit','<?php echo ('정상적으로 수정되었습니다!'); ?>');proceed('to_add');" ><?php echo ('수정');?></span>
                      </div>
                 </div>
             </div>
@@ -125,7 +132,7 @@
      $('.delete-div-wrap .close').on('click', function() { 
 	 	var pid = $(this).closest('.delete-div-wrap').find('img').data('id'); 
 		var here = $(this); 
-		msg = 'Really want to delete this Image?'; 
+        msg = "정말로 삭제하시겠습니까?";
 		bootbox.confirm(msg, function(result) {
 			if (result) { 
 				 $.ajax({ 
@@ -135,7 +142,7 @@
 						$.activeitNoty({ 
 							type: 'success', 
 							icon : 'fa fa-check', 
-							message : 'Deleted Successfully', 
+							message : '정상적으로 삭제되었습니다',
 							container : 'floating', 
 							timer : 3000 
 						}); 
@@ -169,9 +176,23 @@
                     ['fontname', ['fontname']],
                     ['color', ['color']],
                     ['para', ['ul', 'ol', 'paragraph']],
-                    ['view', ['codeview', 'help']],
+                    ['table', ['table']], // 추가
+                    ['insert', ['link', 'picture', 'video']], // 추가
+                    // ['view', ['codeview', 'help']],
+                    ['view', ['fullscreen', 'codeview', 'help']],
                 ],
                 height: h,
+                onImageUpload : function(files, editor, welEditable) {
+                    console.log('image upload:', files);
+                    sendFile(files[0], editor, welEditable);
+                },
+                // onImageUpload: function(image) {
+                //     uploadImage(image[0]);
+                // },
+                onMediaDelete : function(target) {
+                    // console.log('delete');
+                    deleteImage(target[0].src);
+                },
                 onChange: function() {
                     now.closest('div').find('.val').val(now.code());
                 }
@@ -179,6 +200,81 @@
 			now.closest('div').find('.val').val(now.code());
         });
 	}
+
+    // summernote 에디터에 이미지 업로드
+    function sendFile(file,editor,welEditable) {
+        data = new FormData();
+        data.append("file", file);
+        $.ajax({
+            url: "/admin/upload", // image 저장 경로
+            data: data,
+            cache: false,
+            contentType: false,
+            enctype: 'multipart/form-data',
+            processData: false,
+            type: 'POST',
+            success: function(data){
+                var obj = JSON.parse(data);
+                if (obj.success) {
+                    // var image = $('<img>').attr('src', '' + obj.save_url); // 에디터에 img 태그로 저장
+                    // alert(obj.save_url);
+                    // $('.summernotes').summernote("insertNode", image[0]); // summernote 에디터에 img 태그를 보여줌
+                    // $('.summernotes').summernote("insertImage", obj.save_url);
+                    editor.insertImage(welEditable, obj.save_url);
+                    $('.note-editable').keyup();
+                } else {
+                    // alert(obj.error);
+                    switch(parseInt(obj.error)) {
+                        case 1: alert('업로드 용량 제한에 걸렸습니다.'); break;
+                        case 2: alert('MAX_FILE_SIZE 보다 큰 파일은 업로드할 수 없습니다.'); break;
+                        case 3: alert('파일이 일부분만 전송되었습니다.'); break;
+                        case 4: alert('파일이 전송되지 않았습니다.'); break;
+                        case 6: alert('임시 폴더가 없습니다.'); break;
+                        case 7: alert('파일 쓰기 실패'); break;
+                        case 8: alert('알수 없는 오류입니다.'); break;
+                        case 100: alert('허용된 파일이 아닙니다.'); break;
+                        case 101: alert('0 byte 파일은 업로드할 수 없습니다.'); break;
+                    }
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus+" "+errorThrown);
+            }
+        });
+    }
+
+    function uploadImage(image) {
+        var data = new FormData();
+        data.append("image", image);
+        $.ajax({
+            url: "<?php echo base_url() . 'admin/upload_image'?>",
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: data,
+            type: "POST",
+            success: function(url) {
+                $('#summernotes').summernote("insertImage", url);
+                console.log(url);
+            },
+            error: function(data) {
+                console.log(3);
+                console.log(data);
+            }
+        });
+    }
+
+    function deleteImage(src) {
+        $.ajax({
+            data: {src : src},
+            type: "POST",
+            url: "<?php echo base_url(). 'admin/delete_image'?>",
+            cache: false,
+            success: function(response) {
+                console.log(response);
+            }
+        });
+    }
 
     function option_count(type){
         var count = $('#option_count').val();
@@ -235,7 +331,7 @@
         $("#more_additional_fields").append(''
             +'<div class="form-group">'
             +'    <div class="col-sm-4">'
-            +'        <input type="text" name="ad_field_names[]" class="form-control"  placeholder="<?php echo translate('field_name'); ?>">'
+            +'        <input type="text" name="ad_field_names[]" class="form-control"  placeholder="<?php echo ('field_name'); ?>">'
             +'    </div>'
             +'    <div class="col-sm-5">'
             +'        <textarea rows="9"  class="summernotes" data-height="100" data-name="ad_field_values[]"></textarea>'
@@ -255,7 +351,7 @@
         $("#more_additional_options").append(''
             +'<div class="form-group" data-no="'+co+'">'
             +'    <div class="col-sm-4">'
-            +'        <input type="text" name="op_title[]" class="form-control required"  placeholder="<?php echo translate('customer_input_title'); ?>">'
+            +'        <input type="text" name="op_title[]" class="form-control required"  placeholder="<?php echo ('customer_input_title'); ?>">'
             +'    </div>'
             +'    <div class="col-sm-5">'
             +'        <select class="demo-chosen-select op_type required" name="op_type[]" >'
@@ -285,7 +381,7 @@
                 +'    <div class="col-sm-12">'
                 +'        <div class="col-sm-12 options margin-bottom-10"></div><br>'
                 +'        <div class="btn btn-mint btn-labeled fa fa-plus pull-right add_op">'
-                +'        <?php echo translate('add_options_for_choice');?></div>'
+                +'        <?php echo ('add_options_for_choice');?></div>'
                 +'    </div>'
             );
         } else if ($(this).val() == 'text' || $(this).val() == ''){
@@ -300,7 +396,7 @@
         $(this).closest('.col-sm-12').find(".options").append(''
             +'    <div>'
             +'        <div class="col-sm-10">'
-            +'          <input type="text" name="op_set'+co+'[]" class="form-control required"  placeholder="<?php echo translate('option_name'); ?>">'
+            +'          <input type="text" name="op_set'+co+'[]" class="form-control required"  placeholder="<?php echo ('option_name'); ?>">'
             +'        </div>'
             +'        <div class="col-sm-2">'
             +'          <span class="remove_it_n rmon btn btn-danger btn-icon btn-circle icon-sm fa fa-times" onclick="delete_row(this)"></span>'
@@ -361,13 +457,23 @@
     function delete_row(e)
     {
         e.parentNode.parentNode.parentNode.removeChild(e.parentNode.parentNode);
-    }    
-	
-	
-	$(document).ready(function() {
+    }
+
+    /* 텍스트박스 자동 스크롤 기능 */
+    // 입력에 따른 처리
+    $('.note-editable').keyup(function(e) {
+        // $(this).css('height', 'auto' );
+        // $(this).height(this.scrollHeight);
+        $(this).scrollTop(this.scrollHeight);
+    });
+
+    $(document).ready(function() {
 		$("form").submit(function(e){
-			event.preventDefault();
+			e.preventDefault();
 		});
+
+		// 초기 로드시 크기 조절 처리
+        // $('.note-editable').keyup();
 	});
 </script>
 <style>
@@ -375,5 +481,18 @@
 		border-bottom: 1px solid #ebebeb;
 		padding-bottom: 15px;	
 	}
+
+/*
+    .note-editable{
+        resize: none !important;
+        !*overflow-y: hidden !important; !* 스크롤이 생성되는것을 막아준다. *!*!
+        padding-top: .8em !important; !*엔터키로 인한 상단의 텍스트 깨짐 현상을 막아준다. *!
+        padding-bottom: 0.2em !important;
+        padding-left: .25em !important;
+        padding-right: .25em !important;
+        line-height: 1.6 !important;
+        min-height: 300px !important;
+    }
+*/
 </style>
 

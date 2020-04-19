@@ -2,9 +2,9 @@
     <table id="demo-table" class="table table-striped"  data-pagination="true" data-show-refresh="true" data-ignorecol="0,6" data-show-toggle="true" data-show-columns="false" data-search="true" >
         <thead>
             <tr>
-                <th><?php echo translate('title');?></th>
-                <th><?php echo translate('date');?></th>
-                <th class="text-right"><?php echo translate('options');?></th>
+                <th><?php echo ('제목');?></th>
+                <th><?php echo ('작성일');?></th>
+                <th class="text-right"><?php echo ('옵션');?></th>
             </tr>
         </thead>
 
@@ -19,12 +19,12 @@
             <td><?php echo $row['date']; ?></td>
             <td class="text-right">
                 <a class="btn btn-success btn-xs btn-labeled fa fa-wrench" data-toggle="tooltip" 
-                    onclick="ajax_set_full('edit','<?php echo translate('edit_blog'); ?>','<?php echo translate('successfully_edited!'); ?>','blog_edit','<?php echo $row['blog_id']; ?>');proceed('to_list');" data-original-title="Edit" data-container="body">
-                        <?php echo translate('edit');?>
+                    onclick="ajax_set_full('edit','<?php echo ('edit_blog'); ?>','<?php echo ('정상적으로 수정되었습니다!'); ?>','blog_edit','<?php echo $row['blog_id']; ?>');proceed('to_list');" data-original-title="Edit" data-container="body">
+                        <?php echo ('수정');?>
                 </a>
-                <a onclick="delete_confirm('<?php echo $row['blog_id']; ?>','<?php echo translate('really_want_to_delete_this?'); ?>')" 
+                <a onclick="delete_confirm('<?php echo $row['blog_id']; ?>','<?php echo ('정말 삭제하시겠습니까?'); ?>')"
                     class="btn btn-danger btn-xs btn-labeled fa fa-trash" data-toggle="tooltip" data-original-title="Delete" data-container="body">
-                        <?php echo translate('delete');?>
+                        <?php echo ('삭제');?>
                 </a>
             </td>
         </tr>

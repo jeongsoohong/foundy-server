@@ -13,12 +13,12 @@
 			<div class="panel-body">
 				<div class="form-group">
 					<label class="col-sm-4 control-label" for="demo-hor-1">
-                    	<?php echo translate('name');?>
+                    	<?php echo ('name');?>
                         	</label>
 					<div class="col-sm-6">
 						<input type="text" name="name"  
                         	value="<?php echo $row['name'];?>" id="demo-hor-1" 
-                            	class="form-control required" placeholder="<?php echo translate('name');?>" >
+                            	class="form-control required" placeholder="<?php echo ('name');?>" >
 					</div>
 				</div>
 			</div>

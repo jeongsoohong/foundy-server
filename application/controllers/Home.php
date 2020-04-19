@@ -18,7 +18,9 @@ class Home extends CI_Controller
             $this->output->set_header('Cache-Control: post-check=0, pre-check=0');
             $this->output->set_header('Pragma: no-cache');
 
-            if ($this->router->fetch_method() == 'index') {
+            if ($this->router->fetch_method() == 'index' ||
+                $this->router->fetch_method() == 'blog' ||
+                $this->router->fetch_method() == 'blog_view') {
                 $this->output->cache(60);
             }
         }
@@ -253,4 +255,108 @@ class Home extends CI_Controller
         echo json_encode($result);
         exit;
     }
+
+    /* FUNCTION: Loads Contact Page */
+    function blog($para1 = "")
+    {
+        $page_data['category'] = $para1;
+        $page_data['page_name'] = 'blog';
+        $page_data['asset_page'] = 'blog';
+        $page_data['page_title'] = ('blog');
+        $this->load->view('front/index', $page_data);
+    }
+
+    /* FUNCTION: Loads Contact Page */
+    function blog_by_cat($para1 = "")
+    {
+        $page_data['category'] = $para1;
+        $this->load->view('front/blog/blog_list', $page_data);
+    }
+
+    function ajax_blog_list($para1 = "")
+    {
+        $this->load->library('Ajax_pagination');
+
+        $category_id = $this->input->post('blog_category');
+        if ($category_id !== '' && $category_id !== 'all') {
+            $this->db->where('blog_category', $category_id);
+        }
+
+        // pagination
+        $config['total_rows'] = $this->db->count_all_results('blog');
+        $config['base_url'] = base_url() . 'index.php?home/listed/';
+        $config['per_page'] = 3;
+        $config['uri_segment'] = 5;
+        $config['cur_page_giv'] = $para1;
+
+        $function = "filter_blog('0')";
+        $config['first_link'] = '&laquo;';
+        $config['first_tag_open'] = '<li><a onClick="' . $function . '">';
+        $config['first_tag_close'] = '</a></li>';
+
+        $rr = ($config['total_rows'] - 1) / $config['per_page'];
+        $last_start = floor($rr) * $config['per_page'];
+        $function = "filter_blog('" . $last_start . "')";
+        $config['last_link'] = '&raquo;';
+        $config['last_tag_open'] = '<li><a onClick="' . $function . '">';
+        $config['last_tag_close'] = '</a></li>';
+
+        $function = "filter_blog('" . ($para1 - $config['per_page']) . "')";
+        $config['prev_tag_open'] = '<li><a onClick="' . $function . '">';
+        $config['prev_tag_close'] = '</a></li>';
+
+        $function = "filter_blog('" . ($para1 + $config['per_page']) . "')";
+        $config['next_link'] = '&rsaquo;';
+        $config['next_tag_open'] = '<li><a onClick="' . $function . '">';
+        $config['next_tag_close'] = '</a></li>';
+
+        $config['full_tag_open'] = '<ul class="pagination">';
+        $config['full_tag_close'] = '</ul>';
+
+        $config['cur_tag_open'] = '<li class="active"><a>';
+        $config['cur_tag_close'] = '<span class="sr-only">(current)</span></a></li>';
+
+        $function = "filter_blog(((this.innerHTML-1)*" . $config['per_page'] . "))";
+        $config['num_tag_open'] = '<li><a onClick="' . $function . '">';
+        $config['num_tag_close'] = '</a></li>';
+        $this->ajax_pagination->initialize($config);
+
+        $this->db->order_by('blog_id', 'desc');
+        if ($category_id !== '' && $category_id !== 'all') {
+            $this->db->where('blog_category', $category_id);
+        }
+
+        $page_data['blogs'] = $this->db->get('blog', $config['per_page'], $para1)->result_array();
+        if ($category_id !== '' && $category_id !== 'all') {
+            $category = $this->crud_model->get_type_name_by_id('blog_category', $category_id, 'name');
+        } else {
+            $category = ('all_blogs');
+        }
+        $page_data['category_name'] = $category;
+        $page_data['count'] = $config['total_rows'];
+
+        $this->load->view('front/blog/ajax_list', $page_data);
+    }
+
+    /* FUNCTION: Loads Contact Page */
+    function blog_view($para1 = "")
+    {
+        $page_data['blog'] = $this->db->get_where('blog', array('blog_id' => $para1))->result_array();
+        $page_data['categories'] = $this->db->get('blog_category')->result_array();
+
+        $this->db->where('blog_id', $para1);
+        $this->db->update('blog', array(
+            'number_of_view' => 'number_of_view + 1'
+        ));
+        $page_data['page_name'] = 'blog/blog_view';
+        $page_data['asset_page'] = 'blog_view';
+        $page_data['page_title'] = $this->db->get_where('blog', array('blog_id' => $para1))->row()->title;
+        $this->load->view('front/index.php', $page_data);
+    }
+
+    function error()
+    {
+        $this->load->view('front/others/404_error');
+    }
+
 }

@@ -31,7 +31,7 @@ include 'preloader.php';
 
     <!-- FOOTER -->
     <?php
-    //include 'footer/footer.php';
+    include 'footer/footer.php';
     ?>
     <!-- /FOOTER -->
 

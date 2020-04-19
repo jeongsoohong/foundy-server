@@ -3,9 +3,9 @@
 
 			<thead>
 				<tr>
-					<th><?php echo translate('no');?></th>
-					<th><?php echo translate('name');?></th>
-					<th class="text-right"><?php echo translate('options');?></th>
+					<th><?php echo ('no');?></th>
+					<th><?php echo ('name');?></th>
+					<th class="text-right"><?php echo ('options');?></th>
 				</tr>
 			</thead>
 				
@@ -20,13 +20,13 @@
 				<td><?php echo $row['name']; ?></td>
 				<td class="text-right">
 					<a class="btn btn-success btn-xs btn-labeled fa fa-wrench" data-toggle="tooltip" 
-                    	onclick="ajax_modal('edit','<?php echo translate('edit_blog_category'); ?>','<?php echo translate('successfully_edited!'); ?>','blog_category_edit','<?php echo $row['blog_category_id']; ?>')" 
+                    	onclick="ajax_modal('edit','<?php echo ('edit_blog_category'); ?>','<?php echo ('successfully_edited!'); ?>','blog_category_edit','<?php echo $row['blog_category_id']; ?>')"
                         	data-original-title="Edit" data-container="body">
-                            	<?php echo translate('edit');?>
+                            	<?php echo ('edit');?>
                     </a>
-					<a onclick="delete_confirm('<?php echo $row['blog_category_id']; ?>','<?php echo translate('really_want_to_delete_this?'); ?>')" class="btn btn-danger btn-xs btn-labeled fa fa-trash" data-toggle="tooltip" 
+					<a onclick="delete_confirm('<?php echo $row['blog_category_id']; ?>','<?php echo ('really_want_to_delete_this?'); ?>')" class="btn btn-danger btn-xs btn-labeled fa fa-trash" data-toggle="tooltip"
                     	data-original-title="Delete" data-container="body">
-                        	<?php echo translate('delete');?>
+                        	<?php echo ('delete');?>
                     </a>
 				</td>
 			</tr>
@@ -38,12 +38,12 @@
 	</div>
            
 	<div id='export-div'>
-		<h1 style="display:none;"><?php echo translate('blog_category'); ?></h1>
+		<h1 style="display:none;"><?php echo ('blog_category'); ?></h1>
 		<table id="export-table" data-name='blog_category' data-orientation='p' style="display:none;">
 				<thead>
 					<tr>
-						<th><?php echo translate('no');?></th>
-						<th><?php echo translate('name');?></th>
+						<th><?php echo ('no');?></th>
+						<th><?php echo ('name');?></th>
 					</tr>
 				</thead>
 					
