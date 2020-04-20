@@ -12,8 +12,12 @@ foreach ($category_names as $category_name) {
     } else {
         $this->db->order_by('blog_id', 'desc');
         $this->db->limit(1);
-        $shop_info = $this->db->get_where('blog', array('blog_category' => $category_info->blog_category_id))->row();
-        ${"{$category_name}_url"} = base_url() . "home/blog_view/" . $shop_info->blog_id;
+        $blog_info = $this->db->get_where('blog', array('blog_category' => $category_info->blog_category_id))->row();
+        if (empty($blog_info)) {
+            ${"{$category_name}_url"} = base_url();
+        } else {
+            ${"{$category_name}_url"} = base_url() . "home/blog_view/" . $blog_info->blog_id;
+        }
     }
 }
 

@@ -7,7 +7,7 @@
     </ol>
     <div class="carousel-inner" role="listbox">
         <div class="item active">
-            <img class="first-slide slide-img" src="<?php echo base_url(); ?>uploads/banner_image/main_banner.png" alt="First slide">
+            <img class="first-slide slide-img" src="<?php echo base_url(); ?>uploads/banner_image/main banner01.png" alt="First slide">
 <!--            <div class="container">
                 <div class="carousel-caption">
                     <h1>Example headline.</h1>
@@ -17,7 +17,8 @@
             </div>-->
         </div>
         <div class="item">
-            <img class="second-slide slide-img" src="<?php echo base_url(); ?>uploads/banner_image/main_banner.png" alt="Second slide">
+            <img class="second-slide slide-img" src="<?php echo base_url(); ?>uploads/banner_image/main banner02.png"
+                 alt="Second slide">
 <!--            <div class="container">
                 <div class="carousel-caption">
                     <h1>Another example headline.</h1>
@@ -27,7 +28,8 @@
             </div>-->
         </div>
         <div class="item">
-            <img class="third-slide slide-img" src="<?php echo base_url(); ?>uploads/banner_image/main_banner.png" alt="Third slide">
+            <img class="third-slide slide-img" src="<?php echo base_url(); ?>uploads/banner_image/main banner03.png"
+                 alt="Third slide">
 <!--            <div class="container">
                 <div class="carousel-caption">
                     <h1>One more for good measure.</h1>
