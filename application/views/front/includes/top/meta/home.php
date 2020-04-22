@@ -3,16 +3,21 @@
     .carousel {
         height: 300px;
         margin-bottom: 10px;
+        min-width: 100%;
     }
     /* Since positioning the image, we need to help out the caption */
     .carousel-caption {
         z-index: 10;
     }
-
     /* Declare heights because of positioning of img element */
     .carousel .item {
         height: 300px;
         background-color: #777;
+    }
+
+    .carousel .carousel-indicators {
+        margin-bottom: -3px !important;
+        bottom: 0px;
     }
     .carousel-inner > .item > img {
         position: absolute;
@@ -31,17 +36,10 @@
         /* Carousel base class */
         .carousel {
             height: 200px;
-            margin-bottom: 10px;
         }
-        /* Since positioning the image, we need to help out the caption */
-        .carousel-caption {
-            z-index: 10;
-        }
-
         /* Declare heights because of positioning of img element */
         .carousel .item {
             height: 200px;
-            background-color: #777;
         }
         .carousel-inner > .item > img {
             position: absolute;
@@ -56,3 +54,17 @@
         }
     }
 </style>
+
+<style>
+
+    /* content-area layout */
+    @media (max-width: 992px) {
+        .content-area .page-section .container {
+            padding: 0px !important;
+            margin: 0px !important;
+            width: auto !important;
+        }
+    }
+
+</style>
+

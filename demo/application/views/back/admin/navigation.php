@@ -1274,16 +1274,16 @@ $customer_product_check = $this->crud_model->get_type_name_by_id('general_settin
                         }
                         ?>
 
-                        <?php if(!demo()) { ?>
-                        <li>
-                            <a href="http://activeitzone.com/check/" class="activate_bar" target="_blank">
-                                <i class="fa fa-check-circle"></i>
-                                <span class="menu-title">
-                                	<?php echo translate('activate');?>
-                                </span>
-                            </a>
-                        </li>
-                        <?php } ?>
+<!--                        --><?php //if(!demo()) { ?>
+<!--                        <li>-->
+<!--                            <a href="http://activeitzone.com/check/" class="activate_bar" target="_blank">-->
+<!--                                <i class="fa fa-check-circle"></i>-->
+<!--                                <span class="menu-title">-->
+<!--                                	--><?php //echo translate('activate');?>
+<!--                                </span>-->
+<!--                            </a>-->
+<!--                        </li>-->
+<!--                        --><?php //} ?>
                 </div>
             </div>
         </div>

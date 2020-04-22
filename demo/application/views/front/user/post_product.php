@@ -238,7 +238,7 @@
         $(e).parent().parent().parent().remove();
     }
 </script>
-<script src="<?php /*echo base_url(); */?>template/back/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+<script src="<?php echo base_url(); ?>template/back/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
 <script>
     $(document).ready(function() {
         $('.summernotes').each(function() {

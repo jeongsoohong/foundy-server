@@ -107,6 +107,10 @@
         });
     });
 
+    $(document).ready(function() {
+        active_menu_bar('login');
+    });
+
     /*
         $('.kakao-login').click(function(e) {
 

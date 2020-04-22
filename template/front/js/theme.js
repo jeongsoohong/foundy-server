@@ -105,13 +105,13 @@ jQuery(document).ready(function () {
     // ---------------------------------------------------------------------------------------
     $(window).scroll(function () {
         if ($(this).scrollTop() > 1) {
-            toTop.css({bottom: '15px'});
+            toTop.css({bottom: '50px'});
         } else {
             toTop.css({bottom: '-100px'});
         }
     });
     toTop.click(function () {
-        $('html, body').animate({scrollTop: '0px'}, 800);
+        $('html, body').animate({scrollTop: '0px'}, 100);
         return false;
     });
     // Add hover class for correct view on mobile devices

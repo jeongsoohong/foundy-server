@@ -12,87 +12,7 @@
             <div class="row profile">
                 <div class="col-lg-9 col-md-9">
                     <div id="profile_content">
-                        <div class="information-title" style="margin-bottom: 0px;">프로필</div>
-                        <div class="row">
-                            <div class="col-md-12" style="padding-bottom: 10px; ">
-                                <div class="recent-post" style="background: #fff;border: 1px solid #e0e0e0;">
-                                    <div class="media">
-                                        <a class="pull-left media-link" href="#" style="height: 124px; float:left !important;">
-                                            <div class="media-object img-bg" id="blah" style="background-image: url('<?php
-                                            if (empty($profile_image_url) || $profile_image_url == '') {
-                                                echo base_url() . '/uploads/user/default.jpg';
-                                            } else {
-                                                echo $profile_image_url;
-                                            }
-                                            ?>'); background-size: cover; background-position-x: center; background-position-y: top; width: 100px; height: 124px;"></div>
-                                            <span id="inppic" class="set_image">
-                                    <label class="" for="imgInp">
-                                        <span><i class="fa fa-pencil" style="cursor: pointer;"></i></span>
-                                    </label>
-                                    <input type="file" style="display:none;" id="imgInp" name="img" />
-                                </span>
-                                            <span id="savepic" style="display:none;">
-                                    <span class="signup_btn" onclick="abnv('inppic'); change_state('normal');"  data-ing="saving..." data-success="profile_picture_saved_successfully!" data-unsuccessful="edit_failed! try again!" data-reload="no" >
-                                        <span><i class="fa fa-save" style="cursor: pointer;"></i></span>
-                                    </span>
-                                </span>
-                                            </form>
-                                        </a>
-                                        <div class="media-body" style="padding-right: 10px">
-                                            <table class="table table-condensed" style="font-size: 12px; margin-bottom: 0px">
-                                                <tr>
-                                                    <td><b>별명</b></td>
-                                                    <td align="left"><?php echo $nickname; ?></td>
-                                                    <td><b></b></td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>구분</b></td>
-                                                    <td><?php if ($user_type == 'general') { echo '일반회원'; } else { echo '비회원'; }?></td>
-                                                    <td><b></b></td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>팔로워</b></td>
-                                                    <td>0</td>
-                                                    <td><b>팔로잉</b></td>
-                                                    <td>0</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>INSTAGRAM</b></td>
-                                                    <td><b>YouTube</b></td>
-                                                    <td><b></b></td>
-                                                    <td></td>
-                                                </tr>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-md-6" style="padding-top: 10px; ">
-                                        <h3 class="block-title"><span>MY STUDIO</span></h3>
-                                        <div class="widget widget-categories" style="padding-bottom:10px; ">
-                                            <ul class="profile_ul">
-                                                <li><a href="#">자이요가 한남점</b></a></li>
-                                                <li><a href="#">청담요가</b></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                        <div class="col-md-6" style="padding-top: 10px; ">
-                                        <h3 class="block-title"><span>Online Class</span></h3>
-                                        <div class="widget widget-categories" style="padding-bottom:10px; ">
-                                            <ul class="profile_ul">
-                                                <li><a href="#">부진 / 숨쉬는 고래 (요가&영상)</a></li>
-                                                <li><a href="#">춤추는 필라테스 (필라테스&영상)</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-3">
@@ -100,21 +20,21 @@
                     <div class="widget account-details">
                         <div class="information-title" style="margin-bottom: 0px; margin-top: 0px;">더보기</div>
                         <ul class="pleft_nav">
-                            <a class="pnav_info" href="#"><li class="active">프로필 수정</li></a>
-                            <a class="pnav_info" href="#"><li class="active">공지사항</li></a>
-                            <a class="pnav_info" href="#"><li class="active">포잇 소개</li></a>
-                            <a class="pnav_info" href="#"><li class="active">자주하는 질문</li></a>
-                            <a class="pnav_info" href="#"><li class="active">고객센터</li></a>
-                            <a class="pnav_info" href="#"><li class="active">서비스 이용 약관</li></a>
-                            <a class="pnav_info" href="#"><li class="active">개인정보 보호정책</li></a>
-                            <a class="pnav_info" href="#"><li class="active">버전 정보</li></a>
-                            <a class="pnav_info logout" href="#"><li class="active">로그아웃</li></a>
-                            <a class="pnav_info unregister" href="#"><li class="active">회원탈퇴</li></a>
+                            <a class="pnav_info" href="#profile_content"><li>프로필</li></a>
+                            <a class="pnav_notifination" href="#"><li>공지사항</li></a>
+                            <a class="pnav_introduce" href="#"><li>포잇 소개</li></a>
+                            <a class="pnav_faq" href="#"><li>자주하는 질문</li></a>
+                            <a class="pnav_customer_center" href="#"><li>고객센터</li></a>
+                            <a class="pnav_service" href="#"><li>서비스 이용 약관</li></a>
+                            <a class="pnav_privacy" href="#"><li>개인정보 보호정책</li></a>
+                            <a class="pnav_version" href="#"><li>버전 정보</li></a>
+                            <a class="pnav_logout" href="#"><li>로그아웃</li></a>
+                            <a class="pnav_unregister" href="#"><li>회원탈퇴</li></a>
                         </ul>
                         <div class="information-title" style="margin-bottom: 0px; margin-top: 0px;">문의</div>
                         <ul class="pleft_nav">
-                            <a class="pnav_info" href="#"><li class="active">센터 문의</li></a>
-                            <a class="pnav_info" href="#"><li class="active">샵 문의</li></a>
+                            <a class="pnav_center_register" href="#profile_content"><li>센터 회원 신청</li></a>
+                            <a class="pnav_shop_register" href="#"><li>샵 회원 신청</li></a>
                         </ul>
                     </div>
                 </div>
@@ -129,20 +49,18 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">confirm_your_upload</h4>
+                <h4 class="modal-title" id="myModalLabel">센터 회원 신청</h4>
             </div>
             <div class="modal-body">
                 <div class="text-center">
-                    <div>your_remaining_product_upload_amount:_
-                        <b><span class="post_amount">0</span></b><br>
-                        uploading_a_product_will_cost_you_1_upload_amount</br>
-                        <b class="text-danger">After_uploading_a_product_you_can_not_edit_it_again</b>
+                    <div>센터 승인까지는 3-4일정도 소요되며, 완료 후 연락드리겠습니다
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger post_confirm_close" data-dismiss="modal">close</button>
-                <button type="button" class="btn btn-theme btn-theme-sm post_confirm" style="text-transform: none;font-weight: 400;">confirm</button>
+                <button type="button" class="btn btn-danger post_confirm_close" data-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-theme btn-theme-sm post_confirm" style="text-transform: none;
+                font-weight: 400;">확인</button>
             </div>
         </div>
     </div>
@@ -176,55 +94,17 @@
 <script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
 <script type="text/javascript">
 
-    function abnv(thiss){
-        $('#savepic').hide();
-        $('#inppic').hide();
-        $('#'+thiss).show();
-    }
-    function change_state(va){
-        $('#state').val(va);
-    }
+    var top = Number(200);
+    var loading_set = '<div style="text-align:center;width:100%;height:'+(top*2)+'px; position:relative;top:'+top+'px;"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>';
 
-    $('.user-profile-img').on('mouseenter',function(){
-        //$('.pic_changer').show('fast');
+    $('.pnav_info').on('click',function(){
+        $("#profile_content").html(loading_set);
+        $("#profile_content").load("<?php echo base_url()?>home/user/info");
+        $(".pleft_nav").find("li").removeClass("active");
+        $(".pnav_info").find("li").addClass("active");
     });
 
-    //$('.set_image').on('click',function(){
-    //    $('#imgInp').click();
-    //});
-
-    $('.user-profile-img').on('mouseleave',function(){
-        if($('#state').val() == 'normal'){
-            //$('.pic_changer').hide('fast');
-        }
-    });
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-
-            reader.onload = function(e) {
-                $('#blah').css('backgroundImage', "url('"+e.target.result+"')");
-                $('#blah').css('backgroundSize', "cover");
-            }
-            reader.readAsDataURL(input.files[0]);
-            abnv('savepic');
-            change_state('saving');
-        }
-    }
-
-    $("#imgInp").change(function() {
-        readURL(this);
-    });
-
-
-    window.addEventListener("keydown", checkKeyPressed, false);
-
-    function checkKeyPressed(e) {
-        if (e.keyCode == "13") {
-            $(":focus").closest('form').find('.submit_button').click();
-        }
-    }
-    $('.logout').click(function(e) {
+    $('.pnav_logout').click(function(e) {
         Kakao.init('a7e336b59aed62d0e46dae8a8c55da21');
         if (!Kakao.Auth.getAccessToken()) {
             alert('Not logged in.');
@@ -264,7 +144,7 @@
         }
     })
 
-    $('.unregister').click(function(e) {
+    $('.pnav_unregister').click(function(e) {
         Kakao.init('a7e336b59aed62d0e46dae8a8c55da21');
         Kakao.API.request({
             url: '/v1/user/unlink',
@@ -307,4 +187,25 @@
         });
     })
 
+    $('.pnav_center_register').on('click',function(){
+        $("#profile_content").html(loading_set);
+        $("#profile_content").load("<?php echo base_url()?>home/user/center_register");
+        $(".pleft_nav").find("li").removeClass("active");
+        $(".pnav_center_register").find("li").addClass("active");
+    });
+
+    $(document).ready(function(){
+        active_menu_bar('user');
+
+         //$("#<?php //echo $part; ?>//").click();
+        $(".pnav_<?php echo $part; ?>").click();
+    });
 </script>
+<style type="text/css">
+    .pagination_box a{
+        cursor: pointer;
+    }
+    .pleft_nav li.active {
+        background-color: #ebebeb!important;
+    }
+</style>

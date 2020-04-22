@@ -53,7 +53,9 @@
  *
  * NOTE: If you change these, also change the error_reporting() code below
  */
-	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
+define('DEV_SERVER', strstr($_SERVER['SERVER_NAME'], 'dev') != NULL ? true: false);
+define('ENVIRONMENT', DEV_SERVER == false ? 'production' : 'development');
+//define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
 
 /*
  *---------------------------------------------------------------

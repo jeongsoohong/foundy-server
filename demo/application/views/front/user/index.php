@@ -168,7 +168,7 @@
 
 
 	$(document).ready(function(){
-        // $("#<?php echo $part; ?>").click();
+        //$("#<?php //echo $part; ?>//").click();
 		$(".pnav_<?php echo $part; ?>").click();
     });
 </script>

@@ -21,6 +21,11 @@ foreach ($category_names as $category_name) {
     }
 }
 
+//if (ENVIRONMENT == 'production') {
+//    echo 'production';
+//} else {
+//    echo 'development';
+//}
 ?>
 <!-- HEADER -->
 <header class="header header-logo-left">

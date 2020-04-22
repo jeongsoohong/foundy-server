@@ -208,17 +208,26 @@ class Home extends CI_Controller
 
         $view_type = $this->uri->segment(3);
 
-        $page_data['user_id'] = $this->session->userdata('user_id');
-        $page_data['email'] = $this->session->userdata('email');
-        $page_data['user_type'] = $this->session->userdata('user_type');
-        $page_data['nickname'] = $this->session->userdata('nickname');
-        $page_data['profile_image_url'] = $this->session->userdata('profile_image_url');
-        $page_data['thumbnail_image_url'] = $this->session->userdata('thumbname_image_url');
+        if ($view_type == 'info') {
 
-        $page_data['page_name'] = "user";
-        $page_data['asset_page'] = "user_profile";
-        $page_data['page_title'] = "my_profile";
-        $this->load->view('front/index', $page_data);
+            $page_data['user_id'] = $this->session->userdata('user_id');
+            $page_data['email'] = $this->session->userdata('email');
+            $page_data['user_type'] = $this->session->userdata('user_type');
+            $page_data['nickname'] = $this->session->userdata('nickname');
+            $page_data['profile_image_url'] = $this->session->userdata('profile_image_url');
+            $page_data['thumbnail_image_url'] = $this->session->userdata('thumbname_image_url');
+
+            $this->load->view('front/user/profile', $page_data);
+
+        } elseif ($view_type == "center_register") {
+            $this->load->view('front/user/center_register');
+        } else {
+            $page_data['part'] = 'info';
+            $page_data['page_name'] = "user";
+            $page_data['asset_page'] = "user_profile";
+            $page_data['page_title'] = "my_profile";
+            $this->load->view('front/index', $page_data);
+        }
 
     }
 

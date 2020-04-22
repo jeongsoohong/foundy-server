@@ -211,6 +211,23 @@
     });
 </script>
 <style>
+    @media (max-width: 992px) {
+        .row .col-md-9.content {
+            padding-left: 0px !important;
+            padding-right: 0px !important;
+        }
+        .row .col-md-9.content .post-wrap.post-single {
+            padding: 0px;
+        }
+        .row .col-md-9.content .post-wrap.post-single .post-media {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+        .row .col-md-9.content .post-wrap.post-single .post-header {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+    }
     @media (max-width: 680px) {
         iframe {
             height: 270px !important;
@@ -229,9 +246,11 @@
             width: 270px !important;
         }
     }
+    /* blog image */
      .post-body .post-excerpt img {
-         max-width: 100%;
-         width: 100%;
          height: auto;
+         width: 100% !important;
+         max-width: 100%;
+         margin: 0px !important;
      }
 </style>
