@@ -59,7 +59,8 @@ foreach ($category_names as $category_name) {
                     <li class="shop">
                         <a href="<?php echo $shop_url; ?>">SHOP</a>
                     </li>
-                    <li class="<?php if ($this->session->userdata('user_login') == 'yes') { echo ('user'); } else { echo ('login'); } ?>">
+                    <li class="<?php if ($this->session->userdata('user_login') == 'yes') { echo ('user'); } else {
+                        echo ('user'); } ?>">
                         <a href="<?php echo base_url(); if ($this->session->userdata('user_login') == 'yes') { echo ('home/user'); } else { echo ('home/login'); } ?>">
                             <?php if ($this->session->userdata('user_login') == 'yes') { echo ('USER'); } else { echo ('LOGIN'); } ?>
                        </a>

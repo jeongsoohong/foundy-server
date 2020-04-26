@@ -35,21 +35,21 @@
     @media (max-width: 768px) {
         /* Carousel base class */
         .carousel {
-            height: 200px;
+            height: 300px;
         }
         /* Declare heights because of positioning of img element */
         .carousel .item {
-            height: 200px;
+            height: 300px;
         }
         .carousel-inner > .item > img {
             position: absolute;
             top: 0;
             left: 0;
             min-width: 100%;
-            height: 200px;
+            height: 300px;
         }
         .slide-img {
-            height:200px !important;
+            height:300px !important;
             object-fit: cover !important;
         }
     }

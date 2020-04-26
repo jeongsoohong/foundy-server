@@ -61,19 +61,23 @@
                                         <div class="form-group">
                                             <div class="input-group">
                                                 <input class="form-control" name="location" value="" type="text"
-                                                       placeholder="지도검색" data-toggle="tooltip" title="location"
+                                                       placeholder="센터위치" data-toggle="tooltip" title="location"
                                                        style="border-top-left-radius: 0 !important;border-bottom-left-radius: 0 !important;">
-                                                <div class="input-group-addon" style="font-size:12px !important;
+                                                <div class="input-group-addon search"
+                                                     style="font-size:12px
+                                                !important;
 ">검색</div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
-                                        <div class="form-group">
-                                            <textarea class="form-control" name="location-map" placeholder="위치정보"
-                                                      data-toggle="tooltip" title="location-map" style="height: 300px;">
-                                            </textarea>
-                                        </div>
+                                        <!--                                        <div id="map" style="width:500px;height:400px;">
+                                        <textarea class="form-control" name="location-map" placeholder="위치정보"
+                                                  data-toggle="tooltip" title="location-map" style="height: 300px;">
+                                                                                    </textarea>
+                                                                                </div>
+                                        -->
+                                        <div id="map" style="width:500px;height:400px;"></div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
@@ -196,7 +200,7 @@
         $(e).parent().parent().parent().remove();
     }
 </script>
-<script src="<?php echo base_url(); ?>template/back/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+<!--<script src="--><?php //echo base_url(); ?><!--template/back/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>-->
 <script>
     var base_url = '<?php /*echo base_url(); */?>';
     var user_type = 'admin';
@@ -204,4 +208,3 @@
     var list_cont_func = 'list';
     var dlt_cont_func = 'delete';
 </script>
-
