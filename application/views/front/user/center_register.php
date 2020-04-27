@@ -31,7 +31,7 @@
                             <p class="text-success"><?='센터 신청 완료 후 승인까지 3-4일이 소요됩니다'?></p>
                             <div class="details-box">
                                 <?php
-                                echo form_open(base_url() . 'home/profile/do_center_register/', array(
+                                echo form_open(base_url() . 'home/user/do_center_register/', array(
                                     'class' => 'form-login',
                                     'method' => 'post',
                                     'enctype' => 'multipart/form-data'
@@ -40,75 +40,49 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <input class="form-control" name="title" value="" type="text"
+                                            <input class="form-control" id="center-title" name="title" value="" type="text"
                                                    placeholder="센터명" data-toggle="tooltip" title="center_name">
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <input class="form-control" name="phone" value="" type="tel"
+                                            <input class="form-control" id="center-phone" name="phone" value="" type="tel"
                                                    placeholder="전화번호" data-toggle="tooltip" title="phone">
                                         </div>
                                     </div>
-<!--                                    <div class="col-md-12">-->
-<!--                                        <div class="form-group">-->
-<!--                                            <input class="form-control" name="location" value="" type="text"-->
-<!--                                                   placeholder="주소" data-toggle="tooltip" title="location">-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <div class="input-group">
-                                                <input class="form-control" name="location" value="" type="text"
-                                                       placeholder="지도검색" data-toggle="tooltip" title="location"
+                                                <input class="form-control" id="center-address" name="address" value="" type="text"
+                                                       placeholder="지도검색(주소를 입력 후 검색을 눌러주세요)" data-toggle="tooltip" title="address"
                                                        style="border-top-left-radius: 0 !important;border-bottom-left-radius: 0 !important;">
-                                                <div class="input-group-addon" style="font-size:12px !important;
-">검색</div>
+                                                <div class="input-group-addon"><label id="kakao-map-search" onclick="search_center()" style="font-size:10px !important;"><a href="#none">검색</a></label></div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <textarea class="form-control" name="location-map" placeholder="위치정보"
-                                                      data-toggle="tooltip" title="location-map" style="height: 300px;">
-                                            </textarea>
+                                            <div id="kakao-map" style="width:100%;height:350px;"></div>
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-12" style="display: none;">
                                         <div class="form-group">
-                                            <div>
-                                                <label>센터로고</label><br>
-                                                <label class="btn btn-theme btn-theme-sm" for="prod_img" style="width: 200px;font-size: 12px;margin-top: 10px;padding: 8px;">
-                                                    파일찾기
-                                                </label>
-                                            </div>
-                                            <div>
-                                                <span class="pull-left btn btn-default btn-file hidden">파일찾기
-                                                     <input type="file" multiple name="images[]" onchange="preview(this);" id="prod_img" class="form-control required">
-                                                </span>
-                                                <span id="previewImg"></span>
-                                            </div>
+                                            <input class="form-control" id="center-latitude" name="latitude" value="" type="text"
+                                                   placeholder="위도" data-toggle="tooltip" title="center_latitude">
                                         </div>
                                     </div>
-<!--                                    <div class="col-md-12">-->
-<!--                                        <div class="form-group">-->
-<!--                                            <label>추가 정보</label><br>-->
-<!--                                            <h5><i>추가 사항이 있으면 버튼을 클릭하세요.</i></h5>-->
-<!--                                            <button type="button" class="btn btn-theme btn-theme-sm" id="more_btn"-->
-<!--                                                    style="width: 200px;font-size: 12px;margin-top: 10px;padding: 8px;">필드추가</button>-->
-<!--                                        </div>-->
-<!--                                        <div class="row" id="more_additional_fields" style="margin-top: 0px">-->
-                                            <!-- 주석 Loads more fields -->
-<!--                                        </div>-->
-<!--                                    </div>-->
+                                    <div class="col-md-12" style="display: none;">
+                                        <div class="form-group">
+                                            <input class="form-control" id="center-longitude" name="longitude" value="" type="text"
+                                                   placeholder="경도" data-toggle="tooltip" title="center_longitude">
+                                        </div>
+                                    </div>
                                     <div class="col-md-12" style="border-top: 2px solid #f5f5f5; margin-top: 35px">
-                                        <button type="button" type="button" class="btn btn-theme pull-right open_modal" data-toggle="modal" data-target="#prodPostModal">
+                                        <button type="button" class="btn btn-theme pull-right open_modal center-register" data-toggle="modal" data-target="#prodPostModal">
                                             확인
                                         </button>
                                         <button type="button" class="hidden btn btn-theme pull-right btn_dis
-                                        signup_btn" data-reload='ok' data-unsuccessful='신청이 실패했습니다.'); ?>'
-                                            data-success='신청에 성공했습니다.' data-ing='진행중'>
+                                        signup_btn" data-reload='ok' data-unsuccessful='신청에 실패했습니다.' data-success='신청에 성공했습니다.' data-ing='진행중'>
                                             확인
                                         </button>
                                     </div>
@@ -123,50 +97,40 @@
     </div>
 </div>
 <script>
-    window.preview = function (input) {
-        if (input.files && input.files[0]) {
-            $("#previewImg").html('');
-            $(input.files).each(function () {
-                var reader = new FileReader();
-                reader.readAsDataURL(this);
-                reader.onload = function (e) {
-                    $("#previewImg").append("<div style='float:left;border:2px solid #303641;padding:5px;margin:5px;'><img height='80' src='" + e.target.result + "' style='width:auto'></div>");
-                }
-            });
-        }
-    }
+
+    var valid_title = false;
+    var valid_phone = false;
+    var valid_address = false;
+    var valid_address_txt = '';
 
     $(document).ready(function(){
-        //tooltip_set();
-        $('.selectpicker').selectpicker();
-        $('.selectpicker').tooltip();
+        $(".center-register.open_modal").click(function(){
+            if (document.getElementById('center-title').value !== '') {
+                valid_title = true;
+            }
+            if (document.getElementById('center-phone').value !== '') {
+                valid_phone = true;
+            }
+            if (valid_address === true && valid_address_txt !== document.getElementById('center-address').value) {
+                valid_address = false;
+                valid_address_txt = '';
+                alert("주소를 다시 검색해 주세요");
+                return false;
+            }
+            if (valid_title === false) {
+                alert("센터명을 입력해 주세요");
+                return false;
+            }
+            if (valid_phone === false) {
+                alert("전화번호를 정확히 입력해 주세요");
+                return false;
+            }
+            if (valid_address === false) {
+                alert("주소를 정확히 입력 후 지도를 검색해주세요");
+                return false;
+            }
 
-        $("#more_btn").click(function(){
-            $("#more_additional_fields").append(''
-                +'<div class="parent_div">'
-                +'  <div class="col-md-5">'
-                +'      <div class="form-group">'
-                +'          <input class="form-control" name="ad_field_names[]" value="" type="text" '
-                +'placeholder="필드이름" data-toggle="tooltip" title="field_name">'
-                +'      </div>'
-                +'  </div>'
-                +'  <div class="col-md-5">'
-                +'        <div class="form-group">'
-                +'          <input class="form-control" name="ad_field_values[]" value="" type="text" ' +
-                'placeholder="내용"' + ' data-toggle="tooltip" title="details">'
-                +'      </div>'
-                +'  </div>'
-                +'  <div class="col-md-2">'
-                +'      <div class="form-group">'
-                +'          <span class="remove_it_v rms btn btn-danger btn-icon btn-circle icon-lg fa fa-times" onclick="delete_row(this)"></span>'
-                +'      </div>'
-                +'  </div>'
-                +'</div>'
-            );
-        });
-
-        $(".open_modal").click(function(){
-            $(".post_amount").html("<?/*=$upload_amount*/?>");
+            return true;
         });
 
         $(".post_confirm").click(function(){
@@ -177,31 +141,50 @@
         $('html').animate({scrollTop:$('html, body').offset().top}, 100);
     });
 
-    /*    $(function () {
-            //bootstrap WYSIHTML5 - text editor
-            $('.txt_editor').wysihtml5({
-                toolbar: {
-                    "image": true, // Button to insert an image.
-                    "video": true
-                }
-            });
-        })*/
-
-    function get_sub_cat(category_id) {
-        ajax_load(base_url+'home/get_dropdown_by_id/sub_category/category/'+category_id+'/sub_category_name/0','post_sub_category', 'set_elements');
-    }
-
-    function delete_row(e)
+    function search_center()
     {
-        $(e).parent().parent().parent().remove();
+        // console.log(document.getElementById('center-address').value);
+
+        // 주소-좌표 변환 객체를 생성합니다
+        var geocoder = new kakao.maps.services.Geocoder();
+        // 주소로 좌표를 검색합니다
+        geocoder.addressSearch(document.getElementById('center-address').value, function(result, status) {
+            // console.log(result);
+            // console.log(status);
+            if (status == null || status !== kakao.maps.services.Status.OK) {
+                alert("주소가 잘못되었습니다");
+            } else {
+                var mapContainer = document.getElementById('kakao-map'), // 지도를 표시할 div
+                    mapOption = {
+                        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+                        level: 3 // 지도의 확대 레벨
+                    };
+                // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+                var map = new kakao.maps.Map(mapContainer, mapOption);
+                // 정상적으로 검색이 완료됐으면
+                if (status === kakao.maps.services.Status.OK) {
+                    var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                    // 결과값으로 받은 위치를 마커로 표시합니다
+                    var marker = new kakao.maps.Marker({
+                        map: map,
+                        position: coords
+                    });
+                    // 인포윈도우로 장소에 대한 설명을 표시합니다
+                    var infowindow = new kakao.maps.InfoWindow({
+                        content: '<div style="width:150px;text-align:center;padding:6px 0;">' + document.getElementById('center-address').value + '</div>'
+                    });
+                    infowindow.open(map, marker);
+                    // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+                    map.setCenter(coords);
+                }
+
+                valid_address = true;
+                valid_address_txt = document.getElementById('center-address').value;
+
+                document.getElementById('center-latitude').value = result[0].y;
+                document.getElementById('center-longitude').value = result[0].x;
+            }
+        });
     }
-</script>
-<script src="<?php echo base_url(); ?>template/back/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
-<script>
-    var base_url = '<?php /*echo base_url(); */?>';
-    var user_type = 'admin';
-    var module = 'newsletter';
-    var list_cont_func = 'list';
-    var dlt_cont_func = 'delete';
 </script>
 

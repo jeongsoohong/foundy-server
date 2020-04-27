@@ -91,7 +91,7 @@
         background-color: #ebebeb!important;
     }
 </style>
-<script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+<!--<script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>-->
 <script type="text/javascript">
 
     var top = Number(200);
@@ -105,85 +105,85 @@
     });
 
     $('.pnav_logout').click(function(e) {
-        Kakao.init('a7e336b59aed62d0e46dae8a8c55da21');
-        if (!Kakao.Auth.getAccessToken()) {
-            alert('Not logged in.');
-        } else {
-            Kakao.Auth.logout(function() {
-
-                var base_url = '<?php echo base_url(); ?>';
-
-                //alert('logout: ' + Kakao.Auth.getAccessToken());
-
-                $.ajax({
-                    url : base_url + '/home/logout',
-                    //type : 'post',
-                    //data : user_data,
-                    // contentType: "application/json; charset=utf-8",//보낼 데이터 방식
-                    //CI에서 POST방식으로 할 경우에는 이것을 체크하면 안된다.
-                    //왜냐하면, json 방식은 body 안으로 전송되므로 body 를 통해 읽어들여야 한다. 그러므로
-                    //이방식으로 체크 되면 URLencoded format이 아닌 post로 받아올 수 없다
-                    //contentType: 'application/json',
-                    dataType : 'json', // 받을 데이터 방식
-                    success : function(res) {
-                        if (res.status === 'success') {
-                            alert(res.message);
-                            window.location.href = res.redirect_url;
-                        } else {
-                            alert(res.message);
-                            window.location.href = res.redirect_url;
+        $.getScript("https://developers.kakao.com/sdk/js/kakao.min.js", function() {
+            Kakao.init('a7e336b59aed62d0e46dae8a8c55da21');
+            if (!Kakao.Auth.getAccessToken()) {
+                alert('Not logged in.');
+            } else {
+                Kakao.Auth.logout(function() {
+                    var base_url = '<?php echo base_url(); ?>';
+                    //alert('logout: ' + Kakao.Auth.getAccessToken());
+                    $.ajax({
+                        url : base_url + '/home/logout',
+                        //type : 'post',
+                        //data : user_data,
+                        // contentType: "application/json; charset=utf-8",//보낼 데이터 방식
+                        //CI에서 POST방식으로 할 경우에는 이것을 체크하면 안된다.
+                        //왜냐하면, json 방식은 body 안으로 전송되므로 body 를 통해 읽어들여야 한다. 그러므로
+                        //이방식으로 체크 되면 URLencoded format이 아닌 post로 받아올 수 없다
+                        //contentType: 'application/json',
+                        dataType : 'json', // 받을 데이터 방식
+                        success : function(res) {
+                            if (res.status === 'success') {
+                                alert(res.message);
+                                window.location.href = res.redirect_url;
+                            } else {
+                                alert(res.message);
+                                window.location.href = res.redirect_url;
+                            }
+                        },
+                        error: function(xhr, status, error){
+                            alert(error);
+                            window.location.href = base_url + 'home/login';
                         }
-                    },
-                    error: function(xhr, status, error){
-                        alert(error);
-                        window.location.href = base_url + 'home/login';
-                    }
+                    });
                 });
-
-            });
-        }
+            }
+        });
     })
 
     $('.pnav_unregister').click(function(e) {
-        Kakao.init('a7e336b59aed62d0e46dae8a8c55da21');
-        Kakao.API.request({
-            url: '/v1/user/unlink',
-            success: function(response) {
-                console.log(response);
+        $.getScript("https://developers.kakao.com/sdk/js/kakao.min.js", function() {
+            Kakao.init('a7e336b59aed62d0e46dae8a8c55da21');
+            Kakao.API.request({
+                url: '/v1/user/unlink',
+                success: function(response) {
+                    console.log(response);
 
-                var base_url = '<?php echo base_url(); ?>';
+                    var base_url = '<?php echo base_url(); ?>';
 
-                //alert('logout: ' + Kakao.Auth.getAccessToken());
+                    //alert('logout: ' + Kakao.Auth.getAccessToken());
 
-                $.ajax({
-                    url : base_url + '/home/unregister',
-                    //type : 'post',
-                    //data : user_data,
-                    // contentType: "application/json; charset=utf-8",//보낼 데이터 방식
-                    //CI에서 POST방식으로 할 경우에는 이것을 체크하면 안된다.
-                    //왜냐하면, json 방식은 body 안으로 전송되므로 body 를 통해 읽어들여야 한다. 그러므로
-                    //이방식으로 체크 되면 URLencoded format이 아닌 post로 받아올 수 없다
-                    //contentType: 'application/json',
-                    dataType : 'json', // 받을 데이터 방식
-                    success : function(res) {
-                        if (res.status === 'success') {
-                            alert(res.message);
-                            window.location.href = res.redirect_url;
-                        } else {
-                            alert(res.message);
-                            window.location.href = res.redirect_url;
+                    $.ajax({
+                        url : base_url + '/home/unregister',
+                        //type : 'post',
+                        //data : user_data,
+                        // contentType: "application/json; charset=utf-8",//보낼 데이터 방식
+                        //CI에서 POST방식으로 할 경우에는 이것을 체크하면 안된다.
+                        //왜냐하면, json 방식은 body 안으로 전송되므로 body 를 통해 읽어들여야 한다. 그러므로
+                        //이방식으로 체크 되면 URLencoded format이 아닌 post로 받아올 수 없다
+                        //contentType: 'application/json',
+                        dataType : 'json', // 받을 데이터 방식
+                        success : function(res) {
+                            if (res.status === 'success') {
+                                alert(res.message);
+                                window.location.href = res.redirect_url;
+                            } else {
+                                alert(res.message);
+                                window.location.href = res.redirect_url;
+                            }
+                        },
+                        error: function(xhr, status, error){
+                            alert(error);
+                            window.location.href = base_url + 'home/login';
                         }
-                    },
-                    error: function(xhr, status, error){
-                        alert(error);
-                        window.location.href = base_url + 'home/login';
-                    }
-                });
+                    });
 
-            },
-            fail: function(error) {
-                console.log(error);
-            },
+                },
+                fail: function(error) {
+                    console.log(error);
+                },
+            });
         });
     })
 
@@ -192,6 +192,18 @@
         $("#profile_content").load("<?php echo base_url()?>home/user/center_register");
         $(".pleft_nav").find("li").removeClass("active");
         $(".pnav_center_register").find("li").addClass("active");
+        $.getScript("//dapi.kakao.com/v2/maps/sdk.js?appkey=a7e336b59aed62d0e46dae8a8c55da21&autoload=false&libraries=services", function() {
+            kakao.maps.load(function() {
+                var mapContainer = document.getElementById('kakao-map'), // 지도를 표시할 div
+                    mapOption = {
+                        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+                        level: 3 // 지도의 확대 레벨
+                    };
+                // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+                var map = new kakao.maps.StaticMap(mapContainer, mapOption);
+            });
+        });
+
     });
 
     $(document).ready(function(){

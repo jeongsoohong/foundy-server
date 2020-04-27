@@ -221,6 +221,41 @@ class Home extends CI_Controller
 
         } elseif ($view_type == "center_register") {
             $this->load->view('front/user/center_register');
+        } elseif ($view_type == "do_center_register") {
+            $this->load->library('form_validation');
+
+            $this->form_validation->set_rules('title', 'center-title', 'required');
+            $this->form_validation->set_rules('phone', 'center-phone', 'required');
+            $this->form_validation->set_rules('address', 'center-address', 'required');
+            $this->form_validation->set_rules('latitude', 'center-latitude', 'required');
+            $this->form_validation->set_rules('longitude', 'center-longitude', 'required');
+
+            if ($this->form_validation->run() == FALSE) {
+                echo '<br>' . validation_errors();
+            } else {
+                $title = $this->input->post('title');
+                $phone = $this->input->post('phone');
+                $address = $this->input->post('address');
+                $longitude = $this->input->post('longitude');
+                $latitude = $this->input->post('latitude');
+
+                $query = <<<QUERY
+INSERT INTO center (title,phone,address,location,activate) 
+values ('{$title}','{$phone}','{$address}',ST_GeomFromText('POINT({$longitude} {$latitude})'),false)
+QUERY;
+                $this->db->query($query);
+                $id = $this->db->insert_id();
+
+//                $data['title'] = $this->input->post('title');
+//                $data['phone'] = $this->input->post('phone');
+//                $data['address'] = $this->input->post('location');
+//                $data['location'] = "ST_GeomFromText('POINT({$this->input->post('longitude')} {$this->input->post('latitude')})')";
+//                $data['activate'] = false;
+//                $this->db->insert('center', $data);
+//                $id = $this->db->insert_id();
+
+                echo "done";
+            }
         } else {
             $page_data['part'] = 'info';
             $page_data['page_name'] = "user";
