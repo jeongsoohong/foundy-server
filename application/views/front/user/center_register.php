@@ -1,21 +1,3 @@
-<style>
-    .bootstrap-select > .selectpicker {
-        -webkit-appearance: none;
-        -webkit-box-shadow: none;
-        box-shadow: none !important;
-        height: 50px;
-        border-radius: 4px;
-        border: 1px solid #c5c5c5;
-        background-color: #ffffff !important;
-        color: #737475 !important;
-    }
-    .dropdown-menu {
-        border-width: 1px !important;
-    }
-    .input-group-addon {
-        padding: 5px 16px;
-    }
-</style>
 <div class="information-title">센터 회원 신청</div>
 <div class="details-wrap">
     <div class="row">
@@ -78,7 +60,8 @@
                                         </div>
                                     </div>
                                     <div class="col-md-12" style="border-top: 2px solid #f5f5f5; margin-top: 35px">
-                                        <button type="button" class="btn btn-theme pull-right open_modal center-register" data-toggle="modal" data-target="#prodPostModal">
+                                        <button type="button" class="btn btn-theme pull-right open_modal
+                                        center-register" data-toggle="modal" data-target="#centerRegisterModal">
                                             확인
                                         </button>
                                         <button type="button" class="hidden btn btn-theme pull-right btn_dis
@@ -171,7 +154,8 @@
                     });
                     // 인포윈도우로 장소에 대한 설명을 표시합니다
                     var infowindow = new kakao.maps.InfoWindow({
-                        content: '<div style="width:150px;text-align:center;padding:6px 0;">' + document.getElementById('center-address').value + '</div>'
+                        content: '<div style="width:150px;text-align:center;padding:6px 0;">' + result[0]
+                            .address_name + '</div>'
                     });
                     infowindow.open(map, marker);
                     // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
@@ -179,7 +163,8 @@
                 }
 
                 valid_address = true;
-                valid_address_txt = document.getElementById('center-address').value;
+                valid_address_txt = result[0].address_name;
+                document.getElementById('center-address').value = result[0].address_name;
 
                 document.getElementById('center-latitude').value = result[0].y;
                 document.getElementById('center-longitude').value = result[0].x;

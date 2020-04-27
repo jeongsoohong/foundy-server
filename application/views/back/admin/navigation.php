@@ -43,58 +43,61 @@
                                 </li>
                             </ul>
                         </li>
-<!--                        <li --><?php //if($page_name=="center" || $page_name=="center_category" ){?>
-<!--                            class="active-sub"-->
-<!--                        --><?php //} ?><!-- >-->
-<!--                            <a href="#">-->
-<!--                                <i class="fa fa-user"></i>-->
-<!--                                <span class="menu-title">-->
-<!--                                    스튜디오-->
-<!--                                </span>-->
-<!--                                <i class="fa arrow"></i>-->
-<!--                            </a>-->
-<!--                            <ul class="collapse --><?php //if($page_name=="center" || $page_name=="center_category"){ echo 'in'; } ?><!--" >-->
-<!--                                <!--Menu list item-->-->
-<!--                                <li --><?php //if($page_name=="center_category"){?><!-- class="active-link" --><?php //} ?><!-- >-->
-<!--                                    <a href="--><?php //echo base_url(); ?><!--admin/center_category/">-->
-<!--                                        <i class="fa fa-circle fs_i"></i>-->
-<!--                                        센터 카테고리-->
-<!--                                    </a>-->
-<!--                                </li>-->
-<!--                                <li --><?php //if($page_name=="center"){?><!-- class="active-link" --><?php //} ?><!-- >-->
-<!--                                    <a href="--><?php //echo base_url(); ?><!--admin/center/">-->
-<!--                                        <i class="fa fa-circle fs_i"></i>-->
-<!--                                        센터 보기-->
-<!--                                    </a>-->
-<!--                                </li>-->
-<!--                            </ul>-->
-<!--                        </li>-->
-<!--                        <li --><?php //if($page_name=="online" || $page_name=="online_category" ){?>
-<!--                            class="active-sub"-->
-<!--                        --><?php //} ?><!-- >-->
-<!--                            <a href="#">-->
-<!--                                <i class="fa fa-user"></i>-->
-<!--                                <span class="menu-title">-->
-<!--                                    온라인 클래스-->
-<!--                                </span>-->
-<!--                                <i class="fa arrow"></i>-->
-<!--                            </a>-->
-<!--                            <ul class="collapse --><?php //if($page_name=="online" || $page_name=="online_category"){ echo 'in'; } ?><!--" >-->
-<!--                                <!--Menu list item-->-->
-<!--                                <li --><?php //if($page_name=="center_category"){?><!-- class="active-link" --><?php //} ?><!-- >-->
-<!--                                    <a href="--><?php //echo base_url(); ?><!--admin/online_category/">-->
-<!--                                        <i class="fa fa-circle fs_i"></i>-->
-<!--                                        온라인 클래스 카테고리-->
-<!--                                    </a>-->
-<!--                                </li>-->
-<!--                                <li --><?php //if($page_name=="center"){?><!-- class="active-link" --><?php //} ?><!-- >-->
-<!--                                    <a href="--><?php //echo base_url(); ?><!--admin/online/">-->
-<!--                                        <i class="fa fa-circle fs_i"></i>-->
-<!--                                        온라인 클래스 보기-->
-<!--                                    </a>-->
-<!--                                </li>-->
-<!--                            </ul>-->
-<!--                        </li>-->
+                        <li <?php if($page_name=="center" || $page_name=="center_approval" ){?>
+                            class="active-sub"
+                        <?php } ?> >
+                            <a href="#">
+                                <i class="fa fa-user"></i>
+                                <span class="menu-title">
+                                   센터 회원
+                                </span>
+                                <i class="fa arrow"></i>
+                            </a>
+                            <ul class="collapse <?php if($page_name=="center" || $page_name=="center_approval"){
+                                echo
+                            'in'; } ?>" >
+                                <!--Menu list item-->
+                                <li <?php if($page_name=="center_approval"){?> class="active-link" <?php } ?> >
+                                    <a href="<?php echo base_url(); ?>admin/center/approval">
+                                        <i class="fa fa-circle fs_i"></i>
+                                        센터 승인
+                                    </a>
+                                </li>
+                                <li <?php if($page_name=="center"){?> class="active-link" <?php } ?> >
+                                    <a href="<?php echo base_url(); ?>admin/center">
+                                        <i class="fa fa-circle fs_i"></i>
+                                        센터 보기
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li <?php if($page_name=="teacher" || $page_name=="teacher_approval" ){?>
+                            class="active-sub"
+                        <?php } ?> >
+                            <a href="#">
+                                <i class="fa fa-user"></i>
+                                <span class="menu-title">
+                                  강사 회원
+                                </span>
+                                <i class="fa arrow"></i>
+                            </a>
+                            <ul class="collapse <?php if($page_name=="teacher" || $page_name=="teacher_approval"){ echo
+                            'in'; } ?>" >
+                                <!--Menu list item-->
+                                <li <?php if($page_name=="teacher_approval"){?> class="active-link" <?php } ?> >
+                                    <a href="<?php echo base_url(); ?>admin/teacher/approval_list">
+                                        <i class="fa fa-circle fs_i"></i>
+                                        강사 승인
+                                    </a>
+                                </li>
+                                <li <?php if($page_name=="teacher"){?> class="active-link" <?php } ?> >
+                                    <a href="<?php echo base_url(); ?>admin/teacher">
+                                        <i class="fa fa-circle fs_i"></i>
+                                        강사 보기
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </div>

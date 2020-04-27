@@ -221,18 +221,21 @@ class Home extends CI_Controller
 
         } elseif ($view_type == "center_register") {
             $this->load->view('front/user/center_register');
+        } elseif ($view_type == "teacher_register") {
+            $this->load->view('front/user/teacher_register');
         } elseif ($view_type == "do_center_register") {
             $this->load->library('form_validation');
 
-            $this->form_validation->set_rules('title', 'center-title', 'required');
-            $this->form_validation->set_rules('phone', 'center-phone', 'required');
-            $this->form_validation->set_rules('address', 'center-address', 'required');
-            $this->form_validation->set_rules('latitude', 'center-latitude', 'required');
-            $this->form_validation->set_rules('longitude', 'center-longitude', 'required');
+            $this->form_validation->set_rules('title', 'center-title', 'trim|required|max_length[32]');
+            $this->form_validation->set_rules('phone', 'center-phone', 'trim|required|numeric|max_length[16]');
+            $this->form_validation->set_rules('address', 'center-address', 'trim|required|max_length[256]');
+            $this->form_validation->set_rules('latitude', 'center-latitude', 'trim|required|max_length[32]');
+            $this->form_validation->set_rules('longitude', 'center-longitude', 'trim|required|max_length[32]');
 
             if ($this->form_validation->run() == FALSE) {
                 echo '<br>' . validation_errors();
             } else {
+                $user_id = $this->session->userdata('user_id');
                 $title = $this->input->post('title');
                 $phone = $this->input->post('phone');
                 $address = $this->input->post('address');
@@ -240,19 +243,38 @@ class Home extends CI_Controller
                 $latitude = $this->input->post('latitude');
 
                 $query = <<<QUERY
-INSERT INTO center (title,phone,address,location,activate) 
-values ('{$title}','{$phone}','{$address}',ST_GeomFromText('POINT({$longitude} {$latitude})'),false)
+INSERT INTO center (user_id,title,phone,address,location,latitude,longitude,activate,create_at,approval_at) 
+values ({$user_id},'{$title}','{$phone}','{$address}',ST_GeomFromText('POINT({$longitude} {$latitude})'),'{$latitude}',
+'{$longitude}',false,NOW(),NOW())
 QUERY;
                 $this->db->query($query);
                 $id = $this->db->insert_id();
 
-//                $data['title'] = $this->input->post('title');
-//                $data['phone'] = $this->input->post('phone');
-//                $data['address'] = $this->input->post('location');
-//                $data['location'] = "ST_GeomFromText('POINT({$this->input->post('longitude')} {$this->input->post('latitude')})')";
-//                $data['activate'] = false;
-//                $this->db->insert('center', $data);
-//                $id = $this->db->insert_id();
+                echo "done";
+            }
+        } elseif ($view_type == "do_teacher_register") {
+            $this->load->library('form_validation');
+
+            $this->form_validation->set_rules('introduce', 'introduce', 'trim|required|max_length[64]');
+            $this->form_validation->set_rules('youtube_url', 'youtube_url', 'trim|required|valid_url|max_length[256]');
+            $this->form_validation->set_rules('instagram_url', 'instagram_url', 'trim|valid_url|max_length[256]');
+            $this->form_validation->set_rules('homepage_url', 'homepage_url', 'trim|valid_url|max_length[256]');
+
+            if ($this->form_validation->run() == FALSE) {
+                echo '<br>' . validation_errors();
+            } else {
+                $user_id = $this->session->userdata('user_id');
+                $introduce = $this->input->post('introduce');
+                $youtube_url = $this->input->post('youtube_url');
+                $instagram_url = $this->input->post('instagram_url');
+                $homepage_url = $this->input->post('homepage_url');
+
+                $query = <<<QUERY
+INSERT INTO teacher (user_id,introduce,youtube_url,instagram_url,homepage_url,activate,create_at,approval_at) 
+values ({$user_id},'{$introduce}','{$youtube_url}','{$instagram_url}','{$homepage_url}',false,NOW(),NOW())
+QUERY;
+                $this->db->query($query);
+                $id = $this->db->insert_id();
 
                 echo "done";
             }

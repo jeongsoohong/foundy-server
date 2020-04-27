@@ -25,5 +25,6 @@
 	$(document).ready(function(){
 		var category=$('#blog_cat').val();
 		get_blogs_by_cat(category);
+        active_menu_bar('earth');
     });
 </script>

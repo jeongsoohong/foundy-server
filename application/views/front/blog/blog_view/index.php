@@ -208,6 +208,7 @@
             networks: ['facebook','googleplus','twitter','linkedin','tumblr','in1','stumbleupon','digg'],
             theme: 'square'
         });
+        active_menu_bar('earth');
     });
 </script>
 <style>

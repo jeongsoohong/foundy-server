@@ -33,24 +33,7 @@
 <script type="text/javascript">
 
     document.addEventListener("DOMContentLoaded", function() {
-        // @details 카카오톡 Developer API 사이트에서 발급받은 JavaScript Key
         Kakao.init('a7e336b59aed62d0e46dae8a8c55da21');
-        //console.log("DOMContentLoaded : " +  Kakao.isInitialized());
-
-/*        function getToken() {
-            const token = getCookie('authorize-access-token')
-            if(token) {
-                Kakao.Auth.setAccessToken(token)
-                //console.log('login success. token: ' + Kakao.Auth.getAccessToken());
-                alert('login success. token: ' + Kakao.Auth.getAccessToken());
-            }
-        }
-        function getCookie(name) {
-            const value = "; " + document.cookie;
-            const parts = value.split("; " + name + "=");
-            if (parts.length === 2) return parts.pop().split(";").shift();
-        }*/
-
         // @breif 카카오 로그인 버튼을 생성합니다.
         Kakao.Auth.createLoginButton({
 
@@ -110,52 +93,6 @@
     $(document).ready(function() {
         active_menu_bar('login');
     });
-
-    /*
-        $('.kakao-login').click(function(e) {
-
-            // rest api 사용 1
-            function loginWithKakao() {
-                Kakao.Auth.login({
-                    success: function(authObj) {
-                        Kakao.API.request({
-                            url: "https://kapi.kakao.com/v2/user/me",
-                            success: function(res) {
-                                alert(res);
-                            },
-                            fail: function(error) {
-                                alert(JSON.stringify(error));
-                            }
-                        });
-                        alert(JSON.stringify(authObj));
-                    },
-                    fail: function(err) {
-                        alert(JSON.stringify(err));
-                    },
-                })
-            }
-
-            // rest api 사용 2
-            Kakao.Auth.authorize({
-                redirectUri: 'http://10.0.4.56/home/login/kakao'
-            })
-
-            // UI code below
-            console.log('token : ' + getToken())
-
-            function getToken() {
-                const token = getCookie('authorize-access-token')
-                if(token) {
-                    Kakao.Auth.setAccessToken(token)
-                    console.log('login success. token: ' + Kakao.Auth.getAccessToken());
-                }
-            }
-            function getCookie(name) {
-                const value = "; " + document.cookie;
-                const parts = value.split("; " + name + "=");
-                if (parts.length === 2) return parts.pop().split(";").shift();
-            }
-        })*/
 
 </script>
 

@@ -28,6 +28,17 @@ foreach ($category_names as $category_name) {
 //}
 ?>
 <!-- HEADER -->
+<style>
+    .navigation-wrapper .container .navigation ul {
+        width: 100%;
+    }
+    .navigation-wrapper .container .navigation ul li {
+        width: 20%;
+    }
+    .navigation-wrapper .container .navigation ul li a {
+        text-align: center;
+    }
+</style>
 <header class="header header-logo-left">
     <div class="header-wrapper">
         <div class="container">
