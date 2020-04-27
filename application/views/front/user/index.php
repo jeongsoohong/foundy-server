@@ -91,9 +91,8 @@
         background-color: #ebebeb!important;
     }
 </style>
-<script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a7e336b59aed62d0e46dae8a8c55da21&autoload=false&libraries=service"></script>
-<script>
+<!--<script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>-->
+<script type="text/javascript">
 
     var top = Number(200);
     var loading_set = '<div style="text-align:center;width:100%;height:'+(top*2)+'px; position:relative;top:'+top+'px;"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>';
@@ -106,85 +105,85 @@
     });
 
     $('.pnav_logout').click(function(e) {
-        Kakao.init('a7e336b59aed62d0e46dae8a8c55da21');
-        if (!Kakao.Auth.getAccessToken()) {
-            alert('Not logged in.');
-        } else {
-            Kakao.Auth.logout(function() {
-
-                var base_url = '<?php echo base_url(); ?>';
-
-                //alert('logout: ' + Kakao.Auth.getAccessToken());
-
-                $.ajax({
-                    url : base_url + '/home/logout',
-                    //type : 'post',
-                    //data : user_data,
-                    // contentType: "application/json; charset=utf-8",//보낼 데이터 방식
-                    //CI에서 POST방식으로 할 경우에는 이것을 체크하면 안된다.
-                    //왜냐하면, json 방식은 body 안으로 전송되므로 body 를 통해 읽어들여야 한다. 그러므로
-                    //이방식으로 체크 되면 URLencoded format이 아닌 post로 받아올 수 없다
-                    //contentType: 'application/json',
-                    dataType : 'json', // 받을 데이터 방식
-                    success : function(res) {
-                        if (res.status === 'success') {
-                            alert(res.message);
-                            window.location.href = res.redirect_url;
-                        } else {
-                            alert(res.message);
-                            window.location.href = res.redirect_url;
+        $.getScript("https://developers.kakao.com/sdk/js/kakao.min.js", function() {
+            Kakao.init('a7e336b59aed62d0e46dae8a8c55da21');
+            if (!Kakao.Auth.getAccessToken()) {
+                alert('Not logged in.');
+            } else {
+                Kakao.Auth.logout(function() {
+                    var base_url = '<?php echo base_url(); ?>';
+                    //alert('logout: ' + Kakao.Auth.getAccessToken());
+                    $.ajax({
+                        url : base_url + '/home/logout',
+                        //type : 'post',
+                        //data : user_data,
+                        // contentType: "application/json; charset=utf-8",//보낼 데이터 방식
+                        //CI에서 POST방식으로 할 경우에는 이것을 체크하면 안된다.
+                        //왜냐하면, json 방식은 body 안으로 전송되므로 body 를 통해 읽어들여야 한다. 그러므로
+                        //이방식으로 체크 되면 URLencoded format이 아닌 post로 받아올 수 없다
+                        //contentType: 'application/json',
+                        dataType : 'json', // 받을 데이터 방식
+                        success : function(res) {
+                            if (res.status === 'success') {
+                                alert(res.message);
+                                window.location.href = res.redirect_url;
+                            } else {
+                                alert(res.message);
+                                window.location.href = res.redirect_url;
+                            }
+                        },
+                        error: function(xhr, status, error){
+                            alert(error);
+                            window.location.href = base_url + 'home/login';
                         }
-                    },
-                    error: function(xhr, status, error){
-                        alert(error);
-                        window.location.href = base_url + 'home/login';
-                    }
+                    });
                 });
-
-            });
-        }
+            }
+        });
     })
 
     $('.pnav_unregister').click(function(e) {
-        Kakao.init('a7e336b59aed62d0e46dae8a8c55da21');
-        Kakao.API.request({
-            url: '/v1/user/unlink',
-            success: function(response) {
-                console.log(response);
+        $.getScript("https://developers.kakao.com/sdk/js/kakao.min.js", function() {
+            Kakao.init('a7e336b59aed62d0e46dae8a8c55da21');
+            Kakao.API.request({
+                url: '/v1/user/unlink',
+                success: function(response) {
+                    console.log(response);
 
-                var base_url = '<?php echo base_url(); ?>';
+                    var base_url = '<?php echo base_url(); ?>';
 
-                //alert('logout: ' + Kakao.Auth.getAccessToken());
+                    //alert('logout: ' + Kakao.Auth.getAccessToken());
 
-                $.ajax({
-                    url : base_url + '/home/unregister',
-                    //type : 'post',
-                    //data : user_data,
-                    // contentType: "application/json; charset=utf-8",//보낼 데이터 방식
-                    //CI에서 POST방식으로 할 경우에는 이것을 체크하면 안된다.
-                    //왜냐하면, json 방식은 body 안으로 전송되므로 body 를 통해 읽어들여야 한다. 그러므로
-                    //이방식으로 체크 되면 URLencoded format이 아닌 post로 받아올 수 없다
-                    //contentType: 'application/json',
-                    dataType : 'json', // 받을 데이터 방식
-                    success : function(res) {
-                        if (res.status === 'success') {
-                            alert(res.message);
-                            window.location.href = res.redirect_url;
-                        } else {
-                            alert(res.message);
-                            window.location.href = res.redirect_url;
+                    $.ajax({
+                        url : base_url + '/home/unregister',
+                        //type : 'post',
+                        //data : user_data,
+                        // contentType: "application/json; charset=utf-8",//보낼 데이터 방식
+                        //CI에서 POST방식으로 할 경우에는 이것을 체크하면 안된다.
+                        //왜냐하면, json 방식은 body 안으로 전송되므로 body 를 통해 읽어들여야 한다. 그러므로
+                        //이방식으로 체크 되면 URLencoded format이 아닌 post로 받아올 수 없다
+                        //contentType: 'application/json',
+                        dataType : 'json', // 받을 데이터 방식
+                        success : function(res) {
+                            if (res.status === 'success') {
+                                alert(res.message);
+                                window.location.href = res.redirect_url;
+                            } else {
+                                alert(res.message);
+                                window.location.href = res.redirect_url;
+                            }
+                        },
+                        error: function(xhr, status, error){
+                            alert(error);
+                            window.location.href = base_url + 'home/login';
                         }
-                    },
-                    error: function(xhr, status, error){
-                        alert(error);
-                        window.location.href = base_url + 'home/login';
-                    }
-                });
+                    });
 
-            },
-            fail: function(error) {
-                console.log(error);
-            },
+                },
+                fail: function(error) {
+                    console.log(error);
+                },
+            });
         });
     })
 
@@ -193,49 +192,18 @@
         $("#profile_content").load("<?php echo base_url()?>home/user/center_register");
         $(".pleft_nav").find("li").removeClass("active");
         $(".pnav_center_register").find("li").addClass("active");
-
-        console.log('before ready');
-
-        $(document).ready(function(){
-
-            // v3가 모두 로드된 후, 이 콜백 함수가 실행됩니다.
-            var mapContainer = document.getElementById('map'); // 지도를 표시할 div
-            var mapOption = {
-                center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-                level: 3 // 지도의 확대 레벨
-            };
-            // 지도를 생성합니다
-            var map = new kakao.maps.Map(mapContainer, mapOption);
-            $('.search').on('click', function() {
-                console.log('click');
-                // 주소-좌표 변환 객체를 생성합니다
-                var geocoder = new kakao.maps.services.Geocoder();
-                // 주소로 좌표를 검색합니다
-                geocoder.addressSearch('경기도 고양시 일산동구 위시티로 71-33', function(result, status) {
-
-                    // 정상적으로 검색이 완료됐으면
-                    if (status === kakao.maps.services.Status.OK) {
-
-                        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-
-                        // 결과값으로 받은 위치를 마커로 표시합니다
-                        var marker = new kakao.maps.Marker({
-                            map: map,
-                            position: coords
-                        });
-
-                        // 인포윈도우로 장소에 대한 설명을 표시합니다
-                        var infowindow = new kakao.maps.InfoWindow({
-                            content: '<div style="width:150px;text-align:center;padding:6px 0;">우리회사</div>'
-                        });
-                        infowindow.open(map, marker);
-
-                        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-                        map.setCenter(coords);
-                    }
-                });
+        $.getScript("//dapi.kakao.com/v2/maps/sdk.js?appkey=a7e336b59aed62d0e46dae8a8c55da21&autoload=false&libraries=services", function() {
+            kakao.maps.load(function() {
+                var mapContainer = document.getElementById('kakao-map'), // 지도를 표시할 div
+                    mapOption = {
+                        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+                        level: 3 // 지도의 확대 레벨
+                    };
+                // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+                var map = new kakao.maps.StaticMap(mapContainer, mapOption);
             });
         });
+
     });
 
     $(document).ready(function(){
@@ -253,6 +221,3 @@
         background-color: #ebebeb!important;
     }
 </style>
-
-
-
