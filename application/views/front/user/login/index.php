@@ -1,19 +1,26 @@
-<section class="page-section color get_into">
+<section class="page-section color get_into" style="background-color: #ffffff">
     <div class="container" id="login">
         <div class="row margin-top-0">
             <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12">
-                <div class="row box_shape">
-                    <div class="title">
-                        로그인
-                        <div class="option">
-                        방문을 환영합니다
+                <div class="row">
+                    <div class="title" style="background-color: #ffffff">
+                        <!-- 로그인 -->
+                        <div class="option" style="text-align: center !important; ">
+                        간편하게 로그인하고<br>
+                            균형잡힌 삶을 찾아보세요
                         </div>
                     </div>
-                    <hr>
+<!--                    <hr>-->
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <span class="btn btn-theme-sm btn-block btn-theme-transparent pull-center kakao-login btn-kakao-login">
                                 카카오 로그인
                             </span>
+                    </div>
+                    <div class="title" style="margin-top:70px !important; background-color: #FFFFFF">
+                        <!-- 센터회원 / 강사회원 신청 설명 -->
+                        <div class="option" style="font-size: 10px !important; ">
+                            * 강사회원/센터회원은 간편로그인 후 마이페이지에서 신청해주세요
+                        </div>
                     </div>
 <!--                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin: 0px;">
                         <h2 class="login_divider"><span>or</span></h2>
@@ -28,6 +35,16 @@
         </div>
     </div>
 </section>
+<style>
+    .content-area {
+        background-color: #FFFFFF;
+    }
+    footer {
+        background-color: #FFFFFF;
+        padding-top: 15px;
+        margin-top: 0px !important;
+    }
+</style>
 
 <script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
 <script type="text/javascript">

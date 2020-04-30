@@ -250,6 +250,7 @@
         border-bottom: 1px solid #e4e4e4;
     }
     .sf-menu li.active-under {
+        font-weight: bold;
         border-bottom: solid 1px #676767;
     }
     .navigation .nav.sf-menu {

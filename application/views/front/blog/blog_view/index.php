@@ -107,22 +107,21 @@
             </aside>
             <!-- /SIDEBAR -->
             <!-- CONTENT -->
+            <div id="blog_category" style="display: none"><?php echo $blog[0]['blog_category']; ?></div>
             <div class="col-md-9 content" id="content">
                 <?php
                 foreach($blog as $row){
                     ?>
                     <article class="post-wrap post-single">
-                        <div class="post-media">
-                            <img class="img-responsive" src="<?php echo $this->crud_model->file_view('blog',$row['blog_id'],'','','no','src','',''); ?>" alt=""/>
+                        <div class="post-media" style="height: 300px">
+                            <img class="img-responsive" src="<?php echo $this->crud_model->file_view('blog',$row['blog_id'],'','','no','src','',''); ?>" alt="" style="min-height: 100%;"/>
                         </div>
                         <div class="post-header">
                             <h2 class="post-title">
-                                <?php echo $row['title']; ?>
+                                <b><?php echo $row['title']; ?></b>
                             </h2>
                             <div class="post-meta">
-                                <?php echo ('by'); ?>
-                                <?php echo $row['author']; ?> /
-                                <?php echo $row['date']; ?>
+                                <?php echo $row['summery']; ?>
                             </div>
                         </div>
                         <!--            <div class="buttons">
@@ -200,15 +199,28 @@
             </div>
             <!-- /CONTENT -->
         </div>
-    </div>
+    </div
 </section>
-<script>
+<script type="text/javascript">
     $(document).ready(function() {
         $('#share').share({
             networks: ['facebook','googleplus','twitter','linkedin','tumblr','in1','stumbleupon','digg'],
             theme: 'square'
         });
-        active_menu_bar('earth');
+
+        const blog_category_id = document.getElementById('blog_category').innerText;
+        console.log(blog_category_id);
+        if (blog_category_id === '1') {
+            active_menu_bar('find');
+        } else if (blog_category_id === '2') {
+            active_menu_bar('life');
+        } else if (blog_category_id === '3') {
+            active_menu_bar('earth');
+        } else if (blog_category_id === '4') {
+            active_menu_bar('shop');
+        } else {
+            active_menu_bar('earth');
+        }
     });
 </script>
 <style>

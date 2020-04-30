@@ -43,21 +43,41 @@ foreach ($category_names as $category_name) {
     <div class="header-wrapper">
         <div class="container">
             <div class="flex-row">
-                <div class="flex-col-12" style="text-align: center;">
+                <div class="flex-col-2" style="text-align: center;">
+                </div>
+                <div class="flex-col-8" style="text-align: center;">
                     <!-- Logo -->
                     <a href="<?php echo base_url();?>">
-                        <img src="<?php echo base_url(); ?>uploads/logo_image/logo_180x30.jpg" alt="foit"/>
+                        <img src="<?php echo base_url(); ?>uploads/logo_image/logo.png" alt="foit" style="height: 50px; width: 140px; "/>
                     </a>
                     <!-- /Logo -->
+                </div>
+                <div class="flex-col-2" style="text-align: center;">
+                    <a href="<?php echo base_url(); if ($this->session->userdata('user_login') == 'yes') { echo ('home/user'); } else { echo ('home/login'); } ?>">
+                        <?php
+                        if ($this->session->userdata('user_login') == 'yes') {
+                            ?>
+                            <img src="<?php echo base_url(); ?>uploads/icon/login_icon02.png" alt="foit" style="height: 30px; width: 30px; margin-top: 10px"/>
+                            <?php
+                        } else {
+                            ?>
+                            <img src="<?php echo base_url(); ?>uploads/icon/login_icon01.png" alt="foit" style="height: 30px; width: 30px; margin-top: 10px"/>
+                            <?php
+                        }
+                        ?>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
     <div class="navigation-wrapper" id="navbar">
-        <div class="container" style="height: 40px;">
+        <div class="container" style="height: 40px; padding: 0px">
             <!-- Navigation -->
             <nav class="navigation clearfix">
                 <ul class="nav sf-menu">
+                    <li class="home">
+                        <a href="<?php echo base_url(); ?>">HOME</a>
+                    </li>
                     <li class="find">
                         <a href="<?php echo $find_url; ?>">FIND</a>
                     </li>
@@ -69,12 +89,6 @@ foreach ($category_names as $category_name) {
                     </li>
                     <li class="shop">
                         <a href="<?php echo $shop_url; ?>">SHOP</a>
-                    </li>
-                    <li class="<?php if ($this->session->userdata('user_login') == 'yes') { echo ('user'); } else {
-                        echo ('user'); } ?>">
-                        <a href="<?php echo base_url(); if ($this->session->userdata('user_login') == 'yes') { echo ('home/user'); } else { echo ('home/login'); } ?>">
-                            <?php if ($this->session->userdata('user_login') == 'yes') { echo ('USER'); } else { echo ('LOGIN'); } ?>
-                       </a>
                     </li>
                 </ul>
             </nav>

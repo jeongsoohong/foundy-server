@@ -7,7 +7,9 @@
     </ol>
     <div class="carousel-inner" role="listbox">
         <div class="item active">
-            <img class="first-slide slide-img" src="<?php echo base_url(); ?>uploads/banner_image/main banner01.png" alt="First slide">
+            <a href="<?php echo base_url(); ?>home/user">
+                    <img class="first-slide slide-img" src="<?php echo base_url(); ?>uploads/banner_image/main banner01.png" style="object-fit: fill !important; min-width: 100%;" alt="First slide">
+            </a>
 <!--            <div class="container">
                 <div class="carousel-caption">
                     <h1>Example headline.</h1>
@@ -17,8 +19,9 @@
             </div>-->
         </div>
         <div class="item">
-            <img class="second-slide slide-img" src="<?php echo base_url(); ?>uploads/banner_image/main banner02.png"
-                 alt="Second slide">
+            <a href="<?php echo base_url(); ?>home/user/center">
+            <img class="second-slide slide-img" src="<?php echo base_url(); ?>uploads/banner_image/main banner02.png" style="object-fit: fill !important; min-width: 100%;" alt="Second slide">
+            </a>
 <!--            <div class="container">
                 <div class="carousel-caption">
                     <h1>Another example headline.</h1>
@@ -28,8 +31,9 @@
             </div>-->
         </div>
         <div class="item">
-            <img class="third-slide slide-img" src="<?php echo base_url(); ?>uploads/banner_image/main banner03.png"
-                 alt="Third slide">
+            <a href="<?php echo base_url(); ?>home/user/teacher">
+                <img class="second-slide slide-img" src="<?php echo base_url(); ?>uploads/banner_image/main banner03.png" style="object-fit: fill !important; min-width: 100%;" alt="Third slide">
+            </a>
 <!--            <div class="container">
                 <div class="carousel-caption">
                     <h1>One more for good measure.</h1>
@@ -40,11 +44,11 @@
         </div>
     </div>
     <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" style="font-family: 'Glyphicons Halflings' !important;"></span>
         <span class="sr-only">Previous</span>
     </a>
     <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" style="font-family: 'Glyphicons Halflings' !important;"></span>
         <span class="sr-only">Next</span>
     </a>
 </div>

@@ -33,10 +33,17 @@ include 'meta/' . $asset_page . '.php';
 
 <!-- Head Libs -->
 <script src="<?php echo base_url(); ?>template/front/plugins/jquery/jquery-1.11.1.js"></script>
+<!-- Font -->
+
+<!-- Menu Bar Font -->
+<link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
+<!-- Banner Title Font -->
+<link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,600,700,800,900' rel='stylesheet' type='text/css'>
 <style>
     *{
-        font-family: 'Roboto', sans-serif;
+        font-family: 'Noto Sans KR', 'Quicksand', 'Roboto', sans-serif !important;
     }
     .remove_one{
         cursor:pointer;

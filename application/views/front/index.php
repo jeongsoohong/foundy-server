@@ -35,7 +35,7 @@ include 'preloader.php';
     ?>
     <!-- /FOOTER -->
 
-    <div id="to-top" class="to-top"><i class="fa fa-angle-up"></i></div>
+    <div id="to-top" class="to-top"><i class="fa fa-angle-up" style="font-family: FontAwesome !important;"></i></div>
 
 </div>
 <!-- /WRAPPER -->

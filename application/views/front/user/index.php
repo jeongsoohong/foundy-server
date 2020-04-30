@@ -10,12 +10,12 @@
     <div class="wrap container">
         <!-- <div id="profile-content"> -->
             <div class="row profile">
-                <div class="col-lg-9 col-md-9">
+                <div class="col-lg-9 col-md-9" style="padding-left: 0 !important; padding-right: 0 !important;">
                     <div id="profile_content">
 
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-3">
+                <div class="col-lg-3 col-md-3" style="margin-top: 20px !important;">
                     <input type="hidden" id="state" value="normal" />
                     <div class="widget account-details">
                         <div class="information-title" style="margin-bottom: 0px; margin-top: 0px;">더보기</div>

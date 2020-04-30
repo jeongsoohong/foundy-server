@@ -19,12 +19,22 @@
 </section>
 <!-- /PAGE WITH SIDEBAR -->
 <script>
-	function get_blogs_by_cat(category){
-		$("#blog-content").load("<?php echo base_url()?>home/blog_by_cat/"+category);
-	}
-	$(document).ready(function(){
-		var category=$('#blog_cat').val();
-		get_blogs_by_cat(category);
-        active_menu_bar('earth');
+    function get_blogs_by_cat(category){
+        $("#blog-content").load("<?php echo base_url()?>home/blog_by_cat/"+category);
+    }
+    $(document).ready(function(){
+        var category=$('#blog_cat').val();
+        get_blogs_by_cat(category);
+        if (category === 'find') {
+            active_menu_bar('find');
+        } else if (category === 'life') {
+            active_menu_bar('life');
+        } else if (category === 'earth') {
+            active_menu_bar('earth');
+        } else if (category === 'shop') {
+            active_menu_bar('shop');
+        } else {
+            active_menu_bar('earth');
+        }
     });
 </script>

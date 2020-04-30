@@ -1,7 +1,7 @@
 <style>
     /* Carousel base class */
     .carousel {
-        height: 300px;
+        height: 500px;
         margin-bottom: 10px;
         min-width: 100%;
     }
@@ -11,12 +11,12 @@
     }
     /* Declare heights because of positioning of img element */
     .carousel .item {
-        height: 300px;
+        height: 500px;
         background-color: #777;
     }
 
     .carousel .carousel-indicators {
-        margin-bottom: -3px !important;
+        margin-bottom: 3px !important;
         bottom: 0px;
     }
     .carousel-inner > .item > img {
@@ -24,11 +24,11 @@
         top: 0;
         left: 0;
         min-width: 100%;
-        height: 300px;
+        height: 500px;
     }
 
     .slide-img {
-        height:300px !important;
+        height: 500px !important;
         object-fit: cover !important;
     }
 

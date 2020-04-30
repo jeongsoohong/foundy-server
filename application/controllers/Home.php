@@ -77,8 +77,8 @@ class Home extends CI_Controller
                     $address2 = '';
                     $thumbnail_image_url = $profile['thumbnail_image_url'];
                     $profile_image_url = $profile['profile_image_url'];
+                    $custom_image_url = '';
                     $password = '';
-                    $last_login = 'NOW()';
                     $create_at = $connected_at;
 
                     $ins = array(
@@ -93,6 +93,7 @@ class Home extends CI_Controller
                         'address2' => $address2,
                         'thumbnail_image_url' => $thumbnail_image_url,
                         'profile_image_url' => $profile_image_url,
+                        'custom_image_url' => $custom_image_url,
                         'password' => $password,
                         'last_login' => date("Y-m-d H:i:s"),
                         'create_at' => $create_at,
@@ -107,6 +108,7 @@ class Home extends CI_Controller
                     $nickname = $user_data->nickname;
                     $thumbnail_image_url = $user_data->thumbnail_image_url;
                     $profile_image_url = $user_data->profile_image_url;
+                    $custom_image_url = $user_data->custom_data_url;
 
                     $this->db->update('user', array('last_login' => date("Y-m-d H:i:s")), array('user_id' => $user_id));
                     $result['message'] = "로그인해주셔서 감사합니다.";
@@ -119,6 +121,7 @@ class Home extends CI_Controller
                 $this->session->set_userdata('nickname', $nickname);
                 $this->session->set_userdata('thumbnail_image_url', $thumbnail_image_url);
                 $this->session->set_userdata('profile_image_url', $profile_image_url);
+                $this->session->set_userdata('custom_image_url', $custom_image_url);
 
                 $redirect_url .= 'home';
                 $result['status'] = 'success';
@@ -203,7 +206,7 @@ class Home extends CI_Controller
     function user()
     {
         if ($this->session->userdata('user_login') != "yes") {
-            redirect(base_url() . 'home', 'refresh');
+            redirect(base_url() . 'home/login', 'refresh');
         }
 
         $view_type = $this->uri->segment(3);
@@ -216,6 +219,7 @@ class Home extends CI_Controller
             $page_data['nickname'] = $this->session->userdata('nickname');
             $page_data['profile_image_url'] = $this->session->userdata('profile_image_url');
             $page_data['thumbnail_image_url'] = $this->session->userdata('thumbname_image_url');
+            $page_data['custom_image_url'] = $this->session->userdata('custom_image_url');
 
             $this->load->view('front/user/profile', $page_data);
 
@@ -279,7 +283,13 @@ QUERY;
                 echo "done";
             }
         } else {
-            $page_data['part'] = 'info';
+            if ($view_type == 'center') {
+                $page_data['part'] = 'center_register';
+            } else if ($view_type == 'teacher') {
+                $page_data['part'] = 'teacher_register';
+            } else {
+                $page_data['part'] = 'info';
+            }
             $page_data['page_name'] = "user";
             $page_data['asset_page'] = "user_profile";
             $page_data['page_title'] = "my_profile";
