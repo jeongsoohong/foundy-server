@@ -58,7 +58,7 @@
                             'in'; } ?>" >
                                 <!--Menu list item-->
                                 <li <?php if($page_name=="center_approval"){?> class="active-link" <?php } ?> >
-                                    <a href="<?php echo base_url(); ?>admin/center/approval">
+                                    <a href="<?php echo base_url(); ?>admin/center/approval_list">
                                         <i class="fa fa-circle fs_i"></i>
                                         센터 승인
                                     </a>

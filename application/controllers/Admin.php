@@ -305,6 +305,57 @@ class Admin extends CI_Controller
         }
     }
 
+    /* center Management */
+    function center($para1 = '', $para2 = '', $para3 = '')
+    {
+        if ($this->session->userdata('admin_login') != 'yes') {
+            redirect(base_url() . 'admin');
+        }
+
+        if ($para1 == 'list') {
+            if ($para2 == 'approval') {
+                $this->db->order_by('center_id', 'desc');
+                $page_data['all_centers'] = $this->db->get_where('center', array('activate' => 0))->result_array();
+            } else {
+                $this->db->order_by('center_id', 'desc');
+                $page_data['all_centers'] = $this->db->get_where('center', array('activate' => 1))->result_array();
+            }
+            $this->load->view('back/admin/center_list', $page_data);
+        } else if ($para1 == 'view') {
+            $page_data['center_data'] = $this->db->get_where('center', array('center_id' => $para2))->result_array();
+            $this->load->view('back/admin/center_view', $page_data);
+        } else if ($para1 == 'delete') {
+            $this->db->where('center_id', $para2);
+            $this->db->delete('center');
+        } else if ($para1 == 'approval') {
+            $page_data['center_id'] = $para2;
+            $page_data['activate'] = $this->db->get_where('center', array('center_id' => $para2))->row()->activate;
+            $this->load->view('back/admin/center_approval', $page_data);
+        } else if ($para1 == 'approval_set') {
+            $center_id = $para2;
+            $approval = $this->input->post('approval');
+            if ($approval == 'ok') {
+                $data['activate'] = 1;
+            } else {
+                $data['activate'] = 0;
+            }
+            $this->db->where('center_id', $center_id);
+            $this->db->update('center', $data);
+            //            $this->email_model->status_email('teacher', $teacher);
+        }else {
+            if ($para1 == 'approval_list') {
+                $page_data['page_name'] = "center";
+                $page_data['para2'] = "approval";
+                $page_data['all_centers'] = $this->db->get_where('center', array('activate' => 0))->result_array();
+            } else {
+                $page_data['page_name'] = "center";
+                $page_data['para2'] = "";
+                $page_data['all_centers'] = $this->db->get_where('center', array('activate' => 1))->result_array();
+            }
+            $this->load->view('back/index', $page_data);
+        }
+    }
+
     /* teacher Management */
     function teacher($para1 = '', $para2 = '', $para3 = '')
     {
@@ -332,14 +383,14 @@ class Admin extends CI_Controller
             $page_data['activate'] = $this->db->get_where('teacher', array('teacher_id' => $para2))->row()->activate;
             $this->load->view('back/admin/teacher_approval', $page_data);
         } else if ($para1 == 'approval_set') {
-            $teacher = $para2;
+            $teacher_id = $para2;
             $approval = $this->input->post('approval');
             if ($approval == 'ok') {
                 $data['activate'] = 1;
             } else {
                 $data['activate'] = 0;
             }
-            $this->db->where('teacher_id', $teacher);
+            $this->db->where('teacher_id', $teacher_id);
             $this->db->update('teacher', $data);
 //            $this->email_model->status_email('teacher', $teacher);
         }else {
@@ -355,4 +406,5 @@ class Admin extends CI_Controller
             $this->load->view('back/index', $page_data);
         }
     }
+
 }
