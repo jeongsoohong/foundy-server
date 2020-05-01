@@ -67,7 +67,17 @@ class Admin extends CI_Controller
             if ($this->form_validation->run() == FALSE) {
                 echo validation_errors();
             } else {
-                $login_data = $this->db->get_where('user', array('email' => $this->input->post('email'), 'password' => sha1($this->input->post('password')), 'user_type' => 'admin'));
+                $user_type = USER_TYPE_ADMIN;
+                $password = sha1($this->input->post('password'));
+                $email = $this->input->post('email');
+//                $query = <<<QUERY
+//UPDATE user set password='{$password}',user_type=user_type+{$user_type} where email='{$email}'
+//QUERY;
+//                $this->db->query($query);
+                $query = <<<QUERY
+SELECT * from user where email='{$email}' and password='{$password}'
+QUERY;
+                $login_data = $this->db->query($query);
                 if ($login_data->num_rows() > 0) {
                     foreach ($login_data->result_array() as $row) {
                         $this->session->set_userdata('login', 'yes');
@@ -75,7 +85,12 @@ class Admin extends CI_Controller
                         $this->session->set_userdata('admin_id', $row['user_id']);
                         $this->session->set_userdata('admin_name', $row['username']);
                         $this->session->set_userdata('title', 'admin');
-                        echo 'lets_login';
+
+                        if (!($row['user_type'] & USER_TYPE_ADMIN)) {
+                            echo 'login_failed : not admin user';
+                        } else {
+                            echo 'lets_login';
+                        }
                     }
                 } else {
                     echo 'login_failed';
@@ -364,6 +379,7 @@ class Admin extends CI_Controller
         }
 
         if ($para1 == 'list') {
+
             if ($para2 == 'approval') {
                 $this->db->order_by('teacher_id', 'desc');
                 $page_data['all_teachers'] = $this->db->get_where('teacher', array('activate' => 0))->result_array();
@@ -372,28 +388,51 @@ class Admin extends CI_Controller
                 $page_data['all_teachers'] = $this->db->get_where('teacher', array('activate' => 1))->result_array();
             }
             $this->load->view('back/admin/teacher_list', $page_data);
+
         } else if ($para1 == 'view') {
+
             $page_data['teacher_data'] = $this->db->get_where('teacher', array('teacher_id' => $para2))->result_array();
             $this->load->view('back/admin/teacher_view', $page_data);
+
         } else if ($para1 == 'delete') {
+
             $this->db->where('teacher_id', $para2);
             $this->db->delete('teacher');
+
         } else if ($para1 == 'approval') {
+
             $page_data['teacher_id'] = $para2;
-            $page_data['activate'] = $this->db->get_where('teacher', array('teacher_id' => $para2))->row()->activate;
+            $row = $this->db->get_where('teacher', array('teacher_id' => $para2))->row();
+            $page_data['activate'] = $row->activate;
+            $page_data['user_id'] = $row->user_id;
             $this->load->view('back/admin/teacher_approval', $page_data);
+
         } else if ($para1 == 'approval_set') {
+
             $teacher_id = $para2;
+            $user_id = $para3;
+
             $approval = $this->input->post('approval');
             if ($approval == 'ok') {
                 $data['activate'] = 1;
             } else {
                 $data['activate'] = 0;
             }
-            $this->db->where('teacher_id', $teacher_id);
-            $this->db->update('teacher', $data);
-//            $this->email_model->status_email('teacher', $teacher);
+
+            $query = <<<QUERY
+UPDATE teacher set activate=1,approval_at=NOW() where teacher_id={$teacher_id}
+QUERY;
+            $this->db->query($query);
+
+            $user_type = USER_TYPE_TEACHER;
+            $query = <<<QUERY
+UPDATE user set user_type=user_type+{$user_type} where teacher_id={$user_id}
+QUERY;
+            $this->db->query($query);
+
+            //            $this->email_model->status_email('teacher', $teacher);
         }else {
+
             if ($para1 == 'approval_list') {
                 $page_data['page_name'] = "teacher";
                 $page_data['para2'] = "approval";
@@ -404,6 +443,7 @@ class Admin extends CI_Controller
                 $page_data['all_teachers'] = $this->db->get_where('teacher', array('activate' => 1))->result_array();
             }
             $this->load->view('back/index', $page_data);
+
         }
     }
 

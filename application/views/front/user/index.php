@@ -230,6 +230,7 @@
                     };
                 // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
                 var map = new kakao.maps.StaticMap(mapContainer, mapOption);
+                $('div.kakao-map').hide();
             });
         });
     });
@@ -253,6 +254,9 @@
         cursor: pointer;
     }
     .pleft_nav li.active {
-        background-color: #ebebeb!important;
+        background-color: #ebebeb !important;
+    }
+    .fa-angle-up,.fa-angle-down {
+        font-family: FontAwesome !important;
     }
 </style>

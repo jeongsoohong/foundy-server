@@ -57,11 +57,13 @@ foreach ($category_names as $category_name) {
                         <?php
                         if ($this->session->userdata('user_login') == 'yes') {
                             ?>
-                            <img src="<?php echo base_url(); ?>uploads/icon/login_icon02.png" alt="foit" style="height: 30px; width: 30px; margin-top: 10px"/>
+                            <img src="<?php echo base_url(); ?>uploads/icon/mypage_icon.png" alt="foit" style="height:
+                            30px; width: 30px; margin-top: 10px"/>
                             <?php
                         } else {
                             ?>
-                            <img src="<?php echo base_url(); ?>uploads/icon/login_icon01.png" alt="foit" style="height: 30px; width: 30px; margin-top: 10px"/>
+                            <img src="<?php echo base_url(); ?>uploads/icon/join_icon.png" alt="foit" style="height:
+                            30px; width: 30px; margin-top: 10px"/>
                             <?php
                         }
                         ?>
@@ -70,8 +72,8 @@ foreach ($category_names as $category_name) {
             </div>
         </div>
     </div>
-    <div class="navigation-wrapper" id="navbar">
-        <div class="container" style="height: 40px; padding: 0px">
+    <div class="navigation-wrapper" id="navbar" style="background-color: #FFFFFF;">
+        <div class="container" style="height: 40px; padding: 0px;">
             <!-- Navigation -->
             <nav class="navigation clearfix">
                 <ul class="nav sf-menu">

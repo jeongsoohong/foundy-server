@@ -29,24 +29,25 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <input class="form-control" id="youtube-url" name="youtube_url" value=""
+                                            <input class="form-control" id="youtube-url" name="youtube" value=""
                                                    type="url"
-                                                   placeholder="유투브 URL" data-toggle="tooltip" title="youtube_url">
+                                                   placeholder="유투브 홈 URL" data-toggle="tooltip" title="youtube">
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <input class="form-control" id="instagram-url" name="instagram_url" value=""
+                                            <input class="form-control" id="instagram-url" name="instagram" value=""
                                                    type="url"
-                                                   placeholder="인스타그램 URL" data-toggle="tooltip" title="instagram_url">
+                                                   placeholder="인스타그램 홈 URL" data-toggle="tooltip"
+                                                   title="instagram">
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <input class="form-control" id="homepage-url" name="homepage_url" value=""
+                                            <input class="form-control" id="homepage-url" name="homepage" value=""
                                                    type="url"
                                                    placeholder="블로그 / 홈페이지 URL" data-toggle="tooltip"
-                                                   title="homepage_url">
+                                                   title="homepage">
                                         </div>
                                     </div>
                                     <div class="col-md-12" style="border-top: 2px solid #f5f5f5; margin-top: 35px">

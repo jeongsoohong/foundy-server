@@ -36,13 +36,33 @@
                                         <div class="form-group">
                                             <div class="input-group">
                                                 <input class="form-control" id="center-address" name="address" value="" type="text"
-                                                       placeholder="지도검색(주소를 입력 후 검색을 눌러주세요)" data-toggle="tooltip" title="address"
+                                                       placeholder="주소검색(주소를 입력 후 검색을 눌러주세요)" data-toggle="tooltip"
+                                                       title="address"
                                                        style="border-top-left-radius: 0 !important;border-bottom-left-radius: 0 !important;">
-                                                <div class="input-group-addon"><label id="kakao-map-search" onclick="search_center()" style="font-size:10px !important;"><a href="#none">검색</a></label></div>
+                                                <div class="input-group-addon" style="padding: 0 0 0 0">
+                                                    <label id="kakao-map-search" onclick="search_center()" style="margin: 0 0 0 0">
+                                                        <a href="#">
+                                                            <img src="<?php echo base_url(); ?>uploads/icon/icon-2.png"
+                                                                 style="object-fit: contain !important; width: 48px
+                                                                 !important; height: 30px !important; overflow:
+                                                                 hidden; display: flex; align-items: center;
+                                                                 justify-content: center;">
+                                                        </a>
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-12 center-address-detail" style="display: none;">
+                                        <div class="form-group">
+                                            <input class="form-control" id="center-address-detail"
+                                                   name="address-detail"
+                                                   value="" type="text"
+                                                   placeholder="상세주소를 입력해주세요" data-toggle="tooltip"
+                                                   title="address-detail">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 kakao-map">
                                         <div class="form-group">
                                             <div id="kakao-map" style="width:100%;height:350px;"></div>
                                         </div>
@@ -137,6 +157,8 @@
             if (status == null || status !== kakao.maps.services.Status.OK) {
                 alert("주소가 잘못되었습니다");
             } else {
+                $('div.kakao-map').show();
+
                 var mapContainer = document.getElementById('kakao-map'), // 지도를 표시할 div
                     mapOption = {
                         center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
@@ -168,6 +190,8 @@
 
                 document.getElementById('center-latitude').value = result[0].y;
                 document.getElementById('center-longitude').value = result[0].x;
+
+                $('div.center-address-detail').show();
             }
         });
     }

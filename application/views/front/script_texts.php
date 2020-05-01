@@ -251,10 +251,16 @@
     }
     .sf-menu li.active-under {
         font-weight: bold;
-        border-bottom: solid 1px #676767;
+        border-bottom: solid 2px #353535 !important;
+    }
+    .sf-menu li.active-under a {
+        color: #353535 !important;
     }
     .navigation .nav.sf-menu {
        line-height: 7px;
+    }
+    .navigation .nav.sf-menu a {
+        color: #BDBDBD;
     }
     .box{
         overflow: hidden;

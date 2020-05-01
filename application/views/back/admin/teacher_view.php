@@ -46,19 +46,19 @@
                     </tr>
                     <tr>
                         <th class="custom_td"><?php echo ('유투브');?></th>
-                        <td class="custom_td"><a href="<?php echo $row['youtube_url'] ?>" onclick="window.open(this.href, '_blank'); return false;"><?php echo
-                                $row['youtube_url']; ?></a></td>
+                        <td class="custom_td"><a href="<?php echo $row['youtube'] ?>" onclick="window.open(this.href, '_blank'); return false;"><?php echo
+                                $row['youtube']; ?></a></td>
                     </tr>
                     <tr>
                         <th class="custom_td"><?php echo ('인스타그램');?></th>
-                        <td class="custom_td"><a href="<?php echo $row['instagram_url'] ?>" onclick="window.open(this.href, '_blank'); return false;"><?php echo
-                                $row['instagram_url']; ?></a></td>
+                        <td class="custom_td"><a href="<?php echo $row['instagram'] ?>" onclick="window.open(this.href, '_blank'); return false;"><?php echo
+                                $row['instagram']; ?></a></td>
                     </tr>
                     <tr>
                         <th class="custom_td"><?php echo ('홈페이지 / 블로그');?></th>
-                        <td class="custom_td"><a href="<?php echo $row['homepage_url'] ?>" onclick="window.open(this
+                        <td class="custom_td"><a href="<?php echo $row['homepage'] ?>" onclick="window.open(this
                         .href, '_blank'); return false;"><?php echo
-                            $row['homepage_url']; ?></a></td>
+                            $row['homepage']; ?></a></td>
                     </tr>
                 </table>
               </div>

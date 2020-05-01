@@ -1,5 +1,6 @@
 <!--<div class="information-title" style="margin-bottom: 0px;">프로필</div>-->
-<div class="profile" style="font-family: 'Quicksand' !important; font-size: 18px; text-align: center; padding-bottom: 5px; !important;"><b>profile</b></div>
+<div class="profile" style="font-family: 'Quicksand' !important; font-size: 15px; text-align: center; padding-bottom:
+ 5px; !important;"><b>profile</b></div>
 <div class="row">
     <div class="col-md-12" style="padding: 0px 0px 10px 0px !important; ">
         <div class="recent-post" style="background: #fff;border: 1px solid #e0e0e0;">
@@ -30,13 +31,24 @@
                         <?php echo $nickname; ?>
                             &nbsp;&nbsp;&nbsp;
                         <?php
-                        if ($user_type == 'general') {
-                            echo '일반회원';
-                        } else if ($user_type == 'admin') {
+                        $user = '';
+                        if ($user_type & USER_TYPE_ADMIN) {
                             echo '어드민';
+                        } else if ($user_type & USER_TYPE_TEACHER and $user_type & USER_TYPE_CENTER) {
+                            $user .= '강사/센터회원';
+                        } else if ($user_type & USER_TYPE_TEACHER) {
+                            $user .= '강사회원';
+                        } else if ($user_type & USER_TYPE_CENTER) {
+                            $user .= '센터회원';
+                        } else if ($user_type & USER_TYPE_GENERAL > 0) {
+                            $user .= '일반회원';
                         } else {
-                            echo '비회원';
+                            $user .= '비회원';
                         }
+                        if ($user_type & USER_TYPE_SHOP) {
+                            $user .= ' | 점주';
+                        }
+                        echo $user;
                         ?>
                         </p>
                         <p>
@@ -59,27 +71,29 @@
         <div class="row">
             <div class="col-md-6">
 <!--                <h3 class="block-title"><span>MY STUDIO</span></h3>-->
-                <div class="profile" style="font-family: 'Quicksand' !important; font-size: 18px; text-align: center; padding-bottom: 5px; !important;"><b>my studio</b></div>
+                <div class="profile" style="font-family: 'Quicksand' !important; font-size: 15px; text-align: center;
+                 padding-bottom: 5px; !important;"><b>my studio</b></div>
                 <div class="widget widget-categories" style="padding-bottom:10px; ">
                     <ul class="profile_ul">
                         <li>&nbsp;&nbsp;>&nbsp;&nbsp;자이요가 한남점
                             <span class="pull-right">
                                 <img src="<?php echo base_url(); ?>uploads/icon/icon-4.png">
                             </span>
-                            <span class="pull-right schedule">SCHEDULE</span>
+                            <span class="pull-right schedule" style="font-size: 10px;">SCHEDULE</span>
                         </li>
                         <li>&nbsp;&nbsp;>&nbsp;&nbsp;청담요가
                             <span class="pull-right">
                                 <img src="<?php echo base_url(); ?>uploads/icon/icon-4.png">
                             </span>
-                            <span class="pull-right schedule">SCHEDULE</span>
+                            <span class="pull-right schedule" style="font-size: 10px;">SCHEDULE</span>
                         </li>
                     </ul>
                 </div>
             </div>
             <div class="col-md-6">
 <!--                <h3 class="block-title"><span>Online Class</span></h3>-->
-                <div class="profile" style="font-family: 'Quicksand' !important; font-size: 18px; text-align: center; padding-bottom: 5px; !important;"><b>online class</b></div>
+                <div class="profile" style="font-family: 'Quicksand' !important; font-size: 15px; text-align: center;
+                 padding-bottom: 5px; !important;"><b>online class</b></div>
                 <div class="widget widget-categories" style="padding-bottom:10px; ">
                     <ul class="profile_ul">
                         <li>&nbsp;&nbsp;>&nbsp;&nbsp;부진/숨쉬는 고래 (요가%영상)

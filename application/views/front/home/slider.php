@@ -7,40 +7,56 @@
     </ol>
     <div class="carousel-inner" role="listbox">
         <div class="item active">
-            <a href="<?php echo base_url(); ?>home/user">
-                    <img class="first-slide slide-img" src="<?php echo base_url(); ?>uploads/banner_image/main banner01.png" style="object-fit: fill !important; min-width: 100%;" alt="First slide">
-            </a>
-<!--            <div class="container">
+            <img class="first-slide slide-img" src="<?php echo base_url(); ?>uploads/banner_image/main01.png" alt="First slide">
+            <div class="container">
                 <div class="carousel-caption">
-                    <h1>Example headline.</h1>
-                    <p>Note: If you're viewing this page via a <code>file://</code> URL, the "next" and "previous" Glyphicon buttons on the left and right might not load/display properly due to web browser security rules.</p>
-                    <p><a class="btn btn-lg btn-primary" href="#" role="button">Sign up today</a></p>
+                    <h1>JOIN NOW!</h1>
+                    <p>파운디에서 당신의 건강한 삶을 찾아보세요<br>
+                       베타기간 동안 가입 혜택도 지금 확인해보세요!
+                    </p>
+                    <p>
+                        <a class="btn btn-lg btn-primary" href="<?php echo base_url(); ?>home/user" role="button">
+                            지금 가입하기
+                        </a>
+                    </p>
                 </div>
-            </div>-->
+            </div>
         </div>
         <div class="item">
-            <a href="<?php echo base_url(); ?>home/user/center">
-            <img class="second-slide slide-img" src="<?php echo base_url(); ?>uploads/banner_image/main banner02.png" style="object-fit: fill !important; min-width: 100%;" alt="Second slide">
-            </a>
-<!--            <div class="container">
+            <img class="second-slide slide-img" src="<?php echo base_url(); ?>uploads/banner_image/main02.png" alt="Second slide">
+            <div class="container">
                 <div class="carousel-caption">
-                    <h1>Another example headline.</h1>
-                    <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-                    <p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p>
+                    <h1>JOIN NOW!</h1>
+                    <p>요가/필라테스 센터 등록하고<br>
+                       다양한 파운딧의 서비스를 무료로 이용해 보세요!
+                    </p>
+                    <p>
+                        <a class="btn btn-lg btn-primary" href="<?php echo base_url(); ?>home/user/center"
+                           role="button">
+                            센터회원 가입하기
+                        </a>
+                    </p>
                 </div>
-            </div>-->
+            </div>
         </div>
         <div class="item">
             <a href="<?php echo base_url(); ?>home/user/teacher">
-                <img class="second-slide slide-img" src="<?php echo base_url(); ?>uploads/banner_image/main banner03.png" style="object-fit: fill !important; min-width: 100%;" alt="Third slide">
+                <img class="second-slide slide-img" src="<?php echo base_url(); ?>uploads/banner_image/main03.png" alt="Third slide">
             </a>
-<!--            <div class="container">
+            <div class="container">
                 <div class="carousel-caption">
-                    <h1>One more for good measure.</h1>
-                    <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-                    <p><a class="btn btn-lg btn-primary" href="#" role="button">Browse gallery</a></p>
+                    <h1>JOIN NOW!</h1>
+                    <p>ONLY, 강사 회원만을 위해 준비한 혜택을<br>
+                       지금 바로 확인하세요!
+                    </p>
+                    <p>
+                        <a class="btn btn-lg btn-primary" href="<?php echo base_url(); ?>home/user/teacher"
+                           role="button">
+                            강사회원 가입하기
+                        </a>
+                    </p>
                 </div>
-            </div>-->
+            </div>
         </div>
     </div>
     <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">

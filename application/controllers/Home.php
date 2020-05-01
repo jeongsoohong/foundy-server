@@ -52,7 +52,7 @@ class Home extends CI_Controller
             if (!isset($_POST) || !isset($_POST['id'])) {
                 $redirect_url .= "home/login";
                 $result['status'] = 'error';
-                $result['message'] = "오류가 발생했습니다. 다시 로그인해주세요.";
+                $result['message'] = "오류가 발생했습니다. 다시 로그인해주세요(1).";
                 $result['redirect_url'] = $redirect_url;
             } else {
 
@@ -61,41 +61,36 @@ class Home extends CI_Controller
                 $kakao_account = $_POST['kakao_account'];
                 $profile = $kakao_account['profile'];
 
-                $user_id = (int)$_POST['id'];
+                $kakao_id = (int)$_POST['id'];
 
-                $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
+                $user_data = $this->db->get_where('user', array('kakao_id' => $kakao_id))->row();
 
-                //if ($user_data->num_rows()) {
                 if (empty($user_data)) {
-                    $user_type = 'general';
+                    $user_type = USER_TYPE_GENERAL;
                     $username = '';
                     $nickname = $profile['nickname'];
                     $gender = $kakao_account['gender'];
                     $email = $kakao_account['email'];
                     $phone = '';
-                    $address1 = '';
-                    $address2 = '';
-                    $thumbnail_image_url = $profile['thumbnail_image_url'];
-                    $profile_image_url = $profile['profile_image_url'];
-                    $custom_image_url = '';
+                    $kakao_thumbnail_image_url = $profile['thumbnail_image_url'];
+                    $kakao_profile_image_url = $profile['profile_image_url'];
+                    $profile_image_url = '';
                     $password = '';
                     $create_at = $connected_at;
 
                     $ins = array(
-                        'user_id' => $user_id,
+                        'kakao_id' => $kakao_id,
                         'user_type' => $user_type,
                         'username' => $username,
                         'nickname' => $nickname,
                         'gender' => $gender,
                         'email' => $email,
                         'phone' => $phone,
-                        'address1' => $address1,
-                        'address2' => $address2,
-                        'thumbnail_image_url' => $thumbnail_image_url,
+                        'kakao_thumbnail_image_url' => $kakao_thumbnail_image_url,
+                        'kakao_profile_image_url' => $kakao_profile_image_url,
                         'profile_image_url' => $profile_image_url,
-                        'custom_image_url' => $custom_image_url,
                         'password' => $password,
-                        'last_login' => date("Y-m-d H:i:s"),
+                        'last_login_at' => date("Y-m-d H:i:s"),
                         'create_at' => $create_at,
                     );
 
@@ -103,25 +98,27 @@ class Home extends CI_Controller
                     $result['message'] = "첫 방문을 환영합니다.";
                 } else {
 
+                    $user_id = $user_data->user_id;
+                    $kakao_id = $user_data->kakao_id;
                     $email = $user_data->email;
                     $user_type = $user_data->user_type;
                     $nickname = $user_data->nickname;
-                    $thumbnail_image_url = $user_data->thumbnail_image_url;
+                    $kakao_thumbnail_image_url = $user_data->kakao_thumbnail_image_url;
                     $profile_image_url = $user_data->profile_image_url;
-                    $custom_image_url = $user_data->custom_data_url;
 
-                    $this->db->update('user', array('last_login' => date("Y-m-d H:i:s")), array('user_id' => $user_id));
+                    $this->db->update('user', array('last_login_at' => date("Y-m-d H:i:s")), array('kakao_id' =>
+                        $kakao_id));
                     $result['message'] = "로그인해주셔서 감사합니다.";
                 }
 
                 $this->session->set_userdata('user_login', 'yes');
                 $this->session->set_userdata('user_id', $user_id);
+                $this->session->set_userdata('kakao_id', $kakao_id);
                 $this->session->set_userdata('email', $email);
                 $this->session->set_userdata('user_type', $user_type);
                 $this->session->set_userdata('nickname', $nickname);
-                $this->session->set_userdata('thumbnail_image_url', $thumbnail_image_url);
+                $this->session->set_userdata('kakao_thumbnail_image_url', $kakao_thumbnail_image_url);
                 $this->session->set_userdata('profile_image_url', $profile_image_url);
-                $this->session->set_userdata('custom_image_url', $custom_image_url);
 
                 $redirect_url .= 'home';
                 $result['status'] = 'success';
@@ -224,15 +221,61 @@ class Home extends CI_Controller
             $this->load->view('front/user/profile', $page_data);
 
         } elseif ($view_type == "center_register") {
-            $this->load->view('front/user/center_register');
+
+            $user_id = $this->session->userdata('user_id');
+            $query = <<<QUERY
+SELECT center_id FROM user WHERE user_id={$user_id}
+QUERY;
+            $row = $this->db->query($query)->row();
+
+            if ($row->center_id > 0) {
+                echo "<script>alert('이미신청하셨습니다')</script>";
+
+                $page_data['user_id'] = $this->session->userdata('user_id');
+                $page_data['email'] = $this->session->userdata('email');
+                $page_data['user_type'] = $this->session->userdata('user_type');
+                $page_data['nickname'] = $this->session->userdata('nickname');
+                $page_data['profile_image_url'] = $this->session->userdata('profile_image_url');
+                $page_data['thumbnail_image_url'] = $this->session->userdata('thumbname_image_url');
+                $page_data['custom_image_url'] = $this->session->userdata('custom_image_url');
+
+                $this->load->view('front/user/profile', $page_data);
+            } else {
+                $this->load->view('front/user/center_register');
+            }
+
         } elseif ($view_type == "teacher_register") {
-            $this->load->view('front/user/teacher_register');
+
+            $user_id = $this->session->userdata('user_id');
+            $query = <<<QUERY
+SELECT teacher_id FROM user WHERE user_id={$user_id}
+QUERY;
+            $row = $this->db->query($query)->row();
+
+            if ($row->teacher_id > 0) {
+                echo "<script>alert('이미신청하셨습니다')</script>";
+
+                $page_data['user_id'] = $this->session->userdata('user_id');
+                $page_data['email'] = $this->session->userdata('email');
+                $page_data['user_type'] = $this->session->userdata('user_type');
+                $page_data['nickname'] = $this->session->userdata('nickname');
+                $page_data['profile_image_url'] = $this->session->userdata('profile_image_url');
+                $page_data['thumbnail_image_url'] = $this->session->userdata('thumbname_image_url');
+                $page_data['custom_image_url'] = $this->session->userdata('custom_image_url');
+
+                $this->load->view('front/user/profile', $page_data);
+
+            } else {
+                $this->load->view('front/user/teacher_register');
+            }
+
         } elseif ($view_type == "do_center_register") {
             $this->load->library('form_validation');
 
             $this->form_validation->set_rules('title', 'center-title', 'trim|required|max_length[32]');
             $this->form_validation->set_rules('phone', 'center-phone', 'trim|required|numeric|max_length[16]');
             $this->form_validation->set_rules('address', 'center-address', 'trim|required|max_length[256]');
+            $this->form_validation->set_rules('address_detail', 'center-address-detail', 'trim|max_length[256]');
             $this->form_validation->set_rules('latitude', 'center-latitude', 'trim|required|max_length[32]');
             $this->form_validation->set_rules('longitude', 'center-longitude', 'trim|required|max_length[32]');
 
@@ -243,16 +286,44 @@ class Home extends CI_Controller
                 $title = $this->input->post('title');
                 $phone = $this->input->post('phone');
                 $address = $this->input->post('address');
+                $address_detail = $this->input->post('address_detail');
                 $longitude = $this->input->post('longitude');
                 $latitude = $this->input->post('latitude');
 
+                $address_detail = (empty($address_detail) ? '' : $address_detail);
+
+                $data = array(
+                    'user_id' => $user_id,
+                    'title' => $title,
+                    'phone' => $phone,
+                    'address' => $address,
+                    'address_detail' => $address_detail,
+                    'latitude' => $latitude,
+                    'longitude' => $longitude,
+                    'activate' => 0
+                );
+                $this->db->set($data);
+                $this->db->set('location', "ST_GeomFromText('POINT({$longitude} {$latitude})')", false);
+                $this->db->set('create_at', 'NOW()', false);
+                $this->db->set('approval_at', 'NOW()', false);
+                $this->db->insert('center');
+
+//                $query = <<<QUERY
+//INSERT INTO center (user_id,title,phone,address,address_detail,location,latitude,longitude,activate,create_at,
+//approval_at)
+//values ({$user_id},'{$title}','{$phone}','{$address}','{$address_detail}',ST_GeomFromText('POINT({$longitude}
+//{$latitude})'),
+//'{$latitude}','{$longitude}',false,NOW(),NOW())
+//QUERY;
+//                $this->db->query($query);
+                $center_id = $this->db->insert_id();
+
                 $query = <<<QUERY
-INSERT INTO center (user_id,title,phone,address,location,latitude,longitude,activate,create_at,approval_at) 
-values ({$user_id},'{$title}','{$phone}','{$address}',ST_GeomFromText('POINT({$longitude} {$latitude})'),'{$latitude}',
-'{$longitude}',false,NOW(),NOW())
+UPDATE user set center_id={$center_id} where user_id={$user_id}
 QUERY;
                 $this->db->query($query);
-                $id = $this->db->insert_id();
+
+                $this->session->set_userdata('center_id', $center_id);
 
                 echo "done";
             }
@@ -260,27 +331,43 @@ QUERY;
             $this->load->library('form_validation');
 
             $this->form_validation->set_rules('introduce', 'introduce', 'trim|required|max_length[64]');
-            $this->form_validation->set_rules('youtube_url', 'youtube_url', 'trim|required|valid_url|max_length[256]');
-            $this->form_validation->set_rules('instagram_url', 'instagram_url', 'trim|valid_url|max_length[256]');
-            $this->form_validation->set_rules('homepage_url', 'homepage_url', 'trim|valid_url|max_length[256]');
+            $this->form_validation->set_rules('youtube', 'youtube', 'trim|valid_url|max_length[256]');
+            $this->form_validation->set_rules('instagram_', 'instagram', 'trim|valid_url|max_length[256]');
+            $this->form_validation->set_rules('homepage', 'homepage', 'trim|valid_url|max_length[256]');
 
             if ($this->form_validation->run() == FALSE) {
                 echo '<br>' . validation_errors();
             } else {
                 $user_id = $this->session->userdata('user_id');
                 $introduce = $this->input->post('introduce');
-                $youtube_url = $this->input->post('youtube_url');
-                $instagram_url = $this->input->post('instagram_url');
-                $homepage_url = $this->input->post('homepage_url');
+                $youtube = $this->input->post('youtube');
+                $instagram = $this->input->post('instagram');
+                $homepage = $this->input->post('homepage');
 
-                $query = <<<QUERY
-INSERT INTO teacher (user_id,introduce,youtube_url,instagram_url,homepage_url,activate,create_at,approval_at) 
-values ({$user_id},'{$introduce}','{$youtube_url}','{$instagram_url}','{$homepage_url}',false,NOW(),NOW())
+                if (empty($youtube) && empty($instagram) && empty($homepage)) {
+                    echo "youtube : {$youtube}, insta : {$instagram}, homepage : {$homepage}";
+                } else {
+                    $data = array(
+                        'user_id' => $user_id,
+                        'introduce' => $introduce,
+                        'youtube' => $youtube,
+                        'instagram' => $instagram,
+                        'homepage' => $homepage,
+                        'create_at' => 'NOW()',
+                        'approval_at' => 'NOW()'
+                    );
+                    $this->db->insert('teacher', $data);
+                    $teacher_id = $this->db->insert_id();
+
+                    $query = <<<QUERY
+UPDATE user set teacher_id={$teacher_id} where user_id={$user_id}
 QUERY;
-                $this->db->query($query);
-                $id = $this->db->insert_id();
+                    $this->db->query($query);
 
-                echo "done";
+                    $this->session->set_userdata('teacher_id', $teacher_id);
+
+                    echo "done";
+                }
             }
         } else {
             if ($view_type == 'center') {
