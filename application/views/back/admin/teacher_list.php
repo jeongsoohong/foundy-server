@@ -5,6 +5,7 @@
                 <th><?php echo ('로고');?></th>
                 <th><?php echo ('유저아이디');?></th>
                 <th><?php echo ('강사아이디');?></th>
+                <th><?php echo ('강사이름');?></th>
                 <th><?php echo ('소개글');?></th>
                 <th><?php echo ('상태');?></th>
                 <th class="text-right"><?php echo ('옵션');?></th>
@@ -36,6 +37,7 @@ foreach($all_teachers as $row){
         </td>
         <td><?php echo $row['user_id']; ?></td>
         <td><?php echo $row['teacher_id']; ?></td>
+        <td><?php echo $row['name']; ?></td>
         <td><?php echo $row['introduce']; ?></td>
         <td>
             <div class="label label-<?php if($row['activate'] == 1){ ?>purple<?php } else { ?>danger<?php }
@@ -75,6 +77,7 @@ foreach($all_teachers as $row){
             <col width="50">
             <col width="50">
             <col width="50">
+            <col width="50">
             <col width="150">
             <col width="50">
             <col width="50">
@@ -84,6 +87,7 @@ foreach($all_teachers as $row){
             <th><?php echo ('번호');?></th>
             <th><?php echo ('유저아이디');?></th>
             <th><?php echo ('강사아이디');?></th>
+            <th><?php echo ('강사이름');?></th>
             <th><?php echo ('소개글');?></th>
             <th><?php echo ('승인상태');?></th>
             <th><?php echo ('이메일');?></th>
@@ -101,6 +105,8 @@ foreach($all_teachers as $row){
             <tr>
                 <td><?php echo $i; ?></td>
                 <td><?php echo $row['user_id']; ?></td>
+                <td><?php echo $row['teacher_id']; ?></td>
+                <td><?php echo $row['name']; ?></td>
                 <td><?php echo $row['introduce']; ?></td>
                 <td><?php echo $row['activate'] ? '승인' : '미승인'; ?></td>
                 <td><?php echo $row['email']; ?></td>

@@ -1,6 +1,6 @@
 <div>
     <?php
-        echo form_open(base_url() . 'admin/teacher/approval_set/'.$teacher_id.$user_id, array(
+        echo form_open(base_url() . 'admin/teacher/approval_set/'.$teacher_id.'/'.$user_id, array(
             'class' => 'form-horizontal',
             'method' => 'post',
             'id' => 'teacher_approval',

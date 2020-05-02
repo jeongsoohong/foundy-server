@@ -20,8 +20,8 @@
                     }
                 ?>
             </div>
-            <h4 class="text-lg text-overflow mar-no"><?php echo $row['teacher_id']?></h4>
-            <p class="text-sm"><?php echo ('teacher');?></p>
+            <h2 class="text-lg text-overflow mar-no"><b><?php echo $row['name']?></b></h2>
+            <p class="text-sm" style="padding-top: 10px !important;"><?php echo ('강사회원');?></p>
             <div class="pad-ver btn-group">
 <!--                --><?php //if($row['facebook'] != ''){ ?>
 <!--                    <a href="--><?php //echo $row['facebook'];?><!--" target="_blank" class="btn btn-icon btn-hover-primary fa fa-facebook icon-lg"></a>-->

@@ -22,6 +22,13 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
+                                            <input class="form-control" id="teacher_name" name="teacher_name" value=""
+                                                   type="text"
+                                                   placeholder="강사이름" data-toggle="tooltip" title="teacher_name">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
                                             <input class="form-control" id="introduce" name="introduce" value=""
                                                    type="text"
                                                    placeholder="소개글" data-toggle="tooltip" title="introduce">

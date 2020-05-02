@@ -420,14 +420,20 @@ QUERY;
             }
 
             $query = <<<QUERY
-UPDATE teacher set activate=1,approval_at=NOW() where teacher_id={$teacher_id}
+UPDATE teacher set activate={$data['activate']},approval_at=NOW() where teacher_id={$teacher_id}
 QUERY;
             $this->db->query($query);
 
             $user_type = USER_TYPE_TEACHER;
-            $query = <<<QUERY
-UPDATE user set user_type=user_type+{$user_type} where teacher_id={$user_id}
+            if ($approval == 'ok') {
+                $query = <<<QUERY
+UPDATE user set user_type=user_type+{$user_type} where user_id={$user_id}
 QUERY;
+            } else {
+                $query = <<<QUERY
+UPDATE user set user_type=user_type-{$user_type} where user_id={$user_id}
+QUERY;
+            }
             $this->db->query($query);
 
             //            $this->email_model->status_email('teacher', $teacher);

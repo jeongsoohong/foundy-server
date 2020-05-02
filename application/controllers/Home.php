@@ -218,6 +218,16 @@ class Home extends CI_Controller
             $page_data['thumbnail_image_url'] = $this->session->userdata('thumbname_image_url');
             $page_data['custom_image_url'] = $this->session->userdata('custom_image_url');
 
+            if ($this->session->userdata('user_type') & USER_TYPE_TEACHER) {
+                $row = $this->db->get_where('teacher', array( 'user_id' => $this->session->userdata('user_id') ))->row();
+                $page_data['activate'] = $row->activate;
+                if ($row->activate) {
+                    $page_data['youtube'] = $row->youtube;
+                    $page_data['instagram'] = $row->instagram;
+                    $page_data['homepage'] = $row->homepage;
+                }
+            }
+
             $this->load->view('front/user/profile', $page_data);
 
         } elseif ($view_type == "center_register") {
@@ -330,6 +340,7 @@ QUERY;
         } elseif ($view_type == "do_teacher_register") {
             $this->load->library('form_validation');
 
+            $this->form_validation->set_rules('teacher_name', 'teacher_name', 'trim|required|max_length[32]');
             $this->form_validation->set_rules('introduce', 'introduce', 'trim|required|max_length[64]');
             $this->form_validation->set_rules('youtube', 'youtube', 'trim|valid_url|max_length[256]');
             $this->form_validation->set_rules('instagram_', 'instagram', 'trim|valid_url|max_length[256]');
@@ -338,6 +349,7 @@ QUERY;
             if ($this->form_validation->run() == FALSE) {
                 echo '<br>' . validation_errors();
             } else {
+                $name = $this->input->post('teacher_name');
                 $user_id = $this->session->userdata('user_id');
                 $introduce = $this->input->post('introduce');
                 $youtube = $this->input->post('youtube');
@@ -348,6 +360,7 @@ QUERY;
                     echo "youtube : {$youtube}, insta : {$instagram}, homepage : {$homepage}";
                 } else {
                     $data = array(
+                        'name' => $name,
                         'user_id' => $user_id,
                         'introduce' => $introduce,
                         'youtube' => $youtube,
@@ -359,10 +372,12 @@ QUERY;
                     $this->db->insert('teacher', $data);
                     $teacher_id = $this->db->insert_id();
 
-                    $query = <<<QUERY
-UPDATE user set teacher_id={$teacher_id} where user_id={$user_id}
-QUERY;
-                    $this->db->query($query);
+//                    $query = <<<QUERY
+//UPDATE user set teacher_id={$teacher_id} where user_id={$user_id}
+//QUERY;
+//                    $this->db->query($query);
+                    $this->db->where('user_id', $user_id);
+                    $this->db->update('user', array( 'teacher_id' => $teacher_id));
 
                     $this->session->set_userdata('teacher_id', $teacher_id);
 
