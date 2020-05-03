@@ -343,6 +343,7 @@ class Home extends CI_Controller
             redirect(base_url() . 'home/login', 'refresh');
         }
 
+        $base_url = base_url();
         $view_type = $this->uri->segment(3);
 
         if ($view_type == 'info') {
@@ -357,11 +358,6 @@ class Home extends CI_Controller
             if ($this->session->userdata('user_type') & USER_TYPE_TEACHER) {
                 $row = $this->db->get_where('teacher', array( 'user_id' => $this->session->userdata('user_id') ))->row();
                 $page_data['activate'] = $row->activate;
-                if ($row->activate) {
-                    $page_data['youtube'] = $row->youtube;
-                    $page_data['instagram'] = $row->instagram;
-                    $page_data['homepage'] = $row->homepage;
-                }
             }
 
             $this->load->view('front/user/profile', $page_data);
@@ -375,17 +371,8 @@ QUERY;
             $row = $this->db->query($query)->row();
 
             if ($row->center_id > 0) {
-                echo "<script>alert('이미신청하셨습니다')</script>";
-
-                $page_data['user_id'] = $this->session->userdata('user_id');
-                $page_data['email'] = $this->session->userdata('email');
-                $page_data['user_type'] = $this->session->userdata('user_type');
-                $page_data['nickname'] = $this->session->userdata('nickname');
-                $page_data['profile_image_url'] = $this->session->userdata('profile_image_url');
-                $page_data['thumbnail_image_url'] = $this->session->userdata('thumbname_image_url');
-                $page_data['custom_image_url'] = $this->session->userdata('custom_image_url');
-
-                $this->load->view('front/user/profile', $page_data);
+                echo ("<script>alert('이미신청하셨습니다'); window.location.href='{$base_url}home/user'</script>");
+                exit;
             } else {
                 $this->load->view('front/user/center_register');
             }
@@ -399,18 +386,8 @@ QUERY;
             $row = $this->db->query($query)->row();
 
             if ($row->teacher_id > 0) {
-                echo "<script>alert('이미신청하셨습니다')</script>";
-
-                $page_data['user_id'] = $this->session->userdata('user_id');
-                $page_data['email'] = $this->session->userdata('email');
-                $page_data['user_type'] = $this->session->userdata('user_type');
-                $page_data['nickname'] = $this->session->userdata('nickname');
-                $page_data['profile_image_url'] = $this->session->userdata('profile_image_url');
-                $page_data['thumbnail_image_url'] = $this->session->userdata('thumbname_image_url');
-                $page_data['custom_image_url'] = $this->session->userdata('custom_image_url');
-
-                $this->load->view('front/user/profile', $page_data);
-
+                echo ("<script>alert('이미신청하셨습니다'); window.location.href='{$base_url}home/user'</script>");
+                exit;
             } else {
                 $this->load->view('front/user/teacher_register');
             }
@@ -454,14 +431,6 @@ QUERY;
                 $this->db->set('approval_at', 'NOW()', false);
                 $this->db->insert('center');
 
-                //                $query = <<<QUERY
-                //INSERT INTO center (user_id,title,phone,address,address_detail,location,latitude,longitude,activate,create_at,
-                //approval_at)
-                //values ({$user_id},'{$title}','{$phone}','{$address}','{$address_detail}',ST_GeomFromText('POINT({$longitude}
-                //{$latitude})'),
-                //'{$latitude}','{$longitude}',false,NOW(),NOW())
-                //QUERY;
-                //                $this->db->query($query);
                 $center_id = $this->db->insert_id();
 
                 $query = <<<QUERY
@@ -508,10 +477,6 @@ QUERY;
                     $this->db->insert('teacher', $data);
                     $teacher_id = $this->db->insert_id();
 
-                    //                    $query = <<<QUERY
-                    //UPDATE user set teacher_id={$teacher_id} where user_id={$user_id}
-                    //QUERY;
-                    //                    $this->db->query($query);
                     $this->db->where('user_id', $user_id);
                     $this->db->update('user', array( 'teacher_id' => $teacher_id));
 
@@ -538,6 +503,8 @@ QUERY;
 
     function teacher($para1 = "", $para2 = "", $para3 = "")
     {
+        $base_url = base_url();
+
         if ($para1 == "profile") {
 
             $teacher_user_id = $para2;
@@ -551,13 +518,13 @@ QUERY;
             $user_data = $this->db->get_where('user', array('user_id' => $teacher_user_id))->row();
             $str = json_encode($user_data);
             if (!($user_data->user_type & USER_TYPE_TEACHER)) {
-                echo "<script>alert('강사회원이 아닙니다. {$str} {$this->uri->uri_string()} {$teacher_user_id}')</script>";
+                echo ("<script>alert('강사회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
                 exit;
             }
 
             $teacher_data = $this->db->get_where('teacher', array('user_id' => $teacher_user_id))->row();
             if ($teacher_data->activate == 0) {
-                echo "<script>alert('승인 대기중 입니다')</script>";
+                echo ("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
                 exit;
             }
 
@@ -580,52 +547,83 @@ QUERY;
         } else if ($para1 == 'video') {
 
             $action = $para2;
-            $teacher_user_id = $para3;
 
-            if ($teacher_user_id != $this->session->userdata('user_id')) {
-                echo "<script>alert('권한이 없습니다')</script>";
-                exit;
+            if ($action != 'view') {
+
+                $teacher_user_id = $para3;
+                if ($teacher_user_id != $this->session->userdata('user_id')) {
+                    echo ("<script>alert('권한이 없습니다'); window.location.href='{$base_url}home/user'</script>");
+                    exit;
+                }
+
+                $user_data = $this->db->get_where('user', array('user_id' => $teacher_user_id))->row();
+                if (!($user_data->user_type & USER_TYPE_TEACHER)) {
+                    echo ("<script>alert('강사회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
+                    exit;
+                }
+
+                $teacher_data = $this->db->get_where('teacher', array('user_id' => $teacher_user_id))->row();
+                if ($teacher_data->activate == 0) {
+                    echo ("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
+                    exit;
+                }
+
+                $page_data['page_name'] = "teacher/video/".$action;
+                $page_data['asset_page'] = "teacher_video_".$action;
+                $page_data['page_title'] = "teacher_video_".$action;
+                $page_data['user_data'] = $user_data;
+                $page_data['teacher_data'] = $teacher_data;
+                $this->load->view('front/index', $page_data);
+
+            } else {
+                $video_id = $para3;
+
+                $video_data = $this->db->get_where('teacher_video', array('video_id' => $video_id))->row();
+                if (empty($video_data)) {
+                    echo ("<script>alert('잘못된 접근이 감지 되었습니다'); window.location.href='{$base_url}home'</script>");
+                    exit;
+                }
+
+                $teacher_data = $this->db->get_where('teacher', array('teacher_id' => $video_data->teacher_id))->row();
+                if (empty($teacher_data)) {
+                    echo ("<script>alert('잘못된 접근이 감지 되었습니다'); window.location.href='{$base_url}home'</script>");
+                    exit;
+                }
+
+                $user_data = $this->db->get_where('user', array('user_id' => $teacher_data->user_id))->row();
+                if (empty($teacher_data)) {
+                    echo ("<script>alert('잘못된 접근이 감지 되었습니다'); window.location.href='{$base_url}home'</script>");
+                    exit;
+                }
+
+                $page_data['page_name'] = "teacher/video/".$action;
+                $page_data['asset_page'] = "teacher_video_".$action;
+                $page_data['page_title'] = "teacher_video_".$action;
+                $page_data['video_data'] = $video_data;
+                $page_data['teacher_data'] = $teacher_data;
+                $page_data['user_data'] = $user_data;
+                $this->load->view('front/index', $page_data);
             }
-
-            $user_data = $this->db->get_where('user', array('user_id' => $teacher_user_id))->row();
-            $str = json_encode($user_data);
-            if (!($user_data->user_type & USER_TYPE_TEACHER)) {
-                echo "<script>alert('강사회원이 아닙니다. {$str} {$this->uri->uri_string()} {$teacher_user_id}')</script>";
-                exit;
-            }
-
-            $teacher_data = $this->db->get_where('teacher', array('user_id' => $teacher_user_id))->row();
-            if ($teacher_data->activate == 0) {
-                echo "<script>alert('승인 대기중 입니다')</script>";
-                exit;
-            }
-
-            $page_data['page_name'] = "teacher/video/".$action;
-            $page_data['asset_page'] = "teacher_video_".$action;
-            $page_data['page_title'] = "teacher_video_".$action;
-            $page_data['user_data'] = $user_data;
-            $page_data['teacher_data'] = $teacher_data;
-            $this->load->view('front/index', $page_data);
 
         } else if ($para1 == 'do_add_video') {
 
             $teacher_user_id = $para2;
 
             if ($teacher_user_id != $this->session->userdata('user_id')) {
-                echo "<script>alert('권한이 없습니다')</script>";
+                echo ("<script>alert('권한이 없습니다'); window.location.href='{$base_url}home/user'</script>");
                 exit;
             }
 
             $user_data = $this->db->get_where('user', array('user_id' => $teacher_user_id))->row();
             $str = json_encode($user_data);
             if (!($user_data->user_type & USER_TYPE_TEACHER)) {
-                echo "<script>alert('강사회원이 아닙니다. {$str} {$this->uri->uri_string()} {$teacher_user_id}')</script>";
+                echo ("<script>alert('강사회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
                 exit;
             }
 
             $teacher_data = $this->db->get_where('teacher', array('user_id' => $teacher_user_id))->row();
             if ($teacher_data->activate == 0) {
-                echo "<script>alert('승인 대기중 입니다')</script>";
+                echo ("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
                 exit;
             }
 

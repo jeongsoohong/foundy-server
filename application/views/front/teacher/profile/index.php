@@ -66,7 +66,9 @@ if (isset($homepage) && strlen($homepage) > 0) {
                                             <div class="col-md-12" style="margin: 10px 0 10px 0 !important; padding-left: 20px !important; text-align: left; !important; font-size: 12px !important;">
                                                 <p>
                                                     <?php echo $teacher_data->name; ?>
-                                                    &nbsp;&nbsp;&nbsp;<a class="profile-edit" href="#"><span style="color: gray;">수정</span></a>
+                                                    &nbsp;&nbsp;&nbsp;<a class="profile-edit pull-right" href="#">
+                                                        <span style="color: gray;">수정 &nbsp; > &nbsp;</span>
+                                                    </a>
                                                 </p>
                                                 <p>
                                                     팔로워 0
@@ -127,6 +129,7 @@ if (isset($homepage) && strlen($homepage) > 0) {
                                                             $video->thumbnail_image_url;
                                                     }
                                                     ?>
+                                                    <a href="<?php echo base_url(); ?>home/teacher/video/view/<?php echo $video->video_id; ?>">
                                                     <li>
                                                         <div class="col-md-12 media">
                                                             <div class="col-md-6 pull-left media-link" style="width: 150px; height: 90px;">
@@ -146,7 +149,7 @@ if (isset($homepage) && strlen($homepage) > 0) {
                                                             </div>
                                                         </div>
                                                     </li>
-
+                                                    </a>
                                                 <?php } ?>
                                             </ul>
                                         </div>
