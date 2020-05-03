@@ -56,31 +56,6 @@
                             &nbsp;/&nbsp;
                             팔로잉 0
                         </p>
-                        <?php
-                        if ($user_type & USER_TYPE_ADMIN || $user_type & USER_TYPE_TEACHER) {
-                            if (isset($youtube) && strlen($youtube) > 0) {
-                                ?>
-                                <a href="<?php echo $youtube; ?>" onclick="window.open(this.href, '_blank'); return false;">
-                                <span><img src="<?php echo base_url(); ?>uploads/icon/youtube_icon.png"></span>
-                                </a>
-                                <?php
-                            }
-                            if (isset($instagram) && strlen($instagram) > 0) {
-                                ?>
-                                <a href="<?php echo $instagram; ?>" onclick="window.open(this.href, '_blank'); return false;">
-                                <span><img src="<?php echo base_url(); ?>uploads/icon/insta_icon.png"></span>
-                                </a>
-                                <?php
-                            }
-                            if (isset($homepage) && strlen($homepage) > 0) {
-                                ?>
-                                <a href="<?php echo $homepage; ?>" onclick="window.open(this.href, '_blank'); return false;">
-                                <span><img src="<?php echo base_url(); ?>uploads/icon/icon-6.png"></span>
-                                </a>
-                                <?php
-                            }
-                        }
-                        ?>
                     </div>
                 </div>
             </div>
@@ -92,8 +67,13 @@
             <div class="col-md-6">
                 <div class="profile" style="font-family: 'Quicksand' !important; font-size: 15px; text-align: center; padding-bottom: 5px; !important;"><b>my class</b></div>
                 <div class="widget widget-categories" style="padding-bottom:10px; ">
-                    <ul class="profile_ul">
-                        <li>&nbsp;&nbsp;>&nbsp;&nbsp;온라인 클래스 바로가기
+                    <ul class="profile_ul" style="text-align: center">
+                        <li>
+                            <a href="<?php echo base_url(); ?>home/teacher/profile/<?php echo $user_id ?>"
+                               style="position:
+                            inherit;">
+                            <b>+</b>&nbsp;&nbsp;온라인 클래스 바로가기
+                            </a>
                         </li>
                     </ul>
                 </div>

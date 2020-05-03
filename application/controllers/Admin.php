@@ -80,15 +80,15 @@ QUERY;
                 $login_data = $this->db->query($query);
                 if ($login_data->num_rows() > 0) {
                     foreach ($login_data->result_array() as $row) {
-                        $this->session->set_userdata('login', 'yes');
-                        $this->session->set_userdata('admin_login', 'yes');
-                        $this->session->set_userdata('admin_id', $row['user_id']);
-                        $this->session->set_userdata('admin_name', $row['username']);
-                        $this->session->set_userdata('title', 'admin');
-
                         if (!($row['user_type'] & USER_TYPE_ADMIN)) {
                             echo 'login_failed : not admin user';
                         } else {
+                            $this->session->set_userdata('login', 'yes');
+                            $this->session->set_userdata('admin_login', 'yes');
+                            $this->session->set_userdata('admin_id', $row['user_id']);
+                            $this->session->set_userdata('admin_name', $row['username']);
+                            $this->session->set_userdata('title', 'admin');
+
                             echo 'lets_login';
                         }
                     }

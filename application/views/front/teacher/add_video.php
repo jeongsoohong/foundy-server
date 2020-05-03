@@ -1,4 +1,4 @@
-<div class="information-title">강사 회원 신청</div>
+<div class="information-title">클래스 올리기</div>
 <div class="details-wrap">
     <div class="row">
         <div class="col-md-12">
@@ -8,12 +8,12 @@
                         <div class="details-wrap">
                             <div class="block-title alt">
                                 <i class="fa fa-angle-down"></i>
-                                강사 정보 입력
+                                비디오 정보 입력
                             </div>
-                            <p class="text-success">강사 신청 완료 후 승인까지 3-4일이 소요됩니다</p>
+                            <p class="text-success">모든 정보를 정확히 입력 바랍니다</p>
                             <div class="details-box">
                                 <?php
-                                echo form_open(base_url() . 'home/user/do_teacher_register/', array(
+                                echo form_open(base_url() . 'home/teacher/_do_add_video/', array(
                                     'class' => 'form-login',
                                     'method' => 'post',
                                     'enctype' => 'multipart/form-data'
@@ -22,44 +22,37 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <input class="form-control" id="teacher_name" name="teacher_name" value=""
+                                            <input class="form-control" id="title" name="title" value=""
                                                    type="text"
-                                                   placeholder="강사이름" data-toggle="tooltip" title="teacher_name">
+                                                   placeholder="제목" data-toggle="tooltip" title="title">
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <input class="form-control" id="introduce" name="introduce" value=""
-                                                   type="text"
-                                                   placeholder="소개글" data-toggle="tooltip" title="introduce">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <input class="form-control" id="youtube-url" name="youtube" value=""
+                                            <input class="form-control" id="video_url" name="video_url" value=""
                                                    type="url"
-                                                   placeholder="유투브 홈 URL" data-toggle="tooltip" title="youtube">
+                                                   placeholder="비디오 공유 URL" data-toggle="tooltip" title="video_url">
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <input class="form-control" id="instagram-url" name="instagram" value=""
+                                            <input class="form-control" id="thumbnail_image" name="thumbnail_image" value=""
                                                    type="url"
-                                                   placeholder="인스타그램 홈 URL" data-toggle="tooltip"
-                                                   title="instagram">
+                                                   placeholder="썸네일 이미지 URL" data-toggle="tooltip"
+                                                   title="thumbnail_image">
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <input class="form-control" id="homepage-url" name="homepage" value=""
-                                                   type="url"
-                                                   placeholder="블로그 / 홈페이지 URL" data-toggle="tooltip"
-                                                   title="homepage">
+                                            <input class="form-control" id="playtime" name="playtime" value=""
+                                                   type="number"
+                                                   placeholder="총 재생시간(초)" data-toggle="tooltip"
+                                                   title="playtime">
                                         </div>
                                     </div>
                                     <div class="col-md-12" style="border-top: 2px solid #f5f5f5; margin-top: 35px">
                                         <button type="button" class="btn btn-theme pull-right open_modal
-                                        teacher-register" data-toggle="modal" data-target="#teacherRegisterModal">
+                                        add-video-req" data-toggle="modal" data-target="#addVideoReq">
                                             확인
                                         </button>
                                         <button type="button" class="hidden btn btn-theme pull-right btn_dis
@@ -80,7 +73,7 @@
 <script>
 
     $(document).ready(function(){
-        $(".teachr-register.open_modal").click(function(){
+        $(".add-video-req.open_modal").click(function(){
         });
 
         $(".post_confirm").click(function(){

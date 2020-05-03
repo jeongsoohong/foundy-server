@@ -251,7 +251,7 @@
     });
 </script>
 <style type="text/css">
-    .pagination_box a{
+    .pagination_box a {
         cursor: pointer;
     }
     .pleft_nav li.active {
