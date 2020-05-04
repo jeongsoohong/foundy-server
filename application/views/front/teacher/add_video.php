@@ -10,7 +10,7 @@
                                 <i class="fa fa-angle-down"></i>
                                 비디오 정보 입력
                             </div>
-                            <p class="text-success">모든 정보를 정확히 입력 바랍니다</p>
+                            <p class="text-success">유튜브 동영상만 지원이 됩니다</p>
                             <div class="details-box">
                                 <?php
                                 echo form_open(base_url() . 'home/teacher/_do_add_video/', array(
@@ -27,27 +27,18 @@
                                                    placeholder="제목" data-toggle="tooltip" title="title">
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                  <div class="col-md-12">
+                                    <div class="form-group">
+                                      <input class="form-control" id="description" name="description" value=""
+                                             type="text"
+                                             placeholder="소개" data-toggle="tooltip" title="description">
+                                    </div>
+                                  </div>
+                                  <div class="col-md-12">
                                         <div class="form-group">
                                             <input class="form-control" id="video_url" name="video_url" value=""
                                                    type="url"
-                                                   placeholder="비디오 공유 URL" data-toggle="tooltip" title="video_url">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <input class="form-control" id="thumbnail_image" name="thumbnail_image" value=""
-                                                   type="url"
-                                                   placeholder="썸네일 이미지 URL" data-toggle="tooltip"
-                                                   title="thumbnail_image">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <input class="form-control" id="playtime" name="playtime" value=""
-                                                   type="number"
-                                                   placeholder="총 재생시간(초)" data-toggle="tooltip"
-                                                   title="playtime">
+                                                   placeholder="유튜브 비디오 URL" data-toggle="tooltip" title="video_url">
                                         </div>
                                     </div>
                                     <div class="col-md-12" style="border-top: 2px solid #f5f5f5; margin-top: 35px">

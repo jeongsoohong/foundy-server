@@ -81,7 +81,7 @@ foreach ($category_names as $category_name) {
                         <a href="<?php echo base_url(); ?>">HOME</a>
                     </li>
                     <li class="find">
-                        <a href="<?php echo $find_url; ?>">FIND</a>
+                        <a href="<?php echo base_url().'home/find'; ?>">FIND</a>
                     </li>
                     <li class="life">
                         <a href="<?php echo $life_url; ?>">LIFE</a>
@@ -126,5 +126,8 @@ foreach ($category_names as $category_name) {
 /*    .navigation-sticky + .content {
         padding-top: 60px;
     }*/
+    nav ul li a {
+        font-family: 'Quicksand' !important;
+    }
 </style>
 <!-- /HEADER -->
