@@ -371,8 +371,9 @@ QUERY;
       $row = $this->db->query($query)->row();
 
       if ($row->center_id > 0) {
-        echo ("<script>alert('이미신청하셨습니다'); window.location.href='{$base_url}home/user'</script>");
-        exit;
+//        echo ("<script>alert('이미신청하셨습니다'); window.location.href='{$base_url}home/user'</script>");
+//        exit;
+        $this->load->view('front/user/center_register');
       } else {
         $this->load->view('front/user/center_register');
       }
@@ -533,7 +534,7 @@ QUERY;
         'activate' => 1
       );
 
-      $video_data = $this->db->get_where('teacher_video', $where)->result();
+      $video_data = $this->db->order_by('video_id', 'desc')->get_where('teacher_video', $where)->result();
 
       $page_data['page_name'] = "teacher/profile";
       $page_data['asset_page'] = "teacher_profile";
@@ -731,16 +732,27 @@ QUERY;
 
       if ($type == 'list') {
 
-        if (!isset($_GET['page'])) {
+        if (!isset($_GET['page']) || !isset($_GET['filter'])) {
           echo "<script>alert('잘못된 접근입니다')</script>";
           exit;
         }
 
         $page = $_GET['page'];
+        $filter = $_GET['filter'];
         $limit = $page * 10;
         $offset = $limit - 10;
 
-        $video_data = $this->db->order_by('video_id', 'desc')->get('teacher_video', $limit, $offset)->result();
+        if ($filter == 'ALL') {
+          $video_data = $this->db->order_by('video_id', 'desc')->get('teacher_video', $limit, $offset)->result();
+        } else {
+          $video_list = $this->db->get_where('teacher_video_category', array('category' => $filter), $limit, $offset)->result();
+          $video_id_list = array();
+          foreach ($video_list as $video) {
+            $video_id_list[] = $video->video_id;
+          }
+          $this->db->where_in('video_id', $video_id_list);
+          $video_data = $this->db->order_by('video_id', 'desc')->get('teacher_video')->result();
+        }
 
         $page_data['video_data'] = $video_data;
         $this->load->view('front/find/class/list', $page_data);

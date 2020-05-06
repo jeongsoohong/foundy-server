@@ -115,8 +115,8 @@
                   <div class="col-md-12">
                     <div class="profile" style="font-family: 'Quicksand' !important; font-size: 15px; text-align: center;
                  padding-bottom: 5px; !important;"><b>class</b></div>
-                    <div class="widget widget-categories" style="padding-bottom:10px; ">
-                      <ul class="profile_ul">
+                    <div class="widget widget-categories" style="padding-bottom:10px; overflow: hidden; height: auto;">
+                      <ul class="profile_ul" style="overflow: inherit;">
                         <?php foreach ($video_data as $video) {
                           $cat = '';
                           $categories = $this->db->get_where('teacher_video_category', array('video_id' => $video->video_id))->result();

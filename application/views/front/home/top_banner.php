@@ -87,7 +87,7 @@ $banner_size = 1;
     <div class="page-header" style="margin-bottom: 0px; ">
             <span style="font-size: 18px; color: #595959 !important;">
 <!--                <img src="--><?php //echo base_url(); ?><!--uploads/banner_image/header02.png" alt="" style="object-fit: cover !important; height: 50px !important;"/>-->
-                포잇 추천, 온라인 클래스
+                파운디 추천, 온라인 클래스
             </span>
     </div>
   </div>
@@ -102,10 +102,7 @@ $banner_size = 1;
         $banner_size; ?>" style="height: 150px !important;">
           <div class="media">
             <a class="media-link" href="<?php echo base_url().'home/find/class'; ?>">
-              <div class="img-bg image_delay" data-src="<?php echo base_url();
-              ?>uploads/banner_image/online banner.png" style="background-image: url('<?php echo
-              base_url(); ?>uploads/banner_image/online class banner.png'); background-repeat:
-                no-repeat; background-size: cover;"></div>
+              <div class="img-bg image_delay" data-src="<?php echo base_url(); ?>uploads/banner_image/online banner.png" style="background-image: url('<?php echo base_url(); ?>uploads/banner_image/online banner.png'); background-repeat: no-repeat; background-size: cover;"></div>
             </a>
           </div>
         </div>
