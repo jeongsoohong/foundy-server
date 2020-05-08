@@ -41,14 +41,15 @@ include 'meta/' . $asset_page . '.php';
 <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap" rel="stylesheet">
 
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,600,700,800,900' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Patua+One&display=swap" rel="stylesheet">
 <style>
-    *{
-        font-family: 'Noto Sans KR', 'Quicksand', 'Roboto', sans-serif !important;
-    }
-    .remove_one{
-        cursor:pointer;
-        padding-left:5px;
-    }
+  *{
+    font-family: 'Noto Sans KR', 'Quicksand', 'Patua One', 'Roboto', sans-serif !important;
+  }
+  .remove_one{
+    cursor:pointer;
+    padding-left:5px;
+  }
 </style>
 
 <?php

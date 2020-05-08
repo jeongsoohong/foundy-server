@@ -10,7 +10,7 @@
       <img class="first-slide slide-img" src="<?php echo base_url(); ?>uploads/banner_image/main01.png" alt="First slide">
       <div class="container">
         <div class="carousel-caption">
-          <h1>join now!</h1>
+          <h1 style="font-family: 'Patua One' !important;">join now!</h1>
           <p>파운디에서 당신의 건강한 삶을 찾아보세요<br>
             베타기간 동안 가입 혜택도 지금 확인해보세요!
           </p>
@@ -26,7 +26,7 @@
       <img class="second-slide slide-img" src="<?php echo base_url(); ?>uploads/banner_image/main02.png" alt="Second slide">
       <div class="container">
         <div class="carousel-caption">
-          <h1>join now!</h1>
+          <h1 style="font-family: 'Patua One' !important;">join now!</h1>
           <p>요가/필라테스 센터 등록하고<br>
             다양한 파운딧의 서비스를 무료로 이용해 보세요!
           </p>
@@ -45,7 +45,7 @@
       </a>
       <div class="container">
         <div class="carousel-caption">
-          <h1>join now!</h1>
+          <h1 style="font-family: 'Patua One' !important;">join now!</h1>
           <p>ONLY, 강사 회원만을 위해 준비한 혜택을<br>
             지금 바로 확인하세요!
           </p>

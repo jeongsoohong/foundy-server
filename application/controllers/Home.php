@@ -739,12 +739,15 @@ QUERY;
 
         $page = $_GET['page'];
         $filter = $_GET['filter'];
-        $limit = $page * 10;
-        $offset = $limit - 10;
+        $limit = 10;
+        $offset = 10 * ($page - 1);
+
+//        echo "<script>alert('{$page}, {$limit}, {$offset}')</script>";
 
         if ($filter == 'ALL') {
           $video_data = $this->db->order_by('video_id', 'desc')->get('teacher_video', $limit, $offset)->result();
         } else {
+          $this->db->order_by('video_id', 'desc');
           $video_list = $this->db->get_where('teacher_video_category', array('category' => $filter), $limit, $offset)->result();
           $video_id_list = array();
           foreach ($video_list as $video) {
