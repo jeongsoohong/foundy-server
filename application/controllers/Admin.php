@@ -330,6 +330,7 @@ QUERY;
     }
 
     if ($para1 == 'list') {
+
       if ($para2 == 'approval') {
         $this->db->order_by('center_id', 'desc');
         $page_data['all_centers'] = $this->db->get_where('center', array('activate' => 0))->result_array();
@@ -338,27 +339,56 @@ QUERY;
         $page_data['all_centers'] = $this->db->get_where('center', array('activate' => 1))->result_array();
       }
       $this->load->view('back/admin/center_list', $page_data);
+
     } else if ($para1 == 'view') {
+
       $page_data['center_data'] = $this->db->get_where('center', array('center_id' => $para2))->result_array();
       $this->load->view('back/admin/center_view', $page_data);
+
     } else if ($para1 == 'delete') {
+
       $this->db->where('center_id', $para2);
       $this->db->delete('center');
+
     } else if ($para1 == 'approval') {
+
       $page_data['center_id'] = $para2;
-      $page_data['activate'] = $this->db->get_where('center', array('center_id' => $para2))->row()->activate;
+      $row = $this->db->get_where('center', array('center_id' => $para2))->row();
+      $page_data['activate'] = $row->activate;
+      $page_data['user_id'] = $row->user_id;
       $this->load->view('back/admin/center_approval', $page_data);
+
     } else if ($para1 == 'approval_set') {
+
       $center_id = $para2;
+      $user_id = $para3;
+
       $approval = $this->input->post('approval');
       if ($approval == 'ok') {
         $data['activate'] = 1;
       } else {
         $data['activate'] = 0;
       }
-      $this->db->where('center_id', $center_id);
-      $this->db->update('center', $data);
+
+      $query = <<<QUERY
+UPDATE center set activate={$data['activate']},approval_at=NOW() where center_id={$center_id}
+QUERY;
+      $this->db->query($query);
+
+      $user_type = USER_TYPE_CENTER;
+      if ($approval == 'ok') {
+        $query = <<<QUERY
+UPDATE user set user_type=user_type+{$user_type} where user_id={$user_id}
+QUERY;
+      } else {
+        $query = <<<QUERY
+UPDATE user set user_type=user_type-{$user_type} where user_id={$user_id}
+QUERY;
+      }
+      $this->db->query($query);
+
       //            $this->email_model->status_email('teacher', $teacher);
+
     }else {
       if ($para1 == 'approval_list') {
         $page_data['page_name'] = "center";

@@ -1,4 +1,5 @@
-<?php foreach ($video_data as $video) {
+<?php
+foreach ($video_data as $video) {
   $cat = '';
   $categories = $this->db->get_where('teacher_video_category', array('video_id' => $video->video_id))->result();
   foreach($categories as $category) {

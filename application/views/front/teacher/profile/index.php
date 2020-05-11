@@ -20,26 +20,26 @@
             <div class="col-md-12" style="padding: 0px 0px 10px 0px !important; ">
               <div class="recent-post" style="background: #fff;border: 1px solid #e0e0e0;">
                 <div class="media">
-                  <a class="pull-left media-link" href="#" style="height: 60px; float:left !important; padding: 0 !important; margin: 10px 30px 10px 30px !important; ">
-                    <div class="media-object img-bg" id="blah" style="background-image: url('<?php
+                  <div class="pull-left media-link" href="#" style="height: 60px; float:left !important; padding: 0 !important; margin: 10px 30px 10px 30px !important; pointer-events: none;">
+                    <div class="media-object img-bg" id="blah" style="background-size: cover; background-position-x: center; background-position-y: top; width: 60px; height: 60px; background-image: url('<?php
                     if (empty($user_data->profile_image_url)) {
                       echo base_url() . 'uploads/icon/profile_icon.png';
                     } else {
                       echo $user_data->profile_image_url;
                     }
-                    ?>'); background-size: cover; background-position-x: center; background-position-y: top; width: 60px; height: 60px;"></div>
-                    <span id="inppic" class="set_image" >
-                                    <label class="" for="imgInp" >
-                                        <span><i class="fa fa-pencil" style="cursor: pointer;"></i></span>
-                                    </label>
-                                    <input type="file" style="display:none;" id="imgInp" name="img" />
-                                </span>
-                    <span id="savepic" style="display:none;">
-                                    <span class="signup_btn" onclick="abnv('inppic'); change_state('normal');"  data-ing="saving..." data-success="profile_picture_saved_successfully!" data-unsuccessful="edit_failed! try again!" data-reload="no" >
-                                        <span><i class="fa fa-save" style="cursor: pointer;"></i></span>
-                                    </span>
-                                </span>
-                  </a>
+                    ?>'); "></div>
+                    <!--                    <span id="inppic" class="set_image" >-->
+                    <!--                      <label class="" for="imgInp" >-->
+                    <!--                        <span><i class="fa fa-pencil" style="cursor: pointer;"></i></span>-->
+                    <!--                      </label>-->
+                    <!--                      <input type="file" style="display:none;" id="imgInp" name="img" />-->
+                    <!--                    </span>-->
+                    <!--                    <span id="savepic" style="display:none;">-->
+                    <!--                      <span class="signup_btn" onclick="abnv('inppic'); change_state('normal');"  data-ing="saving..." data-success="profile_picture_saved_successfully!" data-unsuccessful="edit_failed! try again!" data-reload="no" >-->
+                    <!--                        <span><i class="fa fa-save" style="cursor: pointer;"></i></span>-->
+                    <!--                      </span>-->
+                    <!--                    </span>-->
+                  </div>
                   <div class="media-body" style="padding-right: 10px">
                     <div class="col-md-12" style="margin: 10px 0 10px 0 !important; padding-left: 20px !important; text-align: left; !important; font-size: 12px !important;">
                       <p>
@@ -49,31 +49,39 @@
                         </a>
                       </p>
                       <p>
-                        팔로워 0
+                        <?php
+                        $cat = '';
+                        $categories = $this->db->get_where('teacher_category', array('teacher_id' => $teacher_data->teacher_id))->result();
+                        foreach($categories as $category) {
+                          $cat .= $category->category . '/';
+                        }
+                        $cat[strlen($cat) - 1] = "\0";
+                        ?>
+                        <span style="color: saddlebrown;"><?php echo $cat; ?></span><br>
                       </p>
                       <?php
-                      if (isset($youtube) && strlen($youtube) > 0) {
+                      if (isset($teacher_data->youtube) && strlen($teacher_data->youtube) > 0) {
                         ?>
-                        <a href="<?php echo $youtube; ?>" onclick="window.open(this.href, '_blank'); return false;">
+                        <a href="<?php echo $teacher_data->youtube; ?>" onclick="window.open(this.href, '_blank'); return false;">
                           <span><img src="<?php echo base_url(); ?>uploads/icon/youtube_icon.png"></span>
                         </a>
                         <?php
                       }
-                      if (isset($instagram) && strlen($instagram) > 0) {
+                      if (isset($teacher_data->instagram) && strlen($teacher_data->instagram) > 0) {
                         ?>
-                        <a href="<?php echo $instagram; ?>" onclick="window.open(this.href, '_blank'); return false;">
+                        <a href="<?php echo $teacher_data->instagram; ?>" onclick="window.open(this.href, '_blank'); return false;">
                           <span><img src="<?php echo base_url(); ?>uploads/icon/insta_icon.png"></span>
                         </a>
                         <?php
                       }
-                      if (isset($homepage) && strlen($homepage) > 0) {
-                        ?>
-                        <a href="<?php echo $homepage; ?>" onclick="window.open(this.href, '_blank'); return false;">
-                          <span><img src="<?php echo base_url(); ?>uploads/icon/icon-6.png"></span>
-                        </a>
-                        <?php
-                      }
-                      ?>
+                      //                      if (isset($homepage) && strlen($homepage) > 0) {
+                      //                        ?>
+                      <!--                        <a href="--><?php //echo $homepage; ?><!--" onclick="window.open(this.href, '_blank'); return false;">-->
+                      <!--                          <span><img src="--><?php //echo base_url(); ?><!--uploads/icon/icon-6.png"></span>-->
+                      <!--                        </a>-->
+                      <!--                        --><?php
+                      //                      }
+                      //                      ?>
                     </div>
                   </div>
                 </div>
@@ -83,35 +91,35 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="profile" style="font-family: 'Quicksand' !important; font-size: 15px; text-align: center;
-                 padding-bottom: 5px; !important;"><b>introduction</b></div>
+                 padding-bottom: 5px; !important;"><b>about</b></div>
                   <div class="widget widget-categories" style="padding-bottom:10px; ">
                     <ul class="profile_ul" style="text-align: center">
-                      <li><?php echo $teacher_data->introduce ?>
+                      <li><?php echo $teacher_data->about?>
                       </li>
                     </ul>
                   </div>
                 </div>
                 <?php if ($iam_this_teacher) { ?>
-                  <div class="col-md-6">
-                    <div class="profile" style="font-family: 'Quicksand' !important; font-size: 15px; text-align: center;
+                <div class="col-md-6">
+                  <div class="profile" style="font-family: 'Quicksand' !important; font-size: 15px; text-align: center;
                  padding-bottom: 5px; !important;"><b>manage class</b></div>
-                    <div class="widget widget-categories" style="padding-bottom:10px; ">
-                      <ul class="profile_ul" style="text-align: center">
-                        <a class="pnav_add_video" href="<?php echo base_url()."home/teacher/video/add/{$user_data->user_id}"; ?>">
-                          <li>
-                            <b>+</b>&nbsp;&nbsp;클래스 올리기
-                          </li>
-                        </a>
-                      </ul>
-                    </div>
+                  <div class="widget widget-categories" style="padding-bottom:10px; ">
+                    <ul class="profile_ul" style="text-align: center">
+                      <a class="pnav_add_video" href="<?php echo base_url()."home/teacher/video/add/{$user_data->user_id}"; ?>">
+                        <li>
+                          <b>+</b>&nbsp;&nbsp;클래스 올리기
+                        </li>
+                      </a>
+                    </ul>
                   </div>
+                </div>
               </div>
             </div>
             <?php }
             if (!empty($video_data)) {
-            ?>
-            <div class="col-md-12">
-              <div class="row">
+              ?>
+              <div class="col-md-12">
+                <div class="row">
                   <div class="col-md-12">
                     <div class="profile" style="font-family: 'Quicksand' !important; font-size: 15px; text-align: center;
                  padding-bottom: 5px; !important;"><b>class</b></div>
@@ -150,8 +158,8 @@
                       </ul>
                     </div>
                   </div>
+                </div>
               </div>
-            </div>
               <?php
             }
             ?>

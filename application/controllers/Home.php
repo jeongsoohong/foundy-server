@@ -355,9 +355,14 @@ class Home extends CI_Controller
       $page_data['profile_image_url'] = $this->session->userdata('profile_image_url');
       $page_data['thumbnail_image_url'] = $this->session->userdata('kakao_thumbnail_image_url');
 
+      if ($this->session->userdata('user_type') & USER_TYPE_CENTER) {
+        $row = $this->db->get_where('center', array( 'user_id' => $this->session->userdata('user_id') ))->row();
+        $page_data['center_activate'] = $row->activate;
+      }
+
       if ($this->session->userdata('user_type') & USER_TYPE_TEACHER) {
         $row = $this->db->get_where('teacher', array( 'user_id' => $this->session->userdata('user_id') ))->row();
-        $page_data['activate'] = $row->activate;
+        $page_data['teacher_activate'] = $row->activate;
       }
 
       $this->load->view('front/user/profile', $page_data);
@@ -371,9 +376,8 @@ QUERY;
       $row = $this->db->query($query)->row();
 
       if ($row->center_id > 0) {
-//        echo ("<script>alert('이미신청하셨습니다'); window.location.href='{$base_url}home/user'</script>");
-//        exit;
-        $this->load->view('front/user/center_register');
+        echo ("<script>alert('이미신청하셨습니다'); window.location.href='{$base_url}home/user'</script>");
+        exit;
       } else {
         $this->load->view('front/user/center_register');
       }
@@ -398,6 +402,7 @@ QUERY;
 
       $this->form_validation->set_rules('title', 'center-title', 'trim|required|max_length[32]');
       $this->form_validation->set_rules('phone', 'center-phone', 'trim|required|numeric|max_length[16]');
+      $this->form_validation->set_rules('about', 'about', 'trim|required|max_length[64]');
       $this->form_validation->set_rules('address', 'center-address', 'trim|required|max_length[256]');
       $this->form_validation->set_rules('address_detail', 'center-address-detail', 'trim|max_length[256]');
       $this->form_validation->set_rules('latitude', 'center-latitude', 'trim|required|max_length[32]');
@@ -409,17 +414,50 @@ QUERY;
         $user_id = $this->session->userdata('user_id');
         $title = $this->input->post('title');
         $phone = $this->input->post('phone');
+        $about = $this->input->post('about');
         $address = $this->input->post('address');
         $address_detail = $this->input->post('address_detail');
         $longitude = $this->input->post('longitude');
         $latitude = $this->input->post('latitude');
+        $categories_yoga = $this->input->post('category_yoga');
+        $categories_pilates = $this->input->post('category_pilates');
 
         $address_detail = (empty($address_detail) ? '' : $address_detail);
+
+        if (!empty(($this->input->post('category_yoga_etc')))) {
+          if (isset($categories_yoga) && count($categories_yoga)) {
+            $categories_yoga = array_merge($categories_yoga, explode(' ', trim($this->input->post('category_yoga_etc'))));
+          } else {
+            $categories_yoga = explode(' ', trim($this->input->post('category_yoga_etc')));
+          }
+        }
+
+        if (!empty($categories_yoga) && count($categories_yoga)) {
+          $categories_yoga = array_filter(array_map('trim', $categories_yoga));
+        }
+
+        if (!empty(($this->input->post('category_pilates_etc')))) {
+          if (isset($categories_pilates) && count($categories_pilates)) {
+            $categories_pilates = array_merge($categories_pilates, explode(' ', trim($this->input->post('category_pilates_etc'))));
+          } else {
+            $categories_pilates = explode(' ', trim($this->input->post('category_pilates_etc')));
+          }
+        }
+
+        if (!empty($categories_pilates) && count($categories_pilates)) {
+          $categories_pilates = array_filter(array_map('trim', $categories_pilates));
+        }
+
+        if ((empty($categories_yoga) && empty($categories_pilates)) || (count($categories_yoga) == 0 && count($categories_pilates) == 0)) {
+          echo ("<script>alert('최소 하나의 분류를 선택해주세요');</script>");
+          exit;
+        }
 
         $data = array(
           'user_id' => $user_id,
           'title' => $title,
           'phone' => $phone,
+          'about' => $about,
           'address' => $address,
           'address_detail' => $address_detail,
           'latitude' => $latitude,
@@ -434,10 +472,18 @@ QUERY;
 
         $center_id = $this->db->insert_id();
 
-        $query = <<<QUERY
-UPDATE user set center_id={$center_id} where user_id={$user_id}
-QUERY;
-        $this->db->query($query);
+        foreach ($categories_yoga as $cat) {
+          $cat = trim($cat);
+          $this->db->insert('center_category', array('center_id' => $center_id, 'category' => $cat, 'type' => CENTER_TYPE_YOGA));
+        }
+
+        foreach ($categories_pilates as $cat) {
+          $cat = trim($cat);
+          $this->db->insert('center_category', array('center_id' => $center_id, 'category' => $cat, 'type' => CENTER_TYPE_PILATES));
+        }
+
+        $this->db->where('user_id', $user_id);
+        $this->db->update('user', array( 'center_id' => $center_id));
 
         $this->session->set_userdata('center_id', $center_id);
 
@@ -447,44 +493,67 @@ QUERY;
       $this->load->library('form_validation');
 
       $this->form_validation->set_rules('teacher_name', 'teacher_name', 'trim|required|max_length[32]');
-      $this->form_validation->set_rules('introduce', 'introduce', 'trim|required|max_length[64]');
+      $this->form_validation->set_rules('about', 'about', 'trim|required|max_length[64]');
       $this->form_validation->set_rules('youtube', 'youtube', 'trim|valid_url|max_length[256]');
       $this->form_validation->set_rules('instagram_', 'instagram', 'trim|valid_url|max_length[256]');
-      $this->form_validation->set_rules('homepage', 'homepage', 'trim|valid_url|max_length[256]');
+//      $this->form_validation->set_rules('homepage', 'homepage', 'trim|valid_url|max_length[256]');
 
       if ($this->form_validation->run() == FALSE) {
         echo '<br>' . validation_errors();
       } else {
         $name = $this->input->post('teacher_name');
         $user_id = $this->session->userdata('user_id');
-        $introduce = $this->input->post('introduce');
+        $about = $this->input->post('about');
         $youtube = $this->input->post('youtube');
         $instagram = $this->input->post('instagram');
-        $homepage = $this->input->post('homepage');
+//        $homepage = $this->input->post('homepage');
+        $categories = $this->input->post('category');
 
-        if (empty($youtube) && empty($instagram) && empty($homepage)) {
-          echo "youtube : {$youtube}, insta : {$instagram}, homepage : {$homepage}";
-        } else {
-          $data = array(
-            'name' => $name,
-            'user_id' => $user_id,
-            'introduce' => $introduce,
-            'youtube' => $youtube,
-            'instagram' => $instagram,
-            'homepage' => $homepage,
-            'create_at' => 'NOW()',
-            'approval_at' => 'NOW()'
-          );
-          $this->db->insert('teacher', $data);
-          $teacher_id = $this->db->insert_id();
-
-          $this->db->where('user_id', $user_id);
-          $this->db->update('user', array( 'teacher_id' => $teacher_id));
-
-          $this->session->set_userdata('teacher_id', $teacher_id);
-
-          echo "done";
+        if (empty($youtube) && empty($instagram)) {
+          echo ("<script>alert('유뷰브와 인스타그램 중 최소 하나는 입력해주세요');</script>");
+          exit;
         }
+
+        if (!empty(($this->input->post('category_etc')))) {
+          if (isset($categories) && count($categories)) {
+            $categories = array_merge($categories, explode(' ', trim($this->input->post('category_etc'))));
+          } else {
+            $categories = explode(' ', trim($this->input->post('category_etc')));
+          }
+        }
+
+        if (!empty($categories) && count($categories)) {
+          $categories = array_filter(array_map('trim', $categories));
+        }
+
+        if (empty($categories) || count($categories) == 0) {
+          echo ("<script>alert('최소 하나의 분류를 선택해주세요');</script>");
+          exit;
+        }
+
+        $data = array(
+          'name' => $name,
+          'user_id' => $user_id,
+          'about' => $about,
+          'youtube' => $youtube,
+          'instagram' => $instagram,
+          'create_at' => 'NOW()',
+          'approval_at' => 'NOW()'
+        );
+        $this->db->insert('teacher', $data);
+        $teacher_id = $this->db->insert_id();
+
+        foreach ($categories as $cat) {
+          $cat = trim($cat);
+          $this->db->insert('teacher_category', array('teacher_id' => $teacher_id, 'category' => $cat));
+        }
+
+        $this->db->where('user_id', $user_id);
+        $this->db->update('user', array( 'teacher_id' => $teacher_id));
+
+        $this->session->set_userdata('teacher_id', $teacher_id);
+
+        echo "done";
       }
     } else {
       if ($view_type == 'center') {
@@ -502,6 +571,111 @@ QUERY;
 
   }
 
+  function center($para1 = "", $para2 = "", $para3 = "")
+  {
+    $base_url = base_url();
+
+    if ($para1 == "profile") {
+
+      $center_user_id = $para2;
+
+      if ($center_user_id == $this->session->userdata('user_id')) {
+        $iam_this_center = true;
+      } else {
+        $iam_this_center = false;
+      }
+
+      $user_data = $this->db->get_where('user', array('user_id' => $center_user_id))->row();
+      if (!($user_data->user_type & USER_TYPE_CENTER)) {
+        echo ("<script>alert('센터회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
+        exit;
+      }
+
+      $center_data = $this->db->get_where('center', array('user_id' => $center_user_id))->row();
+      if ($center_data->activate == 0) {
+        echo ("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
+        exit;
+      }
+
+      $page_data['page_name'] = "center/profile";
+      $page_data['asset_page'] = "center_profile";
+      $page_data['page_title'] = "center_profile";
+      $page_data['user_data'] = $user_data;
+      $page_data['center_data'] = $center_data;
+      $page_data['iam_this_center'] = $iam_this_center;
+      $this->load->view('front/index', $page_data);
+
+    } else if ($para1 == 'teacher') {
+
+      $action = $para2;
+
+      if ($action == 'search') {
+
+        $search_email = $_GET['email'];
+
+        $user_data = $this->db->get_where('user', array('email' => $search_email))->row();
+        if (empty($user_data)) {
+          $result['status'] = 'fail';
+          $result['message'] = "존재하지 않는 이메일입니다.";
+          echo json_encode($result);
+          exit;
+        }
+
+        if ($user_data->teacher_id == 0) {
+          $result['status'] = 'fail';
+          $result['message'] = "강사회원이 아닙니다.";
+          echo json_encode($result);
+          exit;
+        }
+
+        $teacher_data = $this->db->get_where('teacher', array('user_id' => $user_data->user_id))->row();
+        if (empty($teacher_data)) {
+          $result['status'] = 'fail';
+          $result['message'] = "오류가 발생했습니다. 관리자에게 문의 바랍니다.";
+          echo json_encode($result);
+          exit;
+        }
+
+        $result['status'] = 'success';
+        $result['teacher_name'] = $teacher_data->name;
+        $result['teacher_email'] = $user_data->email;
+        $result['teacher_id'] = $teacher_data->teacher_id;
+
+        echo json_encode($result);
+        exit;
+
+      } else {
+
+        $center_user_id = $para2;
+        if ($center_user_id != $this->session->userdata('user_id')) {
+          echo ("<script>alert('권한이 없습니다'); window.location.href='{$base_url}home/user'</script>");
+          exit;
+        }
+
+        $user_data = $this->db->get_where('user', array('user_id' => $center_user_id))->row();
+        if (!($user_data->user_type & USER_TYPE_CENTER)) {
+          echo ("<script>alert('센터회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
+          exit;
+        }
+
+        $center_data = $this->db->get_where('center', array('user_id' => $center_user_id))->row();
+        if ($center_data->activate == 0) {
+          echo ("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
+          exit;
+        }
+
+        $page_data['page_name'] = "center/teacher";
+        $page_data['asset_page'] = "center_teacher_info";
+        $page_data['page_title'] = "center_teacher_info";
+        $page_data['user_data'] = $user_data;
+        $page_data['center_data'] = $center_data;
+        $this->load->view('front/index', $page_data);
+
+      }
+
+    }
+  }
+
   function teacher($para1 = "", $para2 = "", $para3 = "")
   {
     $base_url = base_url();
@@ -517,7 +691,6 @@ QUERY;
       }
 
       $user_data = $this->db->get_where('user', array('user_id' => $teacher_user_id))->row();
-      $str = json_encode($user_data);
       if (!($user_data->user_type & USER_TYPE_TEACHER)) {
         echo ("<script>alert('강사회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
         exit;
@@ -636,7 +809,7 @@ QUERY;
 
       $this->load->library('form_validation');
       $this->form_validation->set_rules('title', 'title', 'trim|required|max_length[32]');
-      $this->form_validation->set_rules('description', 'description', 'trim|required|max_length[128]');
+      $this->form_validation->set_rules('description', 'description', 'trim|required|max_length[256]');
       $this->form_validation->set_rules('video_url', 'video_url', 'trim|required|valid_url|max_length[256]');
 
       if ($this->form_validation->run() == FALSE) {
@@ -749,12 +922,16 @@ QUERY;
         } else {
           $this->db->order_by('video_id', 'desc');
           $video_list = $this->db->get_where('teacher_video_category', array('category' => $filter), $limit, $offset)->result();
-          $video_id_list = array();
-          foreach ($video_list as $video) {
-            $video_id_list[] = $video->video_id;
+
+          $video_data= array();
+          if (!empty($video_list) && count($video_list) > 0) {
+            $video_id_list = array();
+            foreach ($video_list as $video) {
+              $video_id_list[] = $video->video_id;
+            }
+            $this->db->where_in('video_id', $video_id_list);
+            $video_data = $this->db->order_by('video_id', 'desc')->get('teacher_video')->result();
           }
-          $this->db->where_in('video_id', $video_id_list);
-          $video_data = $this->db->order_by('video_id', 'desc')->get('teacher_video')->result();
         }
 
         $page_data['video_data'] = $video_data;

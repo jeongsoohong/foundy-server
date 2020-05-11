@@ -85,7 +85,7 @@
         if ( listCnt === 0 || listCnt % 10 !== 0) {
           $('#view_more').hide();
         }
-        console.log(listCnt);
+        // console.log(listCnt);
       },
       error: function(e) {
         console.log(e)
