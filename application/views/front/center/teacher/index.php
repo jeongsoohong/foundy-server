@@ -28,8 +28,7 @@
                         </p>
                         <div class="details-box">
                           <?php
-                          echo form_open(base_url() . 'home/center/teacher/modify'.
-                            $user_data->user_id, array(
+                          echo form_open(base_url() . 'home/center/teacher/modify/'.$user_data->user_id, array(
                             'class' => 'form-login',
                             'method' => 'post',
                             'enctype' => 'multipart/form-data'
@@ -42,27 +41,37 @@
                                 <span class="pull-right" id="isearch"><img src="<?php echo base_url(); ?>uploads/icon/icon-2.png" style="width: 20px; height: 20px;"></span>
                               </div>
                               <div class="add_list_input" style="display: none;">
-                                  <input id='in-3' type="hidden" name="add_list[]" value="3">
-                                  <input id='in-4' type="hidden" name="add_list[]" value="4">
+<!--                                  <input id='in-3' type="hidden" name="add_list[]" value="3">-->
+<!--                                  <input id='in-4' type="hidden" name="add_list[]" value="4">-->
                               </div>
                               <div class="widget " style="padding-bottom:10px; ">
                                 <ul class="profile_ul teacher_list_ul" style="text-align: center">
-                                  <li id="li-3">홍정수(jsoohong90@naver.com)
-                                    <a href="javascript:void(0);" onclick="remove_teacher($(this).attr('id'), $(this).parent('li').text());" id="3">
-                                      <span class="pull-right" style="font-weight: 600; color:gray">-</span>
-                                    </a>
-                                  </li>
-                                  <li id="li-4">우우우(wowowo@naver.com)
-                                    <a href="javascript:void(0);" onclick="remove_teacher($(this).attr('id'), $(this).parent('li').text());" id="4">
-                                      <span class="pull-right" style="font-weight: 600; color:gray">-</span>
-                                    </a>
-                                  </li>
+                                  <?php
+                                  $teacher_id_list = array();
+                                  if ($center_data->teacher_cnt > 0) {
+                                    foreach ($teacher_data as $teacher) {
+                                      $teacher = $this->db->get_where('teacher', array('teacher_id' => $teacher->teacher_id))->row();
+                                      $teacher_id = $teacher->teacher_id;
+                                      $teacher_name = $teacher->name;
+                                      $teacher_email = $user_data->email;
+
+                                      $teacher_id_list[] = $teacher_id;
+                                      ?>
+                                      <li id="li-<?php echo $teacher_id; ?>"><?php echo "{$teacher_name}({$teacher_email})"; ?>
+                                        <a href="javascript:void(0);" onclick="remove_teacher($(this).attr('id'), $(this).parent('li').text());" id="<?php echo $teacher_id; ?>">
+                                          <span class="pull-right" style="font-weight: 600; color:gray">-</span>
+                                        </a>
+                                      </li>
+                                      <?php
+                                    }
+                                  }
+                                  ?>
                                 </ul>
                               </div>
                             </div>
                             <div class="col-md-12" id="remove_block" style="display: none">
                               <div class="profile" style="font-family: 'quicksand' !important; font-size: 15px; text-align: center; padding-bottom: 5px; !important;"><b>removed</b></div>
-                              <div class="fieldset remove_list_input" style="display: none;">
+                              <div class="remove_list_input" style="display: none;">
 <!--                                <input id='in-5' type="hidden" name="remove_list[]" value="5">-->
 <!--                                <input id='in-6' type="hidden" name="remove_list[]" value="6">-->
                               </div>
@@ -102,10 +111,10 @@
                               </div>
                             </div>
                             <div class="col-md-12" style="border-top: 2px solid #f5f5f5; margin-top: 35px">
-                              <button type="button" class="btn btn-theme pull-right open_modal add-video-req" data-toggle="modal" data-target="#addVideoReq">
+                              <button type="button" class="btn btn-theme pull-right open_modal modify-instructor-req" data-toggle="modal" data-target="#modifyInstructorReq">
                                 확인
                               </button>
-                              <button type="button" class="hidden btn btn-theme pull-right btn_dis signup_btn" data-reload='ok' data-unsuccessful='신청에 실패했습니다.' data-success='신청에 성공했습니다.' data-ing='진행중'>
+                              <button type="button" class="hidden btn btn-theme pull-right btn_dis signup_btn" data-reload='no' data-relocation='<?php echo base_url()."home/center/profile/{$user_data->user_id}"; ?>' data-unsuccessful='신청에 실패했습니다.' data-success='신청에 성공했습니다.' data-ing='진행중'>
                                 확인
                               </button>
                             </div>
@@ -122,37 +131,34 @@
           <script>
 
             $(document).ready(function(){
-              $(".open_modal.add-video-req").click(function(){
-              });
-
               $(".post_confirm").click(function(){
                 $(".post_confirm_close").click();
                 $(".signup_btn").click();
+              });
+
+              $('html').animate({scrollTop:$('html, body').offset().top}, 100);
             });
 
-            $('html').animate({scrollTop:$('html, body').offset().top}, 100);
-          });
+          </script>
 
-        </script>
-
+        </div>
       </div>
     </div>
-  </div>
   <!-- </div> -->
   </div>
 </section>
 
 <!-- Modal For C-C Post confirm -->
-<div class="modal fade" id="addVideoReq" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="modifyInstructorReq" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">클래스 올리기</h4>
+        <h4 class="modal-title" id="myModalLabel">센터 정보 수정</h4>
       </div>
       <div class="modal-body">
-        <div class="text-video">
-          <div>비디오 추가하시겠습니까?
+        <div class="text-instructor">
+          <div>강사 정보를 수정하시겠습니까?
           </div>
         </div>
       </div>
@@ -174,7 +180,7 @@
         <h4 class="modal-title" id="myModalLabel">change_availability_status</h4>
       </div>
       <div class="modal-body">
-        <div class="text-video content_body" id="content_body">
+        <div class="text-instructor content_body" id="content_body">
         </div>
       </div>
     </div>
@@ -209,7 +215,7 @@
 
 <script>
 
-  var teacher_list = ["3", "4"];
+  var teacher_list = [<?php foreach($teacher_id_list as $id) { echo "\"$id\","; }?>];
   var add_list = [];
   var remove_list = [];
 

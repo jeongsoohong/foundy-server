@@ -906,6 +906,7 @@
             var success = now.data('success');
             var unsuccessful = now.data('unsuccessful');
             var rld = now.data('reload');
+            var rlt = now.data('relocation');
             var callback = now.data('callback');
             var formdata = false;
             if (window.FormData){
@@ -928,8 +929,13 @@
                 success: function(data) {
                     if(data == 'done' || data.search('done') !== -1){
                         notify(success,'success','bottom','right');
+
+                        if (rlt !== -1) {
+                          setTimeout(function(){location.href=rlt;}, 1000);
+                        }
+
                         if(rld == 'ok'){
-                            setTimeout(function(){location.reload();}, 2000);
+                            setTimeout(function(){location.reload();}, 1000);
                         }
                         if(callback == 'order_tracing'){
                             // now.removeAttr('disabled');

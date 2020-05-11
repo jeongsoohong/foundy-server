@@ -597,11 +597,18 @@ QUERY;
         exit;
       }
 
+      if ($center_data->teacher_cnt > 0) {
+        $teacher_data = $this->db->get_where('center_teacher', array('center_id' => $center_data->center_id))->result();
+      } else {
+        $teacher_data = null;
+      }
+
       $page_data['page_name'] = "center/profile";
       $page_data['asset_page'] = "center_profile";
       $page_data['page_title'] = "center_profile";
       $page_data['user_data'] = $user_data;
       $page_data['center_data'] = $center_data;
+      $page_data['teacher_data'] = $teacher_data;
       $page_data['iam_this_center'] = $iam_this_center;
       $this->load->view('front/index', $page_data);
 
@@ -644,6 +651,68 @@ QUERY;
         echo json_encode($result);
         exit;
 
+      } else if ($action == 'modify') {
+
+        $center_user_id = $para3;
+        if ($center_user_id != $this->session->userdata('user_id')) {
+          echo ("<script>alert('권한이 없습니다{$center_user_id}'); window.location.href='{$base_url}home/user'</script>");
+          exit;
+        }
+
+        $user_data = $this->db->get_where('user', array('user_id' => $center_user_id))->row();
+        if (!($user_data->user_type & USER_TYPE_CENTER)) {
+          echo ("<script>alert('센터회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
+          exit;
+        }
+
+        $center_data = $this->db->get_where('center', array('user_id' => $center_user_id))->row();
+        if ($center_data->activate == 0) {
+          echo ("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
+          exit;
+        }
+
+        $add_list = $this->input->post('add_list');
+        $remove_list = $this->input->post('remove_list');
+
+        if (!empty($add_list) && count($add_list) > 0) {
+          foreach ($add_list as $teacher_id) {
+            $ins = array(
+              'center_id'=>$user_data->center_id,
+              'teacher_id'=>$user_data->center_id,
+            );
+            $this->db->insert('center_teacher', $ins);
+          }
+        }
+
+        if (!empty($remove_list) && count($remove_list) > 0) {
+          foreach ($remove_list as $teacher_id) {
+            $del = array(
+              'center_id'=>$user_data->center_id,
+              'teacher_id'=>$user_data->center_id,
+            );
+            $this->db->where($del);
+            $this->db->delete('center_teacher');
+          }
+        }
+
+        $query = <<<QUERY
+select count(*) as teacher_cnt from center_teacher where center_id={$center_data->center_id}
+QUERY;
+        $row = $this->db->query($query)->row();
+        $teacher_cnt = $row->teacher_cnt;
+
+        $upd = array(
+          'teacher_cnt' => $teacher_cnt
+        );
+
+        $this->db->where(array('center_id' => $center_data->center_id));
+        $this->db->update('center', $upd);
+
+//        echo ("<script>alert('수정되었습니다'); window.location.href='{$base_url}home/center/profile/{$center_user_id}'</script>");
+
+        echo 'done';
+        exit;
+
       } else {
 
         $center_user_id = $para2;
@@ -664,15 +733,21 @@ QUERY;
           exit;
         }
 
+        if ($center_data->teacher_cnt > 0) {
+          $teacher_data = $this->db->get_where('center_teacher', array('center_id' => $center_data->center_id))->result();
+        } else {
+          $teacher_data = null;
+        }
+
         $page_data['page_name'] = "center/teacher";
         $page_data['asset_page'] = "center_teacher_info";
         $page_data['page_title'] = "center_teacher_info";
         $page_data['user_data'] = $user_data;
         $page_data['center_data'] = $center_data;
+        $page_data['teacher_data'] = $teacher_data;
         $this->load->view('front/index', $page_data);
 
       }
-
     }
   }
 

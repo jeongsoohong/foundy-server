@@ -130,32 +130,35 @@
                             <span class="instructor-add">수정></span>
                           </p>
                         </a>
-                        <div class="instructor slick" style="height: 100px; /* padding-bottom: 10px; */">
-                          <div class="instructor slick-content active" id="1" style="text-align: center">
-                            <p>
-                              <span><img src="<?php echo base_url(); ?>uploads/icon/profile_icon.png" style="width:50px; margin: auto"></span>
-                              <span>instructor 1</span>
-                            </p>
+                        <?php
+                        if ($center_data->teacher_cnt > 0) {
+                          ?>
+                          <div class="instructor slick" style="height: 100px; /* padding-bottom: 10px; */">
+                            <?php
+                            foreach ($teacher_data as $teacher) {
+                              $teacher = $this->db->get_where('teacher', array('teacher_id' => $teacher->teacher_id))->row();
+                              $teacher_id = $teacher->teacher_id;
+                              $teacher_name = $teacher->name;
+                              $profile_image_url = $user_data->profile_image_url;
+                              if (empty($profile_image_url) or strlen($profile_image_url) == 0) {
+                                $profile_image_url = base_url().'uploads/icon/profile_icon.png';
+                              }
+                              ?>
+                              <div class="instructor slick-content active" id="1" style="text-align: center">
+                                <a href="<?php echo base_url().'home/teacher/profile/'.$teacher_id; ?>">
+                                  <p>
+                                    <span><img src="<?php echo $profile_image_url; ?>" style="width:50px; margin: auto"></span>
+                                    <span><?php echo $teacher_name; ?></span>
+                                  </p>
+                                </a>
+                              </div>
+                              <?php
+                            }
+                            ?>
                           </div>
-                          <div class="instructor slick-content active" id="1" style="text-align: center">
-                            <p>
-                              <span><img src="<?php echo base_url(); ?>uploads/icon/profile_icon.png" style="width:50px; margin: auto"></span>
-                              <span>instructor 2</span>
-                            </p>
-                          </div>
-                          <div class="instructor slick-content active" id="1" style="text-align: center">
-                            <p>
-                              <span><img src="<?php echo base_url(); ?>uploads/icon/profile_icon.png" style="width:50px; margin: auto"></span>
-                              <span>instructor 3</span>
-                            </p>
-                          </div>
-                          <div class="instructor slick-content active" id="1" style="text-align: center">
-                            <p>
-                              <span><img src="<?php echo base_url(); ?>uploads/icon/profile_icon.png" style="width:50px; margin: auto"></span>
-                              <span>instructor 4</span>
-                            </p>
-                          </div>
-                        </div>
+                          <?php
+                        }
+                        ?>
                       </div>
                     </div>
                   </div>
@@ -326,47 +329,53 @@
   });
 </script>
 
-<script type="text/javascript">
-  $(function() {
-    $('.instructor-add').click(function () {
-      console.log('instructor-add');
-    });
-  });
+<?php
+if ($center_data->teacher_cnt > 0) {
+  ?>
+  <script type="text/javascript">
+    // $(function() {
+    //   $('.instructor-add').click(function () {
+    //     console.log('instructor-add');
+    //   });
+    // });
 
-  $(document).ready(function(){
-    $('.instructor.slick').slick({
-      centerMode: false,
-      centerPadding: '20px',
-      slidesToShow: 5,
-      slidesToScroll: 1,
-      autoplay: false,
-      arrows: false,
-      focusOnSelect: false,
-      infinite: false,
-      swipe: true,
-      swipeToSlide: true,
-      speed: 100,
-      waitForAnimate: false,
-      easing: 'swing',
-      responsive: [
-        {
-          breakpoint: 768,
-          settings: {
-            centerPadding: '15px',
-            slidesToShow: 5
+    $(document).ready(function(){
+      $('.instructor.slick').slick({
+        centerMode: false,
+        centerPadding: '20px',
+        slidesToShow: 5,
+        slidesToScroll: 1,
+        autoplay: false,
+        arrows: false,
+        focusOnSelect: false,
+        infinite: false,
+        swipe: true,
+        swipeToSlide: true,
+        speed: 100,
+        waitForAnimate: false,
+        easing: 'swing',
+        responsive: [
+          {
+            breakpoint: 768,
+            settings: {
+              centerPadding: '15px',
+              slidesToShow: 5
+            }
+          },
+          {
+            breakpoint: 480,
+            settings: {
+              centerPadding: '10px',
+              slidesToShow: 3
+            }
           }
-        },
-        {
-          breakpoint: 480,
-          settings: {
-            centerPadding: '10px',
-            slidesToShow: 3
-          }
-        }
-      ]
+        ]
+      });
     });
-  });
-</script>
+  </script>
+  <?php
+}
+?>
 
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a7e336b59aed62d0e46dae8a8c55da21"></script>
 <script type="text/javascript">
