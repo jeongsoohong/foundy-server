@@ -41,12 +41,10 @@ $banner_size = 1;
   <div class="container">
     <div class="row">
       <div class="col-md-12 col-sm-12 col-xs-12">
-        <div class="thumbnail my-2 no-scale no-border no-padding thumbnail-banner size-1x<?php echo
-        $banner_size; ?>" style="height: 150px !important;">
+        <div class="thumbnail my-2 no-scale no-border no-padding thumbnail-banner size-1x<?php echo $banner_size; ?>" style="height: 150px !important;">
           <div class="media">
-            <a class="media-link" href="/">
-              <div class="img-bg image_delay" data-src="<?php echo base_url();
-              ?>uploads/banner_image/yoga banner.png" style="background-image: url('<?php echo base_url
+            <a class="media-link" href="<?php echo base_url().'home/find/center/a/'.CENTER_TYPE_YOGA; ?>">
+              <div class="img-bg image_delay" data-src="<?php echo base_url(); ?>uploads/banner_image/yoga banner.png" style="background-image: url('<?php echo base_url
               (); ?>uploads/banner_image/yoga banner.png'); background-repeat: no-repeat;
                 background-size: cover;">
               </div>
@@ -63,12 +61,10 @@ $banner_size = 1;
   <div class="container">
     <div class="row">
       <div class="col-md-12 col-sm-12 col-xs-12">
-        <div class="thumbnail my-2 no-scale no-border no-padding thumbnail-banner size-1x<?php echo
-        $banner_size; ?>" style="height: 150px !important;">
+        <div class="thumbnail my-2 no-scale no-border no-padding thumbnail-banner size-1x<?php echo $banner_size; ?>" style="height: 150px !important;">
           <div class="media">
-            <a class="media-link" href="/">
-              <div class="img-bg image_delay" data-src="<?php echo base_url();
-              ?>uploads/banner_image/pilates banner.png" style="background-image: url('<?php echo
+              <a class="media-link" href="<?php echo base_url().'home/find/center/b/'.CENTER_TYPE_PILATES; ?>">
+              <div class="img-bg image_delay" data-src="<?php echo base_url();?>uploads/banner_image/pilates banner.png" style="background-image: url('<?php echo
               base_url(); ?>uploads/banner_image/pilates banner.png'); background-repeat: no-repeat;
                 background-size: cover;">
 
@@ -81,8 +77,7 @@ $banner_size = 1;
   </div>
 </section>
 <!-- BREADCRUMBS -->
-<section class="page-section breadcrumbs" style="padding-top: 0px !important; padding-bottom: 0px !important; height:
-50px !important;">
+<section class="page-section breadcrumbs" style="padding-top: 0px !important; padding-bottom: 0px !important; height: 50px !important;">
   <div class="container">
     <div class="page-header" style="margin-bottom: 0px; ">
             <span style="font-size: 18px; color: #595959 !important;">
@@ -93,13 +88,11 @@ $banner_size = 1;
   </div>
 </section>
 <!-- /BREADCRUMBS -->
-<section class="page-section" style="margin-top: 0px !important; margin-bottom: 0px !important; padding-top: 0px
-    !important; padding-bottom: 0px !important;">
+<section class="page-section" style="margin-top: 0px !important; margin-bottom: 0px !important; padding-top: 0px !important; padding-bottom: 0px !important;">
   <div class="container">
     <div class="row">
       <div class="col-md-12 col-sm-12 col-xs-12">
-        <div class="thumbnail my-2 no-scale no-border no-padding thumbnail-banner size-1x<?php echo
-        $banner_size; ?>" style="height: 150px !important;">
+        <div class="thumbnail my-2 no-scale no-border no-padding thumbnail-banner size-1x<?php echo $banner_size; ?>" style="height: 150px !important;">
           <div class="media">
             <a class="media-link" href="<?php echo base_url().'home/find/class'; ?>">
               <div class="img-bg image_delay" data-src="<?php echo base_url(); ?>uploads/banner_image/online banner.png" style="background-image: url('<?php echo base_url(); ?>uploads/banner_image/online banner.png'); background-repeat: no-repeat; background-size: cover;"></div>

@@ -78,42 +78,53 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="profile" style="font-family: 'Quicksand' !important; font-size: 15px; text-align: center; padding-bottom: 5px; !important;"><b>schedule</b></div>
-                  <div class="col-md-12" style="padding: 10px 0px 0px 0px !important; border: none;">
-                    <div class="recent-post" style="background: #fff;/* border: 1px solid #e0e0e0; */">
+                  <div class="col-md-12" style="padding: 10px 0px 10px 0px !important; border: none;">
+                    <div class="col-md-12 recent-post" style="background: #fff;/* border: 1px solid #e0e0e0; */">
                       <div class="media">
-                        <p style="color: gray; font-size: medium; font-style: italic; height: 30px; text-align: center; font-weight: 600; margin-bottom: 0px !important; padding: 0 25px 0 25px">
-                          5월
-                          <a href="javascript:void(0);"><span class="pull-right schedule-add" style="font-style: normal;">+</span></a>
+                        <p style="color: gray; font-size: medium; font-style: italic; height: 30px; text-align: center; font-weight: 600; margin-bottom: 0px !important; padding: 0 5px 0 5px">
+                          <span class="schedule-month"><?php echo date('n', strtotime($start_date)); ?></span>월
+                          <a href="<?php echo base_url(); ?>home/center/schedule/mod?uid=<?php echo $user_data->user_id; ?>&sid=0"><span class="pull-right schedule-add" style="font-style: normal;">+</span></a>
                         </p>
                         <!--                        <div class="schedule slick pull-left media-link" style="height: 30px; float:left !important; padding: 0 !important; margin: 10px 30px 10px 30px !important; text-align: center">-->
                         <div class="schedule slick" style="height: 45px; font-size: x-large; font-style: italic; /* padding-bottom: 10px; */">
-                          <div class="schedule slick-content active" id="day-1"><span>1</span></div>
-                          <div class="schedule slick-content" id="day-2">2</div>
-                          <div class="schedule slick-content" id="day-3">3</div>
-                          <div class="schedule slick-content" id="day-4">4</div>
-                          <div class="schedule slick-content" id="day-5">5</div>
-                          <div class="schedule slick-content" id="day-6">6</div>
-                          <div class="schedule slick-content" id="day-7">7</div>
-                          <div class="schedule slick-content" id="day-8">8</div>
-                          <div class="schedule slick-content" id="day-9">9</div>
-                          <div class="schedule slick-content" id="day-10">10</div>
-                          <div class="schedule slick-content" id="day-11">11</div>
-                          <div class="schedule slick-content" id="day-12">12</div>
-                          <div class="schedule slick-content" id="day-13">13</div>
-                          <div class="schedule slick-content" id="day-14">14</div>
-                          <div class="schedule slick-content" id="day-15">15</div>
+                          <?php
+                          $current = strtotime($start_date);
+                          $last = strtotime($end_date);
+                          $months = array();
+                          while ($current <= $last) {
+                            $date = date('Y-m-d', $current);
+                            $day = date('j', $current); // 0 제거
+                            $months[] = date('n', $current);
+                            ?>
+                            <div class="schedule slick-content<?php if ($date == $start_date) echo ' active'; ?>" id="<?php echo $date; ?>"><?php echo $day; ?></div>
+                            <?php
+                            $current = strtotime('+1 day', $current);
+                          }
+                          ?>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="widget" style="padding-bottom:10px;">
-                    <ul class="profile_ul" id="schedule-detail"style="text-align: left">
-                      <li><p>11:00 - 12:00 (현제혁) 요가, 2nd room<a href="javascript:void(0);"><span class="pull-right schedule-edit" id="1">수정></span></a></p></li>
-                      <li><p>11:00 - 12:00 (현제혁) 요가, 2nd room<a href="javascript:void(0);"><span class="pull-right schedule-edit" id="2">수정></span></a></p></li>
-                      <li><p>11:00 - 12:00 (현제혁) 요가, 2nd room<a href="javascript:void(0);"><span class="pull-right schedule-edit" id="3">수정></span></a></p></li>
-                      <li><p>11:00 - 12:00 (현제혁) 요가, 2nd room<a href="javascript:void(0);"><span class="pull-right schedule-edit" id="4">수정></span></a></p></li>
-                      <li><p>11:00 - 12:00 (현제혁) 요가, 2nd room<a href="javascript:void(0);"><span class="pull-right schedule-edit" id="5">수정></span></a></p></li>
-                    </ul>
+                    <div class="col-md-12 widget schedule-detail" style="padding: 0 5px 10px 5px !important;">
+                      <!--                    <ul class="profile_ul" id="schedule-detail"style="text-align: left">-->
+                      <!--                      --><?php
+                      //                      foreach ($schedule_data as $schedule) {
+                      //                        $schedule_id = $schedule->schedule_id;
+                      //                        $start_time = substr($schedule->start_time, 0, 5);
+                      //                        $end_time = substr($schedule->end_time, 0, 5);
+                      //                        $teacher_name = $schedule->teacher_name;
+                      //                        $title = $schedule->title;
+                      //                        ?>
+                      <!--                        <li><p>--><?php //echo $start_time; ?><!-- - --><?php //echo $end_time; ?><!-- (--><?php //echo $teacher_name; ?><!--) --><?php //echo $title; ?>
+                      <!--                            <a href="--><?php //echo base_url().'home/center/schedule/mod?uid='.$user_data->user_id.'&sid='.$schedule_id; ?><!--">-->
+                      <!--                              <span class="pull-right schedule-edit" id="--><?php //echo $schedule_id; ?><!--">수정></span>-->
+                      <!--                            </a>-->
+                      <!--                          </p>-->
+                      <!--                        </li>-->
+                      <!--                        --><?php
+                      //                      }
+                      //                      ?>
+                      <!--                    </ul>-->
+                    </div>
                   </div>
                 </div>
               </div>
@@ -207,6 +218,9 @@
     height: 20px !important;
     margin-right: 5px;
   }
+  .schedule-detail {
+    background-color: white;
+  }
   .profile_ul {
     padding: 0 10px 0 10px !important;
     border-radius: 0 !important;
@@ -241,11 +255,11 @@
 
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
 <style>
-  .schedule .slick-content {
+  .schedule.slick-content {
     text-align: center;
     color: gray;
   }
-  .schedule .slick-content.active {
+  .schedule.slick-content.active {
     text-align: center;
     color: black;
   }
@@ -267,30 +281,72 @@
 <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 <script type="text/javascript">
+  var month = [<?php foreach ($months as $m) {echo "{$m},";} ?>];
+  var today = '<?php echo $start_date; ?>';
+
+  function get_schedule_content(date) {
+    // set current month
+    var d = new Date(date);
+    var currentMonth = d.getMonth() + 1;
+    var scheduleMonth = $.trim($('.schedule-month').text());
+    if (scheduleMonth !== currentMonth) {
+      $('.schedule-month').text(currentMonth);
+    }
+
+    // set current day to Bold
+    $('.schedule.slick-content').removeClass("active");
+    $('#'+date).addClass("active");
+
+    $.ajax({
+      url: "<?php echo base_url().'home/center/schedule/info?uid='.$user_data->user_id.'&date='; ?>" + date,
+      type: 'GET', // form submit method get/post
+      dataType: 'html', // request type html/json/xml
+      success: function(data) {
+        // alert(data);
+        $('.schedule-detail table').remove();
+        $('.schedule-detail').append(data);
+      },
+      error: function(e) {
+        console.log(e)
+      }
+    });
+  }
+
   $(function() {
     $('.schedule.slick-content').click(function () {
-      console.log($(this).attr('id'));
-      $('.schedule.slick-content').removeClass("active");
-      $(this).addClass("active");
+      var date = $(this).attr('id');
+      // console.log(date);
+      get_schedule_content(date);
     });
 
     // On edge hit
-    $('.schedule.slick').on('edge', function(event, slick, direction){
-      console.log('edge was hit')
-    });
+    // $('.schedule.slick').on('edge', function(event, slick, direction){
+    //   console.log('edge was hit')
+    // });
 
     // On swipe event
     $('.slick').on('swipe', function(event, slick, direction){
-      console.log(direction);
-      // left
+      // console.log(direction);
+      // Get the current slide
+      var currentSlide = $('.schedule.slick').slick('slickCurrentSlide');
+      var scheduleMonth = $.trim($('.schedule-month').text());
+      var currentMonth = month[currentSlide];
+
+      // console.log(currentSlide);
+      // console.log(month[currentSlide] + '월');
+      // console.log(scheduleMonth);
+
+      if (scheduleMonth !== currentMonth) {
+        $('.schedule-month').text(currentMonth);
+      }
     })
 
     $('.schedule-add').click(function () {
-      console.log('schedule-add');
+      // console.log('schedule-add');
     });
 
     $('.schedule-edit').click(function () {
-      console.log($(this).attr('id'));
+      // console.log($(this).attr('id'));
     });
   });
 
@@ -326,6 +382,8 @@
         }
       ]
     });
+
+    get_schedule_content(today);
   });
 </script>
 
@@ -405,3 +463,4 @@ if ($center_data->teacher_cnt > 0) {
     infowindow.open(map, marker);
   });
 </script>
+

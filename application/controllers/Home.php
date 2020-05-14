@@ -376,9 +376,9 @@ QUERY;
       $row = $this->db->query($query)->row();
 
       if ($row->center_id > 0) {
-        echo ("<script>alert('이미신청하셨습니다'); window.location.href='{$base_url}home/user'</script>");
-        exit;
-      } else {
+//        echo ("<script>alert('이미신청하셨습니다'); window.location.href='{$base_url}home/user'</script>");
+//        exit;
+//      } else {
         $this->load->view('front/user/center_register');
       }
 
@@ -490,6 +490,7 @@ QUERY;
         echo "done";
       }
     } elseif ($view_type == "do_teacher_register") {
+
       $this->load->library('form_validation');
 
       $this->form_validation->set_rules('teacher_name', 'teacher_name', 'trim|required|max_length[32]');
@@ -510,7 +511,7 @@ QUERY;
         $categories = $this->input->post('category');
 
         if (empty($youtube) && empty($instagram)) {
-          echo ("<script>alert('유뷰브와 인스타그램 중 최소 하나는 입력해주세요');</script>");
+          echo ("<script>alert('유튜브와 인스타그램 중 최소 하나는 입력해주세요');</script>");
           exit;
         }
 
@@ -603,12 +604,34 @@ QUERY;
         $teacher_data = null;
       }
 
+      $start_time = time();
+      $end_time = strtotime("+90 day");
+      $start_date = date("Y-m-d", $start_time);
+      $end_date = date("Y-m-d", $end_time);
+      $week = date('w', $start_time);
+
+      $query = <<<QUERY
+select * from center_schedule where center_id={$center_data->center_id} and start_date<='{$start_date}' and '{$start_date}'<=end_date order by start_time asc
+QUERY;
+      $schedules = $this->db->query($query)->result();
+
+      $schedule_data = array();
+      $w = "weekly_" . $week;
+      foreach ($schedules as $schedule) {
+        if ($schedule->{$w} == 1 or $schedule->weekly_none == 1) {
+          $schedule_data[] = $schedule;
+        }
+      }
+
       $page_data['page_name'] = "center/profile";
       $page_data['asset_page'] = "center_profile";
       $page_data['page_title'] = "center_profile";
       $page_data['user_data'] = $user_data;
       $page_data['center_data'] = $center_data;
       $page_data['teacher_data'] = $teacher_data;
+      $page_data['start_date'] = $start_date;
+      $page_data['end_date'] = $end_date;
+      $page_data['schedule_data'] = $schedule_data;
       $page_data['iam_this_center'] = $iam_this_center;
       $this->load->view('front/index', $page_data);
 
@@ -655,19 +678,19 @@ QUERY;
 
         $center_user_id = $para3;
         if ($center_user_id != $this->session->userdata('user_id')) {
-          echo ("<script>alert('권한이 없습니다{$center_user_id}'); window.location.href='{$base_url}home/user'</script>");
+          echo("<script>alert('권한이 없습니다{$center_user_id}'); window.location.href='{$base_url}home/user'</script>");
           exit;
         }
 
         $user_data = $this->db->get_where('user', array('user_id' => $center_user_id))->row();
         if (!($user_data->user_type & USER_TYPE_CENTER)) {
-          echo ("<script>alert('센터회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
+          echo("<script>alert('센터회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
           exit;
         }
 
         $center_data = $this->db->get_where('center', array('user_id' => $center_user_id))->row();
         if ($center_data->activate == 0) {
-          echo ("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
+          echo("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
           exit;
         }
 
@@ -677,8 +700,8 @@ QUERY;
         if (!empty($add_list) && count($add_list) > 0) {
           foreach ($add_list as $teacher_id) {
             $ins = array(
-              'center_id'=>$user_data->center_id,
-              'teacher_id'=>$user_data->center_id,
+              'center_id' => $user_data->center_id,
+              'teacher_id' => $user_data->center_id,
             );
             $this->db->insert('center_teacher', $ins);
           }
@@ -687,8 +710,8 @@ QUERY;
         if (!empty($remove_list) && count($remove_list) > 0) {
           foreach ($remove_list as $teacher_id) {
             $del = array(
-              'center_id'=>$user_data->center_id,
-              'teacher_id'=>$user_data->center_id,
+              'center_id' => $user_data->center_id,
+              'teacher_id' => $user_data->center_id,
             );
             $this->db->where($del);
             $this->db->delete('center_teacher');
@@ -748,6 +771,246 @@ QUERY;
         $this->load->view('front/index', $page_data);
 
       }
+
+    } else if ($para1 == 'schedule') {
+
+      $type = $para2;
+
+      if ($type == 'mod') {
+
+        $center_user_id = $_GET['uid'];
+        $schedule_id = $_GET['sid'];
+
+        if ($center_user_id != $this->session->userdata('user_id')) {
+          echo("<script>alert('권한이 없습니다'); window.location.href='{$base_url}home/user'</script>");
+          exit;
+        }
+
+        $user_data = $this->db->get_where('user', array('user_id' => $center_user_id))->row();
+        if (!($user_data->user_type & USER_TYPE_CENTER)) {
+          echo("<script>alert('센터회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
+          exit;
+        }
+
+        $center_data = $this->db->get_where('center', array('user_id' => $center_user_id))->row();
+        if ($center_data->activate == 0) {
+          echo("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
+          exit;
+        }
+
+        $schedule_data = new stdClass();
+        if ($schedule_id > 0) {
+          $schedule_data = $this->db->get_where('center_schedule', array('schedule_id' => $schedule_id))->row();
+        } else {
+          $start_time = strtotime('1 hour');
+          $end_time = strtotime('2 hour');
+          $schedule_data->schedule_id = 0;
+          $schedule_data->start_date = date('Y-m-d', $start_time);
+          $schedule_data->end_date = date('Y-m-d', $end_time);
+          $schedule_data->start_time = date('H', $start_time). ':00';
+          $schedule_data->end_time = date('H', $end_time).':00';
+          $schedule_data->title = '';
+          $schedule_data->teacher_id = 0;
+          $schedule_data->teacher_name = '';
+          $schedule_data->weekly_0 = 0;
+          $schedule_data->weekly_1 = 0;
+          $schedule_data->weekly_2 = 0;
+          $schedule_data->weekly_3 = 0;
+          $schedule_data->weekly_4 = 0;
+          $schedule_data->weekly_5 = 0;
+          $schedule_data->weekly_6 = 0;
+          $schedule_data->weekly_none = 1;
+        }
+
+        $teacher_data = array();
+        $teachers = $this->db->get_where('center_teacher', array('center_id' => $center_data->center_id))->result();
+        foreach ($teachers as $teacher) {
+          $teacher_data[] = $this->db->get_where('teacher', array('teacher_id' => $teacher->teacher_id))->row();
+        }
+
+        $page_data['page_name'] = "center/schedule/mod";
+        $page_data['asset_page'] = "center_schedule_mod";
+        $page_data['page_title'] = "center_schedule_mod";
+        $page_data['user_data'] = $user_data;
+        $page_data['center_data'] = $center_data;
+        $page_data['schedule_data'] = $schedule_data;
+        $page_data['teacher_data'] = $teacher_data;
+        $this->load->view('front/index', $page_data);
+
+      } else if ($type == 'do_mod') {
+
+        $center_user_id = $_GET['uid'];
+        $schedule_id = $_GET['sid'];
+
+        if ($center_user_id != $this->session->userdata('user_id')) {
+          echo("<script>alert('권한이 없습니다'); window.location.href='{$base_url}home/user'</script>");
+          exit;
+        }
+
+        $user_data = $this->db->get_where('user', array('user_id' => $center_user_id))->row();
+        if (!($user_data->user_type & USER_TYPE_CENTER)) {
+          echo("<script>alert('센터회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
+          exit;
+        }
+
+        $center_data = $this->db->get_where('center', array('user_id' => $center_user_id))->row();
+        if ($center_data->activate == 0) {
+          echo("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
+          exit;
+        }
+
+        $schedule_del = $this->input->post('schedule_del');
+        if (empty($schedule_del) or $schedule_del == 0) {
+
+          $this->load->library('form_validation');
+
+          $this->form_validation->set_rules('start_date', 'start_date', 'required');
+          $this->form_validation->set_rules('end_date', 'end_date', 'required');
+          $this->form_validation->set_rules('start_time', 'start_time', 'required');
+          $this->form_validation->set_rules('end_time', 'end_time', 'required');
+          $this->form_validation->set_rules('schedule_title', 'schedule_title', 'trim|required|max_length[32]');
+
+          if ($this->form_validation->run() == FALSE) {
+            echo '<br>' . validation_errors();
+            exit;
+          } else {
+
+            $start_date = $this->input->post('start_date');
+            $end_date = $this->input->post('end_date');
+            $start_time = $this->input->post('start_time');
+            $end_time = $this->input->post('end_time');
+            $title = $this->input->post('schedule_title');
+            $weeklys = $this->input->post('weeklys');
+            $teacher_id = $this->input->post('teacher_id');
+            $teacher_name = $this->input->post('teacher_name');
+
+            if ($teacher_id == 0) {
+              echo("<script>alert('강사를 선택해 주세요');</script>");
+              exit;
+            }
+
+            if ($teacher_id == -1) {
+              if (empty($teacher_name) || strlen($teacher_name) == 0) {
+                echo("<script>alert('강사이름을 입력해 주세요 {$teacher_name}');</script>");
+                exit;
+              }
+            } else {
+              $teacher = $this->db->get_where('teacher', array('teacher_id' => $teacher_id))->row();
+              if (empty($teacher)) {
+                echo("<script>alert('강사가 존재하지 않습니다');</script>");
+                exit;
+              }
+              $teacher_name = $teacher->name;
+            }
+
+            $weekly = array(0, 0, 0, 0, 0, 0, 0);
+            if (empty($weeklys) || count($weeklys) == 0) {
+
+              $weekly_none = 1;
+
+              $data = array(
+                'center_id' => $center_data->center_id,
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'start_time' => $start_time,
+                'end_time' => $end_time,
+                'weekly_0' => $weekly[0],
+                'weekly_1' => $weekly[1],
+                'weekly_2' => $weekly[2],
+                'weekly_3' => $weekly[3],
+                'weekly_4' => $weekly[4],
+                'weekly_5' => $weekly[5],
+                'weekly_6' => $weekly[6],
+                'weekly_none' => $weekly_none,
+                'title' => $title,
+                'teacher_id' => $teacher_id,
+                'teacher_name' => $teacher_name
+              );
+            } else {
+
+              foreach ($weeklys as $w) {
+                $w = (int)$w;
+                $weekly[$w] = 1;
+              }
+
+              $weekly_none = 0;
+
+              $data = array(
+                'center_id' => $center_data->center_id,
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'start_time' => $start_time,
+                'end_time' => $end_time,
+                'weekly_0' => $weekly[0],
+                'weekly_1' => $weekly[1],
+                'weekly_2' => $weekly[2],
+                'weekly_3' => $weekly[3],
+                'weekly_4' => $weekly[4],
+                'weekly_5' => $weekly[5],
+                'weekly_6' => $weekly[6],
+                'weekly_none' => $weekly_none,
+                'title' => $title,
+                'teacher_id' => $teacher_id,
+                'teacher_name' => $teacher_name
+              );
+            }
+          }
+        }
+
+        if (isset($schedule_del) && $schedule_del == 1) {
+          $this->db->where(array('schedule_id' => $schedule_id));
+          $this->db->delete('center_schedule');
+        } else if ($schedule_id > 0) {
+          $this->db->where(array('schedule_id' => $schedule_id));
+          $this->db->update('center_schedule', $data);
+        } else {
+          $this->db->insert('center_schedule', $data);
+        }
+
+        echo 'done';
+
+      } else if ($type == 'info') {
+
+        $center_user_id = $_GET['uid'];
+        $date = $_GET['date'];
+
+        $user_data = $this->db->get_where('user', array('user_id' => $center_user_id))->row();
+        if (!($user_data->user_type & USER_TYPE_CENTER)) {
+          echo("<script>alert('센터회원이 아닙니다');'</script>");
+          exit;
+        }
+
+        $center_data = $this->db->get_where('center', array('user_id' => $center_user_id))->row();
+        if ($center_data->activate == 0) {
+          echo("<script>alert('승인 대기 중입니다');'</script>");
+          exit;
+        }
+
+        $query = <<<QUERY
+select * from center_schedule where center_id={$center_data->center_id} and start_date<='{$date}' and '{$date}'<=end_date order by start_time asc
+QUERY;
+        $schedules = $this->db->query($query)->result();
+
+        $schedule_data = array();
+        $week = date('w', strtotime($date));
+        $w = "weekly_" . $week;
+        foreach ($schedules as $schedule) {
+          if ($schedule->{$w} == 1 or $schedule->weekly_none == 1) {
+//            if (strlen($schedule->title) > 35) {
+//              $schedule->title = mb_substr($schedule->title, 0, 35). '...';
+//            }
+            $schedule_data[] = $schedule;
+          }
+        }
+
+        $page_data['user_data'] = $user_data;
+        $page_data['schedule_data'] = $schedule_data;
+        $this->load->view('front/center/schedule/info/index', $page_data);
+
+      } else { // unreachable
+      }
+
+    } else { // unreachable
     }
   }
 
@@ -970,7 +1233,7 @@ QUERY;
     }
   }
 
-  function find($para1 = '', $para2 = '')
+  function find($para1 = '', $para2 = '', $para3 = '')
   {
     $view = $para1;
 
@@ -998,7 +1261,7 @@ QUERY;
           $this->db->order_by('video_id', 'desc');
           $video_list = $this->db->get_where('teacher_video_category', array('category' => $filter), $limit, $offset)->result();
 
-          $video_data= array();
+          $video_data = array();
           if (!empty($video_list) && count($video_list) > 0) {
             $video_id_list = array();
             foreach ($video_list as $video) {
@@ -1024,6 +1287,61 @@ QUERY;
 
       }
 
+    } else if ($view == 'center') {
+
+      $type = $para2;
+      $center_type = $para3;
+
+      if ($type == 'list') {
+
+        if (!isset($_GET['page']) || !isset($_GET['filter'])) {
+          echo "<script>alert('잘못된 접근입니다')</script>";
+          exit;
+        }
+
+        $page = $_GET['page'];
+        $filter = $_GET['filter'];
+        $limit = 10;
+        $offset = 10 * ($page - 1);
+
+//        echo "<script>alert('{$page}, {$limit}, {$offset}')</script>";
+
+        if ($filter == 'ALL') {
+          $this->db->order_by('center_id', 'desc');
+          $center_list = $this->db->get_where('center_category', array('type' => $center_type), $limit, $offset)->result();
+        } else {
+          $this->db->order_by('center_id', 'desc');
+          $center_list = $this->db->get_where('center_category', array('type' => $center_type, 'category' => $filter), $limit, $offset)->result();
+        }
+
+        $center_data = $this->get_center_data($center_list);
+
+        $page_data['center_data'] = $center_data;
+        $this->load->view('front/find/center/list', $page_data);
+
+      } else {
+
+        $limit = 10;
+        $offset = 0;
+
+        $this->db->order_by('center_id', 'desc');
+        $center_list = $this->db->get_where('center_category', array('type' => $center_type), $limit, $offset)->result();
+
+        $center_data = $this->get_center_data($center_list);
+
+        $where = array('type' => $center_type,'activate' => 1);
+        $categories = $this->db->order_by('category_id', 'asc')->get_where('category_center', $where)->result();
+
+        $page_data['page_name'] = "find/center";
+        $page_data['asset_page'] = "center";
+        $page_data['page_title'] = $center_type == CENTER_TYPE_YOGA ? "YOGA" : "PILATES";
+        $page_data['center_data'] = $center_data;
+        $page_data['categories'] = $categories;
+        $page_data['center_type'] = $center_type;
+        $this->load->view('front/index', $page_data);
+
+      }
+
     } else {
 
       $page_data['page_name'] = "find";
@@ -1032,6 +1350,36 @@ QUERY;
       $this->load->view('front/index', $page_data);
 
     }
+  }
+
+  function get_center_data(array $center_list)
+  {
+    $center_data = array();
+
+    if (!empty($center_list) && count($center_list) > 0) {
+      $center_id_list = array();
+      foreach ($center_list as $center) {
+        $center_id_list[] = $center->center_id;
+      }
+      $center_id_list = array_unique($center_id_list);
+
+//      $this->db->where_in('center_id', $center_id_list);
+//      $rows = $this->db->get('center')->num_rows();
+      $center_id_list = implode(',', $center_id_list);
+      $query = <<<QUERY
+select center_id,user_id,title,phone,about,address,address_detail,longitude,latitude,activate 
+from center where center_id in ({$center_id_list}) and activate=1
+QUERY;
+      $center_data = $this->db->query($query)->result();
+
+//      $center_data = json_encode($center_data);
+//      $center_id_list = json_encode($center_id_list);
+//      echo "<script>alert('center_id_list : {$center_id_list} center : $center_data')</script>";
+//      exit;
+
+    }
+
+    return $center_data;
   }
 
 }

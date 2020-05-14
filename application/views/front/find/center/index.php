@@ -25,18 +25,17 @@
       <div class="col-md-12 content" id="content" style="background-color: white !important;">
         <div id="blog-content">
 
-          <!-- online class -->
+          <!-- center -->
           <div class="col-md-12" style="padding: 0 0 0 0 !important; ">
             <div class="row">
               <div class="col-md-12" style="padding: 0 0 0 0 !important;">
                 <div class="profile" style="font-size: 15px; padding: 5px 10px 5px 10px !important;">
-                  <span>포잇 추천 클래스</span>
+                  <span><?php echo $page_title; ?></span>
                   <div class="pull-right" style="width: 80px; margin-right: 10px;">
 <!--                    <i class="pull-right fa fa-angle-down" style="color: #737475; font-family: FontAwesome !important; padding-top: 8px;"> </i>-->
-                    <select class="form-control select-arrow" id="class_category" name="class_category">
+                    <select class="form-control select-arrow" id="center_category" name="center_category">
                       <option value="ALL" selected="selected">ALL</option>
                       <?php
-                      $categories = $this->db->order_by('category_id', 'asc')->get_where('category_class', array('activate' => 1))->result();
                       foreach ($categories as $cat) {
                       ?>
                       <option value="<?php echo $cat->name; ?>"><?php echo $cat->name; ?></option>
@@ -47,19 +46,18 @@
                   </div>
                 </div>
                 <div class="widget widget-categories" style="padding-bottom:10px; ">
-                  <ul class="video_ul">
-
-                    <!-- ajax_class_list() -->
-                    <!-- /ajax_class_list() -->
+                  <!-- ajax_center_list() -->
+                  <ul class="center_ul">
 
                   </ul>
+                  <!-- /ajax_center_list() -->
                 </div>
               </div>
             </div>
           </div>
-          <!-- /online class -->
+          <!-- /center -->
           <p style="text-align: center;">
-            <a class="btn btn-lg btn-primary" id="view_more" href="#none" onclick="ajax_class_list(); return false;" role="button" style="display: none; font-family: 'Quicksand' !important; font-size: 15px; color: gray; background-color: inherit; border: 1px solid #d3d3d3">
+            <a class="btn btn-lg btn-primary" id="view_more" href="#none" onclick="ajax_center_list(); return false;" role="button" style="display: none; font-family: 'Quicksand' !important; font-size: 15px; color: gray; background-color: inherit; border: 1px solid #d3d3d3">
               view more
             </a>
           </p>
@@ -76,21 +74,21 @@
   var page = 0;
   var filter = '';
 
-  function ajax_class_list() {
+  function ajax_center_list() {
 
     page = page + 1;
 
-    // console.log('page : ' + page + ', filter : ' + filter);
+    console.log('page : ' + page + ', filter : ' + filter + ', center_type : ' + '<?php echo $center_type; ?>');
 
     $.ajax({
-      url: "<?php echo base_url().'home/find/class/list?page='; ?>" + page + '&filter=' + filter,
+      url: "<?php echo base_url().'home/find/center/list/'.$center_type.'?page='; ?>" + page + '&filter=' + filter,
       type: 'GET', // form submit method get/post
       dataType: 'html', // request type html/json/xml
       success: function(data) {
-        $('.video_ul').append(data);
-        // console.log($(".video_ul a li").length % 10);
+        $('.center_ul').append(data);
+        // console.log($(".center_ul a li").length % 10);
 
-        var listCnt = $(".video_ul a li").length;
+        var listCnt = $(".center_ul a li").length;
         if ( listCnt === 0 || listCnt % 10 !== 0) {
           $('#view_more').hide();
         } else {
@@ -108,21 +106,21 @@
   }
 
   $(function() {
-    $("#class_category").change(function() {
+    $("#center_category").change(function() {
       // console.log(this.value);
       page = 0;
       filter = this.value;
       $('#view_more').hide();
-      $('.video_ul a').remove();
-      ajax_class_list();
+      $('.center_ul a').remove();
+      ajax_center_list();
     });
   })
 
   $(document).ready(function(){
     page = 0;
-    filter = $("#class_category option:selected").val();
+    filter = $("#center_category option:selected").val();
 
     active_menu_bar('find');
-    ajax_class_list();
+    ajax_center_list();
   });
 </script>
