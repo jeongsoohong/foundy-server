@@ -1,4 +1,4 @@
-﻿#!/bin/bash
+#!/bin/bash
 
 echo
 echo -e "########## memcached 설치 스크립트를 시작합니다."

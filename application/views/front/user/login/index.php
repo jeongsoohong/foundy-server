@@ -50,7 +50,7 @@
 <script type="text/javascript">
 
     document.addEventListener("DOMContentLoaded", function() {
-        Kakao.init('a7e336b59aed62d0e46dae8a8c55da21');
+        Kakao.init('8ee901a556539927d58b30a6bf21a781');
         // @breif 카카오 로그인 버튼을 생성합니다.
         Kakao.Auth.createLoginButton({
 

@@ -130,7 +130,7 @@
 
     $('.pnav_logout').click(function(e) {
         $.getScript("https://developers.kakao.com/sdk/js/kakao.min.js", function() {
-            Kakao.init('a7e336b59aed62d0e46dae8a8c55da21');
+            Kakao.init('8ee901a556539927d58b30a6bf21a781');
             if (!Kakao.Auth.getAccessToken()) {
                 alert('Not logged in.');
             } else {
@@ -168,7 +168,7 @@
 
     $('.pnav_unregister').click(function(e) {
         $.getScript("https://developers.kakao.com/sdk/js/kakao.min.js", function() {
-            Kakao.init('a7e336b59aed62d0e46dae8a8c55da21');
+            Kakao.init('8ee901a556539927d58b30a6bf21a781');
             if (!Kakao.Auth.getAccessToken()) {
                 alert('Not logged in.');
             } else {
@@ -220,7 +220,7 @@
         $("#profile_content").load("<?php echo base_url()?>home/user/center_register");
         $(".pleft_nav").find("li").removeClass("active");
         $(".pnav_center_register").find("li").addClass("active");
-        $.getScript("//dapi.kakao.com/v2/maps/sdk.js?appkey=a7e336b59aed62d0e46dae8a8c55da21&autoload=false&libraries=services", function() {
+        $.getScript("//dapi.kakao.com/v2/maps/sdk.js?appkey=8ee901a556539927d58b30a6bf21a781&autoload=false&libraries=services", function() {
             kakao.maps.load(function() {
                 // getLocation();
                 var mapContainer = document.getElementById('kakao-map'), // 지도를 표시할 div
