@@ -83,7 +83,7 @@
                       <div class="media">
                         <p style="color: gray; font-size: medium; font-style: italic; height: 30px; text-align: center; font-weight: 600; margin-bottom: 0px !important; padding: 0 5px 0 5px">
                           <span class="schedule-month"><?php echo date('n', strtotime($start_date)); ?></span>월
-                          <a href="<?php echo base_url(); ?>home/center/schedule/mod?uid=<?php echo $user_data->user_id; ?>&sid=0"><span class="pull-right schedule-add" style="font-style: normal;">+</span></a>
+                          <a href="<?php echo base_url(); ?>home/center/schedule/mod?cid=<?php echo $center_data->center_id; ?>&sid=0"><span class="pull-right schedule-add" style="font-style: normal;">+</span></a>
                         </p>
                         <!--                        <div class="schedule slick pull-left media-link" style="height: 30px; float:left !important; padding: 0 !important; margin: 10px 30px 10px 30px !important; text-align: center">-->
                         <div class="schedule slick" style="height: 45px; font-size: x-large; font-style: italic; /* padding-bottom: 10px; */">
@@ -104,27 +104,11 @@
                         </div>
                       </div>
                     </div>
+                    <!--  ajax schedule  -->
                     <div class="col-md-12 widget schedule-detail" style="padding: 0 5px 10px 5px !important;">
-                      <!--                    <ul class="profile_ul" id="schedule-detail"style="text-align: left">-->
-                      <!--                      --><?php
-                      //                      foreach ($schedule_data as $schedule) {
-                      //                        $schedule_id = $schedule->schedule_id;
-                      //                        $start_time = substr($schedule->start_time, 0, 5);
-                      //                        $end_time = substr($schedule->end_time, 0, 5);
-                      //                        $teacher_name = $schedule->teacher_name;
-                      //                        $title = $schedule->title;
-                      //                        ?>
-                      <!--                        <li><p>--><?php //echo $start_time; ?><!-- - --><?php //echo $end_time; ?><!-- (--><?php //echo $teacher_name; ?><!--) --><?php //echo $title; ?>
-                      <!--                            <a href="--><?php //echo base_url().'home/center/schedule/mod?uid='.$user_data->user_id.'&sid='.$schedule_id; ?><!--">-->
-                      <!--                              <span class="pull-right schedule-edit" id="--><?php //echo $schedule_id; ?><!--">수정></span>-->
-                      <!--                            </a>-->
-                      <!--                          </p>-->
-                      <!--                        </li>-->
-                      <!--                        --><?php
-                      //                      }
-                      //                      ?>
-                      <!--                    </ul>-->
+
                     </div>
+                    <!--  /ajax schedule  -->
                   </div>
                 </div>
               </div>
@@ -136,7 +120,7 @@
                   <div class="col-md-12" style="padding: 10px 0px 10px 0px !important; border: none;">
                     <div class="recent-post" style="background: #fff;/* border: 1px solid #e0e0e0; */">
                       <div class="media">
-                        <a href="<?php echo base_url(); ?>home/center/teacher/<?php echo $user_data->user_id; ?>">
+                        <a href="<?php echo base_url(); ?>home/center/teacher/<?php echo $center_data->center_id; ?>">
                           <p style="color: gray; height: 30px; text-align: center; font-weight: 600; margin-bottom: 0px !important; padding: 0 25px 0 25px">
                             <span class="instructor-add">수정></span>
                           </p>
@@ -298,7 +282,7 @@
     $('#'+date).addClass("active");
 
     $.ajax({
-      url: "<?php echo base_url().'home/center/schedule/info?uid='.$user_data->user_id.'&date='; ?>" + date,
+      url: "<?php echo base_url().'home/center/schedule/info?cid='.$center_data->center_id.'&date='; ?>" + date,
       type: 'GET', // form submit method get/post
       dataType: 'html', // request type html/json/xml
       success: function(data) {

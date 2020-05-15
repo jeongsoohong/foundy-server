@@ -7,7 +7,7 @@ foreach ($center_data as $center) {
   }
   $cat[strlen($cat) - 1] = "\0";
   ?>
-  <a href="<?php echo base_url(); ?>home/center/profile/<?php echo $center->user_id; ?>">
+  <a href="<?php echo base_url(); ?>home/center/profile/<?php echo $center->center_id; ?>">
     <li style="padding: 10px 0 10px 0 !important;">
       <div class="col-md-12 " style="padding: 0 5px 0 5px !important; height: 75px">
         <div class="col-md-9 pull-left media-link" style="padding: 0 5px 0 5px; width: 80%;">

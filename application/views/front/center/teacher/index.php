@@ -28,7 +28,7 @@
                         </p>
                         <div class="details-box">
                           <?php
-                          echo form_open(base_url() . 'home/center/teacher/modify/'.$user_data->user_id, array(
+                          echo form_open(base_url() . 'home/center/teacher/modify/'.$center_data->center_id, array(
                             'class' => 'form-login',
                             'method' => 'post',
                             'enctype' => 'multipart/form-data'
@@ -114,7 +114,7 @@
                               <button type="button" class="btn btn-theme pull-right open_modal modify-instructor-req" data-toggle="modal" data-target="#modifyInstructorReq">
                                 확인
                               </button>
-                              <button type="button" class="hidden btn btn-theme pull-right btn_dis signup_btn" data-reload='no' data-relocation='<?php echo base_url()."home/center/profile/{$user_data->user_id}"; ?>' data-unsuccessful='신청에 실패했습니다.' data-success='신청에 성공했습니다.' data-ing='진행중'>
+                              <button type="button" class="hidden btn btn-theme pull-right btn_dis signup_btn" data-reload='no' data-relocation='<?php echo base_url()."home/center/profile/{$center_data->center_id}"; ?>' data-unsuccessful='신청에 실패했습니다.' data-success='신청에 성공했습니다.' data-ing='진행중'>
                                 확인
                               </button>
                             </div>

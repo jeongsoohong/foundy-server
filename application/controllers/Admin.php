@@ -375,6 +375,12 @@ UPDATE center set activate={$data['activate']},approval_at=NOW() where center_id
 QUERY;
       $this->db->query($query);
 
+      $query = <<<QUERY
+UPDATE center_category set activate={$data['activate']} where center_id={$center_id}
+QUERY;
+      $this->db->query($query);
+
+
       $user_type = USER_TYPE_CENTER;
       if ($approval == 'ok') {
         $query = <<<QUERY

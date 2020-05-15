@@ -465,21 +465,24 @@ QUERY;
           'activate' => 0
         );
         $this->db->set($data);
-        $this->db->set('location', "ST_GeomFromText('POINT({$longitude} {$latitude})')", false);
         $this->db->set('create_at', 'NOW()', false);
         $this->db->set('approval_at', 'NOW()', false);
         $this->db->insert('center');
 
         $center_id = $this->db->insert_id();
 
+        $this->db->set('center_id', $center_id, true);
+        $this->db->set('location', "ST_GeomFromText('POINT({$longitude} {$latitude})')", false);
+        $this->db->insert('center_location');
+
         foreach ($categories_yoga as $cat) {
           $cat = trim($cat);
-          $this->db->insert('center_category', array('center_id' => $center_id, 'category' => $cat, 'type' => CENTER_TYPE_YOGA));
+          $this->db->insert('center_category', array('center_id' => $center_id, 'category' => $cat, 'type' => CENTER_TYPE_YOGA, 'activate' => 0));
         }
 
         foreach ($categories_pilates as $cat) {
           $cat = trim($cat);
-          $this->db->insert('center_category', array('center_id' => $center_id, 'category' => $cat, 'type' => CENTER_TYPE_PILATES));
+          $this->db->insert('center_category', array('center_id' => $center_id, 'category' => $cat, 'type' => CENTER_TYPE_PILATES, 'activate' => 0));
         }
 
         $this->db->where('user_id', $user_id);
@@ -578,24 +581,24 @@ QUERY;
 
     if ($para1 == "profile") {
 
-      $center_user_id = $para2;
+      $center_id = $para2;
 
-      if ($center_user_id == $this->session->userdata('user_id')) {
-        $iam_this_center = true;
-      } else {
-        $iam_this_center = false;
+      $center_data = $this->db->get_where('center', array('center_id' => $center_id))->row();
+      if ($center_data->activate == 0) {
+        echo ("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
+        exit;
       }
 
-      $user_data = $this->db->get_where('user', array('user_id' => $center_user_id))->row();
+      $user_data = $this->db->get_where('user', array('user_id' => $center_data->user_id))->row();
       if (!($user_data->user_type & USER_TYPE_CENTER)) {
         echo ("<script>alert('센터회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
         exit;
       }
 
-      $center_data = $this->db->get_where('center', array('user_id' => $center_user_id))->row();
-      if ($center_data->activate == 0) {
-        echo ("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
-        exit;
+      if ($user_data->user_id == $this->session->userdata('user_id')) {
+        $iam_this_center = true;
+      } else {
+        $iam_this_center = false;
       }
 
       if ($center_data->teacher_cnt > 0) {
@@ -676,21 +679,22 @@ QUERY;
 
       } else if ($action == 'modify') {
 
-        $center_user_id = $para3;
-        if ($center_user_id != $this->session->userdata('user_id')) {
-          echo("<script>alert('권한이 없습니다{$center_user_id}'); window.location.href='{$base_url}home/user'</script>");
-          exit;
-        }
+        $center_id = $para3;
 
-        $user_data = $this->db->get_where('user', array('user_id' => $center_user_id))->row();
-        if (!($user_data->user_type & USER_TYPE_CENTER)) {
-          echo("<script>alert('센터회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
-          exit;
-        }
-
-        $center_data = $this->db->get_where('center', array('user_id' => $center_user_id))->row();
+        $center_data = $this->db->get_where('center', array('center_id' => $center_id))->row();
         if ($center_data->activate == 0) {
-          echo("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
+          echo ("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
+          exit;
+        }
+
+        $user_data = $this->db->get_where('user', array('user_id' => $center_data->user_id))->row();
+        if (!($user_data->user_type & USER_TYPE_CENTER)) {
+          echo ("<script>alert('센터회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
+          exit;
+        }
+
+        if ($user_data->user_id != $this->session->userdata('user_id')) {
+          echo("<script>alert('권한이 없습니다'); window.location.href='{$base_url}home/user'</script>");
           exit;
         }
 
@@ -700,8 +704,8 @@ QUERY;
         if (!empty($add_list) && count($add_list) > 0) {
           foreach ($add_list as $teacher_id) {
             $ins = array(
-              'center_id' => $user_data->center_id,
-              'teacher_id' => $user_data->center_id,
+              'center_id' => $center_data->center_id,
+              'teacher_id' => $teacher_id,
             );
             $this->db->insert('center_teacher', $ins);
           }
@@ -710,8 +714,8 @@ QUERY;
         if (!empty($remove_list) && count($remove_list) > 0) {
           foreach ($remove_list as $teacher_id) {
             $del = array(
-              'center_id' => $user_data->center_id,
-              'teacher_id' => $user_data->center_id,
+              'center_id' => $center_data->center_id,
+              'teacher_id' => $teacher_id,
             );
             $this->db->where($del);
             $this->db->delete('center_teacher');
@@ -738,21 +742,22 @@ QUERY;
 
       } else {
 
-        $center_user_id = $para2;
-        if ($center_user_id != $this->session->userdata('user_id')) {
-          echo ("<script>alert('권한이 없습니다'); window.location.href='{$base_url}home/user'</script>");
+        $center_id = $para2;
+
+        $center_data = $this->db->get_where('center', array('center_id' => $center_id))->row();
+        if ($center_data->activate == 0) {
+          echo ("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
           exit;
         }
 
-        $user_data = $this->db->get_where('user', array('user_id' => $center_user_id))->row();
+        $user_data = $this->db->get_where('user', array('user_id' => $center_data->user_id))->row();
         if (!($user_data->user_type & USER_TYPE_CENTER)) {
           echo ("<script>alert('센터회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
           exit;
         }
 
-        $center_data = $this->db->get_where('center', array('user_id' => $center_user_id))->row();
-        if ($center_data->activate == 0) {
-          echo ("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
+        if ($user_data->user_id != $this->session->userdata('user_id')) {
+          echo ("<script>alert('권한이 없습니다'); window.location.href='{$base_url}home/user'</script>");
           exit;
         }
 
@@ -778,23 +783,23 @@ QUERY;
 
       if ($type == 'mod') {
 
-        $center_user_id = $_GET['uid'];
+        $center_id = $_GET['cid'];
         $schedule_id = $_GET['sid'];
 
-        if ($center_user_id != $this->session->userdata('user_id')) {
-          echo("<script>alert('권한이 없습니다'); window.location.href='{$base_url}home/user'</script>");
+        $center_data = $this->db->get_where('center', array('center_id' => $center_id))->row();
+        if ($center_data->activate == 0) {
+          echo("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
           exit;
         }
 
-        $user_data = $this->db->get_where('user', array('user_id' => $center_user_id))->row();
+        $user_data = $this->db->get_where('user', array('user_id' => $center_data->user_id))->row();
         if (!($user_data->user_type & USER_TYPE_CENTER)) {
           echo("<script>alert('센터회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
           exit;
         }
 
-        $center_data = $this->db->get_where('center', array('user_id' => $center_user_id))->row();
-        if ($center_data->activate == 0) {
-          echo("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
+        if ($user_data->user_id != $this->session->userdata('user_id')) {
+          echo("<script>alert('권한이 없습니다'); window.location.href='{$base_url}home/user'</script>");
           exit;
         }
 
@@ -839,25 +844,27 @@ QUERY;
 
       } else if ($type == 'do_mod') {
 
-        $center_user_id = $_GET['uid'];
+        $center_id = $_GET['cid'];
         $schedule_id = $_GET['sid'];
 
-        if ($center_user_id != $this->session->userdata('user_id')) {
-          echo("<script>alert('권한이 없습니다'); window.location.href='{$base_url}home/user'</script>");
+        $center_data = $this->db->get_where('center', array('center_id' => $center_id))->row();
+        if ($center_data->activate == 0) {
+          echo("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
           exit;
         }
 
-        $user_data = $this->db->get_where('user', array('user_id' => $center_user_id))->row();
+        $user_data = $this->db->get_where('user', array('user_id' => $center_data->user_id))->row();
         if (!($user_data->user_type & USER_TYPE_CENTER)) {
           echo("<script>alert('센터회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
           exit;
         }
 
-        $center_data = $this->db->get_where('center', array('user_id' => $center_user_id))->row();
-        if ($center_data->activate == 0) {
-          echo("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
+        if ($user_data->user_id != $this->session->userdata('user_id')) {
+          echo("<script>alert('권한이 없습니다'); window.location.href='{$base_url}home/user'</script>");
           exit;
         }
+
+        echo("<script>alert('1');</script>");
 
         $schedule_del = $this->input->post('schedule_del');
         if (empty($schedule_del) or $schedule_del == 0) {
@@ -971,18 +978,18 @@ QUERY;
 
       } else if ($type == 'info') {
 
-        $center_user_id = $_GET['uid'];
+        $center_id = $_GET['cid'];
         $date = $_GET['date'];
 
-        $user_data = $this->db->get_where('user', array('user_id' => $center_user_id))->row();
-        if (!($user_data->user_type & USER_TYPE_CENTER)) {
-          echo("<script>alert('센터회원이 아닙니다');'</script>");
+        $center_data = $this->db->get_where('center', array('center_id' => $center_id))->row();
+        if ($center_data->activate == 0) {
+          echo("<script>alert('승인 대기 중입니다');'</script>");
           exit;
         }
 
-        $center_data = $this->db->get_where('center', array('user_id' => $center_user_id))->row();
-        if ($center_data->activate == 0) {
-          echo("<script>alert('승인 대기 중입니다');'</script>");
+        $user_data = $this->db->get_where('user', array('user_id' => $center_data->user_id))->row();
+        if (!($user_data->user_type & USER_TYPE_CENTER)) {
+          echo("<script>alert('센터회원이 아닙니다');'</script>");
           exit;
         }
 
@@ -1005,6 +1012,7 @@ QUERY;
 
         $page_data['user_data'] = $user_data;
         $page_data['schedule_data'] = $schedule_data;
+        $page_data['center_data'] = $center_data;
         $this->load->view('front/center/schedule/info/index', $page_data);
 
       } else { // unreachable
@@ -1307,11 +1315,20 @@ QUERY;
 //        echo "<script>alert('{$page}, {$limit}, {$offset}')</script>";
 
         if ($filter == 'ALL') {
-          $this->db->order_by('center_id', 'desc');
-          $center_list = $this->db->get_where('center_category', array('type' => $center_type), $limit, $offset)->result();
+          $query = <<<QUERY
+select distinct(center_id) from center_category where type={$center_type} and activate=1 
+order by center_id desc limit {$offset},{$limit}
+QUERY;
+          $center_list = $this->db->query($query)->result();
+
         } else {
-          $this->db->order_by('center_id', 'desc');
-          $center_list = $this->db->get_where('center_category', array('type' => $center_type, 'category' => $filter), $limit, $offset)->result();
+//          $this->db->order_by('center_id', 'desc');
+//          $center_list = $this->db->get_where('center_category', array('type' => $center_type, 'category' => $filter), $limit, $offset)->result();
+          $query = <<<QUERY
+select distinct(center_id) from center_category where type={$center_type} and activate=1 category={$filter}
+order by center_id desc limit {$offset},{$limit}
+QUERY;
+          $center_list = $this->db->query($query)->result();
         }
 
         $center_data = $this->get_center_data($center_list);
@@ -1324,9 +1341,15 @@ QUERY;
         $limit = 10;
         $offset = 0;
 
-        $this->db->order_by('center_id', 'desc');
-        $center_list = $this->db->get_where('center_category', array('type' => $center_type), $limit, $offset)->result();
+//        $this->db->distinct('center_id');
+//        $this->db->order_by('center_id', 'desc');
+//        $center_list = $this->db->get_where('center_category', array('type' => $center_type), $limit, $offset)->result();
 
+        $query = <<<QUERY
+select distinct(center_id) from center_category where type={$center_type} and activate=1 
+order by center_id desc limit {$offset},{$limit}
+QUERY;
+        $center_list = $this->db->query($query)->result();
         $center_data = $this->get_center_data($center_list);
 
         $where = array('type' => $center_type,'activate' => 1);
@@ -1363,19 +1386,12 @@ QUERY;
       }
       $center_id_list = array_unique($center_id_list);
 
-//      $this->db->where_in('center_id', $center_id_list);
-//      $rows = $this->db->get('center')->num_rows();
       $center_id_list = implode(',', $center_id_list);
       $query = <<<QUERY
 select center_id,user_id,title,phone,about,address,address_detail,longitude,latitude,activate 
 from center where center_id in ({$center_id_list}) and activate=1
 QUERY;
       $center_data = $this->db->query($query)->result();
-
-//      $center_data = json_encode($center_data);
-//      $center_id_list = json_encode($center_id_list);
-//      echo "<script>alert('center_id_list : {$center_id_list} center : $center_data')</script>";
-//      exit;
 
     }
 
