@@ -375,12 +375,12 @@ SELECT center_id FROM user WHERE user_id={$user_id}
 QUERY;
       $row = $this->db->query($query)->row();
 
-      if ($row->center_id > 0) {
+//      if ($row->center_id > 0) {
 //        echo ("<script>alert('이미신청하셨습니다'); window.location.href='{$base_url}home/user'</script>");
 //        exit;
 //      } else {
-        $this->load->view('front/user/center_register');
-      }
+//      }
+      $this->load->view('front/user/center_register');
 
     } elseif ($view_type == "teacher_register") {
 

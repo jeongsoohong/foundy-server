@@ -23,9 +23,9 @@
                     <div class="col-md-12" style="margin: 10px 0 10px 0 !important; padding-left: 20px !important; text-align: left; !important; font-size: 12px !important;">
                       <p>
                         <?php echo $center_data->title; ?>
-<!--                        &nbsp;&nbsp;&nbsp;<a class="profile-edit pull-right" href="#">-->
-<!--                          <span style="color: gray;">수정 &nbsp; > &nbsp;</span>-->
-<!--                        </a>-->
+                        <!--                        &nbsp;&nbsp;&nbsp;<a class="profile-edit pull-right" href="#">-->
+                        <!--                          <span style="color: gray;">수정 &nbsp; > &nbsp;</span>-->
+                        <!--                        </a>-->
                       </p>
                       <p>
                         <?php
@@ -83,7 +83,9 @@
                       <div class="media">
                         <p style="color: gray; font-size: medium; font-style: italic; height: 30px; text-align: center; font-weight: 600; margin-bottom: 0px !important; padding: 0 5px 0 5px">
                           <span class="schedule-month"><?php echo date('n', strtotime($start_date)); ?></span>월
-                          <a href="<?php echo base_url(); ?>home/center/schedule/mod?cid=<?php echo $center_data->center_id; ?>&sid=0"><span class="pull-right schedule-add" style="font-style: normal;">+</span></a>
+                          <?php if ($iam_this_center == true) { ?>
+                            <a href="<?php echo base_url(); ?>home/center/schedule/mod?cid=<?php echo $center_data->center_id; ?>&sid=0"><span class="pull-right schedule-add" style="font-style: normal;">+</span></a>
+                          <?php } ?>
                         </p>
                         <!--                        <div class="schedule slick pull-left media-link" style="height: 30px; float:left !important; padding: 0 !important; margin: 10px 30px 10px 30px !important; text-align: center">-->
                         <div class="schedule slick" style="height: 45px; font-size: x-large; font-style: italic; /* padding-bottom: 10px; */">
@@ -120,11 +122,13 @@
                   <div class="col-md-12" style="padding: 10px 0px 10px 0px !important; border: none;">
                     <div class="recent-post" style="background: #fff;/* border: 1px solid #e0e0e0; */">
                       <div class="media">
-                        <a href="<?php echo base_url(); ?>home/center/teacher/<?php echo $center_data->center_id; ?>">
-                          <p style="color: gray; height: 30px; text-align: center; font-weight: 600; margin-bottom: 0px !important; padding: 0 25px 0 25px">
-                            <span class="instructor-add">수정></span>
-                          </p>
-                        </a>
+                        <?php if ($iam_this_center == true) { ?>
+                          <a href="<?php echo base_url(); ?>home/center/teacher/<?php echo $center_data->center_id; ?>">
+                            <p style="color: gray; height: 30px; text-align: center; font-weight: 600; margin-bottom: 0px !important; padding: 0 25px 0 25px">
+                              <span class="instructor-add">수정></span>
+                            </p>
+                          </a>
+                        <?php } ?>
                         <?php
                         if ($center_data->teacher_cnt > 0) {
                           ?>
@@ -167,11 +171,13 @@
                   <div class="col-md-12" style="padding: 10px 0px 0px 0px !important; border: none;">
                     <div class="recent-post" style="background: #fff;/* border: 1px solid #e0e0e0; */">
                       <div class="media">
-                        <a href="javascript:void(0);">
-                          <p style="color: gray; height: 30px; text-align: center; font-weight: 600; margin-bottom: 0px !important; padding: 0 25px 0 25px">
-                            <span class="instructor-add">수정></span>
-                          </p>
-                        </a>
+                        <?php if ($iam_this_center == true) { ?>
+                          <a href="javascript:void(0);">
+                            <p style="color: gray; height: 30px; text-align: center; font-weight: 600; margin-bottom: 0px !important; padding: 0 25px 0 25px">
+                              <span class="instructor-add">수정></span>
+                            </p>
+                          </a>
+                        <?php } ?>
                         <div>
                           info
                         </div>
