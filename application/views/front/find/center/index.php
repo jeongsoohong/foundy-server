@@ -18,9 +18,67 @@
   select::-ms-expand { display: none; }
 </style>
 <!-- PAGE -->
-<section class="page-section with-sidebar">
+<section class="page-section with-sidebar" style="padding-top: 10px !important;">
   <div class="container">
     <div class="row">
+
+      <?php if (!empty($bookmarks) && count($bookmarks) > 0) { ?>
+        <!-- bookmark -->
+        <div class="col-md-12 content" id="content" style="margin-bottom: 10px !important; background-color: white !important;">
+          <div id="blog-content">
+            <div class="col-md-12" style="padding: 0 0 0 0 !important; ">
+              <div class="row">
+                <div class="col-md-12" style="padding: 0 0 0 0 !important;">
+                  <div class="profile" style="font-size: 15px; padding: 5px 10px 5px 10px !important;">
+                    <span>스크랩</span>
+                  </div>
+                </div>
+                <div class="widget widget-categories" style="padding-bottom:10px; ">
+                  <ul class="bookmark_video_ul">
+                    <?php
+                    foreach ($bookmarks as $center) {
+                      $c = '';
+                      $type_cnt = 0;
+                      $cats = $this->db->get_where('center_category', array('center_id' => $center->center_id))->result();
+                      foreach($cats as $cat) {
+                        $c .= $cat->category . '/';
+                        if ($cat->type == $center_type) {
+                          $type_cnt++;
+                        }
+                      }
+                      $c[strlen($c) - 1] = "\0";
+                      if ($type_cnt == 0) {
+                        continue;
+                      }
+                      ?>
+                      <a href="<?php echo base_url(); ?>home/center/profile/<?php echo $center->center_id; ?>">
+                        <li style="padding: 10px 0 10px 0 !important;">
+                          <div class="col-md-12 " style="padding: 0 5px 0 5px !important; height: 75px">
+                            <div class="col-md-9 pull-left media-link" style="padding: 0 5px 0 5px; width: 80%;">
+                              <!--<div class="col-md-12 video-title" style="font-size: 12px; height:60px; text-align: center"> -->
+                              <h5 class="center-title"><?php echo $center->title; ?></h5>
+                              <!--</div>-->
+                              <!--<div class="col-md-12 pull-right video-detail" style="font-size: 12px; height:20px;"> -->
+                              <span style="color: saddlebrown;"><?php echo $c; ?></span><br>
+                              <!--</div>-->
+                            </div>
+                            <div class="col-md-3 media-body" style="padding: 0 5px 0 5px !important">
+                              <!--          <span class="pull-right" style="padding: 20px 10px 0 0; ">-->
+                              <!--          <img src="--><?php //echo base_url().'uploads/icon/heart icon_do.png'; ?><!--" width="15" height="15" alt="" style="padding: 0 0 0 0 !important;">-->
+                              <!--          </span>-->
+                            </div>
+                          </div>
+                        </li>
+                      </a>
+                    <?php } ?>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <?php } ?>
+
       <!-- CONTENT -->
       <div class="col-md-12 content" id="content" style="background-color: white !important;">
         <div id="blog-content">
@@ -32,14 +90,14 @@
                 <div class="profile" style="font-size: 15px; padding: 5px 10px 5px 10px !important;">
                   <span><?php echo $page_title; ?></span>
                   <div class="pull-right" style="width: 80px; margin-right: 10px;">
-<!--                    <i class="pull-right fa fa-angle-down" style="color: #737475; font-family: FontAwesome !important; padding-top: 8px;"> </i>-->
+                    <!--                    <i class="pull-right fa fa-angle-down" style="color: #737475; font-family: FontAwesome !important; padding-top: 8px;"> </i>-->
                     <select class="form-control select-arrow" id="center_category" name="center_category">
                       <option value="ALL" selected="selected">ALL</option>
                       <?php
                       foreach ($categories as $cat) {
-                      ?>
-                      <option value="<?php echo $cat->name; ?>"><?php echo $cat->name; ?></option>
-                      <?php
+                        ?>
+                        <option value="<?php echo $cat->name; ?>"><?php echo $cat->name; ?></option>
+                        <?php
                       }
                       ?>
                     </select>
@@ -61,10 +119,10 @@
               view more
             </a>
           </p>
+        </div>
+        <!-- /CONTENT -->
       </div>
-      <!-- /CONTENT -->
     </div>
-  </div>
 </section>
 <!-- /PAGE -->
 <!--<label>-->

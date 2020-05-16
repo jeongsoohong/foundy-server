@@ -14,7 +14,7 @@
         <div id="profile_content">
 
           <!--<div class="information-title" style="margin-bottom: 0px;">프로필</div>-->
-          <div class="profile" style="font-family: 'Quicksand' !important; font-size: 15px; text-align: center; padding-bottom: 5px; !important;"><b>profile</b></div>
+          <div class="profile" id='profile' style="font-family: 'Quicksand' !important; font-size: 15px; text-align: center; padding-bottom: 5px; !important;"><b>profile</b></div>
           <div class="row">
             <div class="col-md-12" style="padding: 10px 10px 10px 10px !important; ">
               <div class="recent-post" style="background: #fff;border: 1px solid #e0e0e0;">
@@ -44,13 +44,19 @@
                       <p>
                         <span><img src="<?php echo base_url(); ?>uploads/icon/icon01_call.png" style="height: 10px !important; width: 10px !important;"></span>
                         <a href="tel:<?php echo $center_data->phone; ?>"><?php echo $center_data->phone; ?></a>
+                        <span class="text-xl pull-right" id="bookmark" style="font-size: 12px; padding-right: 10px ">
+                        <?php echo $this->crud_model->sns_func_html('bookmark', 'center', $bookmarked, $center_data->center_id, 15, 15); ?>
+                        </span>
+                        <span class="text-xl pull-right" id="like" style="font-size: 12px; padding-right: 10px ">
+                        <?php echo $this->crud_model->sns_func_html('like', 'center', $liked, $center_data->center_id, 15, 15); ?>
+                        </span>
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-12" id="about">
               <div class="row">
                 <div class="col-md-12">
                   <div class="profile" style="font-family: 'quicksand' !important; font-size: 15px; text-align: center;
@@ -64,7 +70,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-12" id="location">
               <div class="row">
                 <div class="col-md-12">
                   <div class="profile" style="font-family: 'Quicksand' !important; font-size: 15px; text-align: center; padding-bottom: 5px; !important;"><b>location</b></div>
@@ -74,7 +80,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-12" id="schedule">
               <div class="row">
                 <div class="col-md-12">
                   <div class="profile" style="font-family: 'Quicksand' !important; font-size: 15px; text-align: center; padding-bottom: 5px; !important;"><b>schedule</b></div>
@@ -115,7 +121,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-12" id="instructors">
               <div class="row">
                 <div class="col-md-12">
                   <div class="profile" style="font-family: 'Quicksand' !important; font-size: 15px; text-align: center; padding-bottom: 5px; !important;"><b>instructors</b></div>
@@ -136,7 +142,6 @@
                             <?php
                             foreach ($teacher_data as $teacher) {
                               $teacher = $this->db->get_where('teacher', array('teacher_id' => $teacher->teacher_id))->row();
-                              $teacher_id = $teacher->teacher_id;
                               $teacher_name = $teacher->name;
                               $profile_image_url = $user_data->profile_image_url;
                               if (empty($profile_image_url) or strlen($profile_image_url) == 0) {
@@ -144,7 +149,7 @@
                               }
                               ?>
                               <div class="instructor slick-content active" id="1" style="text-align: center">
-                                <a href="<?php echo base_url().'home/teacher/profile/'.$teacher_id; ?>">
+                                <a href="<?php echo base_url().'home/teacher/profile/'.$user_data->user_id; ?>">
                                   <p>
                                     <span><img src="<?php echo $profile_image_url; ?>" style="width:50px; margin: auto"></span>
                                     <span><?php echo $teacher_name; ?></span>
@@ -164,7 +169,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-12" id="info">
               <div class="row">
                 <div class="col-md-12">
                   <div class="profile" style="font-family: 'Quicksand' !important; font-size: 15px; text-align: center; padding-bottom: 5px; !important;"><b>info</b></div>

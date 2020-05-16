@@ -19,7 +19,7 @@ foreach ($video_data as $video) {
           <!--</div>-->
           <!--<div class="col-md-12 pull-right video-detail" style="font-size: 12px; height:20px;"> -->
           <span style="color: saddlebrown;"><?php echo $cat; ?></span><br>
-          <span style="color: gray;"> <?php echo (int)($video->playtime/60).'분'; printf("%02d",$video->playtime%60);?>초&middot;조회수<?php echo $video->view;?>&middot;스크랩<?php echo $video->bookmark;?></span>
+          <span style="color: gray;"> <?php echo (int)($video->playtime/60).'분'; printf("%02d",$video->playtime%60);?>초&middot;조회수<?php echo $video->view;?>&middot;좋아요<?php echo $video->like;?>&middot;스크랩<?php echo $video->bookmark;?></span>
           <!--</div>-->
         </div>
       </div>

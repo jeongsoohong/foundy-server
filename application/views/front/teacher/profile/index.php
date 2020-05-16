@@ -42,12 +42,15 @@
                   </div>
                   <div class="media-body" style="padding-right: 10px">
                     <div class="col-md-12" style="margin: 10px 0 10px 0 !important; padding-left: 20px !important; text-align: left; !important; font-size: 12px !important;">
-                      <p>
-                        <?php echo $teacher_data->name; ?>
-                        &nbsp;&nbsp;&nbsp;<a class="profile-edit pull-right" href="#">
-                          <span style="color: gray;">수정 &nbsp; > &nbsp;</span>
-                        </a>
-                      </p>
+                      <?php if ($iam_this_teacher == true) { ?>
+                        <p>
+                          <?php echo $teacher_data->name; ?>
+                          &nbsp;&nbsp;&nbsp;<a class="profile-edit pull-right" href="#">
+                            <span style="color: gray;">수정 &nbsp; > &nbsp;</span>
+                          </a>
+                        </p>
+
+                      <?php } ?>
                       <p>
                         <?php
                         $cat = '';
@@ -82,6 +85,12 @@
                       <!--                        --><?php
                       //                      }
                       //                      ?>
+                      <span class="text-xl pull-right" id="bookmark" style="font-size: 12px; padding-right: 10px ">
+                        <?php echo $this->crud_model->sns_func_html('bookmark', 'teacher', $bookmarked, $teacher_data->teacher_id, 15, 15); ?>
+                      </span>
+                      <span class="text-xl pull-right" id="like" style="font-size: 12px; padding-right: 10px ">
+                        <?php echo $this->crud_model->sns_func_html('like', 'teacher', $liked, $teacher_data->teacher_id, 15, 15); ?>
+                      </span>
                     </div>
                   </div>
                 </div>

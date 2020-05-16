@@ -524,4 +524,52 @@ class Crud_model extends CI_Model
         $name = url_title($this->crud_model->get_type_name_by_id('blog', $blog_id, 'title'));
         return base_url() . 'home/blog_view/' . $blog_id . '/' . $name;
     }
+
+    function get_like_icon($liked)
+    {
+      if ($liked == true) {
+        return base_url().'uploads/icon_0504/icon04_heart.png';
+      }
+      return base_url().'uploads/icon_0504/icon03_heart.png';
+    }
+
+    function get_bookmark_icon($bookmarked)
+    {
+      if ($bookmarked == true) {
+        return base_url().'uploads/icon_0504/icon06_scrap.png';
+      }
+      return base_url().'uploads/icon_0504/icon05_scrap.png';
+    }
+
+  function get_default_profile_img()
+    {
+      return base_url().'uploads/icon_0504/icon08_profile.png';
+    }
+
+    function sns_func_html($func_type, $find_type, $is_do, $id, $w, $h)
+    {
+      $action = $is_do ? 'undo' : 'do';
+      if ($func_type == 'like') {
+        $img_src = $this->crud_model->get_like_icon($is_do);
+      } else {
+        $img_src = $this->crud_model->get_bookmark_icon($is_do);
+      }
+      return "<a href='javascript:void(0)' data-action='{$action}' onclick=\"sns_function('{$func_type}','{$find_type}',{$id},$(this))\">".
+              "<img id='{$find_type}-{$func_type}-{$id}' src='{$img_src}' alt='' style='width:{$w}px !important; height: {$h}px !important;'></a>";
+    }
+
+    function get_sns_mark($type, $func, $user_id, $id)
+    {
+      // type -  class, teacher, center ...
+      // func - bookmark, like ...
+      $id_col = $type.'_id';
+      if ($type == 'class') {
+        $id_col = 'video_id';
+      }
+      $query = <<<QUERY
+select count(*) as cnt from {$func}_{$type} where user_id={$user_id} and {$id_col}={$id}
+QUERY;
+      $marked = $this->db->query($query)->row()->cnt;
+      return $marked;
+    }
 }

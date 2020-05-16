@@ -380,18 +380,25 @@ UPDATE center_category set activate={$data['activate']} where center_id={$center
 QUERY;
       $this->db->query($query);
 
+      $query = <<<QUERY
+select count(*) as cnt from center where user_id={$user_id}
+QUERY;
+      $center_cnt = $this->db->query($query)->row()->cnt;
+
+      $user_data = $this->db->get_where('user', array('user_id' => $user_id));
 
       $user_type = USER_TYPE_CENTER;
-      if ($approval == 'ok') {
+      if ($center_cnt > 0 and ($user_data->user_type & USER_TYPE_CENTER) == false) {
         $query = <<<QUERY
 UPDATE user set user_type=user_type+{$user_type} where user_id={$user_id}
 QUERY;
-      } else {
+        $this->db->query($query);
+      } else if ($center_cnt == 0 and ($user_data->user_type & USER_TYPE_CENTER) == true) {
         $query = <<<QUERY
 UPDATE user set user_type=user_type-{$user_type} where user_id={$user_id}
 QUERY;
+        $this->db->query($query);
       }
-      $this->db->query($query);
 
       //            $this->email_model->status_email('teacher', $teacher);
 

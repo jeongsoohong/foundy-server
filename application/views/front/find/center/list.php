@@ -19,9 +19,9 @@ foreach ($center_data as $center) {
           <!--</div>-->
         </div>
         <div class="col-md-3 media-body" style="padding: 0 5px 0 5px !important">
-          <span class="pull-right" style="padding: 20px 10px 0 0; ">
-          <img src="<?php echo base_url().'uploads/icon/heart icon_do.png'; ?>" width="20" height="20" alt="" style="padding: 0 0 0 0 !important;">
-          </span>
+<!--          <span class="pull-right" style="padding: 20px 10px 0 0; ">-->
+<!--          <img src="--><?php //echo base_url().'uploads/icon/heart icon_do.png'; ?><!--" width="15" height="15" alt="" style="padding: 0 0 0 0 !important;">-->
+<!--          </span>-->
         </div>
       </div>
     </li>

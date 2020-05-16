@@ -41,9 +41,17 @@ class Home extends CI_Controller
     $this->load->view('front/others/404_error');
   }
 
-  public function login()
+  function is_login()
   {
     if ($this->session->userdata('user_login') == "yes") {
+      return true;
+    }
+    return false;
+  }
+
+  public function login()
+  {
+    if ($this->is_login() == true) {
       redirect('home', 'refresh');
     }
 
@@ -348,23 +356,66 @@ class Home extends CI_Controller
 
     if ($view_type == 'info') {
 
-      $page_data['user_id'] = $this->session->userdata('user_id');
-      $page_data['email'] = $this->session->userdata('email');
-      $page_data['user_type'] = $this->session->userdata('user_type');
-      $page_data['nickname'] = $this->session->userdata('nickname');
-      $page_data['profile_image_url'] = $this->session->userdata('profile_image_url');
-      $page_data['thumbnail_image_url'] = $this->session->userdata('kakao_thumbnail_image_url');
+      $user_id = $this->session->userdata('user_id');
+      $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
+      $page_data['user_id'] = $user_id;
+      $page_data['email'] = $user_data->email;
+      $page_data['user_type'] = $user_data->user_type;
+      $page_data['nickname'] = $user_data->nickname;
+      $page_data['profile_image_url'] = $user_data->profile_image_url;
+      $page_data['thumbnail_image_url'] = $user_data->kakao_thumbnail_image_url;
 
+      $page_data['center_activate'] = false;
       if ($this->session->userdata('user_type') & USER_TYPE_CENTER) {
         $row = $this->db->get_where('center', array( 'user_id' => $this->session->userdata('user_id') ))->row();
         $page_data['center_activate'] = $row->activate;
+
+        $my_centers = $this->db->get_where('center', array('user_id' => $user_id))->result();
+        $page_data['my_centers'] = $my_centers;
       }
 
+      $page_data['teacher_activate'] = false;
       if ($this->session->userdata('user_type') & USER_TYPE_TEACHER) {
         $row = $this->db->get_where('teacher', array( 'user_id' => $this->session->userdata('user_id') ))->row();
         $page_data['teacher_activate'] = $row->activate;
+
+        $my_teacher = $this->db->get_where('teacher', array('user_id' => $user_id))->row();
+        $page_data['my_teacher'] = $my_teacher;
       }
 
+      $bookmark_centers = $this->db->get_where('bookmark_center', array('user_id' => $user_id))->result();
+      if (!empty($bookmark_centers) and count($bookmark_centers) > 0) {
+        $center_ids = array();
+        foreach ($bookmark_centers as $b) {
+          $center_ids[] = $b->center_id;
+        }
+        $this->db->where_in('center_id', $center_ids);
+        $bookmark_centers = $this->db->get('center')->result();
+      }
+
+      $bookmark_teachers = $this->db->get_where('bookmark_teacher', array('user_id' => $user_id))->result();
+      if (!empty($bookmark_teachers) and count($bookmark_teachers) > 0) {
+        $teacher_ids = array();
+        foreach ($bookmark_teachers as $t) {
+          $teacher_ids[] = $t->teacher_id;
+        }
+        $this->db->where_in('teacher_id', $teacher_ids);
+        $bookmark_teachers = $this->db->get('teacher')->result();
+      }
+
+      $bookmark_classes = $this->db->get_where('bookmark_class', array('user_id' => $user_id))->result();
+      if (!empty($bookmark_classes) and count($bookmark_classes) > 0) {
+        $video_ids = array();
+        foreach ($bookmark_classes as $v) {
+          $video_ids[] = $v->video_id;
+        }
+        $this->db->where_in('video_id', $video_ids);
+        $bookmark_classes = $this->db->get('teacher_video')->result();
+      }
+
+      $page_data['bookmark_centers'] = $bookmark_centers;
+      $page_data['bookmark_teachers'] = $bookmark_teachers;
+      $page_data['bookmark_classes'] = $bookmark_classes;
       $this->load->view('front/user/profile', $page_data);
 
     } elseif ($view_type == "center_register") {
@@ -626,6 +677,14 @@ QUERY;
         }
       }
 
+      $liked = false;
+      $bookmarked = false;
+      if ($this->is_login() == true) {
+        $session_user_id = $this->session->userdata('user_id');
+        $liked = $this->crud_model->get_sns_mark('center', 'like', $session_user_id, $center_data->center_id);
+        $bookmarked = $this->crud_model->get_sns_mark('center', 'bookmark', $session_user_id, $center_data->center_id);
+      }
+
       $page_data['page_name'] = "center/profile";
       $page_data['asset_page'] = "center_profile";
       $page_data['page_title'] = "center_profile";
@@ -636,6 +695,8 @@ QUERY;
       $page_data['end_date'] = $end_date;
       $page_data['schedule_data'] = $schedule_data;
       $page_data['iam_this_center'] = $iam_this_center;
+      $page_data['liked'] = $liked;
+      $page_data['bookmarked'] = $bookmarked;
       $this->load->view('front/index', $page_data);
 
     } else if ($para1 == 'teacher') {
@@ -1048,6 +1109,14 @@ QUERY;
         exit;
       }
 
+      $liked = false;
+      $bookmarked = false;
+      if ($this->is_login() == true) {
+        $session_user_id = $this->session->userdata('user_id');
+        $liked = $this->crud_model->get_sns_mark('teacher', 'like', $session_user_id, $teacher_data->teacher_id);
+        $bookmarked = $this->crud_model->get_sns_mark('teacher', 'bookmark', $session_user_id, $teacher_data->teacher_id);
+      }
+
       $where = array (
         'teacher_id' => $teacher_data->teacher_id,
         'activate' => 1
@@ -1062,6 +1131,8 @@ QUERY;
       $page_data['teacher_data'] = $teacher_data;
       $page_data['video_data'] = $video_data;
       $page_data['iam_this_teacher'] = $iam_this_teacher;
+      $page_data['liked'] = $liked;
+      $page_data['bookmarked'] = $bookmarked;
       $this->load->view('front/index', $page_data);
 
     } else if ($para1 == 'video') {
@@ -1116,6 +1187,14 @@ QUERY;
           exit;
         }
 
+        $liked = false;
+        $bookmarked = false;
+        if ($this->is_login() == true) {
+          $session_user_id = $this->session->userdata('user_id');
+          $liked = $this->crud_model->get_sns_mark('class', 'like', $session_user_id, $video_id);
+          $bookmarked = $this->crud_model->get_sns_mark('class', 'bookmark', $session_user_id, $video_id);
+        }
+
         $this->db->where(array('video_id' => $video_id));
         $this->db->set('view', 'view + 1', false);
         $this->db->update('teacher_video');
@@ -1128,6 +1207,8 @@ QUERY;
         $page_data['video_data'] = $video_data;
         $page_data['teacher_data'] = $teacher_data;
         $page_data['user_data'] = $user_data;
+        $page_data['liked'] = $liked;
+        $page_data['bookmarked'] = $bookmarked;
         $this->load->view('front/index', $page_data);
       }
 
@@ -1285,9 +1366,24 @@ QUERY;
 
       } else {
 
+        $bookmarks = array();
+        if ($this->is_login()) {
+          $user_id = $this->session->userdata('user_id');
+          $bookmarks = $this->db->get_where('bookmark_class', array('user_id' => $user_id))->result();
+          if (!empty($bookmarks) && count($bookmarks) > 0) {
+            $video_ids = array();
+            foreach ($bookmarks as $b) {
+              $video_ids[] = $b->video_id;
+            }
+            $this->db->where_in('video_id', $video_ids);
+            $bookmarks = $this->db->get('teacher_video')->result();
+          }
+        }
+
         $video_data = $this->db->order_by('video_id', 'desc')->get('teacher_video', 10, 0)->result();
 
         $page_data['video_data'] = $video_data;
+        $page_data['bookmarks'] = $bookmarks;
         $page_data['page_name'] = "find/class";
         $page_data['asset_page'] = "class";
         $page_data['page_title'] = "class";
@@ -1325,7 +1421,7 @@ QUERY;
 //          $this->db->order_by('center_id', 'desc');
 //          $center_list = $this->db->get_where('center_category', array('type' => $center_type, 'category' => $filter), $limit, $offset)->result();
           $query = <<<QUERY
-select distinct(center_id) from center_category where type={$center_type} and activate=1 category={$filter}
+select distinct(center_id) from center_category where type={$center_type} and activate=1 and category='{$filter}'
 order by center_id desc limit {$offset},{$limit}
 QUERY;
           $center_list = $this->db->query($query)->result();
@@ -1355,12 +1451,27 @@ QUERY;
         $where = array('type' => $center_type,'activate' => 1);
         $categories = $this->db->order_by('category_id', 'asc')->get_where('category_center', $where)->result();
 
+        $bookmarks = array();
+        if ($this->is_login()) {
+          $user_id = $this->session->userdata('user_id');
+          $bookmarks = $this->db->get_where('bookmark_center', array('user_id' => $user_id))->result();
+          if (!empty($bookmarks) && count($bookmarks) > 0) {
+            $center_ids = array();
+            foreach ($bookmarks as $b) {
+              $center_ids[] = $b->center_id;
+            }
+            $this->db->where_in('center_id', $center_ids);
+            $bookmarks = $this->db->get('center')->result();
+          }
+        }
+
         $page_data['page_name'] = "find/center";
         $page_data['asset_page'] = "center";
         $page_data['page_title'] = $center_type == CENTER_TYPE_YOGA ? "YOGA" : "PILATES";
         $page_data['center_data'] = $center_data;
         $page_data['categories'] = $categories;
         $page_data['center_type'] = $center_type;
+        $page_data['bookmarks'] = $bookmarks;
         $this->load->view('front/index', $page_data);
 
       }
@@ -1396,6 +1507,71 @@ QUERY;
     }
 
     return $center_data;
+  }
+
+  function sns($para1 = '', $para2 = '', $para3 = '')
+  {
+    if ($this->session->userdata('user_login') != "yes") {
+      $result['status'] = 'not_login';
+      $result['redirect_url'] = base_url().'home/login';
+      $result['message'] = "로그인 후 이용이 가능합니다";
+      echo json_encode($result);
+    } else {
+
+      $user_id = $this->session->userdata('user_id');
+
+      $cat_type = $para1; // center, class, teacher
+
+      if ($cat_type == 'center') {
+        $id_col = 'center_id';
+        $upd_table = 'center';
+      } else if ($cat_type == 'class') {
+        $id_col = 'video_id';
+        $upd_table = 'teacher_video';
+      } else if ($cat_type == 'teacher') {
+        $id_col = 'teacher_id';
+        $upd_table = 'teacher';
+      } else {
+        // unreachable
+        $result['status'] = 'fail';
+        $result['message'] = "cat_type : {$cat_type}";
+        echo json_encode($result);
+        exit;
+      }
+
+
+      $func_type = $para2; // like, bookmark
+      $action = $para3; // do, undo
+      $id = $_GET['id'];
+      if ($action == 'do') {
+        $upd = <<<QUERY
+UPDATE {$upd_table} set `{$func_type}`=`{$func_type}`+1 where {$id_col}={$id}
+QUERY;
+
+        $query = <<<QUERY
+insert into {$func_type}_{$cat_type} (user_id,{$id_col}) values ({$user_id},{$id})
+QUERY;
+      } else {
+        $upd = <<<QUERY
+UPDATE {$upd_table} set `{$func_type}`=`{$func_type}`-1 where {$id_col}={$id}
+QUERY;
+
+        $query = <<<QUERY
+delete from {$func_type}_{$cat_type} where user_id={$user_id} and {$id_col}={$id}
+QUERY;
+      }
+
+      $this->db->query($query);
+
+      if ($this->db->affected_rows()) {
+        $this->db->query($upd);
+        $result['status'] = 'success';
+      } else {
+        $result['status'] = 'fail';
+        $result['message'] = "affected_row: 0";
+      }
+      echo json_encode($result);
+    }
   }
 
 }

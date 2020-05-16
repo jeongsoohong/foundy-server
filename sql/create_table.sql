@@ -201,3 +201,43 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+CREATE TABLE `bookmark_center` (
+  `user_id` int(11) NOT NULL,
+  `center_id` int(11) NOT NULL,
+  UNIQUE KEY `user_id` (`user_id`,`center_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `bookmark_class` (
+  `user_id` int(11) NOT NULL,
+  `video_id` int(11) NOT NULL,
+  UNIQUE KEY `user_id` (`user_id`,`video_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `bookmark_teacher` (
+  `user_id` int(11) NOT NULL,
+  `teacher_id` int(11) NOT NULL,
+  UNIQUE KEY `user_id` (`user_id`,`teacher_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `like_center` (
+  `user_id` int(11) NOT NULL,
+  `center_id` int(11) NOT NULL,
+  UNIQUE KEY `user_id` (`user_id`,`center_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `like_class` (
+  `user_id` int(11) NOT NULL,
+  `video_id` int(11) NOT NULL,
+  UNIQUE KEY `user_id` (`user_id`,`video_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `like_teacher` (
+  `user_id` int(11) NOT NULL,
+  `teacher_id` int(11) NOT NULL,
+  UNIQUE KEY `user_id` (`user_id`,`teacher_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

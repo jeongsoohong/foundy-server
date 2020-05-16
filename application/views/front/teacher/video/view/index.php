@@ -60,15 +60,16 @@
           -->
           <div class="post-body" style="background-color: white !important; height: 30px !important; margin: 0 20px 0 20px !important;">
             <div class="post-excerpt" style="height: 30px !important;">
-                            <span class="text-xl pull-left" id="like" style="font-size: 12px; padding-left: 10px ">
-                                <img src="<?php echo base_url(); ?>uploads/icon/icon-4.png" style="width:20px !important; height: 20px !important;"> &nbsp 0
-                            </span>
-              <span class="text-xl pull-left" id="reply" style="font-size: 12px; padding-left: 10px ">
-                                &nbsp <img src="<?php echo base_url(); ?>uploads/icon/icon-5.jpg" style="width:20px !important; height: 20px !important;"> &nbsp 0
-                            </span>
+<!--              <span class="text-xl pull-left" id="reply" style="font-size: 12px; padding-left: 10px ">-->
+<!--                &nbsp-->
+<!--                <img src="--><?php //echo base_url(); ?><!--uploads/icon/icon-5.jpg" style="width:20px !important; height: 20px !important;"> &nbsp 0-->
+<!--              </span>-->
               <span class="pull-right" id="bookmark" style="font-size: 12px; padding-right: 10px">
-                                <img src="<?php echo base_url(); ?>uploads/icon/icon-11.jpg" style="width:20px !important; height: 20px !important;">
-                            </span>
+                <?php echo $this->crud_model->sns_func_html('bookmark', 'class', $bookmarked, $video_data->video_id, 15, 15); ?>
+              </span>
+              <span class="text-xl pull-right" id="like" style="font-size: 12px; padding-right: 10px ">
+                <?php echo $this->crud_model->sns_func_html('like', 'class', $liked, $video_data->video_id, 15, 15); ?>
+              </span>
             </div>
           </div>
           <!--          <hr class="page-divider"/>-->

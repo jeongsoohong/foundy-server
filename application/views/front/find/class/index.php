@@ -18,29 +18,79 @@
   select::-ms-expand { display: none; }
 </style>
 <!-- PAGE -->
-<section class="page-section with-sidebar">
+<section class="page-section with-sidebar" style="padding-top: 10px !important;">
+  <!-- /CONTENT -->
   <div class="container">
     <div class="row">
-      <!-- CONTENT -->
+
+      <?php if (!empty($bookmarks) && count($bookmarks) > 0) { ?>
+        <!-- bookmark -->
+        <div class="col-md-12 content" id="content" style="margin-bottom: 10px !important; background-color: white !important;">
+          <div id="blog-content">
+            <div class="col-md-12" style="padding: 0 0 0 0 !important; ">
+              <div class="row">
+                <div class="col-md-12" style="padding: 0 0 0 0 !important;">
+                  <div class="profile" style="font-size: 15px; padding: 5px 10px 5px 10px !important;">
+                    <span>스크랩</span>
+                  </div>
+                </div>
+                <div class="widget widget-categories" style="padding-bottom:10px; ">
+                  <ul class="bookmark_video_ul">
+                    <?php
+                    foreach ($bookmarks as $video) {
+                      $c = '';
+                      $cats = $this->db->get_where('teacher_video_category', array('video_id' => $video->video_id))->result();
+                      foreach($cats as $cat) {
+                        $c .= $cat->category . '/';
+                      }
+                      $c[strlen($c) - 1] = "\0";
+                      ?>
+                      <a href="<?php echo base_url(); ?>home/teacher/video/view/<?php echo $video->video_id; ?>">
+                        <li style="padding: 10px 0 10px 0 !important;">
+                          <div class="col-md-12 media" style="padding: 0 5px 0 5px !important;">
+                            <div class="col-md-6 pull-left media-link" style="width: 190px; height: 120px; padding: 0 5px 0 5px !important;">
+                              <img src="<?php echo $video->thumbnail_image_url; ?>" width="180" height="120" alt="" style="padding: 0 0 0 0 !important;">
+                            </div>
+                            <div class="col-md-6 media-body" style="padding: 0 5px 0 5px; width: 300px; height: 120px">
+                              <!--<div class="col-md-12 video-title" style="font-size: 12px; height:60px; text-align: center"> -->
+                              <h5 class="video-title"><?php echo $video->title; ?></h5>
+                              <!--</div>-->
+                              <!--<div class="col-md-12 pull-right video-detail" style="font-size: 12px; height:20px;"> -->
+                              <span style="color: saddlebrown;"><?php echo $c; ?></span><br>
+                              <span style="color: gray;"> <?php echo (int)($video->playtime/60).'분'; printf("%02d",$video->playtime%60);?>초&middot;조회수<?php echo $video->view;?>&middot;좋아요<?php echo $video->like;?>&middot;스크랩<?php echo $video->bookmark;?></span>
+                              <!--</div>-->
+                            </div>
+                          </div>
+                        </li>
+                      </a>
+                    <?php } ?>
+
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <?php } ?>
+
+      <!-- online class -->
       <div class="col-md-12 content" id="content" style="background-color: white !important;">
         <div id="blog-content">
-
-          <!-- online class -->
           <div class="col-md-12" style="padding: 0 0 0 0 !important; ">
             <div class="row">
               <div class="col-md-12" style="padding: 0 0 0 0 !important;">
                 <div class="profile" style="font-size: 15px; padding: 5px 10px 5px 10px !important;">
                   <span>포잇 추천 클래스</span>
                   <div class="pull-right" style="width: 80px; margin-right: 10px;">
-<!--                    <i class="pull-right fa fa-angle-down" style="color: #737475; font-family: FontAwesome !important; padding-top: 8px;"> </i>-->
+                    <!--                    <i class="pull-right fa fa-angle-down" style="color: #737475; font-family: FontAwesome !important; padding-top: 8px;"> </i>-->
                     <select class="form-control select-arrow" id="class_category" name="class_category">
                       <option value="ALL" selected="selected">ALL</option>
                       <?php
                       $categories = $this->db->order_by('category_id', 'asc')->get_where('category_class', array('activate' => 1))->result();
                       foreach ($categories as $cat) {
-                      ?>
-                      <option value="<?php echo $cat->name; ?>"><?php echo $cat->name; ?></option>
-                      <?php
+                        ?>
+                        <option value="<?php echo $cat->name; ?>"><?php echo $cat->name; ?></option>
+                        <?php
                       }
                       ?>
                     </select>
@@ -57,16 +107,17 @@
               </div>
             </div>
           </div>
-          <!-- /online class -->
+
           <p style="text-align: center;">
             <a class="btn btn-lg btn-primary" id="view_more" href="#none" onclick="ajax_class_list(); return false;" role="button" style="display: none; font-family: 'Quicksand' !important; font-size: 15px; color: gray; background-color: inherit; border: 1px solid #d3d3d3">
               view more
             </a>
           </p>
+        </div>
+        <!-- /online class -->
       </div>
-      <!-- /CONTENT -->
     </div>
-  </div>
+    <!-- /CONTENT -->
 </section>
 <!-- /PAGE -->
 <!--<label>-->
