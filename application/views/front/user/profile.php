@@ -28,7 +28,7 @@
         <div class="media-body" style="padding-right: 10px">
           <div class="col-md-12" style="margin: 10px 0 10px 0 !important; padding-left: 20px !important; text-align: left; !important; font-size: 12px !important;">
             <p>
-              <?php echo $nickname; ?>
+              <?php echo $nickname.' ('.$email.')'; ?>
               &nbsp;&nbsp;&nbsp;
             </p>
             <p>
@@ -54,9 +54,9 @@
               ?>
             </p>
             <p>
-              팔로워 0
-              &nbsp;/&nbsp;
-              팔로잉 0
+<!--              팔로워 0-->
+<!--              &nbsp;/&nbsp;-->
+<!--              팔로잉 0-->
             </p>
           </div>
         </div>
@@ -96,61 +96,63 @@
           </div>
         </div>
       <?php } ?>
-      <div class="col-md-6">
-        <div class="profile" style="font-family: 'Quicksand' !important; font-size: 15px; text-align: center; padding-bottom: 5px; !important;"><b>my favorite</b></div>
-        <div class="widget" style="padding-bottom:10px; ">
-          <ul class="profile_ul">
-            <?php if (!empty($bookmark_centers) and count($bookmark_centers) > 0) {
-              foreach ($bookmark_centers as $center) {
-                ?>
-                <li>
-                  <a href="<?php echo base_url().'home/center/profile/'.$center->center_id; ?>">
-                    (스튜디오) <?php echo $center->title; ?>
-                  </a>
-                  <span class="pull-right" style="padding-top: 0px !important;">
+      <?php if (count($bookmark_centers) > 0 || count($bookmark_teachers) > 0 || count($bookmark_classes) > 0) { ?>
+        <div class="col-md-6">
+          <div class="profile" style="font-family: 'Quicksand' !important; font-size: 15px; text-align: center; padding-bottom: 5px; !important;"><b>my favorite</b></div>
+          <div class="widget" style="padding-bottom:10px; ">
+            <ul class="profile_ul">
+              <?php if (!empty($bookmark_centers) and count($bookmark_centers) > 0) {
+                foreach ($bookmark_centers as $center) {
+                  ?>
+                  <li>
+                    <a href="<?php echo base_url().'home/center/profile/'.$center->center_id; ?>">
+                      (스튜디오) <?php echo $center->title; ?>
+                    </a>
+                    <span class="pull-right" style="padding-top: 0px !important;">
                     <?php echo $this->crud_model->sns_func_html('bookmark', 'center', true, $center->center_id, 15, 15); ?>
                   </span>
-                  <a href="<?php echo base_url().'home/center/profile/'.$center->center_id.'#schedule'; ?>">
-                    <span class="pull-right schedule" style="font-size: 10px;">SCHEDULE</span>
-                  </a>
-                </li>
-                <?php
+                    <a href="<?php echo base_url().'home/center/profile/'.$center->center_id.'#schedule'; ?>">
+                      <span class="pull-right schedule" style="font-size: 10px;">SCHEDULE</span>
+                    </a>
+                  </li>
+                  <?php
+                }
               }
-            }
-            ?>
-            <?php if (!empty($bookmark_teachers) and count($bookmark_teachers) > 0) {
-              foreach ($bookmark_teachers as $teacher) {
-                ?>
-                <li>
-                  <a href="<?php echo base_url().'home/teacher/profile/'.$teacher->user_id; ?>">
-                    (강사) <?php echo $teacher->name; ?>
-                  </a>
-                  <span class="pull-right" style="padding-top: 0px !important;">
+              ?>
+              <?php if (!empty($bookmark_teachers) and count($bookmark_teachers) > 0) {
+                foreach ($bookmark_teachers as $teacher) {
+                  ?>
+                  <li>
+                    <a href="<?php echo base_url().'home/teacher/profile/'.$teacher->user_id; ?>">
+                      (강사) <?php echo $teacher->name; ?>
+                    </a>
+                    <span class="pull-right" style="padding-top: 0px !important;">
                     <?php echo $this->crud_model->sns_func_html('bookmark', 'teacher', true, $teacher->teacher_id, 15, 15); ?>
                   </span>
-                </li>
-                <?php
+                  </li>
+                  <?php
+                }
               }
-            }
-            ?>
-            <?php if (!empty($bookmark_classes) and count($bookmark_classes) > 0) {
-              foreach ($bookmark_classes as $video) {
-                ?>
-                <li>
-                  <a href="<?php echo base_url().'home/teacher/video/view/'.$video->video_id; ?>">
-                    (클래스) <?php echo $video->title; ?>
-                  </a>
-                  <span class="pull-right" style="padding-top: 0px !important;">
+              ?>
+              <?php if (!empty($bookmark_classes) and count($bookmark_classes) > 0) {
+                foreach ($bookmark_classes as $video) {
+                  ?>
+                  <li>
+                    <a href="<?php echo base_url().'home/teacher/video/view/'.$video->video_id; ?>">
+                      (클래스) <?php echo $video->title; ?>
+                    </a>
+                    <span class="pull-right" style="padding-top: 0px !important;">
                     <?php echo $this->crud_model->sns_func_html('bookmark', 'class', true, $video->video_id, 15, 15); ?>
                   </span>
-                </li>
-                <?php
+                  </li>
+                  <?php
+                }
               }
-            }
-            ?>
-          </ul>
+              ?>
+            </ul>
+          </div>
         </div>
-      </div>
+      <?php } ?>
     </div>
   </div>
 </div>
