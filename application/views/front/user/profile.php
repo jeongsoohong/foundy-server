@@ -6,11 +6,11 @@
     <div class="recent-post" style="background: #fff;border: 1px solid #e0e0e0;">
       <div class="media">
         <div class="pull-left media-link" href="#" style="height: 60px; float:left !important; padding: 0 !important; margin: 10px 30px 10px 30px !important; pointer-events: none;">
-          <div class="media-object img-bg" id="blah" style="background-size: cover; background-position-x: center; background-position-y: top; width: 60px; height: 60px; background-image: url('<?php
-          if (empty($custom_image_url)) {
+          <div class="media-object img-bg" id="blah" style="border-radius: 30px; background-size: cover; background-position-x: center; background-position-y: top; width: 60px; height: 60px; background-image: url('<?php
+          if (empty($profile_image_url) || strlen($profile_image_url) == 0) {
             echo base_url() . 'uploads/icon/profile_icon.png';
           } else {
-            echo $custom_image_url;
+            echo $profile_image_url;
           }
           ?>');"></div>
           <!--          <span id="inppic" class="set_image" >-->

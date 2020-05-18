@@ -79,20 +79,18 @@ class Admin extends CI_Controller
         $query = <<<QUERY
 SELECT * from user where email='{$email}' and password='{$password}'
 QUERY;
-        $login_data = $this->db->query($query);
-        if ($login_data->num_rows() > 0) {
-          foreach ($login_data->result_array() as $row) {
-            if (!($row['user_type'] & USER_TYPE_ADMIN)) {
-              echo 'login_failed : not admin user';
-            } else {
-              $this->session->set_userdata('login', 'yes');
-              $this->session->set_userdata('admin_login', 'yes');
-              $this->session->set_userdata('admin_id', $row['user_id']);
-              $this->session->set_userdata('admin_name', $row['username']);
-              $this->session->set_userdata('title', 'admin');
+        $user_data = $this->db->query($query)->row();
+        if (empty($user_data) == false) {
+          if (!($user_data->user_type & USER_TYPE_ADMIN)) {
+            echo 'login_failed : not admin user';
+          } else {
+            $this->session->set_userdata('login', 'yes');
+            $this->session->set_userdata('admin_login', 'yes');
+            $this->session->set_userdata('admin_id', $user_data->user_id);
+            $this->session->set_userdata('admin_name', $user_data->nickname);
+            $this->session->set_userdata('title', 'admin');
 
-              echo 'lets_login';
-            }
+            echo 'lets_login';
           }
         } else {
           echo 'login_failed';

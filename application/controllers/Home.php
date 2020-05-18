@@ -348,7 +348,9 @@ class Home extends CI_Controller
   function user()
   {
     if ($this->session->userdata('user_login') != "yes") {
-      redirect(base_url() . 'home/login', 'refresh');
+      $redirect = base_url()."home/login";
+      echo "<script>alert('로그인해주세요');location.href='{$redirect}'</script>";
+      exit;
     }
 
     $base_url = base_url();
@@ -367,7 +369,7 @@ class Home extends CI_Controller
 
       $page_data['center_activate'] = false;
       if ($this->session->userdata('user_type') & USER_TYPE_CENTER) {
-        $row = $this->db->get_where('center', array( 'user_id' => $this->session->userdata('user_id') ))->row();
+        $row = $this->db->get_where('center', array('user_id' => $this->session->userdata('user_id')))->row();
         $page_data['center_activate'] = $row->activate;
 
         $my_centers = $this->db->get_where('center', array('user_id' => $user_id))->result();
@@ -376,7 +378,7 @@ class Home extends CI_Controller
 
       $page_data['teacher_activate'] = false;
       if ($this->session->userdata('user_type') & USER_TYPE_TEACHER) {
-        $row = $this->db->get_where('teacher', array( 'user_id' => $this->session->userdata('user_id') ))->row();
+        $row = $this->db->get_where('teacher', array('user_id' => $this->session->userdata('user_id')))->row();
         $page_data['teacher_activate'] = $row->activate;
 
         $my_teacher = $this->db->get_where('teacher', array('user_id' => $user_id))->row();
@@ -417,6 +419,92 @@ class Home extends CI_Controller
       $page_data['bookmark_teachers'] = $bookmark_teachers;
       $page_data['bookmark_classes'] = $bookmark_classes;
       $this->load->view('front/user/profile', $page_data);
+
+    } else if ($view_type == 'edit_profile') {
+
+      $user_id = $this->session->userdata('user_id');
+      $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
+      $admin = false;
+      if ($user_data->user_type & USER_TYPE_ADMIN) {
+        $admin = true;
+      }
+
+      $page_data['user_data'] = $user_data;
+      $page_data['admin'] = $admin;
+      $this->load->view('front/user/update_profile', $page_data);
+
+    } else if ($view_type == 'update_profile') {
+
+      $this->load->library('form_validation');
+
+      $this->form_validation->set_rules('nickname', 'nickname', 'trim|required|max_length[32]');
+
+      if ($this->form_validation->run() == FALSE) {
+        echo '<br>' . validation_errors();
+      } else {
+        $user_id = $this->session->userdata('user_id');
+        $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
+
+        $this->crud_model->file_up("profile_img", "profile", $user_id, '', '', '.jpg', 100, 100);
+//      redirect(base_url() . "uploads/profile_image/{$_FILES['img']['tmp_name']}_$user_id");
+
+        $time=time();
+        $nickname = $this->input->post('nickname');
+        $profile_image_url = base_url().'uploads/profile_image/profile_'.$user_id.'_thumb.jpg?id='.$time;
+
+        $upd = array (
+          'nickname' => $nickname,
+          'profile_image_url' => $profile_image_url,
+        );
+        $this->db->where('user_id', $user_id);
+        $this->db->update('user', $upd);
+
+        $this->session->set_userdata('nickname', $nickname);
+        $this->session->set_userdata('profile_image_url', $profile_image_url);
+
+        $this->output->cache(0);
+
+        echo 'done';
+      }
+
+    } else if ($view_type == 'update_password') {
+
+      $user_id = $this->session->userdata('user_id');
+      $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
+
+      $this->load->library('form_validation');
+
+      if ($user_data->password != '' || strlen($user_data->password) > 0) {
+        $this->form_validation->set_rules('password', 'password', 'trim|required|max_length[32]');
+      }
+
+      $this->form_validation->set_rules('password1', 'password', 'trim|required|max_length[32]');
+      $this->form_validation->set_rules('password2', 'password', 'trim|required|max_length[32]');
+
+      if ($this->form_validation->run() == FALSE) {
+        echo '<br>' . validation_errors();
+      } else {
+
+        if ($user_data->password != '' || strlen($user_data->password) > 0) {
+          $password = sha1($this->input->post('password'));
+
+          if ($password != $user_data->password) {
+            echo "<script>alert('비밀번호가 잘못되었습니다');</script>";
+            exit;
+          }
+        }
+
+        $password1 = sha1($this->input->post('password1'));
+        $password2 = sha1($this->input->post('password2'));
+        if ($password1 != $password2) {
+          echo "<script>alert('새 비밀번호가 다르게 설정되었습니다');</script>";
+          exit;
+        }
+
+        $this->db->where('user_id', $user_id);
+        $this->db->update('user', array('password' => $password1));
+        echo 'done';
+      }
 
     } elseif ($view_type == "center_register") {
 
@@ -1054,6 +1142,12 @@ QUERY;
           exit;
         }
 
+        if ($user_data->user_id == $this->session->userdata('user_id')) {
+          $iam_this_center = true;
+        } else {
+          $iam_this_center = false;
+        }
+
         $query = <<<QUERY
 select * from center_schedule where center_id={$center_data->center_id} and start_date<='{$date}' and '{$date}'<=end_date order by start_time asc
 QUERY;
@@ -1074,6 +1168,7 @@ QUERY;
         $page_data['user_data'] = $user_data;
         $page_data['schedule_data'] = $schedule_data;
         $page_data['center_data'] = $center_data;
+        $page_data['iam_this_center'] = $iam_this_center;
         $this->load->view('front/center/schedule/info/index', $page_data);
 
       } else { // unreachable

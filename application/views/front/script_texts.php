@@ -897,7 +897,7 @@
       });
     });
 
-    $('body').on('click','.signup_btn',function(event){
+    $('body').on('click','.signup_btn',function(event, action = ''){
       event.preventDefault();
       var now = $(this);
       var btntxt = now.html();

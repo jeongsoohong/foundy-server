@@ -27,7 +27,7 @@
             <a class="pnav_customer_center" href="#"><li>고객센터</li></a>
             <a class="pnav_service" href="#"><li>서비스 이용 약관</li></a>
             <a class="pnav_privacy" href="#"><li>개인정보 보호정책</li></a>
-            <a class="pnav_info_edit" href="#"><li>프로필 편집</li></a>
+            <a class="pnav_edit_profile" href="#profile_content"><li>프로필 편집</li></a>
             <a class="pnav_logout" href="#"><li>로그아웃</li></a>
             <a class="pnav_unregister" href="#"><li>회원탈퇴</li></a>
           </ul>
@@ -91,6 +91,53 @@
   </div>
 </div>
 <!-- Modal For C-C Post confirm -->
+
+<!-- Modal For C-C Post confirm -->
+<div class="modal fade" id="updateProfileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">프로필</h4>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+          <div>프로필을 정말 수정하시겠습니까?
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger post_confirm_close" data-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-theme btn-theme-sm post_confirm" id="update_profile" style="text-transform: none; font-weight: 400;">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal For C-C Post confirm -->
+
+<!-- Modal For C-C Post confirm -->
+<div class="modal fade" id="updatePasswordModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">비밀번호</h4>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+          <div>비밀번호를 정말 수정하시겠습니까?
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger post_confirm_close" data-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-theme btn-theme-sm post_confirm" id="update_password" style="text-transform: none; font-weight: 400;">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal For C-C Post confirm -->
+
 <!-- Modal For C-C Status change -->
 <div class="modal fade" id="statusChange" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
@@ -242,6 +289,13 @@
     $("#profile_content").load("<?php echo base_url()?>home/user/teacher_register");
     $(".pleft_nav").find("li").removeClass("active");
     $(".pnav_teacher_register").find("li").addClass("active");
+  });
+
+  $('.pnav_edit_profile').on('click',function(){
+    $("#profile_content").html(loading_set);
+    $("#profile_content").load("<?php echo base_url()?>home/user/edit_profile");
+    $(".pleft_nav").find("li").removeClass("active");
+    $(".pnav_edit_profile").find("li").addClass("active");
   });
 
   $(document).ready(function(){
