@@ -151,7 +151,7 @@
                               <div class="instructor slick-content active" id="1" style="text-align: center">
                                 <a href="<?php echo base_url().'home/teacher/profile/'.$user_data->user_id; ?>">
                                   <p>
-                                    <span><img src="<?php echo $profile_image_url; ?>" style="width:50px; margin: auto"></span>
+                                    <span><img src="<?php echo $profile_image_url; ?>" style="width:60px; height: 60px; margin: auto; border-radius: 30px"></span>
                                     <span><?php echo $teacher_name; ?></span>
                                   </p>
                                 </a>
@@ -177,14 +177,14 @@
                     <div class="recent-post" style="background: #fff;/* border: 1px solid #e0e0e0; */">
                       <div class="media">
                         <?php if ($iam_this_center == true) { ?>
-                          <a href="javascript:void(0);">
+                          <a href="<?php echo base_url(); ?>home/center/info/<?php echo $center_data->center_id; ?>">
                             <p style="color: gray; height: 30px; text-align: center; font-weight: 600; margin-bottom: 0px !important; padding: 0 25px 0 25px">
                               <span class="instructor-add">수정></span>
                             </p>
                           </a>
                         <?php } ?>
                         <div>
-                          info
+                          <?php echo $center_data->info; ?>
                         </div>
 
                       </div>

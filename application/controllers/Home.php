@@ -10,6 +10,14 @@ class Home extends CI_Controller
 
     $this->load->database();
 
+    defined('IMG_PATH_PROFILE')  OR define('IMG_PATH_PROFILE', '/web/public_html/uploads/profile_image/');
+    defined('IMG_PATH_BLOG')     OR define('IMG_PATH_BLOG', '/web/public_html/uploads/blog_image/');
+    defined('IMG_PATH_CENTER')   OR define('IMG_PATH_CENTER', '/web/public_html/uploads/center_image/');
+
+    defined('IMG_WEB_PATH_PROFILE')  OR define('IMG_WEB_PATH_PROFILE', base_url().'uploads/profile_image/');
+    defined('IMG_WEB_PATH_BLOG')     OR define('IMG_WEB_PATH_BLOG', base_url().'uploads/blog_image/');
+    defined('IMG_WEB_PATH_CENTER')   OR define('IMG_WEB_PATH_CENTER', base_url().'uploads/center_image/');
+
     if (!$this->input->is_ajax_request()) {
       $this->output->set_header('HTTP/1.0 200 OK');
       $this->output->set_header('HTTP/1.1 200 OK');
@@ -23,6 +31,7 @@ class Home extends CI_Controller
         $this->router->fetch_method() == 'blog_view') {
         $this->output->cache(60);
       }
+
     }
 
     // $this->config->cache_query();
@@ -443,7 +452,7 @@ class Home extends CI_Controller
         echo '<br>' . validation_errors();
       } else {
         $user_id = $this->session->userdata('user_id');
-        $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
+//        $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
 
         $this->crud_model->file_up("profile_img", "profile", $user_id, '', '', '.jpg', 100, 100);
 //      redirect(base_url() . "uploads/profile_image/{$_FILES['img']['tmp_name']}_$user_id");
@@ -461,8 +470,6 @@ class Home extends CI_Controller
 
         $this->session->set_userdata('nickname', $nickname);
         $this->session->set_userdata('profile_image_url', $profile_image_url);
-
-        $this->output->cache(0);
 
         echo 'done';
       }
@@ -961,8 +968,8 @@ QUERY;
           $schedule_data->schedule_id = 0;
           $schedule_data->start_date = date('Y-m-d', $start_time);
           $schedule_data->end_date = date('Y-m-d', $end_time);
-          $schedule_data->start_time = date('H', $start_time). ':00';
-          $schedule_data->end_time = date('H', $end_time).':00';
+          $schedule_data->start_time = date('H', $start_time) . ':00';
+          $schedule_data->end_time = date('H', $end_time) . ':00';
           $schedule_data->title = '';
           $schedule_data->teacher_id = 0;
           $schedule_data->teacher_name = '';
@@ -1172,6 +1179,110 @@ QUERY;
         $this->load->view('front/center/schedule/info/index', $page_data);
 
       } else { // unreachable
+      }
+
+    } else if ($para1 == 'info') {
+
+      if ($para2 == 'update') {
+
+        $center_id = $para3;
+
+        $center_data = $this->db->get_where('center', array('center_id' => $center_id))->row();
+        $user_id = $this->session->userdata('user_id');
+        if ($center_data->user_id != $user_id) {
+          echo ("<script>alert('권한이 없습니다,$center_id,  $center_data->user_id, $user_id '); window.location.href='{$base_url}home/center/profile/{$center_id}'</script>");
+          exit;
+        }
+
+        $desc = $this->input->post('description');
+
+        $dom = new domDocument;
+        $dom->loadHTML(html_entity_decode($desc));
+        $dom->preserveWhiteSpace = false;
+        $imgs  = $dom->getElementsByTagName("img");
+
+        $links = array();
+        for($i = 0; $i < $imgs->length; $i++) {
+          $links[] = str_replace(IMG_WEB_PATH_CENTER, IMG_PATH_CENTER, $imgs->item($i)->getAttribute("src"));
+        }
+
+        $files = 'center_'.$center_id.'_*.*';
+        $files = glob(IMG_PATH_CENTER.$files);
+        $result=array_diff($files, $links);
+        foreach($result as $deleteFile) {
+          if (file_exists($deleteFile)) {
+            array_map('unlink', glob($deleteFile));
+          }
+        }
+
+        $upd = array('info' => $desc);
+        $where = array('center_id' => $center_id);
+        $this->db->update('center', $upd, $where);
+
+        echo 'done';
+
+      //Upload image summernote
+      } else if ($para2 == 'upload_image') {
+
+        $center_id = $para3;
+
+        if (isset($_FILES["file"]["tmp_name"])) {
+          $time = time();
+          $upload_path = IMG_PATH_CENTER;
+          $file_name = 'center_'.$center_id.'_'.$time.'.jpg';
+          $file_path = $upload_path.$file_name;
+          $rc = move_uploaded_file($_FILES['file']['tmp_name'], $file_path);
+          if ($rc == false) {
+            echo json_encode(array('success' => false, 'error' => 8));
+            exit;
+          } else {
+            //Compress Image
+            $config['image_library'] = 'gd2';
+            $config['source_image'] = $file_path;
+            $config['create_thumb'] = FALSE;
+            $config['maintain_ratio'] = TRUE;
+            $config['quality'] = '100%';
+            $config['width'] = 400;
+//            $config['height'] = 400;
+            $config['new_image'] = $file_path;
+            $this->load->library('image_lib', $config);
+            $this->image_lib->resize();
+            echo json_encode(array('success' => true, 'filename' => $file_name));
+          }
+        } else {
+          echo json_encode(array('success' => false, 'error' => 4));
+          exit();
+        }
+      } else if ($para2 == 'delete_image') {
+
+        $center_id = $para3;
+
+      } else {
+
+        $center_id = $para2;
+        $center_data = $this->db->get_where('center', array('center_id' => $center_id))->row();
+        if ($center_data->activate == 0) {
+          echo ("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
+          exit;
+        }
+
+        $user_data = $this->db->get_where('user', array('user_id' => $center_data->user_id))->row();
+        if (!($user_data->user_type & USER_TYPE_CENTER)) {
+          echo ("<script>alert('센터회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
+          exit;
+        }
+
+        if ($user_data->user_id != $this->session->userdata('user_id')) {
+          echo ("<script>alert('권한이 없습니다'); window.location.href='{$base_url}home/user'</script>");
+          exit;
+        }
+
+        $page_data['page_name'] = "center/info";
+        $page_data['asset_page'] = "center_info";
+        $page_data['page_title'] = "center_info";
+        $page_data['user_data'] = $user_data;
+        $page_data['center_data'] = $center_data;
+        $this->load->view('front/index', $page_data);
       }
 
     } else { // unreachable

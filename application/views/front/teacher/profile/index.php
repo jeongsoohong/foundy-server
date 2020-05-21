@@ -21,7 +21,7 @@
               <div class="recent-post" style="background: #fff;border: 1px solid #e0e0e0;">
                 <div class="media">
                   <div class="pull-left media-link" href="#" style="height: 60px; float:left !important; padding: 0 !important; margin: 10px 30px 10px 30px !important; pointer-events: none;">
-                    <div class="media-object img-bg" id="blah" style="background-size: cover; background-position-x: center; background-position-y: top; width: 60px; height: 60px; background-image: url('<?php
+                    <div class="media-object img-bg" id="blah" style="background-size: cover; background-position-x: center; background-position-y: top; width: 60px; height: 60px; border-radius: 30px; background-image: url('<?php
                     if (empty($user_data->profile_image_url)) {
                       echo base_url() . 'uploads/icon/profile_icon.png';
                     } else {

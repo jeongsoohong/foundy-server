@@ -11,7 +11,7 @@
               } else {
                 echo $user_data->profile_image_url;
               }
-              ?>'); background-size: cover; background-position-x: center; background-position-y: top; width: 40px; height: 40px;"></div>
+              ?>'); background-size: cover; background-position-x: center; background-position-y: top; width: 40px; height: 40px; border-radius: 20px"></div>
             </a>
             <div class="media-body" style="padding-right: 10px; padding-top: 10px;">
               <div class="col-md-12" style="margin: 10px 0 10px 0 !important; padding-left: 20px !important; text-align: left; !important; font-size: 12px !important;">

@@ -64,12 +64,12 @@
                 ));
                 ?>
                 <div class="row">
-                  <div class="col-md-6">
+                  <div class="col-md-12">
                     <div class="form-group">
                       <input class="form-control" name="email" value="<?php echo $user_data->email; ?>" type="email" placeholder="이메일" readonly>
                     </div>
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-md-12">
                     <div class="form-group">
                       <input class="form-control" name="nickname" value="<?php echo $user_data->nickname; ?>" type="text" placeholder="별명">
                     </div>

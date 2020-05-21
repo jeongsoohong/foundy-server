@@ -42,7 +42,7 @@
                 <table class="table table-striped" style="border-radius:3px;">
                     <tr>
                         <th class="custom_td"><?php echo ('소개글');?></th>
-                        <td class="custom_td"><?php echo $row['introduce'];?></td>
+                        <td class="custom_td"><?php echo $row['about'];?></td>
                     </tr>
                     <tr>
                         <th class="custom_td"><?php echo ('유투브');?></th>

@@ -228,7 +228,7 @@ QUERY;
   {
     # 매달 해당월 폴더 제작
     //        $mydir = UPLOAD.date('Ym');
-    $mydir = '/html/uploads/blog_image';
+    $mydir = '/web/public_html/uploads/blog_image';
     if (!is_dir($mydir)) {
       if (@mkdir($mydir, 0777)) {
         @chmod($mydir, 0777);
@@ -280,7 +280,7 @@ QUERY;
     if (isset($_FILES["file"]["name"])) {
       $this->load->library('upload');
 
-      $config['upload_path'] = '/html/uploads/blog_image/';
+      $config['upload_path'] = '/web/public_html/uploads/blog_image/';
       $config['allowed_types'] = 'jpg|jpeg|png|gif';
       $this->upload->initialize($config);
       if (!$this->upload->do_upload('image')) {
@@ -290,13 +290,13 @@ QUERY;
         $data = $this->upload->data();
         //Compress Image
         $config['image_library'] = 'gd2';
-        $config['source_image'] = '/html/uploads/blog_image/' . $data['file_name'];
+        $config['source_image'] = '/web/public_html/uploads/blog_image/' . $data['file_name'];
         $config['create_thumb'] = FALSE;
         $config['maintain_ratio'] = TRUE;
         $config['quality'] = '60%';
-        $config['width'] = 800;
-        $config['height'] = 800;
-        $config['new_image'] = '/html/uploads/blog_image/' . $data['file_name'];
+        $config['width'] = 400;
+        $config['height'] = 400;
+        $config['new_image'] = '/web/public_html/uploads/blog_image/' . $data['file_name'];
         $this->load->library('image_lib', $config);
         $this->image_lib->resize();
         echo base_url() . 'uploads/blog_image/' . $data['file_name'];

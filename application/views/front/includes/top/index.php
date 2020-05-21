@@ -20,6 +20,7 @@ include 'meta/' . $asset_page . '.php';
 <link href="<?php echo base_url(); ?>template/front/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link href="<?php echo base_url(); ?>template/front/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">
 <link href="<?php echo base_url(); ?>template/front/plugins/fontawesome/css/font-awesome.min.css" rel="stylesheet">
+<!--<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" />-->
 <link href="<?php echo base_url(); ?>template/front/plugins/animate/animate.min.css" rel="stylesheet">
 <link href="<?php echo base_url(); ?>template/front/plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet">
 <link href="<?php echo base_url(); ?>template/front/modal/css/sm.css" rel="stylesheet">
@@ -44,7 +45,7 @@ include 'meta/' . $asset_page . '.php';
 <link href="https://fonts.googleapis.com/css?family=Patua+One&display=swap" rel="stylesheet">
 <style>
   *{
-    font-family: 'Noto Sans KR', 'Quicksand', 'Patua One', 'Roboto', sans-serif !important;
+    font-family: 'Noto Sans KR', 'Quicksand', 'Patua One', 'Roboto', FontAwesome, 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
   }
   .remove_one{
     cursor:pointer;

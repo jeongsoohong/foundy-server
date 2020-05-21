@@ -92,3 +92,4 @@ defined('USER_TYPE_SHOP')      OR define('USER_TYPE_SHOP', 16);
 
 defined('CENTER_TYPE_YOGA')       OR define('CENTER_TYPE_YOGA', 1);
 defined('CENTER_TYPE_PILATES')    OR define('CENTER_TYPE_PILATES', 2);
+

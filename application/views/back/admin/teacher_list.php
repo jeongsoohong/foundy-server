@@ -38,7 +38,7 @@ foreach($all_teachers as $row){
         <td><?php echo $row['user_id']; ?></td>
         <td><?php echo $row['teacher_id']; ?></td>
         <td><?php echo $row['name']; ?></td>
-        <td><?php echo $row['introduce']; ?></td>
+        <td><?php echo $row['about']; ?></td>
         <td>
             <div class="label label-<?php if($row['activate'] == 1){ ?>purple<?php } else { ?>danger<?php }
             ?>">
@@ -107,7 +107,7 @@ foreach($all_teachers as $row){
                 <td><?php echo $row['user_id']; ?></td>
                 <td><?php echo $row['teacher_id']; ?></td>
                 <td><?php echo $row['name']; ?></td>
-                <td><?php echo $row['introduce']; ?></td>
+                <td><?php echo $row['about']; ?></td>
                 <td><?php echo $row['activate'] ? '승인' : '미승인'; ?></td>
                 <td><?php echo $row['email']; ?></td>
             </tr>
