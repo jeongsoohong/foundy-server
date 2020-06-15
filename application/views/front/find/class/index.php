@@ -1,72 +1,133 @@
 <style>
   .profile div select.form-control {
-    width: 90px !important;
+    width: 100% !important;
     height: 30px !important;
     font-size: 12px !important;
     padding: 0 0 0 0 !important;
-    text-align-last: center;
+    text-align-last: right;
     border: none;
+    direction: rtl;
   }
-  .select-arrow {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    /* Some browsers will not display the caret when using calc, so we put the fallback first */
-    background: url("<?php echo base_url(); ?>uploads/icon/arrow_down.png") white no-repeat 100% !important; /* !important used for overriding all other customisations */
+  select option {
+    direction: ltr;
   }
-  /*For IE*/
-  select::-ms-expand { display: none; }
+  .img-youtube img, .img-insta img {
+    width : 20px !important;
+    height: 20px !important;
+    margin-right: 5px;
+  }
 </style>
 <!-- PAGE -->
-<section class="page-section with-sidebar" style="padding-top: 10px !important;">
+<section class="page-section with-sidebar" style="padding-top: 0 !important; padding-bottom: 0 !important; background-color: white">
   <!-- /CONTENT -->
   <div class="container">
     <div class="row">
 
       <?php if (!empty($bookmarks) && count($bookmarks) > 0) { ?>
         <!-- bookmark -->
-        <div class="col-md-12 content" id="content" style="margin-bottom: 10px !important; background-color: white !important;">
+        <div class="col-md-12 content" id="content" style="margin-bottom: 0 !important; background-color: white !important; border-bottom: 1px solid #F5F5F5">
           <div id="blog-content">
             <div class="col-md-12" style="padding: 0 0 0 0 !important; ">
               <div class="row">
                 <div class="col-md-12" style="padding: 0 0 0 0 !important;">
-                  <div class="profile" style="font-size: 15px; padding: 5px 10px 5px 10px !important;">
+                  <div class="profile" style="font-size: 15px; padding: 5px 10px 5px 10px !important; text-align: center">
                     <span>스크랩</span>
                   </div>
                 </div>
-                <div class="widget widget-categories" style="padding-bottom:10px; ">
-                  <ul class="bookmark_video_ul">
-                    <?php
-                    foreach ($bookmarks as $video) {
-                      $c = '';
-                      $cats = $this->db->get_where('teacher_video_category', array('video_id' => $video->video_id))->result();
-                      foreach($cats as $cat) {
-                        $c .= $cat->category . '/';
-                      }
-                      $c[strlen($c) - 1] = "\0";
-                      ?>
-                      <a href="<?php echo base_url(); ?>home/teacher/video/view/<?php echo $video->video_id; ?>">
-                        <li style="padding: 10px 0 10px 0 !important;">
-                          <div class="col-md-12 media" style="padding: 0 5px 0 5px !important;">
-                            <div class="col-md-6 pull-left media-link" style="width: 190px; height: 120px; padding: 0 5px 0 5px !important;">
-                              <img src="<?php echo $video->thumbnail_image_url; ?>" width="180" height="120" alt="" style="padding: 0 0 0 0 !important;">
-                            </div>
-                            <div class="col-md-6 media-body" style="padding: 0 5px 0 5px; width: 300px; height: 120px">
-                              <!--<div class="col-md-12 video-title" style="font-size: 12px; height:60px; text-align: center"> -->
-                              <h5 class="video-title"><?php echo $video->title; ?></h5>
-                              <!--</div>-->
-                              <!--<div class="col-md-12 pull-right video-detail" style="font-size: 12px; height:20px;"> -->
-                              <span style="color: saddlebrown;"><?php echo $c; ?></span><br>
-                              <span style="color: gray;"> <?php echo (int)($video->playtime/60).'분'; printf("%02d",$video->playtime%60);?>초&middot;조회수<?php echo $video->view;?>&middot;좋아요<?php echo $video->like;?>&middot;스크랩<?php echo $video->bookmark;?></span>
-                              <!--</div>-->
-                            </div>
+                <div class="col-md-12" style="padding: 10px 0px 10px 0px !important; border: none;">
+                  <div class="recent-post" style="background: #fff;/* border: 1px solid #e0e0e0; */">
+                    <div class="media">
+                      <div class="instructor slick" style="height: 100px; /* padding-bottom: 10px; */">
+                        <?php
+                        foreach ($bookmarks as $teacher) {
+                          $teacher = $this->db->get_where('teacher', array('teacher_id' => $teacher->teacher_id))->row();
+                          $teacher_name = $teacher->name;
+                          $user_data = $this->db->get_where('user', array('user_id' => $teacher->user_id))->row();
+                          $profile_image_url = $user_data->profile_image_url;
+                          if (empty($profile_image_url) or strlen($profile_image_url) == 0) {
+                            $profile_image_url = base_url().'uploads/icon/profile_icon.png';
+                          }
+                          ?>
+                          <div class="instructor slick-content active" id="1" style="margin-top: 10px; text-align: center">
+                            <a href="<?php echo base_url().'home/teacher/profile/'.$user_data->user_id; ?>">
+                              <p>
+                                <span><img src="<?php echo $profile_image_url; ?>" style="width:60px; height: 60px; margin: auto; border-radius: 30px"></span>
+                                <span><?php echo $teacher_name; ?></span>
+                              </p>
+                            </a>
                           </div>
-                        </li>
-                      </a>
-                    <?php } ?>
-
-                  </ul>
+                          <?php
+                        }
+                        ?>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+<!--                <div class="widget" style="padding-bottom:10px; ">-->
+<!--                  <ul class="bookmark_teacher_ul">-->
+<!--                    --><?php
+//                    foreach ($bookmarks as $teacher) {
+//                      $c = '';
+//                      $cats = $this->db->get_where('teacher_category', array('teacher_id' => $teacher->teacher_id))->result();
+//                      foreach($cats as $cat) {
+//                        $c .= $cat->category . '/';
+//                      }
+//                      $c[strlen($c) - 1] = "\0";
+//                      ?>
+<!--                      <li style="padding: 10px 0 10px 0 !important;">-->
+<!--                        <div class="col-md-12 " style="padding: 0 !important; height: 75px">-->
+<!--                          <table class="col-md-12" style="width: 100%">-->
+<!--                            <tbody>-->
+<!--                            <tr style="height: 30px;">-->
+<!--                              <td rowspan="3" style="text-align: center">-->
+<!--                                <div class="media-object img-bg" id="blah" style="margin: auto; background-size: cover; background-position-x: center; background-position-y: top; width: 60px; height: 60px; border-radius: 30px; background-image: url('--><?php
+//                                $user_data = $this->db->get_where('user', array('user_id' => $teacher->user_id))->row();
+//                                if (empty($user_data->profile_image_url)) {
+//                                  echo base_url() . 'uploads/icon/profile_icon.png';
+//                                } else {
+//                                  echo $user_data->profile_image_url;
+//                                }
+//                                ?><!--'); "></div> -->
+<!--                              </td> -->
+<!--                              <td style="width: 60%"> -->
+<!--                                <a href="*/<?php //echo base_url(); ?>--><!--home/teacher/profile/--><?php //echo $teacher->user_id; ?><!--">-->
+<!--                                  --><?php //echo $teacher->name; ?>
+<!--                                </a>-->
+<!--                              </td>-->
+<!--                              <td rowspan="3" style="width: 15%; text-align: center">-->
+<!--                                --><?php //echo $this->crud_model->sns_func_html('bookmark', 'teacher', true, $teacher->teacher_id, 20, 20); ?>
+<!--                              </td>-->
+<!--                            </tr>-->
+<!--                            <tr style="height: 30px;">-->
+<!--                              <td style="width: 60%">-->
+<!--                                <span style="color: saddlebrown;">--><?php //echo $c; ?><!--</span>-->
+<!--                              </td>-->
+<!--                            </tr>-->
+<!--                            <tr style="height: 30px;">-->
+<!--                              <td style="width: 60%">-->
+<!--                                --><?php
+//                                if (isset($teacher->youtube) && strlen($teacher->youtube) > 0) {
+//                                  ?>
+<!--                                  <a href="--><?php //echo $teacher->youtube; ?><!--" onclick="window.open(this.href, '_blank'); return false;">-->
+<!--                                    <span class="img-youtube"><img src="--><?php //echo base_url(); ?><!--uploads/icon/youtube_icon.png"></span>-->
+<!--                                  </a>-->
+<!--                                  --><?php
+//                                }
+//                                if (isset($teacher->instagram) && strlen($teacher->instagram) > 0) {
+//                                  ?>
+<!--                                  <a href="--><?php //echo $teacher->instagram; ?><!--" onclick="window.open(this.href, '_blank'); return false;">-->
+<!--                                    <span class="img-insta"><img src="--><?php //echo base_url(); ?><!--uploads/icon/insta_icon.png"></span>-->
+<!--                                  </a>-->
+<!--                                --><?php //} ?>
+<!--                              </td>-->
+<!--                            </tr>-->
+<!--                            </tbody>-->
+<!--                          </table>-->
+<!--                        </div>-->
+<!--                      </li>-->
+<!--                    --><?php //} ?>
+<!--                  </ul>-->
+<!--                </div>-->
               </div>
             </div>
           </div>
@@ -79,10 +140,11 @@
           <div class="col-md-12" style="padding: 0 0 0 0 !important; ">
             <div class="row">
               <div class="col-md-12" style="padding: 0 0 0 0 !important;">
-                <div class="profile" style="font-size: 15px; padding: 5px 10px 5px 10px !important;">
-                  <span>포잇 추천 클래스</span>
-                  <div class="pull-right" style="width: 80px; margin-right: 10px;">
-                    <!--                    <i class="pull-right fa fa-angle-down" style="color: #737475; font-family: FontAwesome !important; padding-top: 8px;"> </i>-->
+                <div class="profile" style="display: flex; font-size: 15px; padding: 5px 10px 5px 10px !important; text-align: center">
+                  <div style="width: 70%;">
+                    <span style="position: absolute; left: 40%">포잇 추천 클래스</span>
+                  </div>
+                  <div class="pull-right" style="width: 25%;">
                     <select class="form-control select-arrow" id="class_category" name="class_category">
                       <option value="ALL" selected="selected">ALL</option>
                       <?php
@@ -95,8 +157,11 @@
                       ?>
                     </select>
                   </div>
+                  <div class="pull-right" style="width: 5%; text-align: right; line-height: 30px; color: grey">
+                    <i class="fa fa-angle-down"></i>
+                  </div>
                 </div>
-                <div class="widget widget-categories" style="padding-bottom:10px; ">
+                <div class="widget" style="padding-bottom:10px; ">
                   <ul class="video_ul">
 
                     <!-- ajax_class_list() -->
@@ -107,12 +172,13 @@
               </div>
             </div>
           </div>
-
-          <p style="text-align: center;">
-            <a class="btn btn-lg btn-primary" id="view_more" href="#none" onclick="ajax_class_list(); return false;" role="button" style="display: none; font-family: 'Quicksand' !important; font-size: 15px; color: gray; background-color: inherit; border: 1px solid #d3d3d3">
-              view more
-            </a>
-          </p>
+          <div style="margin-bottom: 10px !important;">
+            <p style="text-align: center; margin-bottom: 0">
+              <a class="btn btn-lg btn-primary" id="view_more" href="#none" onclick="ajax_class_list(); return false;" role="button" style="display: none; font-family: 'Quicksand' !important; font-size: 15px; color: gray; background-color: inherit; border: 1px solid #d3d3d3">
+                view more
+              </a>
+            </p>
+          </div>
         </div>
         <!-- /online class -->
       </div>
@@ -138,15 +204,18 @@
       type: 'GET', // form submit method get/post
       dataType: 'html', // request type html/json/xml
       success: function(data) {
+        var prevCnt = $(".video_ul a li").length;
+
         $('.video_ul').append(data);
         // console.log($(".video_ul a li").length % 10);
 
         var listCnt = $(".video_ul a li").length;
-        if ( listCnt === 0 || listCnt % 10 !== 0) {
+        if ( listCnt === 0 || listCnt % 10 !== 0 || prevCnt === listCnt) {
           $('#view_more').hide();
         } else {
           $('#view_more').show();
         }
+        // console.log(prevCnt);
         // console.log(listCnt);
       },
       error: function(e) {
@@ -177,3 +246,62 @@
     ajax_class_list();
   });
 </script>
+
+<?php
+if (!empty($bookmarks) && count($bookmarks) > 0) {
+  ?>
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+
+  <style>
+  .slick-content:focus {
+    outline: none !important;
+  }
+</style>
+  <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+  <script type="text/javascript">
+    // $(function() {
+    //   $('.instructor-add').click(function () {
+    //     console.log('instructor-add');
+    //   });
+    // });
+
+    $(document).ready(function(){
+      $('.instructor.slick').slick({
+        centerMode: false,
+        centerPadding: '20px',
+        slidesToShow: 5,
+        slidesToScroll: 1,
+        autoplay: false,
+        arrows: false,
+        focusOnSelect: false,
+        infinite: false,
+        swipe: true,
+        swipeToSlide: true,
+        speed: 100,
+        waitForAnimate: false,
+        easing: 'swing',
+        responsive: [
+          {
+            breakpoint: 768,
+            settings: {
+              centerPadding: '15px',
+              slidesToShow: 5
+            }
+          },
+          {
+            breakpoint: 480,
+            settings: {
+              centerPadding: '10px',
+              slidesToShow: 3
+            }
+          }
+        ]
+      });
+    });
+  </script>
+  <?php
+}
+?>

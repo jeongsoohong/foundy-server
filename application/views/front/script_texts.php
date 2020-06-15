@@ -1687,9 +1687,9 @@
       }
     } else if (funcType === 'bookmark') {
       if (action === 'do') {
-        return base_url + 'uploads/icon_0504/icon06_scrap.png';
+        return base_url + 'uploads/icon_0504/icon13_star.png';
       } else {
-        return base_url + 'uploads/icon_0504/icon05_scrap.png';
+        return base_url + 'uploads/icon_0504/icon12_star.png';
       }
     } else {
       console.log(funcType);

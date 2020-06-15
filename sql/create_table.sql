@@ -1,22 +1,33 @@
 CREATE TABLE `blog` (
-  `blog_id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(500) DEFAULT NULL,
-  `summery` varchar(1000) DEFAULT NULL,
-  `author` varchar(500) DEFAULT NULL,
-  `date` varchar(200) DEFAULT NULL,
-  `description` longtext,
-  `status` varchar(100) DEFAULT NULL,
-  `blog_category` varchar(25) DEFAULT NULL,
+  `blog_id` int(11) NOT NULL,
+  `main_image_url` varchar(500) NOT NULL,
+  `title` varchar(500) NOT NULL,
+  `summery` varchar(1000) NOT NULL,
+  `description` longtext NOT NULL,
+  `blog_category` varchar(25) NOT NULL,
   `number_of_view` int(11) NOT NULL DEFAULT '0',
+  `create_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `activate` tinyint(4) NOT NULL DEFAULT '1',
+  `main_view` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`blog_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE `blog_category` (
-  `blog_category_id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(300) DEFAULT NULL,
-  `activate` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`blog_category_id`)
+CREATE TABLE `blog_id` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `category_blog` (
+  `category_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(10) NOT NULL,
+  `activate` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`category_id`),
+  UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -62,6 +73,12 @@ CREATE TABLE `center` (
   UNIQUE KEY `activate` (`activate`,`center_id`),
   KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+alter table foit.center add shower tinyint not null default 0;
+alter table foit.center add towel tinyint not null default 0;
+alter table foit.center add parking tinyint not null default 0;
+alter table foit.center add valet tinyint not null default 0;
 
 
 CREATE TABLE `center_category` (

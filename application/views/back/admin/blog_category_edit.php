@@ -3,7 +3,7 @@
 ?>
 	<div class="tab-pane fade active in" id="edit">
 		<?php
-			echo form_open(base_url() . 'admin/blog_category/update/' . $row['blog_category_id'], array(
+			echo form_open(base_url() . 'admin/blog_category/update/' . $row['category_id'], array(
 				'class' => 'form-horizontal',
 				'method' => 'post',
 				'id' => 'blog_category_edit',

@@ -7,23 +7,32 @@ foreach ($center_data as $center) {
   }
   $cat[strlen($cat) - 1] = "\0";
   ?>
-  <a href="<?php echo base_url(); ?>home/center/profile/<?php echo $center->center_id; ?>">
     <li style="padding: 10px 0 10px 0 !important;">
-      <div class="col-md-12 " style="padding: 0 5px 0 5px !important; height: 75px">
-        <div class="col-md-9 pull-left media-link" style="padding: 0 5px 0 5px; width: 80%;">
-          <!--<div class="col-md-12 video-title" style="font-size: 12px; height:60px; text-align: center"> -->
-          <h5 class="center-title"><?php echo $center->title; ?></h5>
-          <!--</div>-->
-          <!--<div class="col-md-12 pull-right video-detail" style="font-size: 12px; height:20px;"> -->
-          <span style="color: saddlebrown;"><?php echo $cat; ?></span><br>
-          <!--</div>-->
-        </div>
-        <div class="col-md-3 media-body" style="padding: 0 5px 0 5px !important">
-<!--          <span class="pull-right" style="padding: 20px 10px 0 0; ">-->
-<!--          <img src="--><?php //echo base_url().'uploads/icon/heart icon_do.png'; ?><!--" width="15" height="15" alt="" style="padding: 0 0 0 0 !important;">-->
-<!--          </span>-->
-        </div>
+      <div class="col-md-12 " style="padding: 0 10px 0 10px !important;">
+        <table class="col-md-12" style="background-color: white; width: 100%">
+          <tbody>
+          <tr style="height: 25px">
+            <td style="width: 85%">
+              <a href="<?php echo base_url(); ?>home/center/profile/<?php echo $center->center_id; ?>">
+              <h5 class="center-title"><?php echo $center->title; ?></h5>
+              </a>
+            </td>
+            <td rowspan="3" style="text-align: center">
+              <?php echo $this->crud_model->sns_func_html('bookmark', 'center', false, $center->center_id, 20, 20); ?>
+            </td>
+          </tr>
+          <tr style="height: 25px">
+            <td style="width: 85%">
+              <?php echo "{$center->address} {$center->address_detail}"; ?>
+            </td>
+          </tr>
+          <tr style="height: 25px">
+            <td style="width: 85%">
+              <span style="color: saddlebrown;"><?php echo $cat; ?></span><br>
+            </td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </li>
-  </a>
 <?php } ?>

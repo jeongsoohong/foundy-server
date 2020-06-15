@@ -55,6 +55,13 @@
                 <i class="fa fa-angle-down"></i>
                 프로필 수정
               </div>
+              <p class="text-success">
+                * 고화질의 사진은 업로드가 안될 수 있습니다. <br>
+                * 사진 선택 후 하단에서 사진 크기를 ‘작게’로 선택해 주세요.<br>
+                o
+                * 권장 비율 : 정사각형<br>
+                  - 가로형, 세로형 이미지의 경우 이미지가 잘릴 수 있습니다. 올리실때 참고해 주세요.
+              </p>
               <div class="details-box">
                 <?php
                 echo form_open(base_url() . 'home/user/update_profile/', array(
@@ -85,6 +92,8 @@
                         <span id="previewImg" ></span>
                       </div>
                     </div>
+                  </div>
+                  <div class="col-md-12">
                   </div>
                   <div class="col-md-12" style="border-top: 2px solid #f5f5f5; margin-top: 35px">
                     <button type="button" class="btn btn-theme pull-right open_modal update-profile" data-toggle="modal" data-target="#updateProfileModal">

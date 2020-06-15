@@ -6,17 +6,17 @@ $shop_url = '';
 
 $category_names = array('find', 'life', 'earth', 'shop');
 foreach ($category_names as $category_name) {
-    $category_info = $this->db->get_where('blog_category', array('name' => $category_name, 'activate' => 1))->row();
+    $category_info = $this->db->get_where('category_blog', array('name' => $category_name, 'activate' => 1))->row();
     if (empty($category_info)) {
         ${"{$category_name}_url"} = base_url();
     } else {
         $this->db->order_by('blog_id', 'desc');
         $this->db->limit(1);
-        $blog_info = $this->db->get_where('blog', array('blog_category' => $category_info->blog_category_id))->row();
+        $blog_info = $this->db->get_where('blog', array('blog_category' => $category_info->category_id))->row();
         if (empty($blog_info)) {
             ${"{$category_name}_url"} = base_url();
         } else {
-            ${"{$category_name}_url"} = base_url() . "home/blog_view/" . $blog_info->blog_id;
+            ${"{$category_name}_url"} = base_url() . "home/blog/view?id=" . $blog_info->blog_id;
         }
     }
 }
@@ -25,7 +25,7 @@ foreach ($category_names as $category_name) {
 //    echo 'production';
 //} else {
 //    echo 'development';
-//}
+//
 ?>
 <!-- HEADER -->
 <style>
@@ -48,7 +48,7 @@ foreach ($category_names as $category_name) {
                 <div class="flex-col-8" style="text-align: center;">
                     <!-- Logo -->
                     <a href="<?php echo base_url();?>">
-                        <img src="<?php echo base_url(); ?>uploads/logo_image/logo.png" alt="foit" style="height: 50px; width: 140px; "/>
+                        <img src="<?php echo base_url(); ?>uploads/logo_image/foundy logo_0507.png" alt="foit" style="height: 40px; width: 100px; "/>
                     </a>
                     <!-- /Logo -->
                 </div>
@@ -78,19 +78,20 @@ foreach ($category_names as $category_name) {
             <nav class="navigation clearfix">
                 <ul class="nav sf-menu">
                     <li class="home">
-                        <a href="<?php echo base_url(); ?>">HOME</a>
+                      <a href="<?php echo base_url(); ?>">HOME</a>
                     </li>
                     <li class="find">
-                        <a href="<?php echo base_url().'home/find'; ?>">FIND</a>
+                      <a href="<?php echo base_url().'home/find'; ?>">FIND</a>
                     </li>
                     <li class="life">
-                        <a href="<?php echo $life_url; ?>">LIFE</a>
+                      <a href="<?php echo $life_url; ?>">LIFE</a>
                     </li>
                     <li class="earth">
-                        <a href="<?php echo $earth_url; ?>">EARTH</a>
+<!--                        <a href="--><?php //echo $earth_url; ?><!--">EARTH</a>-->
+                      <a href="<?php echo base_url(); ?>home/blog">EARTH</a>
                     </li>
                     <li class="shop">
-                        <a href="<?php echo $shop_url; ?>">SHOP</a>
+                      <a href="<?php echo $shop_url; ?>">SHOP</a>
                     </li>
                 </ul>
             </nav>

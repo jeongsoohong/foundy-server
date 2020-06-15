@@ -1,44 +1,48 @@
-<?php
-	foreach($blogs as $row){
-?>
-<div class="thumbnail blog_box">
-	<div class="row">
-		<div class="col-md-4 col-sm-4 col-xs-12">
-			<div class="media">
-				<a class="media-link" href="<?php echo $this->crud_model->blog_link($row['blog_id']); ?>">
-					<img class="list-view" src="<?php echo $this->crud_model->file_view('blog',$row['blog_id'],'','','thumb','src','',''); ?>" alt="" style="object-fit: contain !important;"/>
-				</a>
-			</div>
-		</div>
-		<div class="col-md-8 col-sm-8 col-xs-12">
-			<div class="caption">
-				<h4 class="caption-title">
-                    <a href="<?php echo $this->crud_model->blog_link($row['blog_id']); ?>">
-                    	<?php echo $row['title']; ?>
-                    </a>
-                </h4>
-				<div class="overflowed">
-					<div class="availability"><?php echo ('author'); ?>: <strong><?php echo $row['author']; ?></strong></div>
-					<div class="price"><ins><?php echo $row['date']; ?></ins></div>
-				</div>
-				<div class="caption-text">
-					<?php echo $row['summery']; ?>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<?php
-	}
-?>
-
-<div class="pagination-wrapper">
-	<?php echo $this->ajax_pagination->create_links();  ?>
-</div>
-
-<script>
-	$(document).ready(function() {
-		$('#title').html('<?php echo $category_name; ?>');
-	});
-</script>
-
+<style>
+  .main-blog-content {
+    margin: 0 0 10px 0;
+    padding-left: 0;
+    padding-right: 0;
+    /*background-color: white;*/
+    padding-bottom: 10px;
+    /*border: 1px solid #EAEAEA;*/
+    border: none;
+  }
+  .blog-img {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .blog-img img {
+    min-height: 100%;
+    min-width: 100%;
+  }
+  .blog-title {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .blog-title h5 {
+    margin: 10px 0 5px 0;
+  }
+  .blog-summery {
+    font-size: 11px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+</style>
+<?php foreach ($blogs as $blog) { ?>
+  <li>
+    <div class="col-md-12 main-blog-content">
+      <div class="col-md-12 blog-img">
+        <a href="<?php echo base_url().'home/blog/view?id='.$blog->blog_id; ?>">
+          <img class="img-responsive" src="<?php echo $blog->main_image_url; ?>" alt="" />
+        </a>
+      </div>
+      <div class="col-md-12 blog-title">
+        <h5><b><?php echo $blog->title; ?></b></h5>
+      </div>
+      <div class="col-md-12 blog-summery">
+        <?php echo $blog->summery; ?>
+      </div>
+    </div>
+  </li>
+<?php } ?>

@@ -43,13 +43,36 @@ include 'meta/' . $asset_page . '.php';
 
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,600,700,800,900' rel='stylesheet' type='text/css'>
 <link href="https://fonts.googleapis.com/css?family=Patua+One&display=swap" rel="stylesheet">
+<!--<link href="https://db.onlinewebfonts.com/c/b46bb1fc76216f5cd90457d0451dbee4?family=Futura-pt" rel="stylesheet">-->
 <style>
+  @font-face{
+    font-family:"futura-pt";
+    src:url("<?php echo base_url(); ?>template/fonts/futura-pt/FuturaPTMedium.otf") format("woff"),
+    url("<?php echo base_url(); ?>template/fonts/futura-pt/FuturaPTMedium.otf") format("opentype"),
+    url("<?php echo base_url(); ?>template/fonts/futura-pt/FuturaPTMedium.otf") format("truetype");
+  }
   *{
     font-family: 'Noto Sans KR', 'Quicksand', 'Patua One', 'Roboto', FontAwesome, 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
   }
   .remove_one{
     cursor:pointer;
     padding-left:5px;
+  }
+  body {
+    background: #F3EFEB;
+  }
+  .page-section {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+  }
+  .font-futura {
+    font-family: futura-pt !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+  }
+  .footer1 {
+    margin: 0 !important;
+    padding-top: 0 !important;
   }
 </style>
 

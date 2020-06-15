@@ -6,14 +6,14 @@
 <!-- /Blog list -->
 
 <?php
-echo form_open(base_url() . 'home/ajax_blog_list/', array(
-    'class' => 'form-horizontal',
-    'method' => 'post',
-    'id' => 'filter_form'
-));
-?>
-<input type="hidden" name="blog_category" value="<?php echo $category; ?>" id="blog_category" />
-</form>
+//echo form_open(base_url() . 'home/ajax_blog_list/', array(
+//    'class' => 'form-horizontal',
+//    'method' => 'post',
+//    'id' => 'filter_form'
+//));
+//?>
+<!--<input type="hidden" name="blog_category" value="--><?php //echo $category; ?><!--" id="blog_category" />-->
+<!--</form>-->
 
 <script>
     function filter_blog(page){

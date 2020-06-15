@@ -49,14 +49,14 @@
                              title="instagram">
                     </div>
                   </div>
-<!--                  <div class="col-md-12">-->
-<!--                    <div class="form-group">-->
-<!--                      <input class="form-control" id="homepage-url" name="homepage" value=""-->
-<!--                             type="url"-->
-<!--                             placeholder="블로그 / 홈페이지 URL" data-toggle="tooltip"-->
-<!--                             title="homepage">-->
-<!--                    </div>-->
-<!--                  </div>-->
+                  <!--                  <div class="col-md-12">-->
+                  <!--                    <div class="form-group">-->
+                  <!--                      <input class="form-control" id="homepage-url" name="homepage" value=""-->
+                  <!--                             type="url"-->
+                  <!--                             placeholder="블로그 / 홈페이지 URL" data-toggle="tooltip"-->
+                  <!--                             title="homepage">-->
+                  <!--                    </div>-->
+                  <!--                  </div>-->
                   <div class="col-md-12">
                     <div class="form-group">
                       <label class="col-sm-3 control-label" for="demo-hor-inputemail">수업분류</label>

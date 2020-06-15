@@ -144,6 +144,33 @@
                       </div>
                     </div>
                   </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" for="demo-hor-inputemail">이용정보</label>
+                      <div class="col-sm-6">
+                        <div class="col-sm-">
+                          <fieldset>
+                            <label style="font-weight: 200 !important;">
+                              <input id="shower" class='form-checkbox' name="shower" type="checkbox" value="shower"/>
+                              샤워시설
+                            </label>
+                            <label style="font-weight: 200 !important;">
+                              <input id="towel" class='form-checkbox' name="towel" type="checkbox" value="towel"/>
+                              수건제공
+                            </label>
+                            <label style="font-weight: 200 !important;">
+                              <input id="parking" class='form-checkbox' name="parking" type="checkbox" value="parking"/>
+                              주차가능
+                            </label>
+                            <label style="font-weight: 200 !important;">
+                              <input id="valet" class='form-checkbox' name="valet" type="checkbox" value="valet"/>
+                              발렛가능
+                            </label>
+                          </fieldset>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <div class="col-md-12" style="border-top: 2px solid #f5f5f5; margin-top: 35px">
                     <button type="button" class="btn btn-theme pull-right open_modal
                                         center-register" data-toggle="modal" data-target="#centerRegisterModal">

@@ -33,7 +33,7 @@
 
 
 	<!--Demo script [ DEMONSTRATION ]-->
-	<script src="<?php echo base_url(); ?>template/back/js/jspdf.js"></script>
+<!--	<script src="--><?php //echo base_url(); ?><!--template/back/js/jspdf.js"></script>-->
 
 
 	<!--Specify page [ SAMPLE ]-->

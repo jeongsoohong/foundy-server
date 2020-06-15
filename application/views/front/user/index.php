@@ -6,7 +6,7 @@
     }
   }
 </style>
-<section class="page-section">
+<section class="page-section" style="padding-top: 0 !important;">
   <div class="wrap container">
     <!-- <div id="profile-content"> -->
     <div class="row profile">
@@ -21,13 +21,13 @@
           <div class="information-title" style="margin-bottom: 0px; margin-top: 0px;">더보기</div>
           <ul class="pleft_nav">
             <a class="pnav_info" href="#profile_content" style="display: none;"><li>프로필</li></a>
+            <a class="pnav_edit_profile" href="#profile_content" style="display: none"><li>프로필 편집</li></a>
             <a class="pnav_notifination" href="#"><li>공지사항</li></a>
             <a class="pnav_introduce" href="#"><li>포잇 소개</li></a>
             <a class="pnav_faq" href="#"><li>자주하는 질문</li></a>
             <a class="pnav_customer_center" href="#"><li>고객센터</li></a>
             <a class="pnav_service" href="#"><li>서비스 이용 약관</li></a>
             <a class="pnav_privacy" href="#"><li>개인정보 보호정책</li></a>
-            <a class="pnav_edit_profile" href="#profile_content"><li>프로필 편집</li></a>
             <a class="pnav_logout" href="#"><li>로그아웃</li></a>
             <a class="pnav_unregister" href="#"><li>회원탈퇴</li></a>
           </ul>

@@ -20,7 +20,7 @@
     var base_url = '<?php echo base_url(); ?>'
     var user_type = 'admin';
     var module = 'teacher';
-    var list_cont_func = 'list/<?php echo $para2; ?>';
+    var list_cont_func = 'list/<?php echo $list_type; ?>';
     var dlt_cont_func = 'delete';
 </script>
 <script src="https://checkout.stripe.com/checkout.js"></script>

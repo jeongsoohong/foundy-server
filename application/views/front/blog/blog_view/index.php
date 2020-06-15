@@ -1,242 +1,28 @@
-<section class="page-section with-sidebar">
-  <div class="container">
-    <div class="row">
-      <!-- SIDEBAR -->
-      <aside class="col-md-3 sidebar hidden-sm hidden-xs" id="sidebar">
-        <!-- widget shop categories -->
-        <div class="widget shop-categories">
-          <div class="widget-content">
-            <ul>
-              <li><a href="<?php echo base_url(); ?>home/blog/"><?php echo ('all_blogs');?></a></li>
-              <?php
-              $categories=$this->db->get('blog_category')->result_array();
-              foreach($categories as $row){
-                ?>
-                <li>
-                  <a href="<?php echo base_url(); ?>home/blog/<?php echo $row['blog_category_id']; ?>">
-                    <?php echo $row['name']; ?>
-                  </a>
-                </li>
-                <?php
-              }
-              ?>
-            </ul>
-          </div>
-        </div>
-        <!-- /widget shop categories -->
-        <!-- widget tabs -->
-        <div class="widget widget-tabs">
-          <div class="widget-content special-blogs">
-            <ul id="tabs" class="nav nav-justified">
-              <li class="active">
-                <a href="#tab-s1" data-toggle="tab">
-                  <?php echo ('recent');?>
-                </a>
-              </li>
-              <li>
-                <a href="#tab-s2" data-toggle="tab">
-                  <?php echo ('popular');?>
-                </a>
-              </li>
-            </ul>
-            <div class="tab-content">
-              <!-- tab 1 -->
-              <div class="tab-pane fade in active" id="tab-s1">
-                <div class="product-list">
-                  <?php
-                  $this->db->limit(3);
-                  $this->db->order_by("blog_id", "desc");
-                  $latest=$this->db->get('blog')->result_array();
-                  foreach($latest as $row){
-                    ?>
-                    <div class="media">
-                      <a class="pull-left media-link" href="<?php echo $this->crud_model->blog_link($row['blog_id']); ?>">
-                        <img class="img-responsive" src="<?php echo $this->crud_model->file_view('blog',$row['blog_id'],'','','thumb','src','',''); ?>" alt=""/>
-                        <i class="fa fa-eye"></i>
-                      </a>
-                      <div class="media-body">
-                        <h6 class="media-heading">
-                          <a href="<?php echo $this->crud_model->blog_link($row['blog_id']); ?>">
-                            <?php echo $row['title']; ?>
-                          </a>
-                        </h6>
-                        <div class="date">
-                          <ins><?php echo $row['date']; ?></ins>
-                        </div>
-                      </div>
-                    </div>
-                    <?php
-                  }
-                  ?>
-                </div>
-              </div>
-              <!-- tab 2 -->
-              <div class="tab-pane fade" id="tab-s2">
-                <div class="product-list">
-                  <?php
-                  $this->db->limit(3);
-                  $this->db->order_by("number_of_view", "desc");
-                  $popular=$this->db->get('blog')->result_array();
-                  foreach($popular as $row){
-                    ?>
-                    <div class="media">
-                      <a class="pull-left media-link" href="<?php echo $this->crud_model->blog_link($row['blog_id']); ?>">
-                        <img class="img-responsive" src="<?php echo $this->crud_model->file_view('blog',$row['blog_id'],'','','thumb','src','',''); ?>" alt=""/>
-                        <i class="fa fa-eye"></i>
-                      </a>
-                      <div class="media-body">
-                        <h6 class="media-heading">
-                          <a href="<?php echo $this->crud_model->blog_link($row['blog_id']); ?>">
-                            <?php echo $row['title']; ?>
-                          </a>
-                        </h6>
-                        <div class="date">
-                          <ins><?php echo $row['date']; ?></ins>
-                        </div>
-                      </div>
-                    </div>
-                    <?php
-                  }
-                  ?>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- /widget tabs -->
-      </aside>
-      <!-- /SIDEBAR -->
-      <!-- CONTENT -->
-      <div id="blog_category" style="display: none"><?php echo $blog[0]['blog_category']; ?></div>
-      <div class="col-md-9 content" id="content">
-        <?php
-        foreach($blog as $row){
-          ?>
-          <article class="post-wrap post-single">
-            <div class="post-media">
-              <img class="img-responsive" src="<?php echo $this->crud_model->file_view('blog',$row['blog_id'],'','','no','src','',''); ?>" alt="" style="min-height: 100%;"/>
-            </div>
-            <div class="post-header">
-              <h2 class="post-title">
-                <b><?php echo $row['title']; ?></b>
-              </h2>
-              <div class="post-meta">
-                <?php echo $row['summery']; ?>
-              </div>
-            </div>
-            <!--            <div class="buttons">
-                            <div id="share"></div>
-                        </div>
-            -->
-            <div class="post-body">
-              <div class="post-excerpt">
-                <!--                    <p class="text-xl">
-                        <?php /*echo $row['summery']; */?>
-                    </p>
--->                    <p>
-                  <?php echo $row['description']; ?>
-                </p>
-              </div>
-            </div>
-          </article>
-          <hr class="page-divider"/>
-          <?php
-        }
-        ?>
-        <div class="row">
-          <div class="col-md-12">
-            <?php
-            $discus_id = '';
-            $fb_id = '';
-            $comment_type = 'disqus';
-            ?>
-            <?php if($comment_type == 'facebook'){ ?>
-              <div id="disqus_thread"></div>
-              <script type="text/javascript">
-                /* * * CONFIGURATION VARIABLES * * */
-                var disqus_shortname = '<?php echo $discus_id; ?>';
-
-                /* * * DON'T EDIT BELOW THIS LINE * * */
-                (function() {
-                  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-                })();
-              </script>
-              <script type="text/javascript">
-                /* * * CONFIGURATION VARIABLES * * */
-                var disqus_shortname = '<?php echo $discus_id; ?>';
-
-                /* * * DON'T EDIT BELOW THIS LINE * * */
-                (function () {
-                  var s = document.createElement('script'); s.async = true;
-                  s.type = 'text/javascript';
-                  s.src = '//' + disqus_shortname + '.disqus.com/count.js';
-                  (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-                }());
-              </script>
-              <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
-            <?php
-            }
-            else if($comment_type == 'facebook'){
-            ?>
-
-              <div id="fb-root"></div>
-              <script>(function(d, s, id) {
-                  var js, fjs = d.getElementsByTagName(s)[0];
-                  if (d.getElementById(id)) return;
-                  js = d.createElement(s); js.id = id;
-                  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.4&appId=<?php echo $fb_id; ?>";
-                  fjs.parentNode.insertBefore(js, fjs);
-                }(document, 'script', 'facebook-jssdk'));</script>
-              <div class="fb-comments" data-href="<?php echo $this->crud_model->product_link($row['product_id']); ?>" data-numposts="5"></div>
-
-              <?php
-            }
-            ?>
-          </div>
-        </div>
-      </div>
-      <!-- /CONTENT -->
-    </div>
-  </div
-</section>
-<script type="text/javascript">
-  $(document).ready(function() {
-    $('#share').share({
-      networks: ['facebook','googleplus','twitter','linkedin','tumblr','in1','stumbleupon','digg'],
-      theme: 'square'
-    });
-
-    const blog_category_id = document.getElementById('blog_category').innerText;
-    // console.log(blog_category_id);
-    if (blog_category_id === '1') {
-      active_menu_bar('find');
-    } else if (blog_category_id === '2') {
-      active_menu_bar('life');
-    } else if (blog_category_id === '3') {
-      active_menu_bar('earth');
-    } else if (blog_category_id === '4') {
-      active_menu_bar('shop');
-    } else {
-      active_menu_bar('earth');
-    }
-  });
-</script>
 <style>
+  .main-header {
+    text-align: center;
+    height: 40px;
+    padding: 0 0;
+  }
+  .main-header h6 {
+    height: 40px;
+    line-height: 40px;
+    margin: 0 0 0 0;
+    font-size: 14px;
+  }
   @media (max-width: 992px) {
-    .row .col-md-9.content {
+    .row .col-md-12.content {
       padding-left: 0px !important;
       padding-right: 0px !important;
     }
-    .row .col-md-9.content .post-wrap.post-single {
+    .row .col-md-12.content .post-wrap.post-single {
       padding: 0px;
     }
-    .row .col-md-9.content .post-wrap.post-single .post-media {
+    .row .col-md-12.content .post-wrap.post-single .post-media {
       margin-left: 10px;
       margin-right: 10px;
     }
-    .row .col-md-9.content .post-wrap.post-single .post-header {
+    .row .col-md-12.content .post-wrap.post-single .post-header {
       margin-left: 20px;
       margin-right: 20px;
     }
@@ -266,4 +52,76 @@
     max-width: 100%;
     margin: 0px !important;
   }
+  .post-body .post-excerpt p {
+    padding: 0 15px;
+  }
+  .page-section {
+    background-color: white;
+  }
+  .post-title {
+    font-size: 20px;
+  }
 </style>
+<section class="page-section with-sidebar">
+  <div class="container">
+    <div class="row">
+      <!-- CONTENT -->
+      <div class="col-md-12 content" id="content">
+        <article class="post-wrap post-single" style="padding-top: 10px">
+          <div class="col-md-12 main-header navigation-header" style="text-align: center; display: flex">
+            <div class="col-md-12" style="text-align: center; width: 100%; padding: 0 0; font-size: 14px">
+              <h6>
+                <b style="padding-right: 5px">EARTH</b>
+                <i class="fa fa-angle-right" style="font-size: 14px; color: grey;"></i>
+                <span style="color: grey;"><?php echo $category->name; ?></span>
+              </h6>
+            </div>
+<!--            <div class="col-md-6" style="text-align: left; width: 50%; padding: 0 5px;">-->
+<!--              <select class="form-control select-arrow" id="blog_category" name="blog_category" style="padding: 0 0; border: none">-->
+<!--                <option value="0">ALL</option>-->
+<!--                --><?php //foreach ($categories as $c) { ?>
+<!--                  <option value="--><?php //echo $c->category_id; ?><!--" --><?php //if ($c->category_id == $blog->blog_category) { echo "selected=\"selected\""; } ?><!-- >--><?php //echo $c->name; ?><!--</option>-->
+<!--                --><?php //} ?>
+<!--              </select>-->
+<!--            </div>-->
+          </div>
+
+          <hr style="width: 30px; border-top: 2px solid black">
+          <div class="post-header" style="text-align: center">
+            <div class="post-meta" style="margin: 10px 10px 10px 10px; font-size: 12px">
+              <?php echo substr($blog->modified_at, 0, 10); ?>
+            </div>
+            <p class="post-title" style="margin-bottom: 10px">
+              <b><?php echo $blog->title; ?></b>
+            </p>
+            <div class="post-meta">
+              <?php echo $blog->summery; ?>
+            </div>
+          </div>
+          <div class="post-media">
+            <img class="img-responsive" src="<?php echo $blog->main_image_url; ?>" alt="" style="min-height: 100%;"/>
+          </div>
+          <div class="post-body">
+            <div class="post-excerpt">
+              <p>
+                <?php echo $blog->description; ?>
+              </p>
+            </div>
+          </div>
+        </article>
+        <hr class="page-divider"/>
+      </div>
+      <!-- /CONTENT -->
+    </div>
+  </div
+</section>
+<script type="text/javascript">
+  $(document).ready(function() {
+    //$('#blog_category').change(function() {
+    //  // console.log($(this).val());
+    //  var category = $(this).val();
+    //  location.href= '<?php //echo base_url(); ?>//home/blog?category=' + category;
+    //})
+    active_menu_bar('earth');
+  });
+</script>

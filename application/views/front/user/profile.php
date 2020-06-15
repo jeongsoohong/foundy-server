@@ -1,80 +1,124 @@
 <!--<div class="information-title" style="margin-bottom: 0px;">프로필</div>-->
-<div class="profile" style="font-family: 'Quicksand' !important; font-size: 15px; text-align: center; padding-bottom:
- 5px; !important;"><b>profile</b></div>
-<div class="row">
-  <div class="col-md-12" style="padding: 0px 0px 10px 0px !important; ">
-    <div class="recent-post" style="background: #fff;border: 1px solid #e0e0e0;">
+<style>
+  .view,.schedule {
+    margin-top: 6px;
+    margin-bottom: 6px;
+    padding-left: 5px;
+    padding-right: 5px;
+    height: 26px;
+    line-height: 26px !important;
+    border: 1px solid grey;
+  }
+  .profile_ul {
+    box-shadow: none;
+    border: none;
+  }
+  #profile-edit {
+    background-color: white;
+    height: 40px;
+    width: 50px;
+    position: absolute;
+    z-index: 10;
+    top: -10px;
+    left: 80%;
+    display: none;
+    text-align: center;
+  }
+  #profile-edit a {
+    color: grey;
+    font-size: 12px;
+    line-height: 40px;
+  }
+</style>
+<div class="profile" style="font-size: 15px; text-align: center; height: 50px; line-height: 50px !important;">
+  <b class="font-futura">profile</b>
+</div>
+<!--<div class="row">-->
+  <div class="col-md-12" style="padding: 0 !important; ">
+    <div class="recent-post" style="background: #fff;">
       <div class="media">
-        <div class="pull-left media-link" href="#" style="height: 60px; float:left !important; padding: 0 !important; margin: 10px 30px 10px 30px !important; pointer-events: none;">
-          <div class="media-object img-bg" id="blah" style="border-radius: 30px; background-size: cover; background-position-x: center; background-position-y: top; width: 60px; height: 60px; background-image: url('<?php
-          if (empty($profile_image_url) || strlen($profile_image_url) == 0) {
-            echo base_url() . 'uploads/icon/profile_icon.png';
-          } else {
-            echo $profile_image_url;
-          }
-          ?>');"></div>
-          <!--          <span id="inppic" class="set_image" >-->
-          <!--            <label class="" for="imgInp" >-->
-          <!--              <span><i class="fa fa-pencil" style="cursor: pointer;"></i></span>-->
-          <!--            </label>-->
-          <!--            <input type="file" style="display:none;" id="imgInp" name="img" />-->
-          <!--          </span>-->
-          <!--          <span id="savepic" style="display:none;">-->
-          <!--            <span class="signup_btn" onclick="abnv('inppic'); change_state('normal');"  data-ing="saving..." data-success="profile_picture_saved_successfully!" data-unsuccessful="edit_failed! try again!" data-reload="no" >-->
-          <!--              <span><i class="fa fa-save" style="cursor: pointer;"></i></span>-->
-          <!--            </span>-->
-          <!--          </span>-->
-        </div>
-        <div class="media-body" style="padding-right: 10px">
-          <div class="col-md-12" style="margin: 10px 0 10px 0 !important; padding-left: 20px !important; text-align: left; !important; font-size: 12px !important;">
-            <p>
-              <?php echo $nickname.' ('.$email.')'; ?>
-              &nbsp;&nbsp;&nbsp;
-            </p>
-            <p>
-              <?php
-              $user = '';
-              if ($user_type & USER_TYPE_ADMIN) {
-                echo '어드민';
-              } else if ($user_type & USER_TYPE_TEACHER and $user_type & USER_TYPE_CENTER) {
-                $user .= '강사/센터회원';
-              } else if ($user_type & USER_TYPE_TEACHER) {
-                $user .= '강사회원';
-              } else if ($user_type & USER_TYPE_CENTER) {
-                $user .= '센터회원';
-              } else if ($user_type & USER_TYPE_GENERAL > 0) {
-                $user .= '일반회원';
-              } else {
-                $user .= '비회원';
-              }
-              if ($user_type & USER_TYPE_SHOP) {
-                $user .= ' | 점주';
-              }
-              echo $user;
-              ?>
-            </p>
-            <p>
-<!--              팔로워 0-->
-<!--              &nbsp;/&nbsp;-->
-<!--              팔로잉 0-->
-            </p>
-          </div>
+        <div class="col-md-12" style="margin: 0 0 0 0; padding: 15px 15px 15px 15px; position: relative">
+          <table class="col-md-12" style="width: 100%;">
+            <tbody>
+            <tr style="height: 20px">
+              <td rowspan="3" style="text-align: center">
+                <div class="media-object img-bg" id="blah" style="border-radius: 30px; background-size: cover; background-position-x: center; background-position-y: top; width: 60px; height: 60px; background-image: url('<?php
+                if (empty($profile_image_url) || strlen($profile_image_url) == 0) {
+                  echo base_url() . 'uploads/icon/profile_icon.png';
+                } else {
+                  echo $profile_image_url;
+                }
+                ?>');">
+                </div>
+              </td>
+              <td style="width: 70%">
+                <?php echo $nickname.' ('.$email.')'; ?>
+              </td>
+              <td style="width: 10%; text-align: center;">
+                <a href="javascript:void(0);">
+                  <span class="profile-edit" data-target='profile-edit' style="color: grey;">
+                    <i class="fa fa-ellipsis-v"></i>
+                  </span>
+                </a>
+                <div id="profile-edit">
+                </div>
+              </td>
+            </tr>
+            <tr style="height: 20px">
+              <td style="width: 70%">
+                <?php
+                $user = '';
+                if ($user_type & USER_TYPE_ADMIN) {
+                  echo '어드민';
+                } else if ($user_type & USER_TYPE_TEACHER and $user_type & USER_TYPE_CENTER) {
+                  $user .= '강사/센터회원';
+                } else if ($user_type & USER_TYPE_TEACHER) {
+                  $user .= '강사회원';
+                } else if ($user_type & USER_TYPE_CENTER) {
+                  $user .= '센터회원';
+                } else if ($user_type & USER_TYPE_GENERAL > 0) {
+                  $user .= '일반회원';
+                } else {
+                  $user .= '비회원';
+                }
+                if ($user_type & USER_TYPE_SHOP) {
+                  $user .= ' | 점주';
+                }
+                echo $user;
+                ?>
+              </td>
+              <td style="width: 10%">
+              </td>
+            </tr>
+            <tr style="height: 20px">
+              <td style="width: 70%">
+              </td>
+              <td style="width: 10%">
+              </td>
+            </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
   </div>
-  <div class="col-md-12">
+  <div class="col-md-12" style="padding: 0 0 0 0">
     <div class="row">
       <?php if ($user_type & USER_TYPE_CENTER && $center_activate == 1) { ?>
         <div class="col-md-6">
-          <div class="profile" style="font-family: 'Quicksand' !important; font-size: 15px; text-align: center; padding-bottom: 5px; !important;"><b>my center</b></div>
-          <div class="widget" style="padding-bottom:10px; ">
-            <ul class="profile_ul" style="text-align: center">
+          <div class="profile" style="font-size: 15px; text-align: center; height: 50px; line-height: 50px !important;">
+            <b class="font-futura">my center</b>
+          </div>
+          <div class="widget">
+            <ul class="profile_ul">
               <?php foreach ($my_centers as $center) {
                 ?>
                 <li>
                   <a href="<?php echo base_url(); ?>home/center/profile/<?php echo $center->center_id; ?>" style="position: inherit;">
-                    <b>+</b>&nbsp;&nbsp;<?php echo $center->title; ?>&nbsp;페이지 바로가기
+                    <?php echo $center->title; ?>&nbsp;페이지 바로가기
+                    <span class="pull-right" style="color: grey;">
+                      <i class="fa fa-angle-right"></i>
+                    </span>
                   </a>
                 </li>
               <?php } ?>
@@ -84,12 +128,17 @@
       <?php } ?>
       <?php if ($user_type & USER_TYPE_TEACHER && $teacher_activate == 1) { ?>
         <div class="col-md-6">
-          <div class="profile" style="font-family: 'Quicksand' !important; font-size: 15px; text-align: center; padding-bottom: 5px; !important;"><b>my class</b></div>
-          <div class="widget" style="padding-bottom:10px; ">
-            <ul class="profile_ul" style="text-align: center">
+          <div class="profile" style="font-size: 15px; text-align: center; height: 50px; line-height: 50px !important;">
+            <b class="font-futura">my class</b>
+          </div>
+          <div class="widget">
+            <ul class="profile_ul">
               <li>
                 <a href="<?php echo base_url(); ?>home/teacher/profile/<?php echo $user_id ?>" style="position: inherit;">
-                  <b>+</b>&nbsp;&nbsp;<?php echo $my_teacher->name; ?>&nbsp;강사님 페이지 바로가기
+                  <?php echo $my_teacher->name; ?>&nbsp;강사님 페이지 바로가기
+                  <span class="pull-right" style="color: grey;">
+                    <i class="fa fa-angle-right"></i>
+                  </span>
                 </a>
               </li>
             </ul>
@@ -98,22 +147,34 @@
       <?php } ?>
       <?php if (count($bookmark_centers) > 0 || count($bookmark_teachers) > 0 || count($bookmark_classes) > 0) { ?>
         <div class="col-md-6">
-          <div class="profile" style="font-family: 'Quicksand' !important; font-size: 15px; text-align: center; padding-bottom: 5px; !important;"><b>my favorite</b></div>
+          <div class="profile" style="font-size: 15px; text-align: center; height: 50px; line-height: 50px !important;">
+            <b class="font-futura">my favorite</b>
+          </div>
           <div class="widget" style="padding-bottom:10px; ">
             <ul class="profile_ul">
               <?php if (!empty($bookmark_centers) and count($bookmark_centers) > 0) {
                 foreach ($bookmark_centers as $center) {
                   ?>
                   <li>
-                    <a href="<?php echo base_url().'home/center/profile/'.$center->center_id; ?>">
-                      (스튜디오) <?php echo $center->title; ?>
-                    </a>
-                    <span class="pull-right" style="padding-top: 0px !important;">
-                    <?php echo $this->crud_model->sns_func_html('bookmark', 'center', true, $center->center_id, 15, 15); ?>
-                  </span>
-                    <a href="<?php echo base_url().'home/center/profile/'.$center->center_id.'#schedule'; ?>">
-                      <span class="pull-right schedule" style="font-size: 10px;">SCHEDULE</span>
-                    </a>
+                    <table class="col-md-12" style="width: 100%">
+                      <tbody>
+                      <tr style="height: 20px">
+                        <td style="width: 65%;">
+                          (스튜디오) <?php echo $center->title; ?>
+                        </td>
+                        <td style="width: 20%; text-align: right;">
+                          <a href="<?php echo base_url().'home/center/profile/'.$center->center_id.'?nav=schedule'; ?>">
+                            <span class="schedule" style="font-size: 10px;">
+                              SCHEDULE
+                            </span>
+                          </a>
+                        </td>
+                        <td style="text-align: center;">
+                          <?php echo $this->crud_model->sns_func_html('bookmark', 'center', true, $center->center_id, 20, 20); ?>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
                   </li>
                   <?php
                 }
@@ -123,27 +184,31 @@
                 foreach ($bookmark_teachers as $teacher) {
                   ?>
                   <li>
-                    <a href="<?php echo base_url().'home/teacher/profile/'.$teacher->user_id; ?>">
-                      (강사) <?php echo $teacher->name; ?>
-                    </a>
-                    <span class="pull-right" style="padding-top: 0px !important;">
-                    <?php echo $this->crud_model->sns_func_html('bookmark', 'teacher', true, $teacher->teacher_id, 15, 15); ?>
-                  </span>
-                  </li>
-                  <?php
-                }
-              }
-              ?>
-              <?php if (!empty($bookmark_classes) and count($bookmark_classes) > 0) {
-                foreach ($bookmark_classes as $video) {
-                  ?>
-                  <li>
-                    <a href="<?php echo base_url().'home/teacher/video/view/'.$video->video_id; ?>">
-                      (클래스) <?php echo $video->title; ?>
-                    </a>
-                    <span class="pull-right" style="padding-top: 0px !important;">
-                    <?php echo $this->crud_model->sns_func_html('bookmark', 'class', true, $video->video_id, 15, 15); ?>
-                  </span>
+                    <table class="col-md-12" style="width: 100%">
+                      <tbody>
+                      <tr style="height: 20px">
+                        <td style="width: 65%;">
+                          (강사) <?php echo $teacher->name; ?>
+                        </td>
+                        <td style="width: 20%; text-align: right;">
+                          <a href="<?php echo base_url().'home/teacher/profile/'.$teacher->user_id; ?>">
+                            <span class="schedule" style="font-size: 10px;">
+                              VIEW
+                            </span>
+                          </a>
+                        </td>
+                        <td style="text-align: center;">
+                          <?php echo $this->crud_model->sns_func_html('bookmark', 'teacher', true, $teacher->teacher_id, 20, 20); ?>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+<!--                    <a href="--><?php //echo base_url().'home/teacher/profile/'.$teacher->user_id; ?><!--">-->
+<!--                      (강사) --><?php //echo $teacher->name; ?>
+<!--                    </a>-->
+<!--                    <span class="pull-right" style="padding-top: 0px !important;">-->
+<!--                    --><?php //echo $this->crud_model->sns_func_html('bookmark', 'teacher', true, $teacher->teacher_id, 15, 15); ?>
+<!--                  </span>-->
                   </li>
                   <?php
                 }
@@ -155,7 +220,7 @@
       <?php } ?>
     </div>
   </div>
-</div>
+<!--</div>-->
 <style>
   .page-section {
     padding-top: 10px !important;
@@ -237,7 +302,19 @@
     }
   }
 
+  function openPop() {
+    if ($('#profile-edit').css('display') === 'none') {
+
+      $('#profile-edit').empty().append('<a href="javascript:void(0)" onclick="$(\'.pnav_edit_profile\').click();">수정</a>');
+      $('#profile-edit').show();
+    } else {
+      $('#profile-edit').hide();
+    }
+  }
   $(document).ready(function() {
     $('html').animate({scrollTop:$('html, body').offset().top}, 100);
+    $('.profile-edit').click(function(e) {
+      openPop();
+    });
   });
 </script>

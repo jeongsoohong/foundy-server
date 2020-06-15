@@ -214,7 +214,10 @@
         callbacks: {
           onImageUpload : function(files) {
             // console.log('image upload:', files);
-            sendFile(files[0]);
+            var i;
+            for (i = 0; i < files.length; i++) {
+              sendFile(files[i]);
+            }
           },
           onChange: function(contents, $editable) {
             // console.log('onChange:', contents, $editable);
@@ -227,7 +230,7 @@
         },
       });
       now.closest('div').find('.val').val(now.summernote('code'));
-      console.log($('#summernotes').summernote('fullscreen.isFullscreen'));
+      // console.log($('#summernotes').summernote('fullscreen.isFullscreen'));
       if ($('#summernotes').summernote('fullscreen.isFullscreen') === false) {
         $('#summernotes').summernote('fullscreen.toggle');
       }

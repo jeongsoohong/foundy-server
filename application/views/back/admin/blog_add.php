@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-12">
     <?php
-    echo form_open(base_url() . 'admin/blog/do_add/', array(
+    echo form_open(base_url() . 'admin/blog/do_add/'.$blog_id, array(
       'class' => 'form-horizontal',
       'method' => 'post',
       'id' => 'blog_add',
@@ -9,46 +9,36 @@
     ));
     ?>
     <!--Panel heading-->
-
     <div class="panel-body">
-
       <div class="tab-base">
-
-
         <!--Tabs Content-->
         <div class="tab-content">
-
           <div id="blog_details" class="tab-pane fade active in">
-
             <div class="form-group btm_border">
               <h4 class="text-thin text-center"><?php echo ('블로그 상세'); ?></h4>
             </div>
-
             <div class="form-group btm_border">
               <label class="col-sm-4 control-label" for="demo-hor-1"><?php echo ('제목');?></label>
               <div class="col-sm-6">
                 <input type="text" name="title" id="demo-hor-1" placeholder="<?php echo ('제목을 입력해주세요');?>" class="form-control required">
               </div>
             </div>
-
             <div class="form-group btm_border">
               <label class="col-sm-4 control-label" for="demo-hor-2"><?php echo ('카테고리');?></label>
               <div class="col-sm-6">
-                <?php echo $this->crud_model->select_html('blog_category','blog_category','name','add','demo-chosen-select required','','','',''); ?>
+                <?php echo $this->crud_model->select_html('category_blog','category_blog','name','add','demo-chosen-select required','','','',''); ?>
               </div>
             </div>
-
             <div class="form-group btm_border">
               <label class="col-sm-4 control-label" for="demo-hor-12"><?php echo ('소개사진');?></label>
               <div class="col-sm-6">
-                                <span class="pull-left btn btn-default btn-file"> <?php echo ('파일열기');?>
-                                    <input type="file" name="img" onchange="preview(this);" id="demo-hor-12" class="form-control required">
-                                    </span>
+                <span class="pull-left btn btn-default btn-file"> <?php echo ('파일열기');?>
+                  <input type="file" name="img" onchange="preview(this);" id="demo-hor-12" class="form-control required">
+                </span>
                 <br><br>
                 <span id="previewImg" ></span>
               </div>
             </div>
-
             <div class="form-group btm_border">
               <label class="col-sm-4 control-label" for="demo-hor-1"><?php echo ('소개글');?></label>
               <div class="col-sm-6">
@@ -56,12 +46,13 @@
               </div>
             </div>
 
-            <!--                            <div class="form-group btm_border">
-                                <label class="col-sm-4 control-label" for="demo-hor-13"><?php /*echo ('summery'); */?></label>
-                                <div class="col-sm-6">
-                                    <textarea rows="9"  class="summernotes" data-height="200" data-name="summery"></textarea>
-                                </div>
-                            </div>
+<!--
+              <div class="form-group btm_border">
+              <label class="col-sm-4 control-label" for="demo-hor-13"><?php /*echo ('summery'); */?></label>
+              <div class="col-sm-6">
+                <textarea rows="9"  class="summernotes" data-height="200" data-name="summery"></textarea>
+              </div>
+            </div>
 -->
             <div class="form-group btm_border">
               <label class="col-sm-4 control-label" for="demo-hor-13"><?php echo ('상세정보'); ?></label>
@@ -69,41 +60,34 @@
                 <textarea rows="9"  class="summernotes" id='summernotes' data-height="300" data-name="description"></textarea>
               </div>
             </div>
-
-            <div class="form-group btm_border">
-              <label class="col-sm-4 control-label" for="demo-hor-1"><?php echo ('작성자');?></label>
-              <div class="col-sm-6">
-                <input type="text" name="author" id="demo-hor-1" placeholder="<?php echo ('작성자');?>" class="form-control ">
-              </div>
-            </div>
-
-            <div class="form-group btm_border">
-              <label class="col-sm-4 control-label" for="demo-hor-1"><?php echo ('작성일');?></label>
-              <div class="col-sm-6">
-                <input type="date" name="date" id="demo-hor-1" class="form-control">
-              </div>
-            </div>
-
+<!--            <div class="form-group btm_border">-->
+<!--              <label class="col-sm-4 control-label" for="demo-hor-1">--><?php //echo ('작성자');?><!--</label>-->
+<!--              <div class="col-sm-6">-->
+<!--                <input type="text" name="author" id="demo-hor-1" placeholder="--><?php //echo ('작성자');?><!--" class="form-control ">-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="form-group btm_border">-->
+<!--              <label class="col-sm-4 control-label" for="demo-hor-1">--><?php //echo ('작성일');?><!--</label>-->
+<!--              <div class="col-sm-6">-->
+<!--                <input type="date" name="date" id="demo-hor-1" class="form-control">-->
+<!--              </div>-->
+<!--            </div>-->
           </div>
         </div>
       </div>
     </div>
-
     <div class="panel-footer">
       <div class="row">
         <div class="col-md-11">
-                        <span class="btn btn-purple btn-labeled fa fa-refresh pro_list_btn pull-right"
-                              onclick="ajax_set_full('add','<?php echo ('add_blog'); ?>','<?php echo ('정상적으로 리셋되었습니다!'); ?>','blog_add',''); "><?php echo ('리셋');?>
-                        </span>
+          <span class="btn btn-purple btn-labeled fa fa-refresh pro_list_btn pull-right"
+                onclick="ajax_set_full('add','<?php echo ('add_blog'); ?>','<?php echo ('정상적으로 리셋되었습니다!'); ?>','blog_add',''); "><?php echo ('리셋');?>
+          </span>
         </div>
-
         <div class="col-md-1">
           <span class="btn btn-success btn-md btn-labeled fa fa-upload pull-right enterer" onclick="form_submit('blog_add','<?php echo ('정상적으로 업로드되었습니다!'); ?>');proceed('to_add');" ><?php echo ('업로드');?></span>
         </div>
-
       </div>
     </div>
-
     </form>
   </div>
 </div>
@@ -180,8 +164,11 @@
         ],
         height: h,
         onImageUpload : function(files, editor, welEditable) {
-          console.log('image upload:', files);
-          sendFile(files[0], editor, welEditable);
+          // console.log('image upload:', files);
+          var i;
+          for (i = 0; i < files.length; i++) {
+            sendFile(files[i], editor, welEditable);
+          }
         },
         // onImageUpload: function(image) {
         //     uploadImage(image[0]);
@@ -200,10 +187,11 @@
 
   // summernote 에디터에 이미지 업로드
   function sendFile(file,editor,welEditable) {
-    data = new FormData();
+    var upload_path = '<?php echo IMG_WEB_PATH_BLOG; ?>';
+    var data = new FormData();
     data.append("file", file);
     $.ajax({
-      url: "/admin/upload", // image 저장 경로
+      url: "<?php echo base_url() . 'admin/blog/upload_image/'.$blog_id; ?>",
       data: data,
       cache: false,
       contentType: false,
@@ -217,8 +205,8 @@
           // alert(obj.save_url);
           // $('.summernotes').summernote("insertNode", image[0]); // summernote 에디터에 img 태그를 보여줌
           // $('.summernotes').summernote("insertImage", obj.save_url);
-          editor.insertImage(welEditable, obj.save_url);
-          // $('.note-editable').keyup();
+          editor.insertImage(welEditable, upload_path + obj.filename);
+          $('.note-editable').keyup();
         } else {
           // alert(obj.error);
           switch(parseInt(obj.error)) {
@@ -236,39 +224,6 @@
       },
       error: function(jqXHR, textStatus, errorThrown) {
         console.log(textStatus+" "+errorThrown);
-      }
-    });
-  }
-
-  function uploadImage(image) {
-    var data = new FormData();
-    data.append("image", image);
-    $.ajax({
-      url: "<?php echo base_url() . 'admin/upload_image'?>",
-      cache: false,
-      contentType: false,
-      processData: false,
-      data: data,
-      type: "POST",
-      success: function(url) {
-        $('#summernotes').summernote("insertImage", url);
-        console.log(url);
-      },
-      error: function(data) {
-        console.log(3);
-        console.log(data);
-      }
-    });
-  }
-
-  function deleteImage(src) {
-    $.ajax({
-      data: {src : src},
-      type: "POST",
-      url: "<?php echo base_url(). 'admin/delete_image'?>",
-      cache: false,
-      success: function(response) {
-        console.log(response);
       }
     });
   }

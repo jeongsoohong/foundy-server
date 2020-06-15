@@ -64,7 +64,7 @@ class Crud_model extends CI_Model
     $cookie['path'] = '/';
 
     //$this->input->set_cookie($cookie);
-    setcookie($name, "", time() - 86400,'/');
+    setcookie($name, "", time() - 86400, '/');
   }
 
   //------------------------------------------------------------------------------------------------------------------
@@ -106,14 +106,14 @@ class Crud_model extends CI_Model
   }
 
   // FILE_UPLOAD
-  function img_thumb($type, $id, $ext = '.jpg', $width = '400', $height = '400')
+  function img_thumb($type, $id, $ext = '.jpg', $width = '400', $height = '300')
   {
     $this->load->library('image_lib');
     ini_set("memory_limit", "-1");
 
     $config1['image_library'] = 'gd2';
     $config1['create_thumb'] = TRUE;
-    $config1['maintain_ratio'] = TRUE;
+    $config1['maintain_ratio'] = false;
     $config1['width'] = $width;
     $config1['height'] = $height;
     $config1['source_image'] = 'uploads/' . $type . '_image/' . $type . '_' . $id . $ext;
@@ -126,9 +126,9 @@ class Crud_model extends CI_Model
   }
 
   // FILE_UPLOAD
-  function file_up($name, $type, $id, $multi = '', $no_thumb = '', $ext = '.jpg', $width = '400', $height = '400')
+  function file_up($name, $type, $id, $multi = '', $no_thumb = '', $ext = '.jpg', $width = '400', $height = '300')
   {
-    $upload_path = '/web/public_html/uploads/'.$type.'_image/';
+    $upload_path = '/web/public_html/uploads/' . $type . '_image/';
     // 원인은 모르겠고 upload path를 미리 만들어서 퍼미션을 주자
 //    $rc = is_dir($upload_path);
 //    if (!isset($rc) || $rc == false) {
@@ -137,12 +137,14 @@ class Crud_model extends CI_Model
 //      }
 //    }
     if ($multi == '') {
-      $file_name = $type.'_'.$id.$ext;
-      $file_path = $upload_path.$file_name;
-      $rc = move_uploaded_file($_FILES[$name]['tmp_name'], $file_path);
-      if ($rc == false) {
-        echo "fail : move_uploaded_file";
-        exit;
+      $file_name = $type . '_' . $id . $ext;
+      $file_path = $upload_path . $file_name;
+      if (isset($_FILES[$name]['tmp_name'])) {
+        $rc = move_uploaded_file($_FILES[$name]['tmp_name'], $file_path);
+//        if ($rc == false) {
+//          echo "fail : move_uploaded_file";
+//          exit;
+//        }
       }
       if ($no_thumb == '') {
         $this->crud_model->img_thumb($type, $id, $ext, $width, $height);
@@ -151,7 +153,7 @@ class Crud_model extends CI_Model
       $ib = 1;
       foreach ($_FILES[$name]['name'] as $i => $row) {
         $ib = $this->file_exist_ret($type, $id, $ib);
-        move_uploaded_file($_FILES[$name]['tmp_name'][$i], $upload_path.'uploads/'.$type.'_image/'.$type.'_'.$id.'_'.$ib.$ext);
+        move_uploaded_file($_FILES[$name]['tmp_name'][$i], $upload_path . 'uploads/' . $type . '_image/' . $type . '_' . $id . '_' . $ib . $ext);
         if ($no_thumb == '') {
           $this->crud_model->img_thumb($type, $id . '_' . $ib, $ext, $width, $height);
         }
@@ -175,12 +177,12 @@ class Crud_model extends CI_Model
       }
   }*/
 
-  function file_up_from_urls($urls, $type, $id,$no_thumb = '')
+  function file_up_from_urls($urls, $type, $id, $no_thumb = '')
   {
     $ib = 1;
     foreach ($urls as $url) {
-      $ext = '.'.pathinfo($url, PATHINFO_EXTENSION);
-      $ib = $this->file_exist_ret2($type, $id, $ib,$ext);
+      $ext = '.' . pathinfo($url, PATHINFO_EXTENSION);
+      $ib = $this->file_exist_ret2($type, $id, $ib, $ext);
 
       file_put_contents('uploads/' . $type . '_image/' . $type . '_' . $id . '_' . $ib . $ext, file_get_contents($url));
       //copy($url,FCPATH.'uploads/' . $type . '_image/' . $type . '_' . $id . '_' . $ib . $ext);
@@ -393,15 +395,15 @@ class Crud_model extends CI_Model
 
       foreach ($all as $row):
         if ($type == 'add') {
-          $return .= '<option value="' . $row[$from . '_id'] . '">' . $row[$field] . '</option>';
+          $return .= '<option value="' . $row['category_id'] . '">' . $row[$field] . '</option>';
         } else if ($type == 'edit') {
-          $return .= '<option value="' . $row[$from . '_id'] . '" ';
+          $return .= '<option value="' . $row['category_id'] . '" ';
           if ($multi == 'no') {
-            if ($row[$from . '_id'] == $e_match) {
+            if ($row['category_id'] == $e_match) {
               $return .= 'selected=."selected"';
             }
           } else if ($multi == 'yes') {
-            if (in_array($row[$from . '_id'], $e_match)) {
+            if (in_array($row['category_id'], $e_match)) {
               $return .= 'selected=."selected"';
             }
           }
@@ -544,22 +546,22 @@ class Crud_model extends CI_Model
   function get_like_icon($liked)
   {
     if ($liked == true) {
-      return base_url().'uploads/icon_0504/icon04_heart.png';
+      return base_url() . 'uploads/icon_0504/icon04_heart.png';
     }
-    return base_url().'uploads/icon_0504/icon03_heart.png';
+    return base_url() . 'uploads/icon_0504/icon03_heart.png';
   }
 
   function get_bookmark_icon($bookmarked)
   {
     if ($bookmarked == true) {
-      return base_url().'uploads/icon_0504/icon06_scrap.png';
+      return base_url() . 'uploads/icon_0504/icon13_star.png';
     }
-    return base_url().'uploads/icon_0504/icon05_scrap.png';
+    return base_url() . 'uploads/icon_0504/icon12_star.png';
   }
 
   function get_default_profile_img()
   {
-    return base_url().'uploads/icon_0504/icon08_profile.png';
+    return base_url() . 'uploads/icon_0504/icon08_profile.png';
   }
 
   function sns_func_html($func_type, $find_type, $is_do, $id, $w, $h)
@@ -570,7 +572,7 @@ class Crud_model extends CI_Model
     } else {
       $img_src = $this->crud_model->get_bookmark_icon($is_do);
     }
-    return "<a href='javascript:void(0)' data-action='{$action}' onclick=\"sns_function('{$func_type}','{$find_type}',{$id},$(this))\">".
+    return "<a href='javascript:void(0)' data-action='{$action}' onclick=\"sns_function('{$func_type}','{$find_type}',{$id},$(this))\">" .
       "<img id='{$find_type}-{$func_type}-{$id}' src='{$img_src}' alt='' style='width:{$w}px !important; height: {$h}px !important;'></a>";
   }
 
@@ -578,7 +580,7 @@ class Crud_model extends CI_Model
   {
     // type -  class, teacher, center ...
     // func - bookmark, like ...
-    $id_col = $type.'_id';
+    $id_col = $type . '_id';
     if ($type == 'class') {
       $id_col = 'video_id';
     }
@@ -587,5 +589,71 @@ select count(*) as cnt from {$func}_{$type} where user_id={$user_id} and {$id_co
 QUERY;
     $marked = $this->db->query($query)->row()->cnt;
     return $marked;
+  }
+
+  function get_month($m)
+  {
+    $month = array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+    return $month[$m - 1];
+  }
+
+  function upload_image($upload_path, $file_name, $src, $width, $height = 0, $create_thumb = true, $maintain_ratio = false)
+  {
+//    $time = time();
+//    $upload_path = IMG_PATH_CENTER;
+//    $file_name = $type.'_' . $id . '_' . $time . '.jpg';
+    $file_path = $upload_path . $file_name;
+    move_uploaded_file($src, $file_path);
+
+    //Compress Image
+    $config['image_library'] = 'gd2';
+    $config['source_image'] = $file_path;
+    $config['create_thumb'] = $create_thumb;
+    $config['maintain_ratio'] = $maintain_ratio;
+    $config['quality'] = '100%';
+    $config['width'] = $width;
+    if ($height) {
+      $config['height'] = $height;
+    }
+    $config['new_image'] = $file_path;
+    $this->load->library('image_lib', $config);
+    $this->image_lib->resize();
+
+    return true;
+  }
+
+  function del_upload_image($web_path, $upload_path, $desc, $files, $except_files = array())
+  {
+    $dom = new domDocument;
+    $dom->loadHTML(html_entity_decode($desc));
+    $dom->preserveWhiteSpace = false;
+    $imgs = $dom->getElementsByTagName("img");
+
+    $links = array();
+    for($i = 0; $i < $imgs->length; $i++) {
+      $links[] = str_replace($web_path, $upload_path, $imgs->item($i)->getAttribute("src"));
+    }
+
+    if (!empty($except_files)) {
+      $links = array_merge($links, $except_files);
+    }
+
+    $files = glob($upload_path.$files);
+    $result = array_diff($files, $links);
+    foreach($result as $deleteFile) {
+      if (file_exists($deleteFile)) {
+        array_map('unlink', glob($deleteFile));
+      }
+    }
+  }
+
+  function del_image($upload_path, $files)
+  {
+    $files = glob($upload_path.$files);
+    foreach($files as $deleteFile) {
+      if (file_exists($deleteFile)) {
+        array_map('unlink', glob($deleteFile));
+      }
+    }
   }
 }
