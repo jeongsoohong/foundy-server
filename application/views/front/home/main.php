@@ -60,7 +60,7 @@
     padding-right: 0;
   }
 </style>
-<section class="page-section" style="margin: 0px 15px 0px 15px !important; padding: 5px 0 5px 0!important; border-top: 1px solid gray;">
+<section class="page-section" style="margin: 0px 15px 0px 15px !important; padding: 5px 0 5px 0!important; /*border-top: 1px solid gray;*/">
   <div class="row">
     <div class="col-md-12 main-discovery">
       <div class="col-md-12 main-header navigation-header" style="text-align: center; margin: 10px 0">
@@ -96,26 +96,28 @@
         <?php include "favorite.php"; ?>
       </div>
     </div>
-    <div class="col-md-12 main-blog">
-      <div class="col-md-12 main-header navigation-header" style="text-align: center">
-        <h6 class="font-futura">This Week</h6>
+    <?php if (count($blogs) > 0) { ?>
+      <div class="col-md-12 main-blog">
+        <div class="col-md-12 main-header navigation-header" style="text-align: center">
+          <h6 class="font-futura">This Week</h6>
+        </div>
+        <?php foreach ($blogs as $blog) { ?>
+          <div class="col-md-12 main-blog-content">
+            <div class="col-md-12 blog-img">
+              <a href="<?php echo base_url().'home/blog/view?id='.$blog->blog_id; ?>">
+                <img class="img-responsive" src="<?php echo $blog->main_image_url; ?>" alt="" />
+              </a>
+            </div>
+            <div class="col-md-12 blog-title">
+              <h5><b><?php echo $blog->title; ?></b></h5>
+            </div>
+            <div class="col-md-12 blog-summery">
+              <?php echo $blog->summery; ?>
+            </div>
+          </div>
+        <?php } ?>
       </div>
-      <?php foreach ($blogs as $blog) { ?>
-      <div class="col-md-12 main-blog-content">
-        <div class="col-md-12 blog-img">
-          <a href="<?php echo base_url().'home/blog/view?id='.$blog->blog_id; ?>">
-            <img class="img-responsive" src="<?php echo $blog->main_image_url; ?>" alt="" />
-          </a>
-        </div>
-        <div class="col-md-12 blog-title">
-          <h5><b><?php echo $blog->title; ?></b></h5>
-        </div>
-        <div class="col-md-12 blog-summery">
-          <?php echo $blog->summery; ?>
-        </div>
-      </div>
-      <?php } ?>
-    </div>
+    <?php } ?>
   </div>
 </section>
 
