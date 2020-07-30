@@ -159,21 +159,25 @@ class Home extends CI_Controller
           );
 
           $this->db->insert('user',$ins);
+          $user_id = $this->db->insert_id();
+          $user_data = $this->db->get_where('user', array('uesr_id', $user_id))->row();
+
           $result['message'] = "첫 방문을 환영합니다.";
+
         } else {
 
-          $user_id = $user_data->user_id;
-          $kakao_id = $user_data->kakao_id;
-          $email = $user_data->email;
-          $user_type = $user_data->user_type;
-          $nickname = $user_data->nickname;
-          $kakao_thumbnail_image_url = $user_data->kakao_thumbnail_image_url;
-          $profile_image_url = $user_data->profile_image_url;
-
-          $this->db->update('user', array('last_login_at' => date("Y-m-d H:i:s")), array('kakao_id' =>
-            $kakao_id));
+          $this->db->update('user', array('last_login_at' => date("Y-m-d H:i:s")), array('user_id' =>
+            $user_data->user_id));
           $result['message'] = "로그인해주셔서 감사합니다.";
         }
+
+        $user_id = $user_data->user_id;
+        $kakao_id = $user_data->kakao_id;
+        $email = $user_data->email;
+        $user_type = $user_data->user_type;
+        $nickname = $user_data->nickname;
+        $kakao_thumbnail_image_url = $user_data->kakao_thumbnail_image_url;
+        $profile_image_url = $user_data->profile_image_url;
 
         $this->session->set_userdata('user_login', 'yes');
         $this->session->set_userdata('user_id', $user_id);

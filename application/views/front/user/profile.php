@@ -76,7 +76,7 @@
                   $user .= '강사회원';
                 } else if ($user_type & USER_TYPE_CENTER) {
                   $user .= '센터회원';
-                } else if ($user_type & USER_TYPE_GENERAL > 0) {
+                } else if ($user_type & USER_TYPE_GENERAL) {
                   $user .= '일반회원';
                 } else {
                   $user .= '비회원';
