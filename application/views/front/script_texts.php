@@ -355,7 +355,9 @@
 
   function active_menu_bar(activeClass) {
     $('.sf-menu li').removeClass("active-under");
-    $('.sf-menu li.' + activeClass).addClass("active-under");
+    if (activeClass !== '') {
+      $('.sf-menu li.' + activeClass).addClass("active-under");
+    }
   }
 
   //google.maps.event.addDomListener(window, 'load', initialize);
@@ -372,23 +374,23 @@
 
   $(document).ready(function(){
 
-    product_listing_defaults();
+    // product_listing_defaults();
     tooltip_set();
     //opc_color();
     //setTimeout(function(){ slide_color(); }, 1000);
 
 
-    window.addEventListener("keydown", checkKeyPressed, false);
-
-    function checkKeyPressed(e) {
-      if (e.keyCode == "13") {
-        $(":focus").each(function() {
-          event.preventDefault();
-          $(this).closest('form').find('.enterer').click();
-          $(this).closest('form').find('.shrc_btn').click();
-        });
-      }
-    }
+    // window.addEventListener("keydown", checkKeyPressed, false);
+    //
+    // function checkKeyPressed(e) {
+    //   if (e.keyCode == "13") {
+    //     $(":focus").each(function() {
+    //       event.preventDefault();
+    //       $(this).closest('form').find('.enterer').click();
+    //       $(this).closest('form').find('.shrc_btn').click();
+    //     });
+    //   }
+    // }
 
 
     /*
@@ -656,7 +658,7 @@
   }
   $(document).ready(function() {
     //set_select();
-    $('.drops').dropdown();
+    // $('.drops').dropdown();
   });
   function check_login_stat(thing){
     return $.ajax({
@@ -1681,15 +1683,15 @@
   {
     if (funcType === 'like') {
       if (action === 'do') {
-        return base_url + 'uploads/icon_0504/icon04_heart.png';
+        return '<?php echo $this->crud_model->get_like_icon(true); ?>';
       } else {
-        return base_url + 'uploads/icon_0504/icon03_heart.png';
+        return '<?php echo $this->crud_model->get_like_icon(false); ?>';
       }
     } else if (funcType === 'bookmark') {
       if (action === 'do') {
-        return base_url + 'uploads/icon_0504/icon13_star.png';
+        return '<?php echo $this->crud_model->get_bookmark_icon(true); ?>';
       } else {
-        return base_url + 'uploads/icon_0504/icon12_star.png';
+        return '<?php echo $this->crud_model->get_bookmark_icon(false); ?>';
       }
     } else {
       console.log(funcType);
@@ -1703,7 +1705,6 @@
     $.ajax({
       url: '<?php echo base_url(); ?>home/sns/'+findType+'/'+funcType+'/'+action+'?id='+id,
       //type : 'post',
-      //data : user_data,
       // contentType: "application/json; charset=utf-8",//보낼 데이터 방식
       //CI에서 POST방식으로 할 경우에는 이것을 체크하면 안된다.
       //왜냐하면, json 방식은 body 안으로 전송되므로 body 를 통해 읽어들여야 한다. 그러므로
@@ -1732,5 +1733,30 @@
       }
     });
   }
+  function get_price_str(p) {
+    return p.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+  function get_price_int(p) {
+    return parseInt(p.replace(/,/g,""));
+  }
+
+  function cart_on(on) {
+    if (on === true) {
+      $('#cart-on').find('img').attr('src', '<?php echo base_url(); ?>uploads/shop/cart02.png');
+    } else {
+      $('#cart-on').find('img').attr('src', '<?php echo base_url(); ?>uploads/shop/cart01.png');
+    }
+  }
+
+  function trim(obj) {
+    return obj.replace(/^\s+|\s+$/g,"");
+  }
+  function ltrim(obj) {
+    return obj.replace(/^\s+/,"");
+  }
+  function rtrim(obj) {
+    return obj.replace(/\s+$/,"");
+  }
+
 </script>
 

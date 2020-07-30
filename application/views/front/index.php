@@ -31,11 +31,13 @@ include 'preloader.php';
 
     <!-- FOOTER -->
     <?php
-    include 'footer/footer.php';
+    if ($page_title == 'home') {
+      include 'footer/footer.php';
+    }
     ?>
     <!-- /FOOTER -->
 
-    <div id="to-top" class="to-top"><i class="fa fa-angle-up" style="font-family: FontAwesome !important;"></i></div>
+    <div id="to-top" class="to-top" style="bottom:100px !important; display: none;"><i class="fa fa-angle-up" style="font-family: FontAwesome !important;"></i></div>
 
 </div>
 <!-- /WRAPPER -->

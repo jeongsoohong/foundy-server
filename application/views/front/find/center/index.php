@@ -22,8 +22,8 @@
           <div id="blog-content">
             <div class="col-md-12" style="padding: 0 0 0 0 !important; ">
               <div class="row">
-                <div class="col-md-12" style="padding: 0 0 0 0 !important;">
-                  <div class="profile" style="font-size: 15px; padding: 5px 10px 5px 10px !important; text-align: center">
+                <div class="col-md-12" style="padding: 0 0 0 0 !important; height: 50px">
+                  <div class="profile" style="font-size: 15px; height: 50px; line-height: 50px; padding: 5px 20px 5px 20px !important; text-align: center">
                     <span>스크랩</span>
                   </div>
                 </div>
@@ -52,22 +52,24 @@
                             <tr style="height: 25px">
                               <td style="width: 85%">
                                 <a href="<?php echo base_url(); ?>home/center/profile/<?php echo $center->center_id; ?>">
-                                  <h5 class="center-title"><?php echo $center->title; ?></h5>
+                                  <h5 class="center-title" style="margin: 0 !important;"><b><?php echo $center->title; ?></b></h5>
                                 </a>
                               </td>
-                              <td rowspan="3" style="text-align: center">
+                              <td style="text-align: center">
                                 <?php echo $this->crud_model->sns_func_html('bookmark', 'center', true, $center->center_id, 20, 20); ?>
                               </td>
                             </tr>
-                            <tr style="height: 25px">
+                            <tr style="height: 23px">
                               <td style="width: 85%">
                                 <?php echo "{$center->address} {$center->address_detail}"; ?>
                               </td>
+                              <td></td>
                             </tr>
-                            <tr style="height: 25px">
+                            <tr style="height: 23px">
                               <td style="width: 85%">
                                 <span style="color: saddlebrown;"><?php echo $c; ?></span><br>
                               </td>
+                              <td></td>
                             </tr>
                             </tbody>
                           </table>
@@ -89,13 +91,13 @@
           <!-- center -->
           <div class="col-md-12" style="padding: 0 0 0 0 !important; ">
             <div class="row">
-              <div class="col-md-12" style="padding: 0 0 0 0 !important;">
-                <div class="profile" style="display: flex; font-size: 15px; padding: 5px 10px 5px 10px !important; text-align: center">
-                  <div style="width: 70%;">
+              <div class="col-md-12" style="padding: 0 0 0 0 !important; height: 50px;">
+                <div class="profile" style="display: flex; font-size: 15px; height: 50px; line-height: 50px; padding: 5px 20px 5px 20px !important; text-align: center">
+                  <div style="width: 70%; ">
                     <span style="position: absolute; left: 45%"><?php echo $page_title; ?></span>
                   </div>
-                  <div class="pull-right" style="width: 25%;">
-                    <select class="form-control select-arrow" id="center_category" name="center_category">
+                  <div class="pull-right" style="width: 25%;height: 50px; line-height: 50px; ">
+                    <select class="form-control select-arrow" id="center_category" name="center_category" style="height: 50px; line-height: 50px">
                       <option value="ALL" selected="selected">ALL</option>
                       <?php
                       foreach ($categories as $cat) {
@@ -106,7 +108,7 @@
                       ?>
                     </select>
                   </div>
-                  <div class="pull-right" style="width: 5%; text-align: right; line-height: 30px; color: grey">
+                  <div class="pull-right" style="width: 5%; text-align: right; height: 50px; line-height: 50px; color: grey">
                     <i class="fa fa-angle-down"></i>
                   </div>
                 </div>

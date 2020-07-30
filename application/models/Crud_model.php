@@ -395,7 +395,11 @@ class Crud_model extends CI_Model
 
       foreach ($all as $row):
         if ($type == 'add') {
-          $return .= '<option value="' . $row['category_id'] . '">' . $row[$field] . '</option>';
+          if ($from == 'category_blog') {
+            $return .= '<option value="' . $row['category_id'] . '">' . $row[$field] . '('. $row['desc'] . ')' . '</option>';
+          } else {
+            $return .= '<option value="' . $row['category_id'] . '">' . $row[$field] . '</option>';
+          }
         } else if ($type == 'edit') {
           $return .= '<option value="' . $row['category_id'] . '" ';
           if ($multi == 'no') {
@@ -407,7 +411,11 @@ class Crud_model extends CI_Model
               $return .= 'selected=."selected"';
             }
           }
-          $return .= '>' . $row[$field] . '</option>';
+          if ($from == 'category_blog') {
+            $return .= '>' . $row[$field] . '('. $row['desc'] . ')' . '</option>';
+          } else {
+            $return .= '>' . $row[$field] . '</option>';
+          }
         }
       endforeach;
     } else {
@@ -543,12 +551,19 @@ class Crud_model extends CI_Model
     return base_url() . 'home/blog_view/' . $blog_id . '/' . $name;
   }
 
+//  function get_like_icon($liked)
+//  {
+//    if ($liked == true) {
+//      return base_url() . 'uploads/icon_0504/icon04_heart.png';
+//    }
+//    return base_url() . 'uploads/icon_0504/icon03_heart.png';
+//  }
   function get_like_icon($liked)
   {
     if ($liked == true) {
-      return base_url() . 'uploads/icon_0504/icon04_heart.png';
+      return base_url() . 'uploads/shop/heart_do.png';
     }
-    return base_url() . 'uploads/icon_0504/icon03_heart.png';
+    return base_url() . 'uploads/shop/heart_undo.png';
   }
 
   function get_bookmark_icon($bookmarked)
@@ -606,18 +621,22 @@ QUERY;
     move_uploaded_file($src, $file_path);
 
     //Compress Image
-    $config['image_library'] = 'gd2';
-    $config['source_image'] = $file_path;
-    $config['create_thumb'] = $create_thumb;
-    $config['maintain_ratio'] = $maintain_ratio;
-    $config['quality'] = '100%';
-    $config['width'] = $width;
-    if ($height) {
-      $config['height'] = $height;
+    if ($create_thumb) {
+      $config['image_library'] = 'gd2';
+      $config['source_image'] = $file_path;
+      $config['create_thumb'] = $create_thumb;
+      $config['maintain_ratio'] = $maintain_ratio;
+      $config['quality'] = '100%';
+      $config['width'] = $width;
+      if ($height) {
+        $config['height'] = $height;
+      }
+      $config['new_image'] = $file_path;
+      $this->load->library('image_lib', $config);
+      $this->image_lib->clear();
+      $this->image_lib->initialize($config);
+      $this->image_lib->resize();
     }
-    $config['new_image'] = $file_path;
-    $this->load->library('image_lib', $config);
-    $this->image_lib->resize();
 
     return true;
   }
@@ -656,4 +675,250 @@ QUERY;
       }
     }
   }
+
+  function get_product_list($shop_id, $status, $item_name, $cat, $offset, $limit = 10, $order = 'desc', $order_col = 'product_id', $user_id = 0) {
+    if ($cat == 'wish' || $cat == 'WISH') {
+      $query = <<<QUERY
+select a.shop_id,a.status,a.brand_name,b.* from shop_product_id a,shop_product b
+where a.product_id=b.product_id and b.product_id in (select product_id from like_product where user_id={$user_id})
+QUERY;
+    } else {
+      $query = <<<QUERY
+select a.shop_id,a.status,a.brand_name,b.* from shop_product_id a,shop_product b
+where a.product_id=b.product_id
+QUERY;
+    }
+    if (is_array($status)) {
+      $query .= " and a.status in (";
+      for ($i = 0; $i < count($status); $i++) {
+        if ($i == 0) {
+          $query .= "{$status[$i]}";
+        } else {
+          $query .= ",{$status[$i]}";
+        }
+      }
+      $query .= ")";
+    } else {
+      $query .= " and a.status={$status}";
+    }
+    if ($shop_id > 0) {
+      $query .= " and a.shop_id={$shop_id}";
+    }
+    if ($cat != 'all' && $cat != 'ALL' && $cat != 'wish' && $cat != 'WISH') {
+      $category = '';
+      for ($i = 0; $i < 3; $i++) {
+        $c = substr($cat, 2 * $i, 2);
+        if ($c == '00') {
+          break;
+        }
+        $category .= $c;
+      }
+      $category .= '%';
+      $query .= " and a.product_code like '{$category}'";
+    }
+
+    if (isset($item_name) && strlen($item_name) > 0) {
+      $query .= " and a.item_name like '%{$item_name}%'";
+    }
+    $query .= " order by {$order_col} {$order} limit {$offset},{$limit}";
+
+    return $this->db->query($query)->result();
+  }
+
+//  function get_product_list($shop_id, $status, $item_name, $cat, $offset, $limit = 10, $order = 'desc', $order_col = 'product_id') {
+//
+//    $product_ids = $this->get_product_id_list($shop_id, $status, $item_name, $cat, $offset, $limit, $order, $order_col);
+//    if (empty($product_ids)) {
+//      return array();
+//    }
+//
+//    $products = array();
+//    foreach ($product_ids as $p) {
+//      $products[] = $p->product_id;
+//    }
+//    $product_ids = implode(',', $products);
+//
+//    $query = <<<QUERY
+//select * from shop_product where product_id in (${product_ids})
+//QUERY;
+//
+//    return $this->db->query($query)->result();
+//  }
+
+  function get_product_total_count($shop_id, $status, $item_name, $cat) {
+    $query = "select count(*) as count from shop_product_id where shop_id={$shop_id} and status={$status}";
+    if ($cat != 'all' && $cat != 'ALL') {
+      $category = '';
+      for ($i = 0; $i < 3; $i++) {
+        $c = substr($cat, 2 * $i, 2);
+        if ($c == '00') {
+          break;
+        }
+        $category .= $c;
+      }
+      $category .= '%';
+      $query .= " and product_code like '{$category}'";
+    }
+    if (isset($item_name) && strlen($item_name) > 0) {
+      $query .= " and item_name='{$item_name}'";
+    }
+    return $this->db->query($query)->row()->count;
+  }
+
+  function get_product_status_str($status) {
+    switch($status) {
+      case SHOP_PRODUCT_STATUS_INIT: return '등록대기';
+      case SHOP_PRODUCT_STATUS_REQUEST: return '승인요청';
+      case SHOP_PRODUCT_STATUS_REJECT: return '반려';
+      case SHOP_PRODUCT_STATUS_ON_SALE: return '판매중';
+      case SHOP_PRODUCT_STATUS_STOP_SALE: return '판매중지';
+      case SHOP_PRODUCT_STATUS_FINISH_SALE: return '판매종료';
+    }
+    return '';
+  }
+  function get_product_status_class($status) {
+    switch($status) {
+      case SHOP_PRODUCT_STATUS_INIT: return 'success';
+      case SHOP_PRODUCT_STATUS_REQUEST: return 'purple';
+      case SHOP_PRODUCT_STATUS_REJECT: return 'danger';
+      case SHOP_PRODUCT_STATUS_ON_SALE: return 'success';
+      case SHOP_PRODUCT_STATUS_STOP_SALE: return 'warning';
+      case SHOP_PRODUCT_STATUS_FINISH_SALE: return 'default';
+    }
+    return '';
+  }
+  function get_product_shipping_free_str($free) {
+    return $free ? '무표배송' : '조건부 무료배송';
+  }
+
+  function get_product_item_type_str($item_type) {
+    switch($item_type) {
+      case  SHOP_PRODUCT_ITEM_TYPE_GENERAL: return '일반상품';
+      case  SHOP_PRODUCT_ITEM_TYPE_CUSTOM: return '주문제작';
+    }
+    return '';
+  }
+  function get_product_item_tax_str($item_tax) {
+    switch($item_tax) {
+      case  SHOP_PRODUCT_ITEM_NO_TAX: return '면세상품';
+      case  SHOP_PRODUCT_ITEM_TAX: return '과세상품';
+    }
+    return '';
+  }
+  function get_product_item_shipping_days_str($item_shipping_days) {
+    switch($item_shipping_days) {
+      case  SHOP_PRODUCT_SHIPPING_CUSTOM: return '주문제작';
+      case  SHOP_PRODUCT_SHIPPING_1_DAYS: return '1일';
+      case  SHOP_PRODUCT_SHIPPING_2_DAYS: return '2일';
+      case  SHOP_PRODUCT_SHIPPING_3_DAYS: return '3일';
+    }
+    return '';
+  }
+
+  function get_price_str($price) {
+    return number_format($price);
+  }
+
+  function get_product_category_str($category, $level = 0) {
+    $prefix = $category;
+    if ($prefix == 'main') {
+      return 'main';
+    } else if ($prefix == 'all' || $prefix == 'ALL') {
+      return 'new';
+    } else if ($level > 0) {
+      $prefix = substr($category,0, 2*$level);
+      $query = <<<QUERY
+select cat_name from shop_product_category where cat_code like '{$prefix}%' and cat_level={$level}
+QUERY;
+
+      return $this->db->query($query)->row()->cat_name;
+    } else {
+      $prefix = substr($category,0, 2);
+      if ($prefix == '01') {
+        return 'yoga';
+      } else if ($prefix == '02') {
+        return 'vegan';
+      } else if ($prefix == '03') {
+        return 'healing';
+      }
+    }
+    return '';
+  }
+
+  function alert_exit($msg, $relocate = '') {
+    $echo = "<script>";
+    $echo .= "alert('{$msg}');";
+    if (isset($relocate) && !empty($relocate)) {
+      $echo .= "window.location.href='{$relocate}';";
+    }
+    $echo .="</script>";
+    echo $echo;
+    exit;
+  }
+
+  function cart_on() {
+    $cart_on = 0;
+    if ($this->session->userdata('user_login') == 'yes') {
+      $user_id = $this->session->userdata('user_id');
+      $query = <<<QUERY
+select count(*) as cnt from shop_cart where user_id={$user_id}
+QUERY;
+      $cart_on = $this->db->query($query)->row()->cnt;
+    } else {
+      $session_id = $this->get_session_id();
+      $query = <<<QUERY
+select count(*) as cnt from shop_cart where session_id='{$session_id}'
+QUERY;
+      $cart_on = $this->db->query($query)->row()->cnt;
+    }
+    return $cart_on;
+  }
+
+  function get_session_id() {
+   return  $this->session->__get('session_id');
+  }
+
+  function get_shipping_req_str($type) {
+   switch($type) {
+     case SHOP_SHIPPING_REQ_DEFAULT : return '배송시 요청 사항을 선택해 주세요.';
+     case SHOP_SHIPPING_REQ_IN_FRONT_OF_DOOR : return '부재시 문 앞에 놓아 주세요.';
+     case SHOP_SHIPPING_REQ_OFFICE : return '부재시 경비실에 맡겨 주세요.';
+     case SHOP_SHIPPING_REQ_PHONE_OR_SMS : return '부재시 전화 또는 문자 주세요.';
+     case SHOP_SHIPPING_REQ_PHONE_BEFORE_SHIPPING : return '배송 전에 연락주세요.';
+     case SHOP_SHIPPING_REQ_DIRECT_INPUT : return '직접입력';
+   }
+   return '';
+  }
+
+  function get_purchase_status_str($status) {
+    switch($status) {
+      case SHOP_PURCHASE_STATUS_PREPARED : return '구매 준비';
+      case SHOP_PURCHASE_STATUS_PURCHASING: return '구매중';
+      case SHOP_PURCHASE_STATUS_PAYING: return '결제중';
+      case SHOP_PURCHASE_STATUS_PAYING_CANCELED: return '결제취소';
+      case SHOP_PURCHASE_STATUS_CONFIRM_SUCCESS: return '결제 확인 성공';
+      case SHOP_PURCHASE_STATUS_CONFIRM_FAIL: return '결제 확인 실패';
+      case SHOP_PURCHASE_STATUS_DONE_SUCCESS: return '결제 검증 성공';
+      case SHOP_PURCHASE_STATUS_DONE_FAIL: return '결제 검증 실패';
+      case SHOP_PURCHASE_STATUS_COMPLETED: return '결제 완료';
+    }
+    return '';
+  }
+
+  function get_shipping_status_str($status) {
+    switch($status) {
+      case SHOP_SHIPPING_STATUS_WAIT: return '입금대기';
+      case SHOP_SHIPPING_STATUS_ORDER_COMPLETED: return '주문완료';
+      case SHOP_SHIPPING_STATUS_ORDER_CANCELED: return '주문취소';
+      case SHOP_SHIPPING_STATUS_PREPARE: return '배송준비중';
+      case SHOP_SHIPPING_STATUS_IN_PROGRESS: return '배송중';
+      case SHOP_SHIPPING_STATUS_COMPLETED: return '배송완료';
+      case SHOP_SHIPPING_STATUS_PURCHASE_COMPLETED: return '구매완료';
+      case SHOP_SHIPPING_STATUS_PURCHASE_CANCELED: return '구매취소(반품)';
+      case SHOP_SHIPPING_STATUS_PURCHASE_CANCELING: return '취소중(반품)';
+      case SHOP_SHIPPING_STATUS_PURCHASE_CHANGED: return '교환완료';
+      case SHOP_SHIPPING_STATUS_PURCHASE_CHANGING: return '교환중';
+    }
+  }
+
 }

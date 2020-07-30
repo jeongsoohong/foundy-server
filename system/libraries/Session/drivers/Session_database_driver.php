@@ -295,7 +295,12 @@ class CI_Session_database_driver extends CI_Session_driver implements SessionHan
 	 */
 	public function destroy($session_id)
 	{
-		if ($this->_lock)
+    // shop_cart, shop_shipping_address, shop_purchase_user, must not delete , shop_purchase_product, shop_purchase
+    $this->_db->delete('shop_cart', array('session_id' => $session_id));
+    $this->_db->delete('shop_shipping_address', array('session_id' => $session_id));
+    $this->_db->delete('shop_purchase_user', array('session_id' => $session_id));
+
+    if ($this->_lock)
 		{
 			// Prevent previous QB calls from messing with our queries
 			$this->_db->reset_query();
@@ -333,7 +338,7 @@ class CI_Session_database_driver extends CI_Session_driver implements SessionHan
 	 */
 	public function gc($maxlifetime)
 	{
-		// Prevent previous QB calls from messing with our queries
+    // Prevent previous QB calls from messing with our queries
 		$this->_db->reset_query();
 
 		return ($this->_db->delete($this->_config['save_path'], 'timestamp < '.(time() - $maxlifetime)))

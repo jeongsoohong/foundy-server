@@ -8,7 +8,7 @@
   $title = $schedule->title;
   ?>
   <tbody style="margin-bottom: 10px">
-  <tr style="height: 40px !important;">
+  <tr style="height: 40px !important; padding-left: 15px; padding-right: 15px;">
     <th class="col-md-3" style="padding-left: 0; padding-right: 0; width: 22%"><?php echo $start_time; ?>-<?php echo $end_time; ?></th>
     <td class="col-md-7" style="padding-left: 0px; padding-right: 0; width: auto">(<?php echo $teacher_name; ?>) <?php echo $title; ?></td>
     <?php if ($iam_this_center == true) { ?>

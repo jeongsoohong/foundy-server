@@ -462,6 +462,8 @@ function form_submit(form_id,noty,e){
 
 	if(can !== 'no'){
 		if(form_id !== 'vendor_pay'){
+			var buttonp = $('.enterer');
+			var btn_text = buttonp.text();
 			$.ajax({
 				url: form.attr('action'), // form action url
 				type: 'POST', // form submit method get/post
@@ -471,26 +473,39 @@ function form_submit(form_id,noty,e){
 				contentType: false,
 				processData: false,
 				beforeSend: function () {
-					var buttonp = $('.enterer');
 					buttonp.addClass('disabled');
 					buttonp.html(working);
 					// alert('beforeSend:'+url);
 				},
-				success: function () {
-					ajax_load(base_url + '' + user_type + '/' + module + '/' + list_cont_func + '/' + extra, 'list', 'first');
-					if (form_id == 'vendor_approval') {
-						noty = enb_ven;
+				success: function (data) {
+					// console.log(btn_text);
+					if(data == 'done' || data.search('done') !== -1){
+						ajax_load(base_url + '' + user_type + '/' + module + '/' + list_cont_func + '/' + extra, 'list', 'first');
+						if (form_id == 'vendor_approval') {
+							noty = enb_ven;
+						}
+						$.activeitNoty({
+							type: 'success',
+							icon: 'fa fa-check',
+							message: noty,
+							container: 'floating',
+							timer: 4000
+						});
+						$('.bootbox-close-button').click();
+						('form_submit_success');
+						other_forms();
+					} else {
+						var text = '<div>실패하였습니다</div>'+data;
+						$.activeitNoty({
+							type: 'danger',
+							icon: 'fa fa-check',
+							message: text,
+							container: 'floating',
+							timer: 4000
+						});
+						buttonp.removeClass('disabled');
+						buttonp.html(btn_text);
 					}
-					$.activeitNoty({
-						type: 'success',
-						icon: 'fa fa-check',
-						message: noty,
-						container: 'floating',
-						timer: 4000
-					});
-					$('.bootbox-close-button').click();
-					('form_submit_success');
-					other_forms();
 				},
 				error: function (e) {
 					console.log(e)

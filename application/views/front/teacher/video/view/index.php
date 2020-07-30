@@ -67,7 +67,7 @@
   .post-body {
     background-color: white !important;
     height: 30px !important;
-    margin: 0 20px 0 20px !important;
+    margin: 0 10px 0 10px !important;
     position: relative;
   }
   .post-body .post-excerpt {
@@ -93,6 +93,12 @@
     font-size: 12px;
     line-height: 30px;
   }
+  .post-title {
+    font-size: 18px !important;
+  }
+  .post-desc {
+    font-size: 13px !important;
+  }
 </style>
 <section class="page-section with-sidebar">
   <div class="container">
@@ -110,7 +116,7 @@
               ?>'); background-size: cover; background-position-x: center; background-position-y: top; width: 40px; height: 40px; border-radius: 20px"></div>
             </span>
             <div class="media-body" style="padding-right: 10px; padding-top: 10px;">
-              <div class="col-md-12" style="margin: 10px 0 10px 0 !important; padding-left: 20px !important; text-align: left; !important; font-size: 12px !important;">
+              <div class="col-md-12" style="margin: 10px 0 10px 0 !important; padding-left: 0 !important; text-align: left !important; font-size: 12px !important;">
                 <a href="<?php echo base_url(); ?>home/teacher/profile/<?php echo $user_data->user_id; ?>">
                   <p>
                     <?php echo $teacher_data->name; ?>
@@ -161,7 +167,7 @@
                 </div>
               <?php } ?>
               <span class="text-xl pull-left" id="like">
-                <?php echo $this->crud_model->sns_func_html('like', 'class', $liked, $video_data->video_id, 15, 15); ?>
+                <?php echo $this->crud_model->sns_func_html('like', 'class', $liked, $video_data->video_id, 20, 20); ?>
               </span>
             </div>
           </div>

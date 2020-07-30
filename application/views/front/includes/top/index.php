@@ -39,7 +39,9 @@ include 'meta/' . $asset_page . '.php';
 <!-- Menu Bar Font -->
 <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
 <!-- Banner Title Font -->
-<link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+<!--<link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap" rel="stylesheet">-->
+<link href='//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css' rel='stylesheet' type='text/css'>
+<link href='//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-jp.css' rel='stylesheet' type='text/css'>
 
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,600,700,800,900' rel='stylesheet' type='text/css'>
 <link href="https://fonts.googleapis.com/css?family=Patua+One&display=swap" rel="stylesheet">
@@ -52,7 +54,7 @@ include 'meta/' . $asset_page . '.php';
     url("<?php echo base_url(); ?>template/fonts/futura-pt/FuturaPTMedium.otf") format("truetype");
   }
   *{
-    font-family: 'Noto Sans KR', 'Quicksand', 'Patua One', 'Roboto', FontAwesome, 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+    font-family: 'Spoqa Han Sans', 'Spoqa Han Sans JP', /*'Noto Sans KR',*/ 'Quicksand', 'Patua One', 'Roboto', FontAwesome, 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
   }
   .remove_one{
     cursor:pointer;

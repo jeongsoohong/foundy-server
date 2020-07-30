@@ -59,7 +59,7 @@ foreach($blog_data as $row){
               <div class="form-group btm_border">
                 <label class="col-sm-4 control-label" for="demo-hor-1"><?php echo ('소개글');?></label>
                 <div class="col-sm-6">
-                  <input type="text" name="summery" id="demo-hor-1" placeholder="<?php echo ('소개글');?>" class="form-control required" value="<?php echo $row['summery']; ?>">
+                  <input type="text" name="summery" id="demo-hor-1" placeholder="<?php echo ('소개글');?>" class="form-control" value="<?php echo $row['summery']; ?>">
                 </div>
               </div>
 

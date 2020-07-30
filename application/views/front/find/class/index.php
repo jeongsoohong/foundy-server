@@ -29,8 +29,8 @@
           <div id="blog-content">
             <div class="col-md-12" style="padding: 0 0 0 0 !important; ">
               <div class="row">
-                <div class="col-md-12" style="padding: 0 0 0 0 !important;">
-                  <div class="profile" style="font-size: 15px; padding: 5px 10px 5px 10px !important; text-align: center">
+                <div class="col-md-12" style="padding: 0 0 0 0 !important; height: 50px">
+                  <div class="profile" style="font-size: 15px; height: 50px; line-height: 50px; padding: 5px 20px 5px 20px !important; text-align: center">
                     <span>스크랩</span>
                   </div>
                 </div>
@@ -63,71 +63,6 @@
                     </div>
                   </div>
                 </div>
-<!--                <div class="widget" style="padding-bottom:10px; ">-->
-<!--                  <ul class="bookmark_teacher_ul">-->
-<!--                    --><?php
-//                    foreach ($bookmarks as $teacher) {
-//                      $c = '';
-//                      $cats = $this->db->get_where('teacher_category', array('teacher_id' => $teacher->teacher_id))->result();
-//                      foreach($cats as $cat) {
-//                        $c .= $cat->category . '/';
-//                      }
-//                      $c[strlen($c) - 1] = "\0";
-//                      ?>
-<!--                      <li style="padding: 10px 0 10px 0 !important;">-->
-<!--                        <div class="col-md-12 " style="padding: 0 !important; height: 75px">-->
-<!--                          <table class="col-md-12" style="width: 100%">-->
-<!--                            <tbody>-->
-<!--                            <tr style="height: 30px;">-->
-<!--                              <td rowspan="3" style="text-align: center">-->
-<!--                                <div class="media-object img-bg" id="blah" style="margin: auto; background-size: cover; background-position-x: center; background-position-y: top; width: 60px; height: 60px; border-radius: 30px; background-image: url('--><?php
-//                                $user_data = $this->db->get_where('user', array('user_id' => $teacher->user_id))->row();
-//                                if (empty($user_data->profile_image_url)) {
-//                                  echo base_url() . 'uploads/icon/profile_icon.png';
-//                                } else {
-//                                  echo $user_data->profile_image_url;
-//                                }
-//                                ?><!--'); "></div> -->
-<!--                              </td> -->
-<!--                              <td style="width: 60%"> -->
-<!--                                <a href="*/<?php //echo base_url(); ?>--><!--home/teacher/profile/--><?php //echo $teacher->user_id; ?><!--">-->
-<!--                                  --><?php //echo $teacher->name; ?>
-<!--                                </a>-->
-<!--                              </td>-->
-<!--                              <td rowspan="3" style="width: 15%; text-align: center">-->
-<!--                                --><?php //echo $this->crud_model->sns_func_html('bookmark', 'teacher', true, $teacher->teacher_id, 20, 20); ?>
-<!--                              </td>-->
-<!--                            </tr>-->
-<!--                            <tr style="height: 30px;">-->
-<!--                              <td style="width: 60%">-->
-<!--                                <span style="color: saddlebrown;">--><?php //echo $c; ?><!--</span>-->
-<!--                              </td>-->
-<!--                            </tr>-->
-<!--                            <tr style="height: 30px;">-->
-<!--                              <td style="width: 60%">-->
-<!--                                --><?php
-//                                if (isset($teacher->youtube) && strlen($teacher->youtube) > 0) {
-//                                  ?>
-<!--                                  <a href="--><?php //echo $teacher->youtube; ?><!--" onclick="window.open(this.href, '_blank'); return false;">-->
-<!--                                    <span class="img-youtube"><img src="--><?php //echo base_url(); ?><!--uploads/icon/youtube_icon.png"></span>-->
-<!--                                  </a>-->
-<!--                                  --><?php
-//                                }
-//                                if (isset($teacher->instagram) && strlen($teacher->instagram) > 0) {
-//                                  ?>
-<!--                                  <a href="--><?php //echo $teacher->instagram; ?><!--" onclick="window.open(this.href, '_blank'); return false;">-->
-<!--                                    <span class="img-insta"><img src="--><?php //echo base_url(); ?><!--uploads/icon/insta_icon.png"></span>-->
-<!--                                  </a>-->
-<!--                                --><?php //} ?>
-<!--                              </td>-->
-<!--                            </tr>-->
-<!--                            </tbody>-->
-<!--                          </table>-->
-<!--                        </div>-->
-<!--                      </li>-->
-<!--                    --><?php //} ?>
-<!--                  </ul>-->
-<!--                </div>-->
               </div>
             </div>
           </div>
@@ -139,13 +74,13 @@
         <div id="blog-content">
           <div class="col-md-12" style="padding: 0 0 0 0 !important; ">
             <div class="row">
-              <div class="col-md-12" style="padding: 0 0 0 0 !important;">
-                <div class="profile" style="display: flex; font-size: 15px; padding: 5px 10px 5px 10px !important; text-align: center">
-                  <div style="width: 70%;">
+              <div class="col-md-12" style="padding: 0 0 0 0 !important; ">
+                <div class="profile" style="display: flex; font-size: 15px; height: 50px; line-height: 50px; padding: 5px 20px 5px 20px !important; text-align: center">
+                  <div style="width: 70%; height: 50px; line-height: 50px;">
                     <span style="position: absolute; left: 40%">포잇 추천 클래스</span>
                   </div>
-                  <div class="pull-right" style="width: 25%;">
-                    <select class="form-control select-arrow" id="class_category" name="class_category">
+                  <div class="pull-right" style="width: 25%; height: 50px; line-height: 50px;">
+                    <select class="form-control select-arrow" id="class_category" name="class_category" style="height: 50px; line-height: 50px;">
                       <option value="ALL" selected="selected">ALL</option>
                       <?php
                       $categories = $this->db->order_by('category_id', 'asc')->get_where('category_class', array('activate' => 1))->result();
@@ -157,7 +92,7 @@
                       ?>
                     </select>
                   </div>
-                  <div class="pull-right" style="width: 5%; text-align: right; line-height: 30px; color: grey">
+                  <div class="pull-right" style="width: 5%; text-align: right; height: 50px; line-height: 50px; color: grey">
                     <i class="fa fa-angle-down"></i>
                   </div>
                 </div>

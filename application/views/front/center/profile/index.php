@@ -35,6 +35,9 @@
   #info .recent-post p {
     padding: 0 15px;
   }
+  #info .recent-post img {
+    width: 100% !important;
+  }
 </style>
 <?php
 $profile_row_add = false;
@@ -56,7 +59,7 @@ if ($center_data->shower || $center_data->towel || $center_data->parking || $cen
             <div class="col-md-12" style="padding: 0 10px 0 10px !important; ">
               <div class="recent-post" style="background: #fff;">
                 <div class="media">
-                  <div class="media-body" style="padding: 0 10px 0 10px">
+                  <div class="media-body" style="padding: 10px 10px 10px 10px">
                     <div class="col-md-12" style="margin: 10px 0 10px 0 !important; padding-left: 20px !important; text-align: left; !important; font-size: 12px !important;">
                       <table class="col-md-12" style="width: 100%">
                         <tbody>
@@ -71,6 +74,8 @@ if ($center_data->shower || $center_data->towel || $center_data->parking || $cen
                                   <i class="fa fa-ellipsis-v"></i>
                                 </span>
                               </a>
+                            <?php } else { ?>
+                              <?php echo $this->crud_model->sns_func_html('bookmark', 'center', $bookmarked, $center_data->center_id, 20, 20); ?>
                             <?php } ?>
                           </td>
                         </tr>
@@ -87,7 +92,7 @@ if ($center_data->shower || $center_data->towel || $center_data->parking || $cen
                             <span style="color: saddlebrown;"><?php echo $cat; ?></span>
                           </td>
                           <td style="text-align: center">
-                            <?php echo $this->crud_model->sns_func_html('bookmark', 'center', $bookmarked, $center_data->center_id, 20, 20); ?>
+<!--                            --><?php //echo $this->crud_model->sns_func_html('bookmark', 'center', $bookmarked, $center_data->center_id, 20, 20); ?>
                           </td>
                         </tr>
                         <tr style="height: 30px;">
@@ -216,7 +221,7 @@ if ($center_data->shower || $center_data->towel || $center_data->parking || $cen
                     </table>
                   </div>
                   <div class="col-md-12" style="padding: 10px 0px 10px 0px !important; border: none;">
-                    <div class="col-md-12 recent-post" style="background: #fff;/* border: 1px solid #e0e0e0; */">
+                    <div class="col-md-12 recent-post" style="background: #fff; padding-left: 5px; padding-right: 5px; /* border: 1px solid #e0e0e0; */">
                       <div class="media">
                         <p style="color: #6D6D6D; font-size: medium; height: 30px; text-align: center; font-weight: 600; margin-bottom: 0px !important; padding: 0 5px 0 5px">
                           <span class="schedule-month font-futura">
@@ -251,7 +256,7 @@ if ($center_data->shower || $center_data->towel || $center_data->parking || $cen
                             $day = date('j', $current); // 0 제거
                             $months[] = date('n', $current);
                             ?>
-                            <div class="schedule slick-content<?php if ($date == $start_date) { echo ' active'; } else if ($date < $start_date) { echo ' before'; } ?>" id="<?php echo $date; ?>">
+                            <div class="schedule slick-content<?php if ($date == $start_date) { echo ' active'; } else if ($date < $start_date) { echo ' before'; } ?>" id="<?php echo $date; ?>" style="width: 12.8%">
                               <div style="width: 40px; height: 40px; text-align: center; margin: 0 auto; line-height: 40px; border-radius: 20px;">
                                 <?php echo $day; ?>
                               </div>
@@ -264,7 +269,7 @@ if ($center_data->shower || $center_data->towel || $center_data->parking || $cen
                       </div>
                     </div>
                     <!--  ajax schedule  -->
-                    <div class="col-md-12 widget schedule-detail" style="padding: 0 5px 10px 5px !important;">
+                    <div class="col-md-12 widget schedule-detail" style="padding: 0 15px 0 15px !important;">
 
                     </div>
                     <!--  /ajax schedule  -->
@@ -399,7 +404,7 @@ if ($center_data->shower || $center_data->towel || $center_data->parking || $cen
     border-radius: 0 !important;
   }
   .profile_ul li {
-    padding: 10px 10px 10px 10px !important;
+    padding: 10px !important;
   }
   .profile_ul li span.pull-right {
     margin: 0 5px 0 0 !important;
@@ -711,7 +716,7 @@ if ($center_data->teacher_cnt > 0) {
         text = '수정';
       } else if (target === 'schedule-edit') {
         id = elem.attr('id');
-        console.log(id);
+        // console.log(id);
         href = base_url + 'home/center/schedule/mod?sid=' + id + '&cid=<?php echo $center_data->center_id; ?>';
         text = '수정';
       } else if (target === 'profile-edit') {
@@ -744,6 +749,7 @@ if ($center_data->teacher_cnt > 0) {
     $('.center-edit').click(function(e) {
       openPop($(this));
     });
+    active_menu_bar('find');
   });
 </script>
 

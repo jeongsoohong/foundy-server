@@ -1,7 +1,7 @@
 
 <?php
-$system_name	 =  "Foit Admin";
-$system_title	 =  "Foit Admin";
+$system_name	 =  "Foundy Admin";
+$system_title	 =  "Foundy Admin";
 ?>
 <?php include 'includes_top.php'; ?>
 <body>
@@ -12,32 +12,31 @@ $system_title	 =  "Foit Admin";
 //} else {
 //    echo 'effect mainnav-lg';
 //}
-    echo 'effect mainnav-sm';
+echo 'effect mainnav-sm';
 ?>
 ">
+  <!--NAVBAR-->
+  <?php include 'header.php'; ?>
+  <!--END NAVBAR-->
 
-    <!--NAVBAR-->
-    <?php include 'header.php'; ?>
-    <!--END NAVBAR-->
-
-    <div class="boxed" id="fol">
-        <!--CONTENT CONTAINER-->
-        <div>
-            <?php include $this->session->userdata('title').'/'.$page_name.'.php' ?>
-        </div>
-        <!--END CONTENT CONTAINER-->
-
-        <!--MAIN NAVIGATION-->
-        <?php include $this->session->userdata('title').'/navigation.php' ?>
-        <!--END MAIN NAVIGATION-->
+  <div class="boxed" id="fol">
+    <!--CONTENT CONTAINER-->
+    <div>
+      <?php include $this->session->userdata('title').'/'.$page_name.'.php' ?>
     </div>
+    <!--END CONTENT CONTAINER-->
 
-    <!-- FOOTER -->
-    <?php include 'footer.php'; ?>
-    <?php include 'script_texts.php'; ?>
-    <!-- END FOOTER -->
-    <!-- SCROLL TOP BUTTON -->
-    <button id="scroll-top" class="btn"><i class="fa fa-chevron-up"></i></button>
+    <!--MAIN NAVIGATION-->
+    <?php include $this->session->userdata('title').'/navigation.php' ?>
+    <!--END MAIN NAVIGATION-->
+  </div>
+
+  <!-- FOOTER -->
+  <?php include 'footer.php'; ?>
+  <?php include 'script_texts.php'; ?>
+  <!-- END FOOTER -->
+  <!-- SCROLL TOP BUTTON -->
+  <button id="scroll-top" class="btn"><i class="fa fa-chevron-up"></i></button>
 </div>
 <!-- END OF CONTAINER -->
 

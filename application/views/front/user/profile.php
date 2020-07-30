@@ -33,7 +33,7 @@
 <div class="profile" style="font-size: 15px; text-align: center; height: 50px; line-height: 50px !important;">
   <b class="font-futura">profile</b>
 </div>
-<!--<div class="row">-->
+<div class="row">
   <div class="col-md-12" style="padding: 0 !important; ">
     <div class="recent-post" style="background: #fff;">
       <div class="media">
@@ -203,12 +203,12 @@
                       </tr>
                       </tbody>
                     </table>
-<!--                    <a href="--><?php //echo base_url().'home/teacher/profile/'.$teacher->user_id; ?><!--">-->
-<!--                      (강사) --><?php //echo $teacher->name; ?>
-<!--                    </a>-->
-<!--                    <span class="pull-right" style="padding-top: 0px !important;">-->
-<!--                    --><?php //echo $this->crud_model->sns_func_html('bookmark', 'teacher', true, $teacher->teacher_id, 15, 15); ?>
-<!--                  </span>-->
+                    <!--                    <a href="--><?php //echo base_url().'home/teacher/profile/'.$teacher->user_id; ?><!--">-->
+                    <!--                      (강사) --><?php //echo $teacher->name; ?>
+                    <!--                    </a>-->
+                    <!--                    <span class="pull-right" style="padding-top: 0px !important;">-->
+                    <!--                    --><?php //echo $this->crud_model->sns_func_html('bookmark', 'teacher', true, $teacher->teacher_id, 15, 15); ?>
+                    <!--                  </span>-->
                   </li>
                   <?php
                 }
@@ -220,7 +220,7 @@
       <?php } ?>
     </div>
   </div>
-<!--</div>-->
+</div>
 <style>
   .page-section {
     padding-top: 10px !important;

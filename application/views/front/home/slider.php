@@ -11,7 +11,7 @@
   }
   .carousel-caption .p-category {
     font-size: 10px;
-    margin-top: 15px;
+    margin-top: 10px;
     margin-bottom: 0 !important;
   }
 </style>

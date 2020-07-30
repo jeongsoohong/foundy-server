@@ -10,11 +10,18 @@
   <div class="panel-body">
     <div class="form-group">
       <label class="col-sm-4 control-label" for="demo-hor-1">
-        <?php echo ('name');?>
+        name
       </label>
       <div class="col-sm-6">
         <input type="text" name="name" id="demo-hor-1"
-               class="form-control required" placeholder="<?php echo ('name');?>" >
+               class="form-control required" placeholder="name" >
+      </div>
+      <label class="col-sm-4 control-label" for="demo-hor-1">
+        desc
+      </label>
+      <div class="col-sm-6">
+        <input type="text" name="desc" id="demo-hor-1"
+               class="form-control required" placeholder="desc" >
       </div>
     </div>
   </div>

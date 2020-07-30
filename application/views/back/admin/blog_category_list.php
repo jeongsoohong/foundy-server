@@ -3,9 +3,10 @@
 
     <thead>
     <tr>
-      <th><?php echo ('no');?></th>
-      <th><?php echo ('name');?></th>
-      <th class="text-right"><?php echo ('options');?></th>
+      <th>no</th>
+      <th>name</th>
+      <th>desc</th>
+      <th class="text-right">options</th>
     </tr>
     </thead>
 
@@ -18,8 +19,10 @@
       <tr>
         <td><?php echo $i; ?></td>
         <td><?php echo $row['name']; ?></td>
+        <td><?php echo $row['desc']; ?></td>
         <td class="text-right">
-          <a class="btn btn-success btn-xs btn-labeled fa fa-wrench" data-toggle="tooltip"
+          <?php if ($row['type'] == BLOG_TYPE_DEFAULT) { ?>
+          <a class="btn btn-edit btn-xs btn-labeled fa fa-wrench" data-toggle="tooltip"
              onclick="ajax_modal('edit','<?php echo ('edit_blog_category'); ?>','<?php echo ('successfully_edited!'); ?>','blog_category_edit','<?php echo $row['category_id']; ?>')"
              data-original-title="Edit" data-container="body">
             <?php echo ('edit');?>
@@ -28,6 +31,7 @@
              data-original-title="Delete" data-container="body">
             <?php echo ('delete');?>
           </a>
+          <?php } ?>
         </td>
       </tr>
       <?php
@@ -42,8 +46,9 @@
   <table id="export-table" data-name='blog_category' data-orientation='p' style="display:none;">
     <thead>
     <tr>
-      <th><?php echo ('no');?></th>
-      <th><?php echo ('name');?></th>
+      <th>no</th>
+      <th>name</th>
+      <th>desc</th>
     </tr>
     </thead>
 
@@ -55,7 +60,8 @@
       ?>
       <tr>
         <td><?php echo $i; ?></td>
-        <td><?php echo $row['blog_category_name']; ?></td>
+        <td><?php echo $row['name']; ?></td>
+        <td><?php echo $row['desc']; ?></td>
       </tr>
       <?php
     }

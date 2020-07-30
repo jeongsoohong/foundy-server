@@ -10,12 +10,12 @@
   <div class="wrap container">
     <!-- <div id="profile-content"> -->
     <div class="row profile">
-      <div class="col-lg-9 col-md-9" style="padding-left: 0 !important; padding-right: 0 !important;">
+      <div class="col-lg-12 col-md-12" style="padding-left: 0 !important; padding-right: 0 !important;">
         <div id="profile_content">
 
         </div>
       </div>
-      <div class="col-lg-3 col-md-3" style="margin-top: 20px !important;">
+      <div class="col-lg-12 col-md-12" style="margin-top: 20px !important;">
         <input type="hidden" id="state" value="normal" />
         <div class="widget account-details">
           <div class="information-title" style="margin-bottom: 0px; margin-top: 0px;">더보기</div>
@@ -23,19 +23,24 @@
             <a class="pnav_info" href="#profile_content" style="display: none;"><li>프로필</li></a>
             <a class="pnav_edit_profile" href="#profile_content" style="display: none"><li>프로필 편집</li></a>
             <a class="pnav_notifination" href="#"><li>공지사항</li></a>
-            <a class="pnav_introduce" href="#"><li>포잇 소개</li></a>
+            <a class="pnav_introduce" href="#"><li>파운디 소개</li></a>
             <a class="pnav_faq" href="#"><li>자주하는 질문</li></a>
             <a class="pnav_customer_center" href="#"><li>고객센터</li></a>
-            <a class="pnav_service" href="#"><li>서비스 이용 약관</li></a>
-            <a class="pnav_privacy" href="#"><li>개인정보 보호정책</li></a>
+            <a class="pnav_service" href="#profile_content"><li>서비스 이용 약관</li></a>
+            <a class="pnav_privacy" href="#profile_content"><li>개인정보 보호정책</li></a>
             <a class="pnav_logout" href="#"><li>로그아웃</li></a>
             <a class="pnav_unregister" href="#"><li>회원탈퇴</li></a>
+          </ul>
+          <div class="information-title" style="margin-bottom: 0px; margin-top: 0px;">샵</div>
+          <ul class="pleft_nav">
+            <a class="pnav_shop_wishlist" href="<?php echo base_url(); ?>home/shop?cat=wish&col=product_id&order=desc"><li>위시리스트</li></a>
+            <a class="pnav_shop_orderlist" href="<?php echo base_url();?>home/shop/order"><li>주문내역</li></a>
           </ul>
           <div class="information-title" style="margin-bottom: 0px; margin-top: 0px;">문의</div>
           <ul class="pleft_nav">
             <a class="pnav_center_register" href="#profile_content"><li>센터 회원 신청</li></a>
             <a class="pnav_teacher_register" href="#profile_content"><li>강사 회원 신청</li></a>
-            <a class="pnav_shop_register" href="#"><li>샵 회원 신청</li></a>
+            <a class="pnav_shop_register" href="#profile_content"><li>샵 회원 신청</li></a>
           </ul>
         </div>
       </div>
@@ -138,6 +143,30 @@
 </div>
 <!-- Modal For C-C Post confirm -->
 
+<!-- Modal For C-C Post confirm -->
+<div class="modal fade" id="shopRegisterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">샵 회원 신청</h4>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+          <div>입점 승인까지는 3-4일정도 소요되며, 완료 후 연락드리겠습니다
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger post_confirm_close" data-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-theme btn-theme-sm post_confirm" style="text-transform: none;
+                font-weight: 400;">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal For C-C Post confirm -->
+
 <!-- Modal For C-C Status change -->
 <div class="modal fade" id="statusChange" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
@@ -154,6 +183,7 @@
   </div>
 </div>
 <!-- Modal For C-C Status change -->
+
 <style type="text/css">
   .pagination_box a{
     cursor: pointer;
@@ -291,11 +321,39 @@
     $(".pnav_teacher_register").find("li").addClass("active");
   });
 
+  $('.pnav_shop_register').on('click',function(){
+    $("#profile_content").html(loading_set);
+    $("#profile_content").load("<?php echo base_url()?>home/user/shop_register");
+    $(".pleft_nav").find("li").removeClass("active");
+    $(".pnav_shop_register").find("li").addClass("active");
+  });
+
   $('.pnav_edit_profile').on('click',function(){
     $("#profile_content").html(loading_set);
     $("#profile_content").load("<?php echo base_url()?>home/user/edit_profile");
     $(".pleft_nav").find("li").removeClass("active");
     $(".pnav_edit_profile").find("li").addClass("active");
+  });
+  $('.pnav_service').on('click',function(){
+    $("#profile_content").html(loading_set);
+    $("#profile_content").load("<?php echo base_url()?>home/user/service");
+    $(".pleft_nav").find("li").removeClass("active");
+    $(".pnav_service").find("li").addClass("active");
+  });
+  $('.pnav_privacy').on('click',function(){
+    $("#profile_content").html(loading_set);
+    $("#profile_content").load("<?php echo base_url()?>home/user/privacy");
+    $(".pleft_nav").find("li").removeClass("active");
+    $(".pnav_privacy").find("li").addClass("active");
+  });
+  $('.pnav_notifination').on('click',function(){
+    window.location.href='<?php echo base_url().'home/notice?type=all'; ?>';
+  });
+  $('.pnav_faq').on('click',function(){
+    window.location.href='<?php echo base_url().'home/notice?type=faq'; ?>';
+  });
+  $('.pnav_introduce').on('click',function(){
+    window.location.href='<?php echo base_url().'home/notice?type=introduce'; ?>';
   });
 
   $(document).ready(function(){

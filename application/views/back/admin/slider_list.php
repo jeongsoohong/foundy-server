@@ -56,7 +56,7 @@
       if (result) {
         ajax_load(base_url + '' + user_type + '/' + module + '/approval_set/' + id + '?req=' + req);
         $.activeitNoty({
-          type: 'danger',
+          type: 'success',
           icon: 'fa fa-check',
           message: (req === 'ok' ? s_e : s_d),
           container: 'floating',

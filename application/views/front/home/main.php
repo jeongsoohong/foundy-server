@@ -8,6 +8,7 @@
     height: 40px;
     line-height: 40px;
     margin: 0 0 0 0;
+    font-size: 13px;
   }
   .main-discovery .main-nav .main-blog {
     padding-left: 15px;
@@ -62,11 +63,11 @@
 <section class="page-section" style="margin: 0px 15px 0px 15px !important; padding: 5px 0 5px 0!important; border-top: 1px solid gray;">
   <div class="row">
     <div class="col-md-12 main-discovery">
-      <div class="col-md-12 main-header navigation-header" style="text-align: center; margin-bottom: 10px">
-        <p style="line-height: 20px;">
-          <b class="font-futura">Find</b>
-          <br>건강한 시작을 위한 클래스 찾기
-        </p>
+      <div class="col-md-12 main-header navigation-header" style="text-align: center; margin: 10px 0">
+<!--        <p style="line-height: 20px;">-->
+          <h6 class="font-futura" style="height: 20px; line-height: 20px;">Find</h6>
+        <p>건강한 시작을 위한 클래스 찾기</p>
+<!--        </p>-->
       </div>
       <div class="col-md-12 main-nav" style="display: flex">
         <a href="<?php echo base_url().'home/find'; ?>">

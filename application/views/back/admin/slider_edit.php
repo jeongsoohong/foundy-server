@@ -85,29 +85,8 @@
     }
   }
 
-  function limitLines(obj, e) {
-    let n = (obj.value.match(/\r\n|\r|\n/g)||[]).length + 1, maxRows = obj.rows;
-    if (e.which === 13 && n === maxRows) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  function postDesc() {
-    let desc = document.getElementById('desc');
-    desc.value = desc.value.replace(/\r\n|\r|\n/g,"<br />");
-    return true;
-  }
-
-  function preDesc() {
-    let desc = document.getElementById('desc');
-    desc.value = desc.value.replace("<br />", "\n");
-    return true;
-  }
-
   function submit() {
-    postDesc();
+    postDesc('desc');
     form_submit('slider_edit','정상적으로 업로드되었습니다!');
     proceed('to_add');
   }
@@ -116,7 +95,7 @@
     $("form").submit(function(e){
       return false;
     });
-    preDesc();
+    preDesc('desc');
   });
 </script>
 <style>

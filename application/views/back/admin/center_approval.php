@@ -27,14 +27,10 @@
   </div>
   </form>
 </div>
-
 <script type="text/javascript">
-
   $(document).ready(function() {
     set_switchery();
   });
-
-
   $(document).ready(function() {
     $("form").submit(function(e){
       //return false;

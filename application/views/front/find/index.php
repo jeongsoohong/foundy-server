@@ -45,11 +45,11 @@
         <table class="col-md-12" style="width: 100%;">
           <tbody>
           <tr>
-            <td style="width: 30%; text-align: right; padding-right: 10px">
+            <td style="width: 70px; text-align: right; padding-right: 10px">
               Find your
             </td>
-            <td style="width: 60%; border-bottom: 1px solid grey">
-              <input type="text" name="search" id="search-text" value="" style="border: none">
+            <td style="width: auto; border-bottom: 1px solid grey">
+              <input type="text" name="search" id="search-text" value="" style="border: none; width: 100%">
             </td>
             <td style="padding-left: 10px">
               <a href="javascript:void(0);" onclick="find_search($('#search-text').val());">

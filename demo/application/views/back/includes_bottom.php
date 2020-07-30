@@ -28,11 +28,11 @@
 	<script src="<?php echo base_url(); ?>template/back/js/ajax_method.js"></script>
 
 
-	<!--Demo script [ DEMONSTRATION ]--
+	<!--Demo script [ DEMONSTRATION ]-->
 	<script src="<?php echo base_url(); ?>template/back/js/jquery.form.js"></script>
 
 
-	<!--Demo script [ DEMONSTRATION ]--
+	<!--Demo script [ DEMONSTRATION ]-->
 	<script src="<?php echo base_url(); ?>template/back/js/jspdf.js"></script>
 
 

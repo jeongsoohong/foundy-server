@@ -33,7 +33,7 @@
               <label class="col-sm-4 control-label" for="demo-hor-12"><?php echo ('소개사진');?></label>
               <div class="col-sm-6">
                 <span class="pull-left btn btn-default btn-file"> <?php echo ('파일열기');?>
-                  <input type="file" name="img" onchange="preview(this);" id="demo-hor-12" class="form-control required">
+                  <input type="file" name="img" onchange="preview(this);" id="demo-hor-12" class="form-control">
                 </span>
                 <br><br>
                 <span id="previewImg" ></span>
@@ -42,7 +42,7 @@
             <div class="form-group btm_border">
               <label class="col-sm-4 control-label" for="demo-hor-1"><?php echo ('소개글');?></label>
               <div class="col-sm-6">
-                <input type="text" name="summery" id="demo-hor-1" placeholder="<?php echo ('소개글');?>" class="form-control required">
+                <input type="text" name="summery" id="demo-hor-1" placeholder="<?php echo ('소개글');?>" class="form-control">
               </div>
             </div>
 
