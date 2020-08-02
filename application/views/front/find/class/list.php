@@ -7,8 +7,8 @@ foreach ($video_data as $video) {
   }
   $cat[strlen($cat) - 1] = "\0";
   ?>
-  <a href="<?php echo base_url(); ?>home/teacher/video/view/<?php echo $video->video_id; ?>">
-    <li style="padding: 10px 0 10px 0 !important;">
+  <li style="padding: 10px 0 10px 0 !important;">
+    <a href="<?php echo base_url(); ?>home/teacher/video/view/<?php echo $video->video_id; ?>">
       <div class="col-md-12 media" style="padding: 0 5px 0 5px !important;">
         <div class="col-md-6 pull-left media-link" style="width: 190px; height: 120px; padding: 0 5px 0 5px !important;">
           <img src="<?php echo $video->thumbnail_image_url; ?>" width="180" height="120" alt="" style="padding: 0 0 0 0 !important;">
@@ -23,6 +23,6 @@ foreach ($video_data as $video) {
           <!--</div>-->
         </div>
       </div>
-    </li>
-  </a>
+    </a>
+  </li>
 <?php } ?>

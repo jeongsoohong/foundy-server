@@ -32,11 +32,15 @@ class Admin extends CI_Controller
     defined('IMG_WEB_PATH_BLOG')  OR define('IMG_WEB_PATH_BLOG', base_url().'uploads/blog_image/');
     defined('IMG_PATH_SLIDER')      OR define('IMG_PATH_SLIDER', '/web/public_html/uploads/slider_image/');
     defined('IMG_WEB_PATH_SLIDER')  OR define('IMG_WEB_PATH_SLIDER', base_url().'uploads/slider_image/');
+
   }
 
   /* index of the admin. Default: Dashboard; On No Login Session: Back to login page. */
   public function index()
   {
+    // for login
+    $page_data['control'] = "admin";
+
     if ($this->session->userdata('admin_login') == 'yes') {
       $query = <<<QUERY
 select count(*) as count from center where activate=1
@@ -91,7 +95,7 @@ QUERY;
       $page_data['page_name'] = "dashboard";
       $this->load->view('back/index', $page_data);
     } else {
-      $page_data['control'] = "admin";
+//      $page_data['control'] = "admin";
       $this->load->view('back/login', $page_data);
     }
   }
@@ -99,8 +103,11 @@ QUERY;
   /* Login into Admin panel */
   function login($para1 = '')
   {
+    // for login
+    $page_data['control'] = "admin";
+
     if ($para1 == 'forget_form') {
-      $page_data['control'] = 'admin';
+//      $page_data['control'] = 'admin';
       $this->load->view('back/forget_password', $page_data);
     } else if ($para1 == 'forget') {
       $this->load->library('form_validation');
@@ -153,7 +160,6 @@ QUERY;
               echo 'login_failed : incorrect password';
               exit;
             }
-            $this->session->set_userdata('login', 'yes');
             $this->session->set_userdata('admin_login', 'yes');
             $this->session->set_userdata('admin_id', $user_data->user_id);
             $this->session->set_userdata('admin_name', $user_data->nickname);
@@ -171,7 +177,8 @@ QUERY;
   /* Loging out from Admin panel */
   function logout()
   {
-    $this->session->sess_destroy();
+    //$this->session->sess_destroy();
+    $this->session->set_userdata('admin_login', 'no');
     redirect(base_url() . 'admin', 'refresh');
   }
 
@@ -188,6 +195,9 @@ QUERY;
   /* Manage Admin Settings */
   function manage_admin($para1 = "")
   {
+    // for login
+    $page_data['control'] = "admin";
+
     if ($this->is_logged() == false) {
       redirect(base_url() . 'admin');
     }
@@ -219,6 +229,9 @@ QUERY;
   /*Product blog_category add, edit, view, delete */
   function blog_category($para1 = '', $para2 = '')
   {
+    // for login
+    $page_data['control'] = "admin";
+
     if ($this->is_logged() == false) {
       redirect(base_url() . 'admin');
     }
@@ -274,6 +287,9 @@ QUERY;
   /*Product Category add, edit, view, delete */
   function blog($para1 = '', $para2 = '')
   {
+    // for login
+    $page_data['control'] = "admin";
+
     if ($this->is_logged() == false) {
       redirect(base_url() . 'admin');
     }
@@ -285,16 +301,17 @@ QUERY;
       $blog_category = $this->db->get_where('category_blog', array('category_id' => $category_id))->row();
 
       $main_image_url = '';
-      if (!isset($_FILES["img"]["tmp_name"])) {
+      if (!isset($_FILES["img"])) {
         if ($blog_category->type == BLOG_TYPE_DEFAULT) {
           echo '메인 이미지를 첨부해주세요.';
           exit;
         }
       } else {
+        $this->crud_model->file_validation($_FILES['img']);
         $time = time();
         $file_name = 'blog_'.$blog_id.'.jpg';
         $main_image_url = base_url().'uploads/blog_image/blog_'.$blog_id.'_thumb.jpg?id='.$time;
-        $this->crud_model->upload_image(IMG_PATH_BLOG, $file_name, $_FILES["img"]["tmp_name"], 400, 250, true, false);
+        $this->crud_model->upload_image(IMG_PATH_BLOG, $file_name, $_FILES["img"], 400, 250, true, false);
       }
 
       $data['blog_id'] = $blog_id;
@@ -326,10 +343,11 @@ QUERY;
       $blog_id = $para2;
       $category_id = $this->input->post('category_blog');
 
-      if (isset($_FILES["img"]["tmp_name"])) {
+      if (isset($_FILES["img"])) {
+        $this->crud_model->file_validation($_FILES['img']);
         $time = time();
         $file_name = 'blog_'.$blog_id.'.jpg';
-        $this->crud_model->upload_image(IMG_PATH_BLOG, $file_name, $_FILES["img"]["tmp_name"], 400, 250, true, false);
+        $this->crud_model->upload_image(IMG_PATH_BLOG, $file_name, $_FILES["img"], 400, 250, true, false);
         $main_image_url = base_url().'uploads/blog_image/blog_'.$blog_id.'_thumb.jpg?id='.$time;
         $data['main_image_url'] = $main_image_url;
       } else {
@@ -361,11 +379,16 @@ QUERY;
 
       $blog_id = $para2;
 
-      if (isset($_FILES["file"]["tmp_name"])) {
-        $time = gettimeofday();
-        $file_name = 'blog_'.$blog_id.'_'.$time['sec'].$time['usec'].'.jpg';
-        $this->crud_model->upload_image(IMG_PATH_BLOG, $file_name, $_FILES["file"]["tmp_name"], 400, 0, false, true);
-        echo json_encode(array('success' => true, 'filename' => $file_name));
+      if (isset($_FILES["file"])) {
+        $error = $this->crud_model->file_validation($_FILES['file'], false);
+        if ($error != UPLOAD_ERR_OK) {
+          echo json_encode(array('success' => false, 'error' => $error));
+        } else {
+          $time = gettimeofday();
+          $file_name = 'blog_' . $blog_id . '_' . $time['sec'] . $time['usec'] . '.jpg';
+          $this->crud_model->upload_image(IMG_PATH_BLOG, $file_name, $_FILES["file"], 400, 0, false, true);
+          echo json_encode(array('success' => true, 'filename' => $file_name));
+        }
       } else {
         echo json_encode(array('success' => false, 'error' => 4));
       }
@@ -474,114 +497,12 @@ QUERY;
     }
   }
 
-  public function upload()
-  {
-    if ($this->is_logged() == false) {
-      redirect(base_url() . 'admin');
-    }
-    # 매달 해당월 폴더 제작
-    //        $mydir = UPLOAD.date('Ym');
-    $mydir = '/web/public_html/uploads/blog_image';
-    if (!is_dir($mydir)) {
-      if (@mkdir($mydir, 0777)) {
-        @chmod($mydir, 0777);
-      }
-    }
-    # 파일 업로드
-    $config['upload_path'] = $mydir;
-    $config['allowed_types'] = 'gif|jpg|png';
-    $config['max_size'] = 2048;
-    $config['max_width'] = 0;
-    $config['max_height'] = 0;
-    $config['encrypt_name'] = true;
-    $log_field = array();
-    $this->load->library('upload', $config);
-    if (!$this->upload->do_upload('file')) {
-      $error_message = $this->upload->display_errors();
-      echo json_encode(array('success' => false, 'error' => strip_tags($error_message), 'url' => $mydir));
-      exit();
-    } else {
-      $data = array('upload_data' => $this->upload->data());
-      $save_url = base_url() . 'uploads/blog_image/' . $data['upload_data']['file_name'];
-      # 이미지 리사이징 가로 400px 이상만 리사이징됨
-      $img_conf['image_library'] = 'gd2';
-      $img_conf['source_image'] = $data['upload_data']['full_path'];
-      $img_conf['create_thumb'] = TRUE;
-      $img_conf['quality'] = '100%';
-      $img_conf['maintain_ratio'] = TRUE;
-      $img_conf['new_image'] = $mydir;
-      if ($data['upload_data']['image_width'] > 400) {
-        $img_conf['width'] = 400;
-        $img_conf['master_dim'] = 'width';
-      }
-      $this->load->library('image_lib', $img_conf);
-      if ($this->image_lib->resize()) {
-        # URL 다시 설정
-        $refile_arr = explode('.', $data['upload_data']['file_name']);
-        $refile = $refile_arr[0] . '_thumb.' . $refile_arr[1];
-        $save_url = base_url() . 'uploads/blog_image/' . $refile;
-        unlink($data['upload_data']['full_path']);
-      }
-      echo json_encode(array('success' => true, 'save_url' => $save_url));
-      exit();
-    }
-  }
-
-  //Upload image summernote
-  function upload_image()
-  {
-    if ($this->is_logged() == false) {
-      redirect(base_url() . 'admin');
-    }
-    if (isset($_FILES["file"]["name"])) {
-      $this->load->library('upload');
-
-      $config['upload_path'] = '/web/public_html/uploads/blog_image/';
-      $config['allowed_types'] = 'jpg|jpeg|png|gif';
-      $this->upload->initialize($config);
-      if (!$this->upload->do_upload('image')) {
-        $this->upload->display_errors();
-        return FALSE;
-      } else {
-        $data = $this->upload->data();
-        //Compress Image
-        $config['image_library'] = 'gd2';
-        $config['source_image'] = '/web/public_html/uploads/blog_image/' . $data['file_name'];
-        $config['create_thumb'] = FALSE;
-        $config['maintain_ratio'] = TRUE;
-        $config['quality'] = '100%';
-        $config['width'] = 400;
-        $config['height'] = 300;
-        $config['new_image'] = '/web/public_html/uploads/blog_image/' . $data['file_name'];
-        $this->load->library('image_lib', $config);
-        $this->image_lib->resize();
-        echo base_url() . 'uploads/blog_image/' . $data['file_name'];
-      }
-    } else {
-      $error_message = $this->upload->display_errors();
-      echo json_encode(array('success' => false, 'error' => strip_tags($error_message)));
-      exit();
-    }
-  }
-
-  //Delete image summernote
-  function delete_image()
-  {
-    if ($this->is_logged() == false) {
-      redirect(base_url() . 'admin');
-    }
-    $src = $this->input->post('src');
-    $file_name = str_replace(base_url(), '', $src);
-    if (unlink($file_name)) {
-      echo 'File Delete Successfully';
-    } else {
-      echo $file_name;
-    }
-  }
-
   /* center Management */
   function center($para1 = '', $para2 = '', $para3 = '')
   {
+    // for login
+    $page_data['control'] = "admin";
+
     if ($this->is_logged() == false) {
       redirect(base_url() . 'admin');
     }
@@ -682,6 +603,9 @@ QUERY;
   /* teacher Management */
   function teacher($para1 = '', $para2 = '', $para3 = '')
   {
+    // for login
+    $page_data['control'] = "admin";
+
     if ($this->is_logged() == false) {
       redirect(base_url() . 'admin');
     }
@@ -733,14 +657,17 @@ UPDATE teacher set activate={$data['activate']},approval_at=NOW() where teacher_
 QUERY;
       $this->db->query($query);
 
-      $user_type = USER_TYPE_TEACHER;
+      $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
+
       if ($approval == 'ok') {
+        $user_type = ($user_data->user_type | USER_TYPE_TEACHER);
         $query = <<<QUERY
-UPDATE user set user_type=user_type+{$user_type} where user_id={$user_id}
+UPDATE user set user_type={$user_type} where user_id={$user_id}
 QUERY;
       } else {
+        $user_type = ($user_data->user_type & ~USER_TYPE_TEACHER);
         $query = <<<QUERY
-UPDATE user set user_type=user_type-{$user_type} where user_id={$user_id}
+UPDATE user set user_type={$user_type} where user_id={$user_id}
 QUERY;
       }
       $this->db->query($query);
@@ -770,6 +697,9 @@ QUERY;
 
   function slider($para1 = '', $para2 = '')
   {
+    // for login
+    $page_data['control'] = "admin";
+
     if ($this->is_logged() == false) {
       redirect(base_url() . 'admin');
     }
@@ -782,10 +712,12 @@ QUERY;
 
     } elseif ($type == 'do_add') {
 
-      if (!isset($_FILES["img"]["tmp_name"])) {
+      if (!isset($_FILES["img"])) {
         echo '메인 이미지를 첨부해주세요.';
         exit;
       }
+
+      $this->crud_model->file_validation($_FILES['img']);
 
       $data['slider_image_url'] = '';
       $data['category'] = $this->input->post('category');
@@ -798,7 +730,7 @@ QUERY;
       $time = time();
       $file_name = 'slider_'.$slider_id.'.jpg';
       $slider_image_url = base_url().'uploads/slider_image/slider_'.$slider_id.'_thumb.jpg?id='.$time;
-      $this->crud_model->upload_image(IMG_PATH_SLIDER, $file_name, $_FILES["img"]["tmp_name"], 400, 250, true, false);
+      $this->crud_model->upload_image(IMG_PATH_SLIDER, $file_name, $_FILES["img"], 400, 250, true, false);
 
       $upd['slider_image_url'] = $slider_image_url;
       $this->db->where('slider_id', $slider_id);
@@ -844,11 +776,12 @@ QUERY;
 
       $slider_id = $para2;
 
-      if (isset($_FILES["img"]["tmp_name"])) {
+      if (isset($_FILES["img"])) {
+        $this->crud_model->file_validation($_FILES['img']);
         $time = time();
         $file_name = 'slider_'.$slider_id.'.jpg';
         $slider_image_url = base_url().'uploads/slider_image/slider_'.$slider_id.'_thumb.jpg?id='.$time;
-        $this->crud_model->upload_image(IMG_PATH_SLIDER, $file_name, $_FILES["img"]["tmp_name"], 400, 250, true, false);
+        $this->crud_model->upload_image(IMG_PATH_SLIDER, $file_name, $_FILES["img"], 400, 250, true, false);
         $data['slider_image_url'] = $slider_image_url;
       }
 
@@ -888,6 +821,8 @@ QUERY;
 
   function shop($para1 = '', $para2 = '', $para3 = '')
   {
+    // for login
+    $page_data['control'] = "admin";
 
     if ($this->is_logged() == false) {
       redirect(base_url() . 'admin');
@@ -940,12 +875,18 @@ QUERY;
       } else if ($type == 'approval_set') {
 
         $product_id = $para3;
+        $product_data = $this->db->get_where('shop_product_id', array('product_id' => $product_id))->row();
+        $shop_data = $this->db->get_where('shop', array('shop_id' => $product_data->shop_id))->row();
         $status = $this->input->post('status');
-        $query = <<<QUERY
+        if ($shop_data->activate == 0 && $status >= SHOP_PRODUCT_STATUS_ON_SALE) {
+          $this->crud_model->alert_exit('샵 승인을 먼저 해주세요');
+        } else {
+          $query = <<<QUERY
 UPDATE shop_product_id set status={$status},approval_at=NOW() where product_id={$product_id}
 QUERY;
-        $this->db->query($query);
-        echo 'done';
+          $this->db->query($query);
+          echo 'done';
+        }
 
       } else if ($type == 'view') {
 
@@ -1014,8 +955,13 @@ QUERY;
         $approval = $this->input->post('approval');
         if ($approval == 'ok') {
           $data['activate'] = 1;
+          $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
+          if (empty($shop_data->commission_rate) == true || $shop_data->commission_rate == '') {
+            $this->crud_model->alert_exit("샵의 수수료율 등 추가정보를 먼저 업데이트 해주세요. commission_rate: {$shop_data->commission_rate}");
+          }
         } else {
           $data['activate'] = 0;
+          $this->db->update('shop_product_id', array('status' => SHOP_PRODUCT_STATUS_REJECT), array('shop_id' => $shop_id));
         }
 
         $query = <<<QUERY
@@ -1023,14 +969,22 @@ UPDATE shop set activate={$data['activate']},contract_at=NOW() where shop_id={$s
 QUERY;
         $this->db->query($query);
 
-        $user_type = USER_TYPE_SHOP;
-        if ($approval == 'ok') {
+        $query = <<<QUERY
+select count(*) as cnt from shop where user_id={$user_id} and activate=1
+QUERY;
+        $shop_cnt = $this->db->query($query)->row()->cnt;
+
+        $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
+
+        if ($shop_cnt > 0) {
+          $user_type = ($user_data->user_type | USER_TYPE_SHOP);
           $query = <<<QUERY
-UPDATE user set user_type=user_type+{$user_type} where user_id={$user_id}
+UPDATE user set user_type={$user_type} where user_id={$user_id}
 QUERY;
         } else {
+          $user_type = ($user_data->user_type & ~USER_TYPE_SHOP);
           $query = <<<QUERY
-UPDATE user set user_type=user_type-{$user_type} where user_id={$user_id}
+UPDATE user set user_type={$user_type} where user_id={$user_id}
 QUERY;
         }
         $this->db->query($query);
@@ -1126,9 +1080,10 @@ QUERY;
             'address_1' => $address_1,
             'address_2' => $address_2,
           );
-          if (isset($_FILES["business_license_img"]["tmp_name"])) {
+          if (isset($_FILES["business_license_img"])) {
+            $this->crud_model->file_validation($_FILES['business_license_img']);
             $file_name = 'shop_'.$shop_id.'.jpg';
-            $this->crud_model->upload_image(IMG_PATH_SHOP, $file_name, $_FILES["business_license_img"]["tmp_name"], 0, 0, false, true);
+            $this->crud_model->upload_image(IMG_PATH_SHOP, $file_name, $_FILES["business_license_img"], 0, 0, false, true);
             $time=time();
             $business_image_url = IMG_WEB_PATH_SHOP.$file_name.'?id='.$time;
             $data['business_license_url'] = $business_image_url;

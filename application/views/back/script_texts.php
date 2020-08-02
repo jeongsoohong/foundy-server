@@ -1,5 +1,5 @@
 <script>
-	var base_url = "<?php echo base_url(); ?>"; 
+	var base_url = "<?php echo base_url(); ?>";
 	var dss = "<?php echo ("deleted_successfully"); ?>";
 	var cncle = "<?php echo ("cancelled"); ?>";
 	var cnl = "<?php echo ("cancel"); ?>";

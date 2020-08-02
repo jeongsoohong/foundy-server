@@ -49,11 +49,9 @@
              onclick="ajax_modal('approval','shop_approval','successfully_approval!','shop_approval','<?php echo $row['shop_id']; ?>')" data-original-title="View" data-container="body">
             <?php echo ($row['activate'] ? '미승인' : '승인');?>
           </a>
-          <a onclick="delete_confirm('<?php echo $row['shop_id']; ?>','<?php echo ('정말 삭제하시겠습니까?');
-          ?>')" class="btn btn-xs btn-danger btn-labeled fa fa-trash" data-toggle="tooltip"
-             data-original-title="Delete" data-container="body">
-            <?php echo ('삭제');?>
-          </a>
+<!--          <a onclick="delete_confirm('--><?php //echo $row['shop_id']; ?><!--',' --><?php //echo ('정말 삭제하시겠습니까?'); ?><!--')" class="btn btn-xs btn-danger btn-labeled fa fa-trash" data-toggle="tooltip" data-original-title="Delete" data-container="body"> -->
+            <?php //echo ('삭제');?>
+<!--          </a>-->
         </td>
       </tr>
       <?php

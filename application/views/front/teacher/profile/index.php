@@ -94,6 +94,8 @@
                               <i class="fa fa-ellipsis-v"></i>
                             </span>
                           </a>
+                        <?php } else {?>
+                          <?php echo $this->crud_model->sns_func_html('bookmark', 'teacher', $bookmarked, $teacher_data->teacher_id, 20, 20); ?>
                         <?php } ?>
                       </td>
                     </tr>
@@ -109,8 +111,7 @@
                         ?>
                         <span style="color: saddlebrown;"><?php echo $cat; ?></span>
                       </td>
-                      <td style="width: 15%; text-align: center">
-                        <?php echo $this->crud_model->sns_func_html('bookmark', 'teacher', $bookmarked, $teacher_data->teacher_id, 20, 20); ?>
+                      <td>
                       </td>
                     </tr>
                     <tr style="height: 20px;">

@@ -5,6 +5,7 @@ if (!defined('BASEPATH'))
 
 class Shop extends CI_Controller
 {
+
   function __construct()
   {
     parent::__construct();
@@ -16,30 +17,40 @@ class Shop extends CI_Controller
     /*cache control*/
     $this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
     $this->output->set_header('Pragma: no-cache');
+
   }
 
-  public function echo_exit($msg) {
+  function echo_exit($msg) {
     echo "<script>alert('$msg');</script>";
     exit;
   }
 
   /* index of the admin. Default: Dashboard; On No Login Session: Back to login page. */
-  public function index()
+  function index()
   {
-    if ($this->session->userdata('shop_login') == 'yes') {
+    if (($page_data = $this->is_logged()) == false) {
+      // for login
+      $page_data['control'] = "shop";
+
+      $this->load->view('back/login', $page_data);
+    } else {
+      // for login
+      $page_data['control'] = "shop";
+
       $page_data['page_name'] = "dashboard";
       $this->load->view('back/shop/index', $page_data);
-    } else {
-      $page_data['control'] = "shop";
-      $this->load->view('back/login', $page_data);
     }
+
   }
 
   /* Login into Admin panel */
   function login($para1 = '')
   {
+    // for login
+    $page_data['control'] = "shop";
+
     if ($para1 == 'forget_form') {
-      $page_data['control'] = 'shop';
+//      $page_data['control'] = 'shop';
       $this->load->view('back/forget_password', $page_data);
     } else if ($para1 == 'forget') {
       $this->load->library('form_validation');
@@ -92,9 +103,12 @@ QUERY;
               echo 'login_failed : incorrect password';
               exit;
             }
-            $this->session->set_userdata('login', 'yes');
+            $this->db->order_by('shop_id', 'asc');
+            $this->db->limit(1,0);
+            $shop_data = $this->db->get_where('shop', array('user_id' => $user_data->user_id, 'activate' => 1))->row();
             $this->session->set_userdata('shop_login', 'yes');
             $this->session->set_userdata('user_id', $user_data->user_id);
+            $this->session->set_userdata('shop_id', $shop_data->shop_id);
             $this->session->set_userdata('title', 'shop');
 
             echo 'lets_login';
@@ -109,25 +123,53 @@ QUERY;
   /* Loging out from Admin panel */
   function logout()
   {
-    $this->session->sess_destroy();
+//    $this->session->sess_destroy();
+    $this->session->set_userdata('shop_login', 'no');
     redirect(base_url() . 'shop', 'refresh');
   }
 
   /* Checking Login Stat */
   function is_logged()
   {
+    $page_data = array();
     if ($this->session->userdata('shop_login') == 'yes') {
-      return true;
+      $user_id = $this->session->userdata('user_id');
+      $shops= $this->db->get_where('shop', array('user_id' => $user_id, 'activate' => 1))->result();
+      $page_data['shops'] = $shops;
+      return $page_data;
     } else {
       return false;
     }
   }
 
-  public function notice()
+  function change()
   {
-    if ($this->is_logged() == false) {
+    $user_id = $this->session->userdata('user_id');
+    $shop_id = $this->input->get('id');
+
+    $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
+    if (empty($shop_data)) {
+      $this->crud_model->alert_exit('샵이 존재하지 않습니다');
+    }
+    if ($shop_data->user_id != $user_id) {
+      $this->crud_model->alert_exit('해당 샵에 대한 권한이 없습니다');
+    }
+    if ($shop_data->activate != 1) {
+      $this->crud_model->alert_exit('승인 대기 중입니다.');
+    }
+
+    $this->session->set_userdata('shop_id', $shop_id);
+    echo 'done';
+  }
+
+  function notice()
+  {
+    if (($page_data = $this->is_logged()) == false) {
       redirect(base_url() . 'shop');
     }
+
+    // for login
+    $page_data['control'] = "shop";
 
     $page = 1;
     if (isset($_GET['page'])) {
@@ -178,11 +220,17 @@ QUERY;
     $this->load->view('back/shop/index', $page_data);
   }
 
-  public function product($para1 = '', $para2 = '')
+
+  function product($para1 = '', $para2 = '')
   {
-    if ($this->is_logged() == false) {
+    if (($page_data = $this->is_logged()) == false) {
       redirect(base_url() . 'shop');
     }
+
+    // for login
+    $page_data['control'] = "shop";
+    $user_id = $this->session->userdata('user_id');
+    $shop_id = $this->session->userdata('shop_id');
 
     if ($para1 == 'list') {
 
@@ -196,8 +244,7 @@ QUERY;
 //      echo "<script>alert('$item_name');</script>";
 //      exit;
 
-      $user_id = $this->session->userdata('user_id');
-      $shop_data = $this->db->get_where('shop', array('user_id' => $user_id))->row();
+      $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
       $shop_category = $this->db->get_where('shop_product_category', array('cat_level' => 1))->result();
       $product_data = $this->crud_model->get_product_list($shop_data->shop_id, $status, $item_name, $cat, $offset, $size , 'asc');
       if (isset($product_data) && !empty($product_data)) {
@@ -247,14 +294,11 @@ QUERY;
         $end_date_kor = date('Y-m-d H:i:s', strtotime($_GET['end_date']));
       }
 
-      $user_id = $this->session->userdata('user_id');
-      $shop_data = $this->db->get_where('shop', array('user_id' => $user_id))->row();
 
       $size = SHOP_ADMIN_ITEM_LIST_PAGE_SIZE;
       $offset = $size*($page - 1);
 
-      $user_id = $this->session->userdata('user_id');
-      $shop_data = $this->db->get_where('shop', array('user_id' => $user_id))->row();
+      $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
 
       $select = "select a.shop_id,a.shop_name,b.email,c.item_name,d.*";
       $from = "from shop a,user b,shop_product c, shop_product_qna d";
@@ -310,8 +354,7 @@ QUERY;
       $size = SHOP_ADMIN_ITEM_LIST_PAGE_SIZE;
       $offset = $size*($page - 1);
 
-      $user_id = $this->session->userdata('user_id');
-      $shop_data = $this->db->get_where('shop', array('user_id' => $user_id))->row();
+      $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
 
       $select = "select a.shop_id,a.shop_name,b.email,c.item_name,d.*";
       $from = "from shop a,user b,shop_product c, shop_product_review d";
@@ -350,8 +393,7 @@ QUERY;
 
     } else if ($para1 == 'register') {
 
-      $user_id = $this->session->userdata('user_id');
-      $shop_data = $this->db->get_where('shop', array('user_id' => $user_id))->row();
+      $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
 
       if ($shop_data->set_ship_info == false || $shop_data->set_return_info == false || $shop_data->set_brand_info == false) {
         $this->crud_model->alert_exit('공급사 정보를 먼저 입력해주세요.', base_url().'shop/account');
@@ -465,8 +507,7 @@ QUERY;
         $purchase_max_cnt = (int)$this->input->post('purchase_max_cnt');
         $bundle_shipping_cnt = $this->input->post('bundle_shipping_cnt');
 
-        $user_id = $this->session->userdata('user_id');
-        $shop_data = $this->db->get_where('shop', array('user_id' => $user_id))->row();
+        $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
 
         $product_code = sprintf('%s%010d', $item_cat, (int)$product_id);
 
@@ -489,8 +530,9 @@ QUERY;
         $i = 0;
         for (; $i < $item_image_file_count; $i++) {
           if (isset($_FILES["item_image_file_{$i}"]) == true) {
+            $this->crud_model->file_validation($_FILES["item_image_file_{$i}"]);
             $file_name = 'product_' . $product_id . '_' . $i . '.jpg';
-            $this->crud_model->upload_image(IMG_PATH_SHOP, $file_name, $_FILES["item_image_file_{$i}"]["tmp_name"], 400, 400, true, false);
+            $this->crud_model->upload_image(IMG_PATH_SHOP, $file_name, $_FILES["item_image_file_{$i}"], 400, 400, true, false);
             $time = time();
             $file_name = 'product_' . $product_id . '_' . $i . '_thumb.jpg';
             $item_image_urls[$i] = IMG_WEB_PATH_SHOP . $file_name . '?id=' . $time;
@@ -564,10 +606,11 @@ QUERY;
     } else if ($para1 == 'upload_image') {
 
       $product_id = $para2;
-      if (isset($_FILES["file"]["tmp_name"])) {
+      if (isset($_FILES["file"])) {
+        $this->crud_model->file_validation($_FILES['file']);
         $time = gettimeofday();
         $file_name = 'product_info_'.$product_id.'_'.$time['sec'].$time['usec'].'.jpg';
-        $this->crud_model->upload_image(IMG_PATH_SHOP, $file_name, $_FILES["file"]["tmp_name"], 400, 0, false, true);
+        $this->crud_model->upload_image(IMG_PATH_SHOP, $file_name, $_FILES["file"], 400, 0, false, true);
         echo json_encode(array('success' => true, 'filename' => $file_name));
       } else {
         echo json_encode(array('success' => false, 'error' => 4));
@@ -609,9 +652,14 @@ QUERY;
 
   public function order()
   {
-    if ($this->is_logged() == false) {
+    if (($page_data = $this->is_logged()) == false) {
       redirect(base_url() . 'shop');
     }
+
+    // for login
+    $page_data['control'] = "shop";
+    $user_id = $this->session->userdata('user_id');
+    $shop_id = $this->session->userdata('shop_id');
 
     $page = 1;
     if (isset($_GET['page'])) {
@@ -641,8 +689,7 @@ QUERY;
     $size = SHOP_ADMIN_ITEM_LIST_PAGE_SIZE;
     $offset = $size*($page - 1);
 
-    $user_id = $this->session->userdata('user_id');
-    $shop_data = $this->db->get_where('shop', array('user_id' => $user_id))->row();
+    $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
 
     $select = "select a.shop_id,a.shop_name,b.email,c.item_name,d.*";
     $from = "from shop a,user b,shop_product c, shop_purchase_product d";
@@ -688,9 +735,14 @@ QUERY;
 
   public function income()
   {
-    if ($this->is_logged() == false) {
+    if (($page_data = $this->is_logged()) == false) {
       redirect(base_url() . 'shop');
     }
+
+    // for login
+    $page_data['control'] = "shop";
+    $user_id = $this->session->userdata('user_id');
+    $shop_id = $this->session->userdata('shop_id');
 
     $page = 1;
     if (isset($_GET['page'])) {
@@ -714,7 +766,7 @@ QUERY;
     $offset = $size*($page - 1);
 
     $user_id = $this->session->userdata('user_id');
-    $shop_data = $this->db->get_where('shop', array('user_id' => $user_id))->row();
+    $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
 
     $select = "select a.shop_id,a.shop_name,b.email,c.item_name,e.receiver_name,d.*";
     $from = "from shop a,user b,shop_product c, shop_purchase_product d, shop_purchase e";
@@ -765,12 +817,17 @@ QUERY;
 
   public function account($para1 = '', $para2 = '')
   {
-    if ($this->is_logged() == false) {
+    if (($page_data = $this->is_logged()) == false) {
       redirect(base_url() . 'shop');
     }
 
+    // for login
+    $page_data['control'] = "shop";
     $user_id = $this->session->userdata('user_id');
-    $shop_data = $this->db->get_where('shop', array('user_id' => $user_id))->row();
+    $shop_id = $this->session->userdata('shop_id');
+
+    $user_id = $this->session->userdata('user_id');
+    $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
 
     $type = $para1;
     $action = $para2;

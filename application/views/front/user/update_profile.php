@@ -86,7 +86,7 @@
                       <label class="col-sm-12 control-label">프로필 사진</label>
                       <div class="col-sm-12">
                         <span class="pull-left btn btn-default btn-file">사진선택
-                          <input type="file" name="profile_img" onchange="preview(this);" class="form-control required">
+                          <input type="file" name="profile_img" onchange="preview(this);" class="form-control">
                         </span>
                         <br><br>
                         <span id="previewImg" ></span>

@@ -209,7 +209,7 @@ foreach($blog_data as $row){
     data = new FormData();
     data.append("file", file);
     $.ajax({
-      url: "/admin/upload", // image 저장 경로
+      url: "<?php echo base_url() . 'admin/blog/upload_image/'.$row['blog_id']; ?>",
       data: data,
       cache: false,
       contentType: false,

@@ -566,32 +566,31 @@ QUERY;
 
       $this->load->library('form_validation');
 
-      $this->form_validation->set_rules('nickname', 'nickname', 'trim|required|max_length[32]');
+      $this->form_validation->set_rules('nickname', 'nickname', 'trim|max_length[32]');
 
       if ($this->form_validation->run() == FALSE) {
         echo '<br>' . validation_errors();
       } else {
+
         $user_id = $this->session->userdata('user_id');
-//        $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
-
-//        $this->crud_model->file_up("profile_img", "profile", $user_id, '', '', '.jpg', 100, 100);
-        $file_name = 'profile_'.$user_id.'.jpg';
-        $this->crud_model->upload_image(IMG_PATH_PROFILE, $file_name, $_FILES["profile_img"]["tmp_name"], 100, 0, true, true);
-//      redirect(base_url() . "uploads/profile_image/{$_FILES['img']['tmp_name']}_$user_id");
-
-        $time=time();
         $nickname = $this->input->post('nickname');
-        $profile_image_url = base_url().'uploads/profile_image/profile_'.$user_id.'_thumb.jpg?id='.$time;
+        $this->db->set('nickname', $nickname);
 
-        $upd = array (
-          'nickname' => $nickname,
-          'profile_image_url' => $profile_image_url,
-        );
+        if (isset($_FILES['profile_img'])) {
+          $file_name = 'profile_'.$user_id.'.jpg';
+          $error = $this->crud_model->file_validation($_FILES['profile_img'], false);
+          if ($error == UPLOAD_ERR_OK) {
+            $this->crud_model->upload_image(IMG_PATH_PROFILE, $file_name, $_FILES["profile_img"], 100, 0, true, true);
+            $time=time();
+            $profile_image_url = base_url().'uploads/profile_image/profile_'.$user_id.'_thumb.jpg?id='.$time;
+            $this->db->set('profile_image_url', $profile_image_url);
+          } else if ($error != UPLOAD_ERR_NO_FILE) {
+            $this->crud_model->file_validation_alert($error);
+          }
+        }
+
         $this->db->where('user_id', $user_id);
-        $this->db->update('user', $upd);
-
-        $this->session->set_userdata('nickname', $nickname);
-        $this->session->set_userdata('profile_image_url', $profile_image_url);
+        $this->db->update('user');
 
         echo 'done';
       }
@@ -673,12 +672,12 @@ SELECT shop_id FROM user WHERE user_id={$user_id}
 QUERY;
       $row = $this->db->query($query)->row();
 
-      if ($row->shop_id > 0) {
-        echo ("<script>alert('이미신청하셨습니다'); window.location.href='{$base_url}home/user'</script>");
-        exit;
-      } else {
-        $this->load->view('front/user/shop_register');
-      }
+//      if ($row->shop_id > 0) {
+//        echo ("<script>alert('이미신청하셨습니다'); window.location.href='{$base_url}home/user'</script>");
+//        exit;
+//      }
+
+      $this->load->view('front/user/shop_register');
 
     } elseif ($view_type == "do_center_register") {
 
@@ -795,10 +794,10 @@ QUERY;
           $this->db->insert('center_category', array('center_id' => $center_id, 'category' => $cat, 'type' => CENTER_TYPE_PILATES, 'activate' => 0));
         }
 
-        $this->db->where('user_id', $user_id);
-        $this->db->update('user', array( 'center_id' => $center_id));
-
-        $this->session->set_userdata('center_id', $center_id);
+//        $this->db->where('user_id', $user_id);
+//        $this->db->update('user', array( 'center_id' => $center_id));
+//
+//        $this->session->set_userdata('center_id', $center_id);
 
         echo "done";
       }
@@ -893,10 +892,12 @@ QUERY;
         $email = $this->input->post('email');
         $sns_url = $this->input->post('sns_url');
 
-        if (!isset($_FILES["business_license_img"]["tmp_name"])) {
+        if (!isset($_FILES["business_license_img"])) {
           echo("<script>alert('사업자등록증 파일을 등록바랍니다.');</script>");
           exit;
         }
+
+        $this->crud_model->file_validation($_FILES['business_license_img']);
 
         $query = <<<QUERY
 select count(*) as cnt from shop where shop_name='{$shop_name}'
@@ -925,17 +926,17 @@ QUERY;
         $shop_id = $this->db->insert_id();
 
         $file_name = 'shop_' . $shop_id . '.jpg';
-        $this->crud_model->upload_image(IMG_PATH_SHOP, $file_name, $_FILES["business_license_img"]["tmp_name"], 0, 0, false, true);
+        $this->crud_model->upload_image(IMG_PATH_SHOP, $file_name, $_FILES['business_license_img'], 0, 0, false, true);
         $time = time();
         $business_image_url = IMG_WEB_PATH_SHOP . $file_name . '?id=' . $time;
 
         $this->db->where('shop_id', $shop_id);
         $this->db->update('shop', array('business_license_url' => $business_image_url));
 
-        $this->db->where('user_id', $user_id);
-        $this->db->update('user', array('shop_id' => $shop_id));
-
-        $this->session->set_userdata('shop_id', $shop_id);
+//        $this->db->where('user_id', $user_id);
+//        $this->db->update('user', array('shop_id' => $shop_id));
+//
+//        $this->session->set_userdata('shop_id', $shop_id);
 
         echo "done";
       }
@@ -1706,11 +1707,16 @@ QUERY;
 
         $center_id = $para3;
 
-        if (isset($_FILES["file"]["tmp_name"])) {
-          $time = gettimeofday();
-          $file_name = 'center_'.$center_id.'_'.$time['sec'].$time['usec'].'.jpg';
-          $this->crud_model->upload_image(IMG_PATH_CENTER, $file_name, $_FILES["file"]["tmp_name"], 400, 0, false, true);
-          echo json_encode(array('success' => true, 'filename' => $file_name));
+        if (isset($_FILES["file"])) {
+          $error = $this->crud_model->file_validation($_FILES['file'], false);
+          if ($error != UPLOAD_ERR_OK) {
+            echo json_encode(array('success' => false, 'error' => $error));
+          } else {
+            $time = gettimeofday();
+            $file_name = 'center_'.$center_id.'_'.$time['sec'].$time['usec'].'.jpg';
+            $this->crud_model->upload_image(IMG_PATH_CENTER, $file_name, $_FILES["file"], 400, 0, false, true);
+            echo json_encode(array('success' => true, 'filename' => $file_name));
+          }
         } else {
           echo json_encode(array('success' => false, 'error' => 4));
         }
@@ -3813,8 +3819,9 @@ QUERY;
             $review_img_url = array();
             for (; $i < $review_file_cnt; $i++) {
               if (isset($_FILES["review_file_{$i}"]) == true) {
+                $this->crud_model->file_validation($_FILES["review_file_{$i}"]);
                 $file_name = 'review_' . $review_id . '_' . $i . '.jpg';
-                $this->crud_model->upload_image(IMG_PATH_SHOP, $file_name, $_FILES["review_file_{$i}"]["tmp_name"], 400, 0, true, true);
+                $this->crud_model->upload_image(IMG_PATH_SHOP, $file_name, $_FILES["review_file_{$i}"], 400, 0, true, true);
                 $time = time();
                 $file_name = 'review_' . $review_id . '_' . $i . '_thumb.jpg';
                 $review_img_url[$i] = IMG_WEB_PATH_SHOP . $file_name . '?id=' . $time;

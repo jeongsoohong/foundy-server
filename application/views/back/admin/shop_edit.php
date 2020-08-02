@@ -44,7 +44,7 @@ foreach($shop_data as $row){
             </label>
             <div class="col-sm-6">
               <div class="col-sm-6">
-                <input readonly type="text" name="postcode" id="postcode" placeholder="우편번호" class="form-control required" value="<?php echo $row['postcode']; ?>">
+                <input readonly type="text" name="postcode" id="postcode" placeholder="우편번호" class="form-control" value="<?php echo $row['postcode']; ?>">
               </div>
               <div class="col-sm-3">
                 <button class="address-postcode-search-btn btn-edit" onclick="search_address()" style="padding: 0; font-size:12px; width:100%;height:32px">주소찾기</button>
@@ -52,10 +52,10 @@ foreach($shop_data as $row){
               <div class="col-sm-3">
               </div>
               <div class="col-sm-12">
-                <input readonly type="text" name="address_1" id="address-1" placeholder="기본주소" class="form-control required" value="<?php echo $row['address_1']; ?>">
+                <input readonly type="text" name="address_1" id="address-1" placeholder="기본주소" class="form-control" value="<?php echo $row['address_1']; ?>">
               </div>
               <div class="col-sm-12">
-                <input readonly type="text" name="address_2" id="address-2" placeholder="상세주소" class="form-control required" value="<?php echo $row['address_2']; ?>">
+                <input readonly type="text" name="address_2" id="address-2" placeholder="상세주소" class="form-control" value="<?php echo $row['address_2']; ?>">
               </div>
             </div>
           </div>
@@ -112,7 +112,7 @@ foreach($shop_data as $row){
               수수료율(%)
             </label>
             <div class="col-sm-6">
-              <input type="text" name="commission_rate" id="demo-hor-10" placeholder="수수료율(%)" class="form-control" value="<?php echo $row['commission_rate']; ?>">
+              <input type="text" name="commission_rate" id="demo-hor-10" placeholder="수수료율(%)" class="form-control required" value="<?php echo $row['commission_rate']; ?>">
             </div>
           </div>
           <div class="form-group btm_border">

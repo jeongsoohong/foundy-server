@@ -34,7 +34,7 @@
   <b class="font-futura">profile</b>
 </div>
 <div class="row">
-  <div class="col-md-12" style="padding: 0 !important; ">
+  <div class="col-md-12" style="padding: 0 15px !important; ">
     <div class="recent-post" style="background: #fff;">
       <div class="media">
         <div class="col-md-12" style="margin: 0 0 0 0; padding: 15px 15px 15px 15px; position: relative">
@@ -42,7 +42,7 @@
             <tbody>
             <tr style="height: 20px">
               <td rowspan="3" style="text-align: center">
-                <div class="media-object img-bg" id="blah" style="border-radius: 30px; background-size: cover; background-position-x: center; background-position-y: top; width: 60px; height: 60px; background-image: url('<?php
+                <div class="media-object img-bg" id="blah" style="margin: auto; border-radius: 30px; background-size: cover; background-position-x: center; background-position-y: top; width: 60px; height: 60px; background-image: url('<?php
                 if (empty($profile_image_url) || strlen($profile_image_url) == 0) {
                   echo base_url() . 'uploads/icon/profile_icon.png';
                 } else {
@@ -110,7 +110,7 @@
             <b class="font-futura">my center</b>
           </div>
           <div class="widget">
-            <ul class="profile_ul">
+            <ul class="profile_ul" style="padding-left: 30px !important; padding-right: 30px !important;">
               <?php foreach ($my_centers as $center) {
                 ?>
                 <li>
@@ -132,7 +132,7 @@
             <b class="font-futura">my class</b>
           </div>
           <div class="widget">
-            <ul class="profile_ul">
+            <ul class="profile_ul" style="padding-left: 30px !important; padding-right: 30px !important;">
               <li>
                 <a href="<?php echo base_url(); ?>home/teacher/profile/<?php echo $user_id ?>" style="position: inherit;">
                   <?php echo $my_teacher->name; ?>&nbsp;강사님 페이지 바로가기
@@ -151,7 +151,7 @@
             <b class="font-futura">my favorite</b>
           </div>
           <div class="widget" style="padding-bottom:10px; ">
-            <ul class="profile_ul">
+            <ul class="profile_ul" style="padding-left: 30px !important; padding-right: 30px !important;">
               <?php if (!empty($bookmark_centers) and count($bookmark_centers) > 0) {
                 foreach ($bookmark_centers as $center) {
                   ?>

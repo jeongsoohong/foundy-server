@@ -26,21 +26,24 @@
             <a class="pnav_introduce" href="#"><li>파운디 소개</li></a>
             <a class="pnav_faq" href="#"><li>자주하는 질문</li></a>
             <a class="pnav_customer_center" href="#"><li>고객센터</li></a>
-            <a class="pnav_service" href="#profile_content"><li>서비스 이용 약관</li></a>
-            <a class="pnav_privacy" href="#profile_content"><li>개인정보 보호정책</li></a>
-            <a class="pnav_logout" href="#"><li>로그아웃</li></a>
-            <a class="pnav_unregister" href="#"><li>회원탈퇴</li></a>
+<!--            <a class="pnav_service" href="#profile_content"><li>서비스 이용 약관</li></a>-->
+<!--            <a class="pnav_privacy" href="#profile_content"><li>개인정보 보호정책</li></a>-->
           </ul>
           <div class="information-title" style="margin-bottom: 0px; margin-top: 0px;">샵</div>
           <ul class="pleft_nav">
             <a class="pnav_shop_wishlist" href="<?php echo base_url(); ?>home/shop?cat=wish&col=product_id&order=desc"><li>위시리스트</li></a>
             <a class="pnav_shop_orderlist" href="<?php echo base_url();?>home/shop/order"><li>주문내역</li></a>
           </ul>
-          <div class="information-title" style="margin-bottom: 0px; margin-top: 0px;">문의</div>
+          <div class="information-title" style="margin-bottom: 0px; margin-top: 0px;">신청</div>
           <ul class="pleft_nav">
-            <a class="pnav_center_register" href="#profile_content"><li>센터 회원 신청</li></a>
-            <a class="pnav_teacher_register" href="#profile_content"><li>강사 회원 신청</li></a>
-            <a class="pnav_shop_register" href="#profile_content"><li>샵 회원 신청</li></a>
+            <a class="pnav_center_register" href="#profile_content"><li>센터 신청</li></a>
+            <a class="pnav_teacher_register" href="#profile_content"><li>강사 신청</li></a>
+            <a class="pnav_shop_register" href="#profile_content"><li>샵 브랜드 신청</li></a>
+          </ul>
+          <div class="information-title" style="margin-bottom: 0px; margin-top: 0px;">계정</div>
+          <ul class="pleft_nav">
+            <a class="pnav_logout" href="#"><li>로그아웃</li></a>
+            <a class="pnav_unregister" href="#"><li>회원탈퇴</li></a>
           </ul>
         </div>
       </div>
@@ -334,18 +337,18 @@
     $(".pleft_nav").find("li").removeClass("active");
     $(".pnav_edit_profile").find("li").addClass("active");
   });
-  $('.pnav_service').on('click',function(){
-    $("#profile_content").html(loading_set);
-    $("#profile_content").load("<?php echo base_url()?>home/user/service");
-    $(".pleft_nav").find("li").removeClass("active");
-    $(".pnav_service").find("li").addClass("active");
-  });
-  $('.pnav_privacy').on('click',function(){
-    $("#profile_content").html(loading_set);
-    $("#profile_content").load("<?php echo base_url()?>home/user/privacy");
-    $(".pleft_nav").find("li").removeClass("active");
-    $(".pnav_privacy").find("li").addClass("active");
-  });
+  //$('.pnav_service').on('click',function(){
+  //  $("#profile_content").html(loading_set);
+  //  $("#profile_content").load("<?php //echo base_url()?>//home/user/service");
+  //  $(".pleft_nav").find("li").removeClass("active");
+  //  $(".pnav_service").find("li").addClass("active");
+  //});
+  //$('.pnav_privacy').on('click',function(){
+  //  $("#profile_content").html(loading_set);
+  //  $("#profile_content").load("<?php //echo base_url()?>//home/user/privacy");
+  //  $(".pleft_nav").find("li").removeClass("active");
+  //  $(".pnav_privacy").find("li").addClass("active");
+  //});
   $('.pnav_notifination').on('click',function(){
     window.location.href='<?php echo base_url().'home/notice?type=all'; ?>';
   });

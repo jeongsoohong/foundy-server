@@ -612,13 +612,35 @@ QUERY;
     return $month[$m - 1];
   }
 
+  function file_validation_alert($error) {
+    if ($error == UPLOAD_ERR_INI_SIZE || $error == UPLOAD_ERR_FORM_SIZE) {
+        $max_filesize_in_mib = min((int)(ini_get('upload_max_filesize')), (int)(ini_get('post_max_size')), (int)(ini_get('memory_limit')));
+        $this->alert_exit("파일 사이즈는 {$max_filesize_in_mib}MB를 초과할 수 없습니다.");
+    } else if ($error != UPLOAD_ERR_OK) {
+        $this->alert_exit("파일 업로드에 문제가 발생했습니다. error code : {$error}");
+    }
+  }
+
+  function file_validation($src, $alert = true) {
+    $error = $src['error'];
+    if ($error != UPLOAD_ERR_OK) {
+      if ($alert == true) {
+        $this->file_validation_alert($error);
+      }
+    }
+    return $error;
+  }
+
   function upload_image($upload_path, $file_name, $src, $width, $height = 0, $create_thumb = true, $maintain_ratio = false)
   {
 //    $time = time();
 //    $upload_path = IMG_PATH_CENTER;
 //    $file_name = $type.'_' . $id . '_' . $time . '.jpg';
     $file_path = $upload_path . $file_name;
-    move_uploaded_file($src, $file_path);
+//    move_uploaded_file($src, $file_path);
+    if (!move_uploaded_file($src['tmp_name'], $file_path)) {
+      move_uploaded_file($src['name'], $file_path);
+    }
 
     //Compress Image
     if ($create_thumb) {
