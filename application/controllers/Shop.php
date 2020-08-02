@@ -109,7 +109,7 @@ QUERY;
             $this->session->set_userdata('shop_login', 'yes');
             $this->session->set_userdata('user_id', $user_data->user_id);
             $this->session->set_userdata('shop_id', $shop_data->shop_id);
-            $this->session->set_userdata('title', 'shop');
+//            $this->session->set_userdata('title', 'shop');
 
             echo 'lets_login';
           }

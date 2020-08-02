@@ -22,12 +22,12 @@ echo 'effect mainnav-sm';
   <div class="boxed" id="fol">
     <!--CONTENT CONTAINER-->
     <div>
-      <?php include $this->session->userdata('title').'/'.$page_name.'.php' ?>
+      <?php include 'admin/'.$page_name.'.php' ?>
     </div>
     <!--END CONTENT CONTAINER-->
 
     <!--MAIN NAVIGATION-->
-    <?php include $this->session->userdata('title').'/navigation.php' ?>
+    <?php include 'admin/navigation.php' ?>
     <!--END MAIN NAVIGATION-->
   </div>
 

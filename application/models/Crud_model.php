@@ -810,7 +810,7 @@ QUERY;
     return '';
   }
   function get_product_shipping_free_str($free) {
-    return $free ? '무표배송' : '조건부 무료배송';
+    return $free ? '무료배송' : '조건부 무료배송';
   }
 
   function get_product_item_type_str($item_type) {

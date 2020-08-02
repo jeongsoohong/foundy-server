@@ -77,7 +77,7 @@
               <div class="col-md-12" style="padding: 0 0 0 0 !important; ">
                 <div class="profile" style="display: flex; font-size: 15px; height: 50px; line-height: 50px; padding: 5px 20px 5px 20px !important; text-align: center">
                   <div style="width: 70%; height: 50px; line-height: 50px;">
-                    <span style="position: absolute; left: 40%">포잇 추천 클래스</span>
+                    <span style="position: absolute; left: 36%">파운디 추천 클래스</span>
                   </div>
                   <div class="pull-right" style="width: 25%; height: 50px; line-height: 50px;">
                     <select class="form-control select-arrow" id="class_category" name="class_category" style="height: 50px; line-height: 50px;">

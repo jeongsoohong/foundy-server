@@ -1,4 +1,7 @@
 <style>
+  button {
+    border: none;
+  }
   span.required {
     color: red;
   }
@@ -30,6 +33,7 @@
   }
   .send-info input[type='checkbox'] {
     width: auto !important;
+    min-width: 10px !important;
   }
   .return-info {
     text-align: left;
@@ -40,6 +44,7 @@
   }
   .return-info input[type='checkbox'] {
     width: auto !important;
+    min-width: 10px !important;
   }
   .shipping-info input {
     width: 100%;
@@ -47,6 +52,7 @@
   }
   .shipping-info input[type='checkbox'] {
     width: auto !important;
+    min-width: 10px !important;
   }
   .shipping-company-left,.shipping-company-right {
     overflow: auto;

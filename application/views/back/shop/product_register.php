@@ -415,7 +415,7 @@
             <div class="col-md-12">
               <div class="col-md-2"></div>
               <div class="col-md-10">
-                <p>- 권장사이즈 : 가로 400px * 세로 400px (정사각형) </p>
+                <p>- 권장사이즈 : 가로 800px * 세로 800px (정사각형) </p>
                 <p>- 이미지가 잘리거나 비정상적으로 보여질 수 있으므로, 권장사이즈를 준수하여 주시기 바랍니다.</p>
                 <p>- 대표이미지는 필수 1장 - 최대 5장까지 등록 가능합니다.</p>
               </div>
@@ -450,7 +450,7 @@
           <div class="panel-body">
             <div class="col-md-12">
               <!-- <p>- 화면(에디터) 크기는 모바일 환경에 맞도록 고정(가로 400px) 되어있습니다. </p>-->
-              <p>- 권장 이미지 사이즈 : 가로 400px </p>
+              <p>- 권장 이미지 사이즈 : 가로 800px </p>
               <p>- 이미지가 비정상적으로 보여질 수 있으므로, 권장사이즈를 준수하여 주시기 바랍니다.</p>
             </div>
             <div class="col-md-12" style="width: 600px">
@@ -968,7 +968,7 @@
       $('.item-noti-info-header').addClass('header-required');
       return false;
     }
-    if (item_cert_disabled === false && (item_kc_cert_number === '' || item_cert_name === '' || item_model_name === '' || item_manufacturer_name === '' || item_importer_name === '')) {
+    if (item_cert_disabled === false && (item_kc_cert_number === '' || item_cert_name === '' || item_model_name === '' || (item_manufacturer_name === '' && item_importer_name === ''))) {
       alert('인증정보를 정확히 입력해주세요.');
       $('.item-cert-header').addClass('header-required');
       return false;

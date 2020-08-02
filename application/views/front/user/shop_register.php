@@ -79,18 +79,25 @@
                              placeholder="이메일(필수)" data-toggle="tooltip" title="email">
                     </div>
                   </div>
-                  <div class="col-md-12 btm_border">
+                  <div class="col-md-12">
                     <div class="form-group">
-                      <label class="col-sm-12 control-label">사업자등록증(필수)</label>
-                      <div class="col-sm-12">
-                        <span class="pull-left btn btn-default btn-file">파일선택
-                          <input type="file" name="business_license_img" onchange="preview(this);" class="form-control required">
-                        </span>
-                        <br><br>
-                        <span id="previewImg" ></span>
-                      </div>
+                      <input class="form-control required" id="business_license_num" name="business_license_num" value=""
+                             type="text"
+                             placeholder="사업자번호(필수)" data-toggle="tooltip" title="business_license_num">
                     </div>
                   </div>
+<!--                  <div class="col-md-12 btm_border">-->
+<!--                    <div class="form-group">-->
+<!--                      <label class="col-sm-12 control-label">사업자등록증(필수)</label>-->
+<!--                      <div class="col-sm-12">-->
+<!--                        <span class="pull-left btn btn-default btn-file">파일선택-->
+<!--                          <input type="file" name="business_license_img" onchange="preview(this);" class="form-control required">-->
+<!--                        </span>-->
+<!--                        <br><br>-->
+<!--                        <span id="previewImg" ></span>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
                   <div class="col-md-12">
                     <div class="form-group">
                       <input class="form-control" id="sns_url" name="sns_url" value=""
@@ -121,18 +128,18 @@
 </div>
 <script>
 
-  window.preview = function (input) {
-    if (input.files && input.files[0]) {
-      $("#previewImg").html('');
-      $(input.files).each(function () {
-        var reader = new FileReader();
-        reader.readAsDataURL(this);
-        reader.onload = function (e) {
-          $("#previewImg").append("<div style='float:left;border:4px solid #303641;padding:5px;margin:5px;'><img height='80' src='" + e.target.result + "'></div>");
-        }
-      });
-    }
-  }
+  // window.preview = function (input) {
+  //   if (input.files && input.files[0]) {
+  //     $("#previewImg").html('');
+  //     $(input.files).each(function () {
+  //       var reader = new FileReader();
+  //       reader.readAsDataURL(this);
+  //       reader.onload = function (e) {
+  //         $("#previewImg").append("<div style='float:left;border:4px solid #303641;padding:5px;margin:5px;'><img height='80' src='" + e.target.result + "'></div>");
+  //       }
+  //     });
+  //   }
+  // }
 
   $(document).ready(function(){
     $(".shop-register.open_modal").click(function(){

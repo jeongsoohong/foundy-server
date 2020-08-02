@@ -187,6 +187,7 @@
   }
   .item-content-noti th, .item-content-noti td, .item-content-shipping th, .item-content-shipping td {
     padding: 10px;
+    font-size: 10px;
   }
   .item-cart-btn {
     width: 100%;
@@ -521,7 +522,7 @@
               <?php } else if ($review_score_f <= 8) { ?>
                 <span><img src="<?php echo base_url().'uploads/icon/icon14_star half.png'; ?>"/></span>
               <?php } else { ?>
-                <span><img src="<?php echo base_url().'uploads/icon/icon12_star.png'; ?>"/></span>
+                <span><img src="<?php echo base_url().'uploads/icon/icon13_star.png'; ?>"/></span>
               <?php }
               $i++;
             }

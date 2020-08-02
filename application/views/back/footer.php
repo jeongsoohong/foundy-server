@@ -19,10 +19,8 @@
       </li>
     </ul>
   </div>
-  <?php if($this->session->userdata('title') == 'admin'){ ?>
-    <div class="hide-fixed pull-right pad-rgt">
-      Currently v1.0
-    </div>
-  <?php } ?>
+  <div class="hide-fixed pull-right pad-rgt">
+    Currently v1.0
+  </div>
   <p class="pad-lft">&#0169; 2020 <?php echo $system_title;?></p>
 </footer>

@@ -163,7 +163,7 @@ QUERY;
             $this->session->set_userdata('admin_login', 'yes');
             $this->session->set_userdata('admin_id', $user_data->user_id);
             $this->session->set_userdata('admin_name', $user_data->nickname);
-            $this->session->set_userdata('title', 'admin');
+//            $this->session->set_userdata('title', 'admin');
 
             echo 'lets_login';
           }
@@ -177,6 +177,9 @@ QUERY;
   /* Loging out from Admin panel */
   function logout()
   {
+    // for login
+    $page_data['control'] = "admin";
+
     //$this->session->sess_destroy();
     $this->session->set_userdata('admin_login', 'no');
     redirect(base_url() . 'admin', 'refresh');
@@ -1081,12 +1084,16 @@ QUERY;
             'address_2' => $address_2,
           );
           if (isset($_FILES["business_license_img"])) {
-            $this->crud_model->file_validation($_FILES['business_license_img']);
-            $file_name = 'shop_'.$shop_id.'.jpg';
-            $this->crud_model->upload_image(IMG_PATH_SHOP, $file_name, $_FILES["business_license_img"], 0, 0, false, true);
-            $time=time();
-            $business_image_url = IMG_WEB_PATH_SHOP.$file_name.'?id='.$time;
-            $data['business_license_url'] = $business_image_url;
+            $error = $this->crud_model->file_validation($_FILES['business_license_img'], false);
+            if ($error == UPLOAD_ERR_OK) {
+              $file_name = 'shop_' . $shop_id . '.jpg';
+              $this->crud_model->upload_image(IMG_PATH_SHOP, $file_name, $_FILES["business_license_img"], 0, 0, false, true);
+              $time = time();
+              $business_image_url = IMG_WEB_PATH_SHOP . $file_name . '?id=' . $time;
+              $data['business_license_url'] = $business_image_url;
+            } else if ($error != UPLOAD_ERR_NO_FILE) {
+              $this->crud_model->file_validation_alert($error);
+            }
           }
 
           $this->db->update('shop', $data, $where);

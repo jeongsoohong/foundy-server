@@ -878,6 +878,7 @@ QUERY;
       $this->form_validation->set_rules('shop_homepage_url', 'shop_homepage_url', 'trim|valid_url|max_length[256]');
       $this->form_validation->set_rules('representative_name', 'representative_name', 'trim|required|max_length[128]');
       $this->form_validation->set_rules('email', 'email', 'trim|required|valid_email|max_length[128]');
+      $this->form_validation->set_rules('business_license_num', 'business_license_num', 'trim|required|numeric|max_length[32]');
       $this->form_validation->set_rules('sns_url', 'sns_url', 'trim|valid_url|max_length[256]');
 
       if ($this->form_validation->run() == FALSE) {
@@ -890,14 +891,15 @@ QUERY;
         $shop_homepage_url = $this->input->post('shop_homepage_url');
         $representative_name = $this->input->post('representative_name');
         $email = $this->input->post('email');
+        $business_license_num = $this->input->post('business_license_num');
         $sns_url = $this->input->post('sns_url');
 
-        if (!isset($_FILES["business_license_img"])) {
-          echo("<script>alert('사업자등록증 파일을 등록바랍니다.');</script>");
-          exit;
-        }
+//        if (!isset($_FILES["business_license_img"])) {
+//          echo("<script>alert('사업자등록증 파일을 등록바랍니다.');</script>");
+//          exit;
+//        }
 
-        $this->crud_model->file_validation($_FILES['business_license_img']);
+//        $this->crud_model->file_validation($_FILES['business_license_img']);
 
         $query = <<<QUERY
 select count(*) as cnt from shop where shop_name='{$shop_name}'
@@ -916,6 +918,7 @@ QUERY;
           'shop_homepage_url' => $shop_homepage_url,
           'representative_name' => $representative_name,
           'email' => $email,
+          'business_license_num' => $business_license_num,
           'sns_url' => $sns_url,
           'activate' => 0,
         );
@@ -923,22 +926,25 @@ QUERY;
         $this->db->set('register_at', 'NOW()', false);
         $this->db->set('contract_at', 'NOW()', false);
         $this->db->insert('shop');
-        $shop_id = $this->db->insert_id();
+//        $shop_id = $this->db->insert_id();
 
-        $file_name = 'shop_' . $shop_id . '.jpg';
-        $this->crud_model->upload_image(IMG_PATH_SHOP, $file_name, $_FILES['business_license_img'], 0, 0, false, true);
-        $time = time();
-        $business_image_url = IMG_WEB_PATH_SHOP . $file_name . '?id=' . $time;
-
-        $this->db->where('shop_id', $shop_id);
-        $this->db->update('shop', array('business_license_url' => $business_image_url));
+//        $file_name = 'shop_' . $shop_id . '.jpg';
+//        $this->crud_model->upload_image(IMG_PATH_SHOP, $file_name, $_FILES['business_license_img'], 0, 0, false, true);
+//        $time = time();
+//        $business_image_url = IMG_WEB_PATH_SHOP . $file_name . '?id=' . $time;
+//        $this->db->where('shop_id', $shop_id);
+//        $this->db->update('shop', array('business_license_url' => $business_image_url));
 
 //        $this->db->where('user_id', $user_id);
 //        $this->db->update('user', array('shop_id' => $shop_id));
 //
 //        $this->session->set_userdata('shop_id', $shop_id);
 
-        echo "done";
+        if ($this->db->affected_rows() > 0) {
+          echo "done";
+        } else {
+          echo "fail : not inserted";
+        }
       }
 
     } elseif ($view_type == 'service') {
