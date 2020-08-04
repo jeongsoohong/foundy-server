@@ -88,7 +88,7 @@
                   </div>
                   <div class="col-md-12">
                     <div class="form-group">
-                      <label class="col-sm-3 control-label" for="demo-hor-inputemail">요가 분류</label>
+                      <label class="col-sm-3 control-label" for="demo-hor-inputemail">요가</label>
                       <div class="col-sm-6">
                         <div class="col-sm-">
                           <fieldset>
@@ -117,7 +117,7 @@
                   </div>
                   <div class="col-md-12">
                     <div class="form-group">
-                      <label class="col-sm-3 control-label" for="demo-hor-inputemail">필라테스 분류</label>
+                      <label class="col-sm-3 control-label" for="demo-hor-inputemail">필라테스</label>
                       <div class="col-sm-6">
                         <div class="col-sm-">
                           <fieldset>

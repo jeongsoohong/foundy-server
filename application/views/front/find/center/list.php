@@ -16,7 +16,7 @@ foreach ($center_data as $center) {
               <td style="width: 85%">
                 <h5 class="center-title" style="margin: 0 !important;"><b><?php echo $center->title; ?></b></h5>
               </td>
-              <td style="text-align: center">
+              <td style="text-align: right">
                 <?php echo $this->crud_model->sns_func_html('bookmark', 'center', false, $center->center_id, 20, 20); ?>
               </td>
             </tr>

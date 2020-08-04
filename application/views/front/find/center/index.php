@@ -24,7 +24,7 @@
               <div class="row">
                 <div class="col-md-12" style="padding: 0 0 0 0 !important; height: 50px">
                   <div class="profile" style="font-size: 15px; height: 50px; line-height: 50px; padding: 5px 20px 5px 20px !important; text-align: center">
-                    <span>스크랩</span>
+                    <span class="font-futura">My Favorite</span>
                   </div>
                 </div>
                 <div class="widget" style="padding-bottom:10px; ">
@@ -47,14 +47,14 @@
                       ?>
                       <li style="padding: 10px 0 10px 0 !important;">
                         <a href="<?php echo base_url(); ?>home/center/profile/<?php echo $center->center_id; ?>">
-                          <div class="col-md-12 " style="padding: 0 10px 0 10px !important; height: 75px">
+                          <div class="col-md-12 " style="padding: 0 20px 0 20px !important; height: 75px">
                             <table class="col-md-12" style="background-color: white; width: 100%">
                               <tbody>
                               <tr style="height: 25px">
                                 <td style="width: 85%">
                                   <h5 class="center-title" style="margin: 0 !important;"><b><?php echo $center->title; ?></b></h5>
                                 </td>
-                                <td style="text-align: center">
+                                <td style="text-align: right">
                                   <?php echo $this->crud_model->sns_func_html('bookmark', 'center', true, $center->center_id, 20, 20); ?>
                                 </td>
                               </tr>
@@ -94,7 +94,7 @@
               <div class="col-md-12" style="padding: 0 0 0 0 !important; height: 50px;">
                 <div class="profile" style="display: flex; font-size: 15px; height: 50px; line-height: 50px; padding: 5px 20px 5px 20px !important; text-align: center">
                   <div style="width: 70%; ">
-                    <span style="position: absolute; left: 45%"><?php echo $page_title; ?></span>
+                    <span class="font-futura" style="position: absolute; left: 45%"><?php echo $page_title; ?></span>
                   </div>
                   <div class="pull-right" style="width: 25%;height: 50px; line-height: 50px; ">
                     <select class="form-control select-arrow" id="center_category" name="center_category" style="height: 50px; line-height: 50px">

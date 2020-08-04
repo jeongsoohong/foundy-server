@@ -84,7 +84,7 @@
                         }
                         ?>'); "></div>
                       </td>
-                      <td style="width: 65%">
+                      <td style="width: 65%; padding-left: 3px;">
                         <?php echo $teacher_data->name; ?>
                       </td>
                       <td style="width: 15%; text-align: center">
@@ -100,7 +100,7 @@
                       </td>
                     </tr>
                     <tr style="height: 20px;">
-                      <td style="width: 65%">
+                      <td style="width: 65%; padding-left: 3px;">
                         <?php
                         $cat = '';
                         $categories = $this->db->get_where('teacher_category', array('teacher_id' => $teacher_data->teacher_id))->result();
@@ -114,7 +114,7 @@
                       <td>
                       </td>
                     </tr>
-                    <tr style="height: 20px;">
+                    <tr style="height: 30px;">
                       <td style="width: 65%">
                         <?php
                         if (isset($teacher_data->youtube) && strlen($teacher_data->youtube) > 0) {

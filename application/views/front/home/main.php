@@ -60,7 +60,7 @@
     padding-right: 0;
   }
 </style>
-<section class="page-section" style="margin: 0px 15px 0px 15px !important; padding: 5px 0 5px 0!important; /*border-top: 1px solid gray;*/">
+<section class="page-section" style="margin: 0px 15px 0px 15px !important; padding: 5px 0 5px 0!important; border-top: 1px solid #353535;">
   <div class="row">
     <div class="col-md-12 main-discovery">
       <div class="col-md-12 main-header navigation-header" style="text-align: center; margin: 10px 0">

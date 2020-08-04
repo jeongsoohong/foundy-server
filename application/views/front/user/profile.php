@@ -13,6 +13,9 @@
     box-shadow: none;
     border: none;
   }
+  .profile_ul li {
+    height: 40px !important;
+  }
   #profile-edit {
     background-color: white;
     height: 40px;
@@ -105,7 +108,7 @@
   <div class="col-md-12" style="padding: 0 0 0 0">
     <div class="row">
       <?php if ($user_type & USER_TYPE_CENTER && $center_activate == 1) { ?>
-        <div class="col-md-6">
+        <div class="col-md-12">
           <div class="profile" style="font-size: 15px; text-align: center; height: 50px; line-height: 50px !important;">
             <b class="font-futura">my center</b>
           </div>
@@ -127,7 +130,7 @@
         </div>
       <?php } ?>
       <?php if ($user_type & USER_TYPE_TEACHER && $teacher_activate == 1) { ?>
-        <div class="col-md-6">
+        <div class="col-md-12">
           <div class="profile" style="font-size: 15px; text-align: center; height: 50px; line-height: 50px !important;">
             <b class="font-futura">my class</b>
           </div>
@@ -146,7 +149,7 @@
         </div>
       <?php } ?>
       <?php if (count($bookmark_centers) > 0 || count($bookmark_teachers) > 0 || count($bookmark_classes) > 0) { ?>
-        <div class="col-md-6">
+        <div class="col-md-12">
           <div class="profile" style="font-size: 15px; text-align: center; height: 50px; line-height: 50px !important;">
             <b class="font-futura">my favorite</b>
           </div>
@@ -203,12 +206,6 @@
                       </tr>
                       </tbody>
                     </table>
-                    <!--                    <a href="--><?php //echo base_url().'home/teacher/profile/'.$teacher->user_id; ?><!--">-->
-                    <!--                      (강사) --><?php //echo $teacher->name; ?>
-                    <!--                    </a>-->
-                    <!--                    <span class="pull-right" style="padding-top: 0px !important;">-->
-                    <!--                    --><?php //echo $this->crud_model->sns_func_html('bookmark', 'teacher', true, $teacher->teacher_id, 15, 15); ?>
-                    <!--                  </span>-->
                   </li>
                   <?php
                 }

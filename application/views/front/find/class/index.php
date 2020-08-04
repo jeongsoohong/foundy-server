@@ -31,7 +31,7 @@
               <div class="row">
                 <div class="col-md-12" style="padding: 0 0 0 0 !important; height: 50px">
                   <div class="profile" style="font-size: 15px; height: 50px; line-height: 50px; padding: 5px 20px 5px 20px !important; text-align: center">
-                    <span>스크랩</span>
+                    <span class="font-futura">My Favorite</span>
                   </div>
                 </div>
                 <div class="col-md-12" style="padding: 10px 0px 10px 0px !important; border: none;">
