@@ -90,7 +90,7 @@
       <div class="col-md-6 col-sm-6 col-xs-6 find-right">
         <div class="thumbnail my-2 no-scale no-border no-padding thumbnail-banner">
           <div class="media">
-            <a class="media-link" href="javascript:void(0);">
+            <a class="media-link" href="javascript:void(0);" onclick="open_nearby_modal()">
               <div class="col-md-6 img-bg image_delay" data-src="<?php echo base_url(); ?>uploads/icon_0604/nearby.png" style="background-image: url('<?php echo base_url(); ?>uploads/icon_0604/nearby.png');"></div>
             </a>
           </div>
@@ -118,7 +118,34 @@
       </div>
 </div>-->
 </section>
+<div class="modal fade" id="nearbyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">내 주변 스튜디오 찾기</h4>
+      </div>
+      <div class="modal-body">
+        <div style="text-align: center">
+          Sorry! <br>
+          본 서비스는 오픈인 8/24부터 가능합니다.
+        </div>
+      </div>
+      <div class="modal-footer">
+<!--        <button type="button" class="btn btn-danger btn-theme-sm" data-dismiss="modal"">취소</button>-->
+        <button type="button" class="btn btn-danger btn-theme-sm" onclick="close_nearby_modal()" style="text-transform: none; font-weight: 400;"">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
+  function open_nearby_modal() {
+    $('#nearbyModal').modal('show');
+  }
+  function close_nearby_modal() {
+    $('#nearbyModal').modal('hide');
+  }
+
   function find_search(q) {
     // console.log(q);
     location.href = '<?php echo base_url().'home/find/search?q='; ?>' + q;

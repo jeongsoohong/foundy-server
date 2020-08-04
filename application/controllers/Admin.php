@@ -310,15 +310,17 @@ QUERY;
           exit;
         }
       } else {
-        $this->crud_model->file_validation($_FILES['img']);
-        $time = time();
-        $file_name = 'blog_'.$blog_id.'.jpg';
-        $main_image_url = base_url().'uploads/blog_image/blog_'.$blog_id.'_thumb.jpg?id='.$time;
-        $this->crud_model->upload_image(IMG_PATH_BLOG, $file_name, $_FILES["img"], 400, 250, true, false);
+        $error = $this->crud_model->file_validation($_FILES['img'], false);
+        if ($error == UPLOAD_ERR_OK) {
+          $time = time();
+          $file_name = 'blog_' . $blog_id . '.jpg';
+          $main_image_url = base_url() . 'uploads/blog_image/blog_' . $blog_id . '_thumb.jpg?id=' . $time;
+          $this->crud_model->upload_image(IMG_PATH_BLOG, $file_name, $_FILES["img"], 400, 250, true, false);
+        }
       }
 
-      $data['blog_id'] = $blog_id;
       $data['main_image_url'] = $main_image_url;
+      $data['blog_id'] = $blog_id;
       $data['title'] = $this->input->post('title');
       $data['summery'] = $this->input->post('summery');
       $data['blog_category'] = $category_id;
@@ -347,12 +349,14 @@ QUERY;
       $category_id = $this->input->post('category_blog');
 
       if (isset($_FILES["img"])) {
-        $this->crud_model->file_validation($_FILES['img']);
-        $time = time();
-        $file_name = 'blog_'.$blog_id.'.jpg';
-        $this->crud_model->upload_image(IMG_PATH_BLOG, $file_name, $_FILES["img"], 400, 250, true, false);
-        $main_image_url = base_url().'uploads/blog_image/blog_'.$blog_id.'_thumb.jpg?id='.$time;
-        $data['main_image_url'] = $main_image_url;
+        $error = $this->crud_model->file_validation($_FILES['img'], false);
+        if ($error == UPLOAD_ERR_OK) {
+          $time = time();
+          $file_name = 'blog_' . $blog_id . '.jpg';
+          $this->crud_model->upload_image(IMG_PATH_BLOG, $file_name, $_FILES["img"], 400, 250, true, false);
+          $main_image_url = base_url() . 'uploads/blog_image/blog_' . $blog_id . '_thumb.jpg?id=' . $time;
+          $data['main_image_url'] = $main_image_url;
+        }
       } else {
         $blog_category = $this->db->get_where('category_blog', array('category_id' => $category_id))->row();
         if ($blog_category->type == BLOG_TYPE_DEFAULT) {

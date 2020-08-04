@@ -53,6 +53,30 @@
   </div>
 </section>
 
+<div class="modal fade" id="userUnregisterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">회원 탈퇴</h4>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+          <div>정말 탈퇴하시겠습니까?<br>
+            탈퇴하시면 7일간 데이터 보존 후 삭제되어<br>
+            복원이 불가능하고 로그인이 제한될 수 있습니다.
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger post_confirm_close" data-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-theme btn-theme-sm post_confirm" onclick="user_unregister()" style="text-transform: none;
+                font-weight: 400;">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Modal For C-C Post confirm -->
 <div class="modal fade" id="centerRegisterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
@@ -245,9 +269,10 @@
         });
       }
     });
-  })
+  });
 
-  $('.pnav_unregister').click(function(e) {
+  function user_unregister() {
+    $('#userUnregisterModal').modal('hide');
     $.getScript("https://developers.kakao.com/sdk/js/kakao.min.js", function() {
       Kakao.init('8ee901a556539927d58b30a6bf21a781');
       if (!Kakao.Auth.getAccessToken()) {
@@ -294,7 +319,11 @@
         });
       }
     });
-  })
+  }
+
+  $('.pnav_unregister').click(function(e) {
+    $('#userUnregisterModal').modal('show');
+  });
 
   $('.pnav_center_register').on('click',function(){
     $("#profile_content").html(loading_set);

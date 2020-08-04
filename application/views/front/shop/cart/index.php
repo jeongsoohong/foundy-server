@@ -186,6 +186,26 @@
     </div>
   </div>
 </section>
+<div class="modal fade" id="betaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">내 주변 스튜디오 찾기</h4>
+      </div>
+      <div class="modal-body">
+        <div style="text-align: center">
+          Sorry! <br>
+          결제는 본 서비스 오픈인 8/24부터 가능합니다.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!--        <button type="button" class="btn btn-danger btn-theme-sm" data-dismiss="modal"">취소</button>-->
+        <button type="button" class="btn btn-danger btn-theme-sm" onclick="close_beta_modal()" style="text-transform: none; font-weight: 400;"">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
   let cart_item_cnt = <?php echo $total_purchase_cnt; ?>;
   let total_purchase_cnt = <?php echo $total_purchase_cnt; ?>;
@@ -308,7 +328,20 @@
 
   }
 
+  function open_beta_modal() {
+    $('#betaModal').modal('show');
+  }
+
+  function close_beta_modal() {
+    $('#betaModal').modal('hide');
+  }
+
   function go_purchase() {
+    // for beta service
+    open_beta_modal();
+    return false;
+
+    // grand open
     let formData = new FormData();
     let item_cnt = 0;
 

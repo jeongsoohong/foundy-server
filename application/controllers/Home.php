@@ -36,6 +36,17 @@ class Home extends CI_Controller
 
     }
 
+    if ($this->is_login() == true) {
+      $user_id = $this->session->userdata('user_id');
+      $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
+      if ($user_data->unregister == 1) {
+        $this->session->sess_destroy();
+        $this->crud_model->alert_exit("(탈퇴회원) 탈퇴 후 7일간 로그인이 불가능합니다.", base_url().'home');
+      } else {
+        $this->session->set_userdata('user_data', json_encode($user_data));
+      }
+    }
+
 //    $this->session->sess_destroy();
 
     // $this->config->cache_query();
@@ -140,7 +151,7 @@ class Home extends CI_Controller
           $kakao_profile_image_url = $profile['profile_image_url'];
           $profile_image_url = '';
           $password = '';
-          $create_at = $connected_at;
+//          $create_at = $connected_at;
 
           $ins = array(
             'kakao_id' => $kakao_id,
@@ -154,21 +165,63 @@ class Home extends CI_Controller
             'kakao_profile_image_url' => $kakao_profile_image_url,
             'profile_image_url' => $profile_image_url,
             'password' => $password,
-            'last_login_at' => date("Y-m-d H:i:s"),
-            'create_at' => $create_at,
+            'unregister' => 0,
+//            'last_login_at' => date("Y-m-d H:i:s"),
+//            'create_at' => $create_at,
           );
 
-          $this->db->insert('user',$ins);
+          $this->db->set('create_at', 'NOW()', false);
+          $this->db->set('last_login_at', 'NOW()', false);
+          $this->db->insert('user', $ins);
+
           $user_data = $this->db->get_where('user', array('kakao_id' => $kakao_id))->row();
+
+          $ins = array(
+            'user_id' => $user_data->user_id,
+            'kakao_id' => $user_data->kakao_id,
+            'account' => json_encode($kakao_account),
+            'unregistered' => 0,
+          );
+          $this->db->set('register_at', 'NOW()', false);
+          $this->db->insert('user_register',$ins);
 
           $result['message'] = "첫 방문을 환영합니다.";
 
         } else {
 
-          $this->db->update('user', array('last_login_at' => date("Y-m-d H:i:s")), array('user_id' =>
-            $user_data->user_id));
+          if ($user_data->unregister == 1) {
+            $ins = array(
+              'user_id' => $user_data->user_id,
+              'kakao_id' => $user_data->kakao_id,
+              'account' => json_encode($kakao_account),
+              'unregistered' => 1,
+            );
+            $this->db->set('register_at', 'NOW()', false);
+            $this->db->insert('user_register',$ins);
+
+            $redirect_url .= "home/login";
+            $result['status'] = 'error';
+            $result['message'] = "(탈퇴회원) 탈퇴 후 7일간 로그인이 불가능합니다.";
+            $result['redirect_url'] = $redirect_url;
+            echo json_encode($result);
+            exit;
+          }
+
+          $this->db->set('last_login_at', 'NOW()', false);
+          $this->db->where('user_id', $user_data->user_id);
+          $this->db->update('user');
+
           $result['message'] = "로그인해주셔서 감사합니다.";
+
         }
+
+        $ins = array(
+          'user_id' => $user_data->user_id,
+          'kakao_id' => $user_data->kakao_id,
+          'account' => json_encode($kakao_account),
+        );
+        $this->db->set('login_at', 'NOW()', false);
+        $this->db->insert('user_login',$ins);
 
         $user_id = $user_data->user_id;
         $kakao_id = $user_data->kakao_id;
@@ -270,6 +323,15 @@ class Home extends CI_Controller
   /* FUNCTION: Logout set */
   function logout()
   {
+    $user_data = json_decode($this->session->userdata('user_data'));
+
+    $ins = array(
+      'user_id' => $user_data->user_id,
+      'kakao_id' => $user_data->kakao_id,
+    );
+    $this->db->set('logout_at', 'NOW()', false);
+    $this->db->insert('user_logout',$ins);
+
     $redirect_url = base_url();
     $this->session->sess_destroy();
     $result['status'] = 'success';
@@ -288,9 +350,31 @@ class Home extends CI_Controller
     }
 
     $user_id = $this->session->userdata('user_id');
+    $user_data = json_decode($this->session->userdata('user_data'));
 
-    $this->db->where('user_id', $user_id);
-    $this->db->delete('user');
+    $query = <<<QUERY
+select account from user_login where user_id={$user_id} order by login_at desc limit 0,1
+QUERY;
+    $kakao_account = $this->db->query($query)->row()->account;
+
+    $ins = array(
+      'user_id' => $user_data->user_id,
+      'kakao_id' => $user_data->kakao_id,
+      'account' => $kakao_account,
+    );
+    $this->db->set('unregister_at', 'NOW()', false);
+    $this->db->insert('user_unregister',$ins);
+
+    $upd = array(
+      'unregister' => 1,
+    );
+    $where = array(
+      'user_id' => $user_id
+    );
+    $this->db->update('user', $upd, $where);
+
+//    $this->db->where('user_id', $user_id);
+//    $this->db->delete('user');
 
     $redirect_url = base_url();
     $this->session->sess_destroy();
@@ -487,7 +571,8 @@ QUERY;
     if ($view_type == 'info') {
 
       $user_id = $this->session->userdata('user_id');
-      $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
+//      $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
+      $user_data = json_decode($this->session->userdata('user_data'));
       $page_data['user_id'] = $user_id;
       $page_data['email'] = $user_data->email;
       $page_data['user_type'] = $user_data->user_type;
@@ -551,7 +636,8 @@ QUERY;
     } else if ($view_type == 'edit_profile') {
 
       $user_id = $this->session->userdata('user_id');
-      $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
+//      $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
+      $user_data = json_decode($this->session->userdata('user_data'));
       $admin = false;
       if ($user_data->user_type & USER_TYPE_ADMIN) {
         $admin = true;
@@ -597,7 +683,8 @@ QUERY;
     } else if ($view_type == 'update_password') {
 
       $user_id = $this->session->userdata('user_id');
-      $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
+//      $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
+      $user_data = json_decode($this->session->userdata('user_data'));
 
       $this->load->library('form_validation');
 
@@ -986,6 +1073,7 @@ QUERY;
       }
 
       $user_data = $this->db->get_where('user', array('user_id' => $center_data->user_id))->row();
+//      $user_data = json_decode($this->session->userdata('user_data'));
       if (!($user_data->user_type & USER_TYPE_CENTER)) {
         echo ("<script>alert('센터회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
         exit;
