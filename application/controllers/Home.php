@@ -159,8 +159,7 @@ class Home extends CI_Controller
           );
 
           $this->db->insert('user',$ins);
-          $user_id = $this->db->insert_id();
-          $user_data = $this->db->get_where('user', array('user_id', $user_id))->row();
+          $user_data = $this->db->get_where('user', array('kakao_id' => $kakao_id))->row();
 
           $result['message'] = "첫 방문을 환영합니다.";
 
