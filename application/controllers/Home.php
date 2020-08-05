@@ -146,12 +146,17 @@ class Home extends CI_Controller
           $nickname = $profile['nickname'];
           $gender = $kakao_account['gender'];
           $email = $kakao_account['email'];
-          $phone = '';
           $kakao_thumbnail_image_url = $profile['thumbnail_image_url'];
           $kakao_profile_image_url = $profile['profile_image_url'];
           $profile_image_url = '';
           $password = '';
 //          $create_at = $connected_at;
+
+          if ($kakao_account['has_phone_number'] == true) {
+            $phone = $kakao_account['phone_number'];
+          } else {
+            $phone = '';
+          }
 
           $ins = array(
             'kakao_id' => $kakao_id,
@@ -205,6 +210,11 @@ class Home extends CI_Controller
             $result['redirect_url'] = $redirect_url;
             echo json_encode($result);
             exit;
+          }
+
+          if ($kakao_account['has_phone_number'] == true) {
+            $phone = $kakao_account['phone_number'];
+            $this->db->set('phone', $phone);
           }
 
           $this->db->set('last_login_at', 'NOW()', false);
