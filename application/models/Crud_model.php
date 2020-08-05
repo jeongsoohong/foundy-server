@@ -900,6 +900,10 @@ QUERY;
    return  $this->session->__get('session_id');
   }
 
+  function get_session_ip() {
+    return  $_SERVER['REMOTE_ADDR'];
+  }
+
   function get_shipping_req_str($type) {
    switch($type) {
      case SHOP_SHIPPING_REQ_DEFAULT : return '배송시 요청 사항을 선택해 주세요.';

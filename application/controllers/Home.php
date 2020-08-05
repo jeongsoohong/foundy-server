@@ -225,10 +225,32 @@ class Home extends CI_Controller
 
         }
 
+        $this->load->library('user_agent');
+
+//        $redirect_url .= 'home/login';
+//        $result['status'] = 'success';
+//        $result['message'] = $this->agent->referrer();
+//        $result['redirect_url'] = $redirect_url;
+//        echo json_encode($result);
+//        exit;
+
         $ins = array(
           'user_id' => $user_data->user_id,
           'kakao_id' => $user_data->kakao_id,
           'account' => json_encode($kakao_account),
+          'session_id' => $this->crud_model->get_session_id(),
+          'ip' => $this->crud_model->get_session_ip(),
+          'is_browser' => $this->agent->is_browser(),
+          'is_mobile' => $this->agent->is_mobile(),
+          'is_robot' => $this->agent->is_robot(),
+          'is_referral' => $this->agent->is_referral(),
+          'browser' => $this->agent->browser(),
+          'version' => $this->agent->version(),
+          'mobile' => $this->agent->mobile(),
+          'robot' => $this->agent->robot(),
+          'platform' => $this->agent->platform(),
+          'referrer' => $this->agent->referrer(),
+          'agent' => $this->agent->agent_string(),
         );
         $this->db->set('login_at', 'NOW()', false);
         $this->db->insert('user_login',$ins);

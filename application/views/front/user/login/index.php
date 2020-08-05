@@ -85,8 +85,11 @@
                 }
               },
               error: function(xhr, status, error){
-                alert('login fail : ' + error);
-                window.location.href = base_url + 'home/login';
+                console.log(xhr);
+                console.log(status);
+                console.log(error);
+                // alert('login fail : ' + error);
+                // window.location.href = base_url + 'home/login';
               }
             });
 
