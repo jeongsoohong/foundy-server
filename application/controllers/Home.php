@@ -454,19 +454,6 @@ class Home extends CI_Controller
           $this->crud_model->do_teacher_activate($teacher_id, $user_id, $activate);
         }
 
-//        $session_id = $this->crud_model->get_session_id();
-//
-//        $query = <<<QUERY
-//select account from user_login where user_id={$user_id} and session_id={$session_id} order by login_at desc limit 0,1
-//QUERY;
-//        $kakao_account = $this->db->query($query)->row()->account;
-
-//        $this->session->sess_destroy();
-//        $result['status'] = 'success';
-//        $result['message'] = "회원탈퇴 되었습니다.";
-//        echo json_encode($result);
-//        exit;
-
         $ins = array(
           'user_id' => $user_data->user_id,
           'kakao_id' => $user_data->kakao_id,
