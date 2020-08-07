@@ -588,7 +588,8 @@ class Crud_model extends CI_Model
       $img_src = $this->crud_model->get_bookmark_icon($is_do);
     }
     return "<a href='javascript:void(0)' data-action='{$action}' onclick=\"sns_function('{$func_type}','{$find_type}',{$id},$(this))\">" .
-      "<img id='{$find_type}-{$func_type}-{$id}' src='{$img_src}' alt='' style='width:{$w}px !important; height: {$h}px !important;'></a>";
+//      "<img class='{$find_type}-{$func_type}-{$id}' <!-- id='{$find_type}-{$func_type}-{$id}' --> src='{$img_src}' alt='' style='width:{$w}px !important; height: {$h}px !important;'></a>";
+    "<img class='{$find_type}-{$func_type}-{$id}' src='{$img_src}' alt='' style='width:{$w}px !important; height: {$h}px !important;'></a>";
   }
 
   function get_sns_mark($type, $func, $user_id, $id)
@@ -945,6 +946,90 @@ QUERY;
       case SHOP_SHIPPING_STATUS_PURCHASE_CHANGED: return '교환완료';
       case SHOP_SHIPPING_STATUS_PURCHASE_CHANGING: return '교환중';
     }
+  }
+
+  function do_teacher_activate($teacher_id, $user_id, $activate) {
+
+    $teacher_data = $this->db->get_where('teacher', array('teacher_id' => $teacher_id))->row();
+
+    if ($activate == true) {
+      $teacher_cnt = 'teacher_cnt + 1';
+    } else {
+      $teacher_cnt = 'teacher_cnt - 1';
+    }
+
+    $upd = array(
+      'activate' => $activate
+    );
+    $where = array(
+      'teacher_id' => $teacher_id
+    );
+
+    $this->db->update('teacher', $upd, $where);
+    $this->db->update('teacher_video', $upd, $where);
+    $this->db->update('center_teacher', $upd, $where);
+
+    if ($activate == true) {
+      $upd = array(
+        'teacher_name' => $teacher_data->name,
+        'activate' => 1
+      );
+    } else {
+      $upd = array(
+        'teacher_name' => 'Unknown',
+        'activate' => 0
+      );
+    }
+    $this->db->update('center_schedule', $upd, $where);
+
+    $centers = $this->db->get_where('center_teacher', array('teacher_id' => $teacher_id))->result();
+    if (!empty($centers) && count($centers) > 0) {
+      $center_ids = array();
+      foreach ($centers as $c) {
+        $center_ids[] = $c->center_id;
+      }
+      $this->db->where_in('center_id', $center_ids);
+      $this->db->set('teacher_cnt', $teacher_cnt, false);
+      $this->db->update('center');
+    }
+
+//    $query = <<<QUERY
+//UPDATE center set teacher_cnt={$teacher_cnt}
+//where center_id in (select center_id from center_teacher where teacher_id={$teacher_id})
+//QUERY;
+//    $this->db->query($query);
+
+    $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
+
+    if ($activate == true) {
+      $user_type = ($user_data->user_type | USER_TYPE_TEACHER);
+      $query = <<<QUERY
+UPDATE user set user_type={$user_type} where user_id={$user_id}
+QUERY;
+    } else {
+      $user_type = ($user_data->user_type & ~USER_TYPE_TEACHER);
+      $query = <<<QUERY
+UPDATE user set user_type={$user_type} where user_id={$user_id}
+QUERY;
+    }
+
+    $this->db->query($query);
+
+  }
+
+  function delete_teacher_data($user_data) {
+    $teacher_id = $user_data->teacher_id;
+
+    $this->db->delete('center_teacher', array('teacher_id' => $teacher_id));
+    $this->db->delete('center_schedule', array('teacher_id' => $teacher_id));
+
+    $query = <<<QUERY
+delete from teacher_video_category a where video_id in (select video_id from teacher_video where teacher_id={$teacher_id})
+QUERY;
+    $this->db->query($query);
+
+    $this->db->delete('teacher_video', array('teacher_id' => $teacher_id));
+    $this->db->delete('teacher', array('teacher_id' => $teacher_id));
   }
 
 }

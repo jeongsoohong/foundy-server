@@ -84,6 +84,9 @@ defined('EXIT_DATABASE')       OR define('EXIT_DATABASE', 8); // database error
 defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
+defined('SERVER_SETTINGS_TYPE_BETA_SERVICE')   OR define('SERVER_SETTINGS_TYPE_BETA_SERVICE', 0);
+defined('SERVER_SETTINGS_TYPE_SERVER_DOWNTIMES')   OR define('SERVER_SETTINGS_TYPE_DOWNTIMES', 1);
+
 defined('USER_TYPE_GENERAL')   OR define('USER_TYPE_GENERAL', 1);
 defined('USER_TYPE_ADMIN')     OR define('USER_TYPE_ADMIN', 2);
 defined('USER_TYPE_TEACHER')   OR define('USER_TYPE_TEACHER', 4);

@@ -26,7 +26,7 @@
             <a class="pnav_introduce" href="#"><li>파운디 소개</li></a>
             <a class="pnav_faq" href="#"><li>자주하는 질문</li></a>
             <a class="pnav_customer_center" href="#"><li>고객센터</li></a>
-            <a class="pnav_user_question" href="#"><li>문의하기</li></a>
+            <a class="pnav_user_question" href="#"><li>1:1 문의하기</li></a>
 <!--            <a class="pnav_service" href="#profile_content"><li>서비스 이용 약관</li></a>-->
 <!--            <a class="pnav_privacy" href="#profile_content"><li>개인정보 보호정책</li></a>-->
           </ul>
@@ -34,6 +34,7 @@
           <ul class="pleft_nav">
             <a class="pnav_shop_wishlist" href="<?php echo base_url(); ?>home/shop?cat=wish&col=product_id&order=desc"><li>위시리스트</li></a>
             <a class="pnav_shop_orderlist" href="<?php echo base_url();?>home/shop/order"><li>주문내역</li></a>
+            <a class="pnav_coupon_box" href="javascript:void(0)"><li>쿠폰박스</li></a>
           </ul>
           <div class="information-title" style="margin-bottom: 0px; margin-top: 0px;">신청</div>
           <ul class="pleft_nav">
@@ -52,30 +53,6 @@
     <!-- </div> -->
   </div>
 </section>
-
-<div class="modal fade" id="userUnregisterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">회원 탈퇴</h4>
-      </div>
-      <div class="modal-body">
-        <div class="text-center">
-          <div>정말 탈퇴하시겠습니까?<br>
-            탈퇴하시면 7일간 데이터 보존 후 삭제되어<br>
-            복원이 불가능하고 로그인이 제한될 수 있습니다.
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger post_confirm_close" data-dismiss="modal">취소</button>
-        <button type="button" class="btn btn-theme btn-theme-sm post_confirm" onclick="user_unregister()" style="text-transform: none;
-                font-weight: 400;">확인</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- Modal For C-C Post confirm -->
 <div class="modal fade" id="centerRegisterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -210,7 +187,51 @@
     </div>
   </div>
 </div>
-<!-- Modal For C-C Status change -->
+
+<div class="modal fade" id="userUnregisterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">회원 탈퇴</h4>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+          <div>정말 탈퇴하시겠습니까?<br>
+            탈퇴하시면 7일간 데이터 보존 후 삭제되어<br>
+            복원이 불가능하고 로그인이 제한될 수 있습니다.
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger post_confirm_close" data-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-theme btn-theme-sm post_confirm" onclick="user_unregister()" style="text-transform: none;
+                font-weight: 400;">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="userUnregisterConfirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">회원 탈퇴</h4>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger post_confirm_close" data-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-theme btn-theme-sm post_confirm" onclick="do_user_unregister()" style="text-transform: none;
+                font-weight: 400;">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <style type="text/css">
   .pagination_box a{
@@ -255,9 +276,11 @@
             success : function(res) {
               if (res.status === 'success') {
                 alert(res.message);
+                console.log(res.message);
                 window.location.href = res.redirect_url;
               } else {
                 alert(res.message);
+                console.log(res.message);
                 window.location.href = res.redirect_url;
               }
             },
@@ -271,8 +294,8 @@
     });
   });
 
-  function user_unregister() {
-    $('#userUnregisterModal').modal('hide');
+  function do_user_unregister() {
+    $('#userUnregisterConfirmModal').modal('hide');
     $.getScript("https://developers.kakao.com/sdk/js/kakao.min.js", function() {
       Kakao.init('8ee901a556539927d58b30a6bf21a781');
       if (!Kakao.Auth.getAccessToken()) {
@@ -285,30 +308,23 @@
 
             var base_url = '<?php echo base_url(); ?>';
 
-            //alert('logout: ' + Kakao.Auth.getAccessToken());
-
             $.ajax({
               url : base_url + '/home/unregister',
-              //type : 'post',
-              //data : user_data,
-              // contentType: "application/json; charset=utf-8",//보낼 데이터 방식
-              //CI에서 POST방식으로 할 경우에는 이것을 체크하면 안된다.
-              //왜냐하면, json 방식은 body 안으로 전송되므로 body 를 통해 읽어들여야 한다. 그러므로
-              //이방식으로 체크 되면 URLencoded format이 아닌 post로 받아올 수 없다
-              //contentType: 'application/json',
               dataType : 'json', // 받을 데이터 방식
               success : function(res) {
                 if (res.status === 'success') {
                   alert(res.message);
-                  window.location.href = res.redirect_url;
+                  window.location.href = base_url;
                 } else {
-                  alert(res.message);
-                  window.location.href = res.redirect_url;
+                  console.log(res.message);
+                  // alert(res.message);
+                  // window.location.href = base_url;
                 }
               },
               error: function(xhr, status, error){
-                alert(error);
-                window.location.href = base_url + 'home/login';
+                console.log(error);
+                // alert(error);
+                // window.location.href = base_url + 'home/login';
               }
             });
 
@@ -317,6 +333,35 @@
             console.log(error);
           },
         });
+      }
+    });
+  }
+
+  function user_unregister() {
+
+    $('#userUnregisterModal').modal('hide');
+
+    $.ajax({
+      url : base_url + '/home/unregister/confirm',
+      dataType : 'json',
+      success : function(res) {
+        if (res.status === 'success') {
+
+          if (res.message === '') {
+            do_user_unregister();
+          } else {
+            $('#userUnregisterConfirmModal .modal-body .text-center').text(res.message);
+            $('#userUnregisterConfirmModal').modal('show');
+          }
+
+        } else {
+          alert(res.message);
+          window.location.href = base_url;
+        }
+      },
+      error: function(xhr, status, error){
+        alert(error);
+        window.location.href = base_url + 'home/login';
       }
     });
   }

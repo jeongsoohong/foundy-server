@@ -29,6 +29,9 @@
   .item-img {
     position: relative;
   }
+  .img-responsive {
+    width: 100%;
+  }
   .item-img .item-banner {
     position: absolute;
     z-index: 10;
@@ -114,7 +117,7 @@
             <div class="col-md-12 shop-header">
               <h6 class="text-overflow text-center">BEST ITEM</h6>
             </div>
-            <div class="col-md-12 shop-best-items">
+            <div class="col-md-12 shop-best-items" style="margin: 0 !important;">
               <?php
               $i = 0;
               foreach ($best_items as $item) {

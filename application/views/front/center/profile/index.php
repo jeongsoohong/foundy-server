@@ -67,11 +67,12 @@ if ($center_data->shower || $center_data->towel || $center_data->parking || $cen
                           <td style="width: 80%">
                             <b><?php echo $center_data->title; ?></b>
                           </td>
-                          <td style="text-align: center">
+                          <td style="text-align: right">
                             <?php if ($iam_this_center == true) { ?>
                               <a href="javascript:void(0);">
                                 <span class="center-edit" data-target='profile-edit' style="color: grey;">
-                                  <i class="fa fa-ellipsis-v"></i>
+<!--                                  <i class="fa fa-ellipsis-v"></i>-->
+                                  <img src="<?php echo base_url(); ?>uploads/icon/dots.png" alt="" style="width: 10px !important; height: 10px !important;">
                                 </span>
                               </a>
                             <?php } else { ?>
@@ -211,7 +212,8 @@ if ($center_data->shower || $center_data->towel || $center_data->parking || $cen
                           <?php if ($iam_this_center == true) { ?>
                             <a href="javascript:void(0);">
                               <span class="pull-right center-edit" data-target='schedule-add' style="color: grey; padding-right: 25px">
-                                <i class="fa fa-ellipsis-v"></i>
+                                <img src="<?php echo base_url(); ?>uploads/icon/dots.png" alt="" style="width: 10px; height: 10px">
+<!--                                <i class="fa fa-ellipsis-v"></i>-->
                               </span>
                             </a>
                           <?php } ?>
@@ -293,7 +295,8 @@ if ($center_data->shower || $center_data->towel || $center_data->parking || $cen
                           <?php if ($iam_this_center == true) { ?>
                             <a href="javascript:void(0);">
                               <span class="pull-right center-edit" data-target='instructor-add' style="color: grey; padding-right: 25px">
-                                <i class="fa fa-ellipsis-v"></i>
+                                <img src="<?php echo base_url(); ?>uploads/icon/dots.png" alt="" style="width: 10px; height: 10px">
+<!--                                <i class="fa fa-ellipsis-v"></i>-->
                               </span>
                             </a>
                           <?php } ?>
@@ -355,7 +358,8 @@ if ($center_data->shower || $center_data->towel || $center_data->parking || $cen
                           <?php if ($iam_this_center == true) { ?>
                             <a href="javascript:void(0);">
                               <span class="pull-right center-edit" data-target="info-edit" style="color: grey; padding-right: 25px">
-                                <i class="fa fa-ellipsis-v"></i>
+                                <img src="<?php echo base_url(); ?>uploads/icon/dots.png" alt="" style="width: 10px; height: 10px">
+<!--                                <i class="fa fa-ellipsis-v"></i>-->
                               </span>
                             </a>
                           <?php } ?>

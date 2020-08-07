@@ -80,7 +80,7 @@
                     <span style="position: absolute; left: 36%">파운디 추천 클래스</span>
                   </div>
                   <div class="pull-right" style="width: 25%; height: 50px; line-height: 50px;">
-                    <select class="form-control select-arrow" id="class_category" name="class_category" style="height: 50px; line-height: 50px;">
+                    <select class="form-control select-arrow" id="class_category" name="class_category" style="height: 50px !important; line-height: 50px !important;">
                       <option value="ALL" selected="selected">ALL</option>
                       <?php
                       $categories = $this->db->order_by('category_id', 'asc')->get_where('category_class', array('activate' => 1))->result();
@@ -164,11 +164,11 @@
 
   $(function() {
     $("#class_category").change(function() {
-      // console.log(this.value);
+      console.log(this.value);
       page = 0;
       filter = this.value;
       $('#view_more').hide();
-      $('.video_ul a').remove();
+      $('.video_ul li').remove();
       ajax_class_list();
     });
   })

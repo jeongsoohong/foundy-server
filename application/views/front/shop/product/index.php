@@ -167,6 +167,7 @@
   .item-nav-tab.sticky {
     position: fixed;
     top: 40px;
+    left: 0;
     width: 100%;
     z-index: 100;
   }
@@ -193,6 +194,7 @@
     width: 100%;
     background-color: black;
     height: 50px;
+    left: 0;
     bottom: 0;
     z-index: 100;
     position: fixed;

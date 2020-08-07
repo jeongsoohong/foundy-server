@@ -1715,11 +1715,13 @@
         // console.log(res.status);
         if (res.status === 'success') {
           // console.log($('.' + funcType + '-img-'+id).attr('src'));
-          $('#' + findType + '-' + funcType + '-' + id).attr('src', get_sns_img(funcType, action));
+          $('.' + findType + '-' + funcType + '-' + id).attr('src', get_sns_img(funcType, action));
           if (action === 'do') {
-            elem.attr('data-action', 'undo');
+            $('.' + findType + '-' + funcType + '-' + id).closest('a').attr('data-action', 'undo');
+            // elem.attr('data-action', 'undo');
           } else {
-            elem.attr('data-action', 'do');
+            $('.' + findType + '-' + funcType + '-' + id).closest('a').attr('data-action', 'do');
+            // elem.attr('data-action', 'do');
           }
         } else if (res.status == 'not_login') {
           alert(res.message);

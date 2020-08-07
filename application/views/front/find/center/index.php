@@ -97,7 +97,7 @@
                     <span class="font-futura" style="position: absolute; left: 45%"><?php echo $page_title; ?></span>
                   </div>
                   <div class="pull-right" style="width: 25%;height: 50px; line-height: 50px; ">
-                    <select class="form-control select-arrow" id="center_category" name="center_category" style="height: 50px; line-height: 50px">
+                    <select class="form-control select-arrow" id="center_category" name="center_category" style="height: 50px !important; line-height: 50px !important;">
                       <option value="ALL" selected="selected">ALL</option>
                       <?php
                       foreach ($categories as $cat) {

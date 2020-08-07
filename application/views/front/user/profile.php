@@ -1,5 +1,39 @@
-<!--<div class="information-title" style="margin-bottom: 0px;">프로필</div>-->
 <style>
+  .page-section {
+    padding-top: 10px !important;
+  }
+  .media-body div p {
+    margin: 0 0 5px 0 !important;
+  }
+  .media-body div span img {
+    width : 20px !important;
+    height: 20px !important;
+    margin-right: 5px;
+  }
+  .profile_ul {
+    box-shadow: none;
+    border: none;
+    padding: 0 10px 0 10px !important;
+    border-radius: 0 !important;
+  }
+  .profile_ul li {
+    height: 40px !important;
+    line-height: 40px;
+    /*padding: 0 10px 0 10px !important;*/
+    padding: 0 !important;
+  }
+  .profile_ul li span.pull-right {
+    /*margin: 0 5px 0 0 !important;*/
+    margin: 0 !important;
+    padding: 0 5px 0 5px !important;
+  }
+  .profile_ul li span.pull-right.schedule {
+    border: 1px solid #8e8e8e !important;
+  }
+  .profile_ul li span.pull-right img {
+    width: 20px !important;
+    height: 20px !important;
+  }
   .view,.schedule {
     margin-top: 6px;
     margin-bottom: 6px;
@@ -8,13 +42,6 @@
     height: 26px;
     line-height: 26px !important;
     border: 1px solid grey;
-  }
-  .profile_ul {
-    box-shadow: none;
-    border: none;
-  }
-  .profile_ul li {
-    height: 40px !important;
   }
   #profile-edit {
     background-color: white;
@@ -37,7 +64,7 @@
   <b class="font-futura">profile</b>
 </div>
 <div class="row">
-  <div class="col-md-12" style="padding: 0 15px !important; ">
+  <div class="col-md-12" style="padding: 0 !important; ">
     <div class="recent-post" style="background: #fff;">
       <div class="media">
         <div class="col-md-12" style="margin: 0 0 0 0; padding: 15px 15px 15px 15px; position: relative">
@@ -54,13 +81,14 @@
                 ?>');">
                 </div>
               </td>
-              <td style="width: 70%">
+              <td style="padding-left: 10px; width: 70%">
                 <?php echo $nickname.' ('.$email.')'; ?>
               </td>
               <td style="width: 10%; text-align: center;">
                 <a href="javascript:void(0);">
                   <span class="profile-edit" data-target='profile-edit' style="color: grey;">
-                    <i class="fa fa-ellipsis-v"></i>
+<!--                    <i class="fa fa-ellipsis-v"></i>-->
+                    <img src="<?php echo base_url(); ?>uploads/icon/dots.png" alt="" style="width: 10px; height: 10px">
                   </span>
                 </a>
                 <div id="profile-edit">
@@ -68,7 +96,7 @@
               </td>
             </tr>
             <tr style="height: 20px">
-              <td style="width: 70%">
+              <td style="padding-left: 10px; width: 70%">
                 <?php
                 $user = '';
                 if ($user_type & USER_TYPE_ADMIN) {
@@ -114,9 +142,13 @@
           </div>
           <div class="widget">
             <ul class="profile_ul" style="padding-left: 30px !important; padding-right: 30px !important;">
-              <?php foreach ($my_centers as $center) {
+              <?php
+              $i = 0;
+              $total_cnt = count($my_centers);
+              foreach ($my_centers as $center) {
+                $i++;
                 ?>
-                <li>
+                <li style="<?php echo ($i != $total_cnt ? 'border-bottom: 1px solid #EAEAEA' : ''); ?>">
                   <a href="<?php echo base_url(); ?>home/center/profile/<?php echo $center->center_id; ?>" style="position: inherit;">
                     <?php echo $center->title; ?>&nbsp;페이지 바로가기
                     <span class="pull-right" style="color: grey;">
@@ -148,24 +180,28 @@
           </div>
         </div>
       <?php } ?>
-      <?php if (count($bookmark_centers) > 0 || count($bookmark_teachers) > 0 || count($bookmark_classes) > 0) { ?>
+      <?php if (count($bookmark_centers) > 0 || count($bookmark_teachers) > 0) { ?>
         <div class="col-md-12">
           <div class="profile" style="font-size: 15px; text-align: center; height: 50px; line-height: 50px !important;">
             <b class="font-futura">my favorite</b>
           </div>
           <div class="widget" style="padding-bottom:10px; ">
             <ul class="profile_ul" style="padding-left: 30px !important; padding-right: 30px !important;">
-              <?php if (!empty($bookmark_centers) and count($bookmark_centers) > 0) {
+              <?php
+              $i = 0;
+              $total_cnt = count($bookmark_centers) + count($bookmark_teachers);
+              if (!empty($bookmark_centers) and count($bookmark_centers) > 0) {
                 foreach ($bookmark_centers as $center) {
+                  $i++;
                   ?>
-                  <li>
+                  <li style="<?php echo ($i != $total_cnt ? 'border-bottom: 1px solid #EAEAEA' : ''); ?>">
                     <table class="col-md-12" style="width: 100%">
                       <tbody>
-                      <tr style="height: 20px">
+                      <tr style="height: 40px">
                         <td style="width: 65%;">
                           (스튜디오) <?php echo $center->title; ?>
                         </td>
-                        <td style="width: 20%; text-align: right;">
+                        <td style="width: 25%; text-align: right;">
                           <a href="<?php echo base_url().'home/center/profile/'.$center->center_id.'?nav=schedule'; ?>">
                             <span class="schedule" style="font-size: 10px;">
                               SCHEDULE
@@ -185,15 +221,16 @@
               ?>
               <?php if (!empty($bookmark_teachers) and count($bookmark_teachers) > 0) {
                 foreach ($bookmark_teachers as $teacher) {
+                  $i++;
                   ?>
-                  <li>
+                  <li style="<?php echo ($i != $total_cnt ? 'border-bottom: 1px solid #EAEAEA' : ''); ?>">
                     <table class="col-md-12" style="width: 100%">
                       <tbody>
-                      <tr style="height: 20px">
+                      <tr style="height: 40px">
                         <td style="width: 65%;">
                           (강사) <?php echo $teacher->name; ?>
                         </td>
-                        <td style="width: 20%; text-align: right;">
+                        <td style="width: 25%; text-align: right;">
                           <a href="<?php echo base_url().'home/teacher/profile/'.$teacher->user_id; ?>">
                             <span class="schedule" style="font-size: 10px;">
                               VIEW
@@ -218,37 +255,6 @@
     </div>
   </div>
 </div>
-<style>
-  .page-section {
-    padding-top: 10px !important;
-  }
-  .media-body div p {
-    margin: 0 0 5px 0 !important;
-  }
-  .media-body div span img {
-    width : 20px !important;
-    height: 20px !important;
-    margin-right: 5px;
-  }
-  .profile_ul {
-    padding: 0 10px 0 10px !important;
-    border-radius: 0 !important;
-  }
-  .profile_ul li {
-    padding: 10px 10px 10px 10px !important;
-  }
-  .profile_ul li span.pull-right {
-    margin: 0 5px 0 0 !important;
-    padding: 0 5px 0 5px !important;
-  }
-  .profile_ul li span.pull-right.schedule {
-    border: 1px solid #8e8e8e !important;
-  }
-  .profile_ul li span.pull-right img {
-    width: 20px !important;
-    height: 20px !important;
-  }
-</style>
 <script type="text/javascript">
   function abnv(thiss){
     $('#savepic').hide();

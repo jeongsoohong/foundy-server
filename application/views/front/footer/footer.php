@@ -28,12 +28,6 @@
     width: 32px;
     line-height: 32px;
   }
-  body {
-    margin: 0 !important; /* 리셋을 하지 않은 경우 추가 */
-  }
-  .content-area {
-    min-height: calc(100vh - 218px) !important;
-  }
   footer {
     height: 100px !important;
     padding-bottom: 0px !important;

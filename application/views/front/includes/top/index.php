@@ -67,6 +67,12 @@ include 'meta/' . $asset_page . '.php';
     padding-top: 10px !important;
     padding-bottom: 10px !important;
   }
+  body {
+      margin: 0 !important; /* 리셋을 하지 않은 경우 추가 */
+  }
+  .content-area {
+      min-height: calc(100vh - 98px) !important;
+  }
   .font-futura {
     font-family: futura-pt !important;
     font-style: normal !important;

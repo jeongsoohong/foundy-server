@@ -651,41 +651,18 @@ QUERY;
 
       $teacher_id = $para2;
       $user_id = $para3;
-
       $approval = $this->input->post('approval');
-      if ($approval == 'ok') {
-        $data['activate'] = 1;
-      } else {
-        $data['activate'] = 0;
-      }
-
-      $query = <<<QUERY
-UPDATE teacher set activate={$data['activate']},approval_at=NOW() where teacher_id={$teacher_id}
-QUERY;
-      $this->db->query($query);
-
-      $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
 
       if ($approval == 'ok') {
-        $user_type = ($user_data->user_type | USER_TYPE_TEACHER);
-        $query = <<<QUERY
-UPDATE user set user_type={$user_type} where user_id={$user_id}
-QUERY;
+        $activate = 1;
       } else {
-        $user_type = ($user_data->user_type & ~USER_TYPE_TEACHER);
-        $query = <<<QUERY
-UPDATE user set user_type={$user_type} where user_id={$user_id}
-QUERY;
-      }
-      $this->db->query($query);
-
-      if ($this->db->affected_rows()){
-        echo 'done';
-      } else {
-        echo 'fail';
+        $activate = 0;
       }
 
-      //            $this->email_model->status_email('teacher', $teacher);
+      $this->crud_model->do_teacher_activate($teacher_id, $user_id, $activate);
+
+      echo 'done';
+
     }else {
 
       if ($para1 == 'approval_list') {

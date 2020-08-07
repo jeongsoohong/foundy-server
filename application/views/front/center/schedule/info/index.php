@@ -12,10 +12,11 @@
     <th class="col-md-3" style="padding-left: 0; padding-right: 0; width: 22%"><?php echo $start_time; ?>-<?php echo $end_time; ?></th>
     <td class="col-md-7" style="padding-left: 0px; padding-right: 0; width: auto">(<?php echo $teacher_name; ?>) <?php echo $title; ?></td>
     <?php if ($iam_this_center == true) { ?>
-    <td class="col-md-2" style="padding-left: 5px; padding-right: 15px; width: 40px !important;">
+    <td class="col-md-2" style="padding-left: 5px; padding-right: 10px; width: 40px !important;">
       <a href="javascript:void(0);">
         <span class="pull-right center-edit" data-target="schedule-edit" id="<?php echo $schedule_id; ?>" onclick="openPop($(this))">
-          <i class="fa fa-ellipsis-v"></i>
+          <img src="<?php echo base_url(); ?>uploads/icon/dots.png" alt="" style="width: 10px !important; height: 10px !important;">
+<!--          <i class="fa fa-ellipsis-v"></i>-->
         </span>
       </a>
     </td>

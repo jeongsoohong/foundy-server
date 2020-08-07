@@ -12,7 +12,7 @@
     <div class="form-group">
       <label class="col-sm-2 control-label" for="demo-hor-1"> </label>
       <div class="col-sm-2">
-        <h4><?php echo ('연기'); ?></h4>
+        <h4>미승인</h4>
       </div>
       <div class="col-sm-4 text-center">
         <input id="pub_<?php echo $shop_id; ?>"  data-size="switchery-lg" class='sw1 form-control'
@@ -20,7 +20,7 @@
                ($activate == 1){ ?>checked<?php } ?> />
       </div>
       <div class="col-sm-2">
-        <h4><?php echo ('승인'); ?></h4>
+        <h4>승인</h4>
       </div>
     </div>
 

@@ -125,6 +125,14 @@
     /*padding-left: 0;*/
     /*padding-right: 0;*/
   }
+  .shop-best-items, .shop-new-items, .shop-recommend-items {
+    margin: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .img-responsive {
+    width: 100%;
+  }
 </style>
 <section class="page-section" style="margin-top: 0px !important; margin-bottom: 0px !important; padding-top: 0px
     !important; padding-bottom: 0px !important;">

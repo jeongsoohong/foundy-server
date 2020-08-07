@@ -65,6 +65,7 @@
     width: 100%;
     background-color: black;
     height: 50px;
+    left: 0;
     bottom: 0;
     z-index: 100;
     position: fixed;

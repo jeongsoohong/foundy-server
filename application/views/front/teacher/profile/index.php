@@ -91,7 +91,8 @@
                         <?php if ($iam_this_teacher == true) { ?>
                           <a href="javascript:void(0);">
                             <span class="teacher-edit" style="color: grey;">
-                              <i class="fa fa-ellipsis-v"></i>
+<!--                              <i class="fa fa-ellipsis-v"></i>-->
+                              <img src="<?php echo base_url(); ?>uploads/icon/dots.png" alt="" style="width: 10px; height: 10px">
                             </span>
                           </a>
                         <?php } else {?>

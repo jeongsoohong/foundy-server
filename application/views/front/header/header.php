@@ -1,31 +1,28 @@
 <?php
-$find_url = '';
-$life_url = '';
-$earth_url = '';
-$shop_url = '';
-
-$category_names = array('find', 'life', 'earth', 'shop');
-foreach ($category_names as $category_name) {
-  $category_info = $this->db->get_where('category_blog', array('name' => $category_name, 'activate' => 1))->row();
-  if (empty($category_info)) {
-    ${"{$category_name}_url"} = base_url();
-  } else {
-    $this->db->order_by('blog_id', 'desc');
-    $this->db->limit(1);
-    $blog_info = $this->db->get_where('blog', array('blog_category' => $category_info->category_id))->row();
-    if (empty($blog_info)) {
-      ${"{$category_name}_url"} = base_url();
-    } else {
-      ${"{$category_name}_url"} = base_url() . "home/blog/view?id=" . $blog_info->blog_id;
-    }
-  }
-}
-
-//if (ENVIRONMENT == 'production') {
-//    echo 'production';
-//} else {
-//    echo 'development';
+//$find_url = '';
+//$life_url = '';
+//$earth_url = '';
+//$shop_url = '';
 //
+//$category_names = array('find', 'life', 'earth', 'shop');
+//foreach ($category_names as $category_name) {
+//  $category_info = $this->db->get_where('category_blog', array('name' => $category_name, 'activate' => 1))->row();
+//  if (empty($category_info)) {
+//    ${"{$category_name}_url"} = base_url();
+//  } else {
+//    $this->db->order_by('blog_id', 'desc');
+//    $this->db->limit(1);
+//    $blog_info = $this->db->get_where('blog', array('blog_category' => $category_info->category_id))->row();
+//    if (empty($blog_info)) {
+//      ${"{$category_name}_url"} = base_url();
+//    } else {
+//      ${"{$category_name}_url"} = base_url() . "home/blog/view?id=" . $blog_info->blog_id;
+//    }
+//  }
+//}
+
+$today = date('Y-m-d H:i:s');
+$beta_service = $this->db->get_where('server_settings', array('type' => SERVER_SETTINGS_TYPE_BETA_SERVICE))->row();
 ?>
 <!-- HEADER -->
 <style>
@@ -36,7 +33,11 @@ foreach ($category_names as $category_name) {
     width: 25%;
   }
   .navigation-wrapper .container .navigation ul li.shop-nav {
+  <?php if ($beta_service->start_at < $today && $today < $beta_service->end_at) { ?>
+    width: 25%;
+  <?php } else { ?>
     width: 20%;
+  <?php } ?>
   }
   .navigation-wrapper .container .navigation ul li a {
     text-align: center;
@@ -87,14 +88,16 @@ foreach ($category_names as $category_name) {
     </div>
   </div>
   <div class="navigation-wrapper" id="navbar" style="background-color: #FFFFFF;">
-    <div class="container" style="height: 40px; padding: 0px;">
+    <div class="container" style="height: 40px; width: 100%; padding: 0; margin: 0">
       <!-- Navigation -->
       <nav class="navigation clearfix">
         <ul class="nav sf-menu">
           <?php if (!strncasecmp($page_name,'shop',4)) { ?>
-            <li class="shop-nav main">
-              <a href="<?php echo base_url().'home/shop/main'; ?>" >MAIN</a>
-            </li>
+            <?php if ($beta_service->start_at >= $today || $today >= $beta_service->end_at) { ?>
+              <li class="shop-nav main">
+                <a href="<?php echo base_url().'home/shop/main'; ?>" >MAIN</a>
+              </li>
+            <?php } ?>
             <li class="shop-nav new">
               <a href="<?php echo base_url().'home/shop?cat=all&col=product_id&order=desc'; ?>" >NEW</a>
             </li>
@@ -122,7 +125,11 @@ foreach ($category_names as $category_name) {
               <a href="<?php echo base_url().'home/blog'; ?>" >LIFE</a>
             </li>
             <li class="main-nav shop">
-              <a id="go-shop" href="<?php echo base_url().'home/shop/main'; ?>" >SHOP</a>
+              <?php if ($beta_service->start_at < $today && $today < $beta_service->end_at) { ?>
+                <a id="go-shop" href="<?php echo base_url().'home/shop?cat=all&col=product_id&order=desc'; ?>" >SHOP</a>
+              <?php } else { ?>
+                <a id="go-shop" href="<?php echo base_url().'home/shop/main'; ?>" >SHOP</a>
+              <?php } ?>
             </li>
           <?php } ?>
         </ul>

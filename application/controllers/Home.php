@@ -28,27 +28,39 @@ class Home extends CI_Controller
       $this->output->set_header('Cache-Control: post-check=0, pre-check=0');
       $this->output->set_header('Pragma: no-cache');
 
-      if ($this->router->fetch_method() == 'index' ||
-        $this->router->fetch_method() == 'blog' ||
-        $this->router->fetch_method() == 'blog_view') {
-        $this->output->cache(60);
-      }
+//      if ($this->router->fetch_method() == 'index' ||
+//        $this->router->fetch_method() == 'blog' ||
+//        $this->router->fetch_method() == 'blog_view') {
+//        $this->output->cache(60);
+//      }
 
     }
+
+//if (ENVIRONMENT == 'production') {
+//    echo 'production';
+//} else {
+//  echo 'development';
+//}
+
+//if (DEV_SERVER == true) {
+//  echo 'dev';
+//} else {
+//  echo 'live';
+//}
 
     if ($this->is_login() == true) {
       $user_id = $this->session->userdata('user_id');
       $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
-      if ($user_data->unregister == 1) {
+      if ($user_data->unregister == 1 && $this->session->userdata('user_restore') != 'yes') {
         $this->session->sess_destroy();
         $this->crud_model->alert_exit("(탈퇴회원) 탈퇴 후 7일간 로그인이 불가능합니다.", base_url().'home');
       } else {
         $this->session->set_userdata('user_data', json_encode($user_data));
       }
+//      echo json_encode($user_data);
     }
 
 //    $this->session->sess_destroy();
-
     // $this->config->cache_query();
   }
 
@@ -113,22 +125,45 @@ class Home extends CI_Controller
 
   public function login()
   {
-    if ($this->is_login() == true) {
+    if ($this->is_login() == true && $this->session->userdata('user_restore') != 'yes') {
       redirect('home', 'refresh');
     }
 
     $login_type = $this->uri->segment(3);
 
-    if (!strncmp($login_type, "kakao", 5)) {
+    if ($login_type == 'restore') {
+
+      $restore = ($_GET['r'] == 'ok');
+
+      $user_id = $this->session->userdata('user_id');
+      $user_data = json_decode($this->session->userdata('user_data'));
+
+      if ($restore) {
+
+        if ($user_data->teacher_id > 0) {
+          $teacher_id = $user_data->teacher_id;
+          $this->crud_model->do_teacher_activate($teacher_id, $user_id, 1);
+        }
+
+      } else {
+
+        if ($user_data->teacher_id > 0) {
+          $this->crud_model->delete_teacher_data($user_data);
+        }
+
+      }
+
+      $this->session->set_userdata('user_restore', "no");
+
+      echo 'done';
+
+    } else if (!strncmp($login_type, "kakao", 5)) {
       //header('Content-Type: application/json; charset=UTF-8');
       $result = array();
-      $redirect_url = base_url();
 
       if (!isset($_POST) || !isset($_POST['id'])) {
-        $redirect_url .= "home/login";
         $result['status'] = 'error';
         $result['message'] = "오류가 발생했습니다. 다시 로그인해주세요(1).";
-        $result['redirect_url'] = $redirect_url;
       } else {
 
         $connected_at = $_POST['connected_at'];
@@ -190,6 +225,7 @@ class Home extends CI_Controller
           $this->db->set('register_at', 'NOW()', false);
           $this->db->insert('user_register',$ins);
 
+          $result['status'] = 'success';
           $result['message'] = "첫 방문을 환영합니다.";
 
         } else {
@@ -204,12 +240,19 @@ class Home extends CI_Controller
             $this->db->set('register_at', 'NOW()', false);
             $this->db->insert('user_register',$ins);
 
-            $redirect_url .= "home/login";
+            $this->db->set('unregister', 0);
+
             $result['status'] = 'error';
-            $result['message'] = "(탈퇴회원) 탈퇴 후 7일간 로그인이 불가능합니다.";
-            $result['redirect_url'] = $redirect_url;
-            echo json_encode($result);
-            exit;
+            if ($user_data->user_type & USER_TYPE_TEACHER) {
+              $result['message'] = "기존에 강사 정보를 포함한 휴먼계정이 삭제되지 않았습니다. 복원 후 로그인하시겠습니까? 복원을 원하지 않으시면 삭제를 클릭해 주세요.";
+            } else {
+              $result['message'] = "기존에 휴먼계정이 삭제되지 않았습니다. 복원 후 로그인하시겠습니까? 복원을 원하지 않으시면 삭제를 클릭해 주세요.";
+            }
+            $this->session->set_userdata('user_restore', "yes");
+
+          } else {
+            $result['status'] = 'success';
+            $result['message'] = "로그인해주셔서 감사합니다.";
           }
 
           if ($kakao_account['has_phone_number'] == true) {
@@ -220,8 +263,6 @@ class Home extends CI_Controller
           $this->db->set('last_login_at', 'NOW()', false);
           $this->db->where('user_id', $user_data->user_id);
           $this->db->update('user');
-
-          $result['message'] = "로그인해주셔서 감사합니다.";
 
         }
 
@@ -272,9 +313,6 @@ class Home extends CI_Controller
         $this->session->set_userdata('kakao_thumbnail_image_url', $kakao_thumbnail_image_url);
         $this->session->set_userdata('profile_image_url', $profile_image_url);
 
-        $redirect_url .= 'home';
-        $result['status'] = 'success';
-        $result['redirect_url'] = $redirect_url;
       }
 
       echo json_encode($result);
@@ -374,7 +412,7 @@ class Home extends CI_Controller
   }
 
   /* FUNCTION: Unregister set */
-  function unregister()
+  function unregister($para1 = '')
   {
     if ($this->session->userdata('user_login') != "yes") {
       $this->session->set_flashdata('alert', "login first!");
@@ -384,35 +422,78 @@ class Home extends CI_Controller
     $user_id = $this->session->userdata('user_id');
     $user_data = json_decode($this->session->userdata('user_data'));
 
-    $query = <<<QUERY
-select account from user_login where user_id={$user_id} order by login_at desc limit 0,1
-QUERY;
-    $kakao_account = $this->db->query($query)->row()->account;
+    if ($para1 == 'confirm') {
 
-    $ins = array(
-      'user_id' => $user_data->user_id,
-      'kakao_id' => $user_data->kakao_id,
-      'account' => $kakao_account,
-    );
-    $this->db->set('unregister_at', 'NOW()', false);
-    $this->db->insert('user_unregister',$ins);
+      if ($user_data->user_type & USER_TYPE_SHOP) {
+        $result['status'] = 'error';
+        $result['message'] = "샵 회원은 관리자에게 요청 후 회원탈퇴가 가능합니다.";
+      } else if ($user_data->user_type & USER_TYPE_CENTER) {
+        $result['status'] = 'error';
+        $result['message'] = "센터 회원은 관리자에게 요청 후 회원탈퇴가 가능합니다.";
+      } else if ($user_data->user_type & USER_TYPE_TEACHER) {
+        $result['status'] = 'success';
+        $result['message'] = "강사로 등록된 모든 클래스 / 센터 스케줄 정보가 휴먼기간 후 모두 삭제됩니다. 탈퇴하시겠습니까?";
+      } else {
+        $result['status'] = 'success';
+        $result['message'] = "";
+      }
 
-    $upd = array(
-      'unregister' => 1,
-    );
-    $where = array(
-      'user_id' => $user_id
-    );
-    $this->db->update('user', $upd, $where);
+    } else {
+
+      if ($user_data->user_type & USER_TYPE_SHOP) {
+        $result['status'] = 'error';
+        $result['message'] = "샵 회원은 관리자에게 요청 후 회원탈퇴가 가능합니다.";
+      } else if ($user_data->user_type & USER_TYPE_CENTER) {
+        $result['status'] = 'error';
+        $result['message'] = "센터 회원은 관리자에게 요청 후 회원탈퇴가 가능합니다.";
+      } else {
+
+        if ($user_data->user_type & USER_TYPE_TEACHER) {
+          $activate = 0;
+          $teacher_id = $user_data->teacher_id;
+          $this->crud_model->do_teacher_activate($teacher_id, $user_id, $activate);
+        }
+
+//        $session_id = $this->crud_model->get_session_id();
+//
+//        $query = <<<QUERY
+//select account from user_login where user_id={$user_id} and session_id={$session_id} order by login_at desc limit 0,1
+//QUERY;
+//        $kakao_account = $this->db->query($query)->row()->account;
+
+//        $this->session->sess_destroy();
+//        $result['status'] = 'success';
+//        $result['message'] = "회원탈퇴 되었습니다.";
+//        echo json_encode($result);
+//        exit;
+
+        $ins = array(
+          'user_id' => $user_data->user_id,
+          'kakao_id' => $user_data->kakao_id,
+//          'account' => $kakao_account,
+        );
+        $this->db->set('unregister_at', 'NOW()', false);
+        $this->db->insert('user_unregister',$ins);
+
+        $upd = array(
+          'unregister' => 1,
+        );
+        $where = array(
+          'user_id' => $user_id
+        );
+        $this->db->update('user', $upd, $where);
 
 //    $this->db->where('user_id', $user_id);
 //    $this->db->delete('user');
 
-    $redirect_url = base_url();
-    $this->session->sess_destroy();
-    $result['status'] = 'success';
-    $result['redirect_url'] = $redirect_url;
-    $result['message'] = "회원탈퇴 되었습니다.";
+        $this->session->sess_destroy();
+
+        $result['status'] = 'success';
+        $result['message'] = "회원탈퇴 되었습니다.";
+      }
+
+    }
+
     echo json_encode($result);
     exit;
   }
@@ -613,7 +694,7 @@ QUERY;
       $page_data['thumbnail_image_url'] = $user_data->kakao_thumbnail_image_url;
 
       $page_data['center_activate'] = false;
-      if ($this->session->userdata('user_type') & USER_TYPE_CENTER) {
+      if ($user_data->user_type & USER_TYPE_CENTER) {
         $page_data['center_activate'] = 1;
 
         $my_centers = $this->db->get_where('center', array('user_id' => $user_id, 'activate' => 1))->result();
@@ -621,7 +702,7 @@ QUERY;
       }
 
       $page_data['teacher_activate'] = false;
-      if ($this->session->userdata('user_type') & USER_TYPE_TEACHER) {
+      if ($user_data->user_type & USER_TYPE_TEACHER) {
         $page_data['teacher_activate'] = 1;
 
         $my_teacher = $this->db->get_where('teacher', array('user_id' => $user_id, 'activate' => 1))->row();
@@ -650,19 +731,19 @@ QUERY;
         $bookmark_teachers = $this->db->get('teacher')->result();
       }
 
-      $bookmark_classes = $this->db->get_where('bookmark_class', array('user_id' => $user_id))->result();
-      if (!empty($bookmark_classes) and count($bookmark_classes) > 0) {
-        $video_ids = array();
-        foreach ($bookmark_classes as $v) {
-          $video_ids[] = $v->video_id;
-        }
-        $this->db->where_in('video_id', $video_ids);
-        $bookmark_classes = $this->db->get('teacher_video')->result();
-      }
+//      $bookmark_classes = $this->db->get_where('bookmark_class', array('user_id' => $user_id))->result();
+//      if (!empty($bookmark_classes) and count($bookmark_classes) > 0) {
+//        $video_ids = array();
+//        foreach ($bookmark_classes as $v) {
+//          $video_ids[] = $v->video_id;
+//        }
+//        $this->db->where_in('video_id', $video_ids);
+//        $bookmark_classes = $this->db->get('teacher_video')->result();
+//      }
 
       $page_data['bookmark_centers'] = $bookmark_centers;
       $page_data['bookmark_teachers'] = $bookmark_teachers;
-      $page_data['bookmark_classes'] = $bookmark_classes;
+//      $page_data['bookmark_classes'] = $bookmark_classes;
       $this->load->view('front/user/profile', $page_data);
 
     } else if ($view_type == 'edit_profile') {
@@ -968,9 +1049,11 @@ QUERY;
           'about' => $about,
           'youtube' => $youtube,
           'instagram' => $instagram,
-          'create_at' => 'NOW()',
-          'approval_at' => 'NOW()'
+//          'create_at' => 'NOW()',
+//          'approval_at' => 'NOW()'
         );
+        $this->db->set('create_at', 'NOW()', false);
+        $this->db->set('approval_at', 'NOW()', false);
         $this->db->insert('teacher', $data);
         $teacher_id = $this->db->insert_id();
 
@@ -2468,20 +2551,28 @@ QUERY;
 //        echo "<script>alert('{$page}, {$limit}, {$offset}')</script>";
 
         if ($filter == 'ALL') {
+          $this->db->where('activate', 1);
           $video_data = $this->db->order_by('video_id', 'desc')->get('teacher_video', $limit, $offset)->result();
         } else {
-          $this->db->order_by('video_id', 'desc');
-          $video_list = $this->db->get_where('teacher_video_category', array('category' => $filter), $limit, $offset)->result();
+          $query = <<<QUERU
+select a.* from teacher_video a, teacher_video_category b 
+where a.video_id=b.video_id and a.activate=1 and b.category='{$filter}'
+order by video_id desc limit {$offset},{$limit}
+QUERU;
+          $video_data = $this->db->query($query)->result();
 
-          $video_data = array();
-          if (!empty($video_list) && count($video_list) > 0) {
-            $video_id_list = array();
-            foreach ($video_list as $video) {
-              $video_id_list[] = $video->video_id;
-            }
-            $this->db->where_in('video_id', $video_id_list);
-            $video_data = $this->db->order_by('video_id', 'desc')->get('teacher_video')->result();
-          }
+//          $this->db->order_by('video_id', 'desc');
+//          $video_list = $this->db->get_where('teacher_video_category', array('category' => $filter), $limit, $offset)->result();
+
+//          $video_data = array();
+//          if (!empty($video_list) && count($video_list) > 0) {
+//            $video_id_list = array();
+//            foreach ($video_list as $video) {
+//              $video_id_list[] = $video->video_id;
+//            }
+//            $this->db->where_in('video_id', $video_id_list);
+//            $video_data = $this->db->order_by('video_id', 'desc')->get('teacher_video')->result();
+//          }
         }
 
         $page_data['video_data'] = $video_data;
