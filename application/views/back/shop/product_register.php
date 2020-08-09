@@ -88,54 +88,109 @@
                   <th class="col-md-2 item-cat-header">진열카테고리<span class="required">*</span></th>
                   <td colspan="5" class="col-md-10">
                     <div class="col-md-12">
-                      <div class="col-md-4 shop-category-1">
-                        <select id="item-cat-1" class="form-control" onchange="get_product_category($(this));" data-id="1">
-                          <option value="0">대분류</option>
-                          <?php foreach ($shop_product_category as $cat) { ?>
-                            <option value="<?php echo $cat->cat_code; ?>"><?php echo $cat->cat_name; ?></option>
-                          <?php } ?>
-                        </select>
-                      </div>
-                      <div class="col-md-4 shop-category-2">
-                        <select id="item-cat-2" class="form-control" onchange="get_product_category($(this));" data-id="2">
-                          <option value="0">중분류</option>
-                        </select>
-                      </div>
-                      <div class="col-md-4 shop-category-3">
-                        <select id="item-cat-3" class="form-control" data-id="3">
-                          <option value="0">소분류</option>
-                        </select>
-                      </div>
+                      <?php if ($edit == true) { ?>
+                        <div class="col-md-4 shop-category-1">
+                          <select disabled id="item-cat-1" class="form-control" onchange="get_product_category($(this));" data-id="1">
+                            <option value="0">대분류</option>
+                            <?php foreach ($cat_1 as $cat) { ?>
+                              <option <?php if (!strncmp($cat->cat_code, $product_data->item_cat, 2)) echo 'selected'; ?> value="<?php echo $cat->cat_code; ?>"><?php echo $cat->cat_name; ?></option>
+                            <?php } ?>
+                          </select>
+                        </div>
+                        <div class="col-md-4 shop-category-2">
+                          <select disabled id="item-cat-2" class="form-control" onchange="get_product_category($(this));" data-id="2">
+                            <option value="0">중분류</option>
+                            <?php foreach ($cat_2 as $cat) { ?>
+                              <option <?php if (!strncmp($cat->cat_code, $product_data->item_cat, 4)) echo 'selected'; ?> value="<?php echo $cat->cat_code; ?>"><?php echo $cat->cat_name; ?></option>
+                            <?php } ?>
+                          </select>
+                        </div>
+                        <div class="col-md-4 shop-category-3">
+                          <select disabled id="item-cat-3" class="form-control" data-id="3">
+                            <option value="0">소분류</option>
+                            <?php foreach ($cat_3 as $cat) { ?>
+                              <option <?php if (!strncmp($cat->cat_code, $product_data->item_cat, 6)) echo 'selected'; ?> value="<?php echo $cat->cat_code; ?>"><?php echo $cat->cat_name; ?></option>
+                            <?php } ?>
+                          </select>
+                        </div>
+                      <?php } else { ?>
+                        <div class="col-md-4 shop-category-1">
+                          <select id="item-cat-1" class="form-control" onchange="get_product_category($(this));" data-id="1">
+                            <option value="0">대분류</option>
+                            <?php foreach ($shop_product_category as $cat) { ?>
+                              <option value="<?php echo $cat->cat_code; ?>"><?php echo $cat->cat_name; ?></option>
+                            <?php } ?>
+                          </select>
+                        </div>
+                        <div class="col-md-4 shop-category-2">
+                          <select id="item-cat-2" class="form-control" onchange="get_product_category($(this));" data-id="2">
+                            <option value="0">중분류</option>
+                          </select>
+                        </div>
+                        <div class="col-md-4 shop-category-3">
+                          <select id="item-cat-3" class="form-control" data-id="3">
+                            <option value="0">소분류</option>
+                          </select>
+                        </div>
+                      <?php } ?>
                     </div>
                   </td>
                 </tr>
                 <tr>
                   <th class="col-md-2 item-name-header">상품명<span class="required">*</span></th>
                   <td colspan="5" class="col-md-10">
-                    <input class='form-control' id="item-name" name="item_name" type="text" value="" />
+                    <?php if ($edit == true) { ?>
+                      <input class='form-control' id="item-name" name="item_name" type="text" value="<?php echo $product->item_name; ?>" />
+                    <?php } else { ?>
+                      <input class='form-control' id="item-name" name="item_name" type="text" value="" />
+                    <?php } ?>
                   </td>
                 </tr>
                 <tr>
                   <th class="col-md-2 item-type-header">상품유형<span class="required">*</span></th>
                   <td colspan="2" class="col-md-4">
-                    <select id="item-type" class="form-control">
-                      <option value="<?php echo SHOP_PRODUCT_ITEM_TYPE_GENERAL; ?>">
-                        <?php echo $this->crud_model->get_product_item_type_str(SHOP_PRODUCT_ITEM_TYPE_GENERAL);?>
-                      </option>
-                      <option value="<?php echo SHOP_PRODUCT_ITEM_TYPE_CUSTOM; ?>">
-                        <?php echo $this->crud_model->get_product_item_type_str(SHOP_PRODUCT_ITEM_TYPE_CUSTOM);?>
-                      </option>
-                    </select>
+                    <?php if ($edit == true) { ?>
+                      <select id="item-type" class="form-control">
+                        <option <?php if ($product_data->item_type == SHOP_PRODUCT_ITEM_TYPE_GENERAL) echo 'selected'; ?>
+                          value="<?php echo SHOP_PRODUCT_ITEM_TYPE_GENERAL; ?>">
+                          <?php echo $this->crud_model->get_product_item_type_str(SHOP_PRODUCT_ITEM_TYPE_GENERAL);?>
+                        </option>
+                        <option <?php if ($product_data->item_type == SHOP_PRODUCT_ITEM_TYPE_CUSTOM) echo 'selected'; ?>
+                          value="<?php echo SHOP_PRODUCT_ITEM_TYPE_CUSTOM; ?>">
+                          <?php echo $this->crud_model->get_product_item_type_str(SHOP_PRODUCT_ITEM_TYPE_CUSTOM);?>
+                        </option>
+                      </select>
+                    <?php } else { ?>
+                      <select id="item-type" class="form-control">
+                        <option value="<?php echo SHOP_PRODUCT_ITEM_TYPE_GENERAL; ?>">
+                          <?php echo $this->crud_model->get_product_item_type_str(SHOP_PRODUCT_ITEM_TYPE_GENERAL);?>
+                        </option>
+                        <option value="<?php echo SHOP_PRODUCT_ITEM_TYPE_CUSTOM; ?>">
+                          <?php echo $this->crud_model->get_product_item_type_str(SHOP_PRODUCT_ITEM_TYPE_CUSTOM);?>
+                        </option>
+                      </select>
+                    <?php } ?>
                   </td>
                   <th class="col-md-2 item-tax-header">과세여부<span class="required">*</span></th>
                   <td colspan="2" class="col-md-4">
                     <select id="item-tax" class="form-control">
-                      <option value="<?php echo SHOP_PRODUCT_ITEM_TAX; ?>">
-                        <?php echo $this->crud_model->get_product_item_tax_str(SHOP_PRODUCT_ITEM_TAX);?>
-                      </option>
-                      <option value="<?php echo SHOP_PRODUCT_ITEM_NO_TAX; ?>">
-                        <?php echo $this->crud_model->get_product_item_tax_str(SHOP_PRODUCT_ITEM_NO_TAX);?>
-                      </option>
+                      <?php if ($edit == true) { ?>
+                        <option <?php if ($product_data->item_tax == SHOP_PRODUCT_ITEM_TAX) echo 'selected'; ?>
+                          value="<?php echo SHOP_PRODUCT_ITEM_TAX; ?>">
+                          <?php echo $this->crud_model->get_product_item_tax_str(SHOP_PRODUCT_ITEM_TAX);?>
+                        </option>
+                        <option <?php if ($product_data->item_tax == SHOP_PRODUCT_ITEM_NO_TAX) echo 'selected'; ?>
+                          value="<?php echo SHOP_PRODUCT_ITEM_NO_TAX; ?>">
+                          <?php echo $this->crud_model->get_product_item_tax_str(SHOP_PRODUCT_ITEM_NO_TAX);?>
+                        </option>
+                      <?php } else { ?>
+                        <option value="<?php echo SHOP_PRODUCT_ITEM_TAX; ?>">
+                          <?php echo $this->crud_model->get_product_item_tax_str(SHOP_PRODUCT_ITEM_TAX);?>
+                        </option>
+                        <option value="<?php echo SHOP_PRODUCT_ITEM_NO_TAX; ?>">
+                          <?php echo $this->crud_model->get_product_item_tax_str(SHOP_PRODUCT_ITEM_NO_TAX);?>
+                        </option>
+                      <?php } ?>
                     </select>
                   </td>
                 </tr>
@@ -143,15 +198,30 @@
                   <th class="col-md-2 item-shipping-days-header">배송소요일<span class="required">*</span></th>
                   <td colspan="2" class="col-md-4">
                     <select id="item-shipping-days" class="form-control">
-                      <option value="<?php echo SHOP_PRODUCT_SHIPPING_2_DAYS; ?>">
-                        <?php echo $this->crud_model->get_product_item_shipping_days_str(SHOP_PRODUCT_SHIPPING_2_DAYS);?>
-                      </option>
-                      <option value="<?php echo SHOP_PRODUCT_SHIPPING_3_DAYS; ?>">
-                        <?php echo $this->crud_model->get_product_item_shipping_days_str(SHOP_PRODUCT_SHIPPING_3_DAYS);?>
-                      </option>
-                      <option value="<?php echo SHOP_PRODUCT_SHIPPING_CUSTOM; ?>">
-                        <?php echo $this->crud_model->get_product_item_shipping_days_str(SHOP_PRODUCT_SHIPPING_CUSTOM);?>
-                      </option>
+                      <?php if ($edit == true) { ?>
+                        <option <?php if ($product_data->item_shipping_days == SHOP_PRODUCT_SHIPPING_2_DAYS) echo 'selected'; ?>
+                          value="<?php echo SHOP_PRODUCT_SHIPPING_2_DAYS; ?>">
+                          <?php echo $this->crud_model->get_product_item_shipping_days_str(SHOP_PRODUCT_SHIPPING_2_DAYS);?>
+                        </option>
+                        <option <?php if ($product_data->item_shipping_days == SHOP_PRODUCT_SHIPPING_3_DAYS) echo 'selected'; ?>
+                          value="<?php echo SHOP_PRODUCT_SHIPPING_3_DAYS; ?>">
+                          <?php echo $this->crud_model->get_product_item_shipping_days_str(SHOP_PRODUCT_SHIPPING_3_DAYS);?>
+                        </option>
+                        <option <?php if ($product_data->item_shipping_days == SHOP_PRODUCT_SHIPPING_CUSTOM) echo 'selected'; ?>
+                          value="<?php echo SHOP_PRODUCT_SHIPPING_CUSTOM; ?>">
+                          <?php echo $this->crud_model->get_product_item_shipping_days_str(SHOP_PRODUCT_SHIPPING_CUSTOM);?>
+                        </option>
+                      <?php } else { ?>
+                        <option value="<?php echo SHOP_PRODUCT_SHIPPING_2_DAYS; ?>">
+                          <?php echo $this->crud_model->get_product_item_shipping_days_str(SHOP_PRODUCT_SHIPPING_2_DAYS);?>
+                        </option>
+                        <option value="<?php echo SHOP_PRODUCT_SHIPPING_3_DAYS; ?>">
+                          <?php echo $this->crud_model->get_product_item_shipping_days_str(SHOP_PRODUCT_SHIPPING_3_DAYS);?>
+                        </option>
+                        <option value="<?php echo SHOP_PRODUCT_SHIPPING_CUSTOM; ?>">
+                          <?php echo $this->crud_model->get_product_item_shipping_days_str(SHOP_PRODUCT_SHIPPING_CUSTOM);?>
+                        </option>
+                      <?php } ?>
                     </select>
                   </td>
                   <th class="col-md-2 item-shipping-free-header">배송비유형<span class="required">*</span></th>
@@ -166,47 +236,89 @@
                 <tr>
                   <th class="col-md-2 item-base-info-header">상품기본설명<span class="required">*</span></th>
                   <td colspan="5" class="col-md-10">
-<!--                    <textarea id="item-info" rows="3" class="form-control" data-height="200" data-name="item-desc"></textarea>-->
-                    <input id="item-base-info" class='form-control' name="item_info" type="text" value="" />
+                    <?php if ($edit == true) { ?>
+                      <input id="item-base-info" class='form-control' name="item_info" type="text" value="<?php echo $product_data->item_base_info; ?>" />
+                    <?php } else { ?>
+                      <input id="item-base-info" class='form-control' name="item_info" type="text" value="" />
+                    <?php } ?>
                   </td>
                 </tr>
                 <tr>
                   <th class="col-md-2 item-attention-point-header">상품유의사항</th>
                   <td class="col-md-2">
                     <select id="item-attention-point-select" class="form-control" onchange="change_attention_point($(this))">
-                      <option value="0">사용안함</option>
-                      <option value="1">사용</option>
+                      <?php if ($edit == true) { ?>
+                        <option <?php if ($product_data->item_attention_point == '') echo 'selected'; ?> value="0">사용안함</option>
+                        <option <?php if ($product_data->item_attention_point != '') echo 'selected'; ?> value="1">사용</option>
+                    <?php } else { ?>
+                        <option value="0">사용안함</option>
+                        <option value="1">사용</option>
+                    <?php } ?>
                     </select>
                   </td>
                   <td colspan="4" class="col-md-8">
-                    <input disabled id="item-attention-point" class='form-control' name="item_attention_point" type="text" value="" />
-<!--                    <textarea disabled id="item-attention-point" rows="3" class="form-control" data-height="200" data-name="item-attention-point"></textarea>-->
+                    <?php if ($edit == true) { ?>
+                      <?php if ($product_data->item_attention_point == '') { ?>
+                        <input disabled id="item-attention-point" class='form-control' name="item_attention_point" type="text" value="" />
+                      <?php } else { ?>
+                        <input id="item-attention-point" class='form-control' name="item_attention_point" type="text"
+                               value="<?php echo $product_data->item_attention_point; ?>" />
+                      <?php } ?>
+                    <?php } else { ?>
+                      <input disabled id="item-attention-point" class='form-control' name="item_attention_point" type="text" value="" />
+                    <?php } ?>
                   </td>
                 </tr>
                 <tr>
                   <th class="col-md-2 order-attention-point-header">주문유의사항</th>
                   <td class="col-md-2">
                     <select id="order-attention-point-select" class="form-control" onchange="change_attention_point($(this))">
-                      <option value="0">사용안함</option>
-                      <option value="1">사용</option>
+                      <?php if ($edit == true) { ?>
+                        <option <?php if ($product_data->order_attention_point == '') echo 'selected'; ?> value="0">사용안함</option>
+                        <option <?php if ($product_data->order_attention_point != '') echo 'selected'; ?> value="1">사용</option>
+                      <?php } else { ?>
+                        <option value="0">사용안함</option>
+                        <option value="1">사용</option>
+                      <?php } ?>
                     </select>
                   </td>
                   <td colspan="4" class="col-md-8">
-                    <input disabled id="order-attention-point" class='form-control' name="order_attention_point" type="text" value="" />
-<!--                    <textarea disabled id="order-attention-point" rows="3" class="form-control" data-height="200" data-name="order-attention-point"></textarea>-->
+                    <?php if ($edit == true) { ?>
+                      <?php if ($product_data->order_attention_point == '') { ?>
+                        <input disabled id="order-attention-point" class='form-control' name="order_attention_point" type="text" value="" />
+                      <?php } else { ?>
+                        <input id="order-attention-point" class='form-control' name="order_attention_point" type="text"
+                               value="<?php echo $product_data->order_attention_point; ?>" />
+                      <?php } ?>
+                    <?php } else { ?>
+                      <input disabled id="order-attention-point" class='form-control' name="order_attention_point" type="text" value="" />
+                    <?php } ?>
                   </td>
                 </tr>
                 <tr>
                   <th class="col-md-2 shipping-attention-point-header">배송유의사항</th>
                   <td class="col-md-2">
                     <select id="shipping-attention-point-select" class="form-control" onchange="change_attention_point($(this))">
-                      <option value="0">사용안함</option>
-                      <option value="1">사용</option>
+                      <?php if ($edit == true) { ?>
+                        <option <?php if ($product_data->shipping_attention_point == '') echo 'selected'; ?> value="0">사용안함</option>
+                        <option <?php if ($product_data->shipping_attention_point != '') echo 'selected'; ?> value="1">사용</option>
+                      <?php } else { ?>
+                        <option value="0">사용안함</option>
+                        <option value="1">사용</option>
+                      <?php } ?>
                     </select>
                   </td>
                   <td colspan="4" class="col-md-8">
-                    <input disabled id="shipping-attention-point" class='form-control' name="shipping_attention_point" type="text" value="" />
-<!--                    <textarea disabled id="shipping-attention-point" rows="3" class="form-control" data-height="200" data-name="shipping-attention-point"></textarea>-->
+                    <?php if ($edit == true) { ?>
+                      <?php if ($product_data->shipping_attention_point == '') { ?>
+                        <input disabled id="shipping-attention-point" class='form-control' name="shipping_attention_point" type="text" value="" />
+                      <?php } else { ?>
+                        <input id="shipping-attention-point" class='form-control' name="shipping_attention_point" type="text"
+                               value="<?php echo $product_data->shipping_attention_point; ?>" />
+                      <?php } ?>
+                    <?php } else { ?>
+                      <input disabled id="shipping-attention-point" class='form-control' name="shipping_attention_point" type="text" value="" />
+                    <?php } ?>
                   </td>
                 </tr>
                 </tbody>
@@ -228,13 +340,22 @@
               <tr>
                 <th class="col-md-2 item-noti-info-header">상품고시정보<span class="required">*</span></th>
                 <td colspan="4" class="col-md-10">
-                  <textarea disabled id="item-noti-info" rows="20" class="form-control" data-height="500"></textarea>
+                  <?php if ($edit == true) { ?>
+                    <?php if ($product_data->item_noti_info_need) { ?>
+                      <textarea id="item-noti-info" rows="20" class="form-control" data-height="500"><?php echo str_replace("<br />", "\n", $product_data->item_noti_info); ?></textarea>
+                    <?php } else { ?>
+                      <textarea disabled id="item-noti-info" rows="20" class="form-control" data-height="500"></textarea>
+                    <?php } ?>
+                  <?php } else { ?>
+                    <textarea disabled id="item-noti-info" rows="20" class="form-control" data-height="500"></textarea>
+                  <?php } ?>
                 </td>
               </tr>
               <tr>
                 <th class="col-md-2 item-cert-header">인증정보</th>
                 <td colspan="4" class="col-md-10">
                   <div class="col-md-12">
+                    <?php if ($edit == false || $product_data->item_cert_need == false) { ?>
                     <div class="col-md-2">
                       KC인증번호
                     </div>
@@ -267,6 +388,45 @@
                     <div class="col-md-2">
                       <input disabled class='form-control' id="item-importer-name" name="item_importer_name" type="text" value="" />
                     </div>
+                    <?php } else { ?>
+                    <div class="col-md-2">
+                      KC인증번호
+                    </div>
+                    <div class="col-md-4">
+                      <input class='form-control' id="item-kc-cert-number" name="item_kc_permit_number" type="text"
+                             value="<?php echo $product_data->item_kc_cert_number; ?>" />
+                    </div>
+                    <div class="col-md-2">
+                      제품명
+                    </div>
+                    <div class="col-md-4">
+                      <input class='form-control' id="item-cert-name" name="item_permit_name" type="text"
+                             value="<?php echo $product_data->item_cert_name; ?>" />
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="col-md-2">
+                      모델명
+                    </div>
+                    <div class="col-md-2">
+                      <input class='form-control' id="item-model-name" name="item_model_name" type="text"
+                             value="<?php echo $product_data->item_model_name; ?>" />
+                    </div>
+                    <div class="col-md-2">
+                      제조업자명
+                    </div>
+                    <div class="col-md-2">
+                      <input class='form-control' id="item-manufacturer-name" name="item_manufacturer_name" type="text"
+                             value="<?php echo $product_data->item_manufacturer_name; ?>" />
+                    </div>
+                    <div class="col-md-2">
+                      수업업자명
+                    </div>
+                    <div class="col-md-2">
+                      <input class='form-control' id="item-importer-name" name="item_importer_name" type="text"
+                             value="<?php echo $product_data->item_importer_name; ?>" />
+                    </div>
+                    <?php } ?>
                   </div>
                 </td>
               </tr>
@@ -288,20 +448,37 @@
               <tr>
                 <th class="col-md-1 item-general-price-header">정상가<span class="required">*</span></th>
                 <td class="col-md-2">
-                  <input onchange="change_general_price();" class='form-control' id="item-general-price" name="item_general_price" type="text" value="0" />
+                  <?php if ($edit) { ?>
+                    <input onchange="change_general_price();" class='form-control' id="item-general-price" name="item_general_price" type="text"
+                           value="<?php echo $product_data->item_general_price; ?>" />
+                  <?php } else { ?>
+                    <input onchange="change_general_price();" class='form-control' id="item-general-price" name="item_general_price" type="text" value="0" />
+                  <?php } ?>
                 </td>
                 <th class="col-md-1 item-discount-rate-header">할인율<span class="required">*</span></th>
                 <td class="col-md-2">
                   <select class="form-control" id="item-discount-rate" onchange="change_discount_rate()">
-                    <option value="0" selected>0%</option>
-                    <option value="5">5%</option>
-                    <option value="10">10%</option>
-                    <option value="15">15%</option>
-                    <option value="20">20%</option>
-                    <option value="25">25%</option>
-                    <option value="30">30%</option>
-                    <option value="35">35%</option>
-                    <option value="40">40%</option>
+                    <?php if ($edit) { ?>
+                      <option <?php if ($product_data->item_discount_rate == 0) echo 'selected'; ?> value="0" selected>0%</option>
+                      <option <?php if ($product_data->item_discount_rate == 5) echo 'selected'; ?> value="5">5%</option>
+                      <option <?php if ($product_data->item_discount_rate == 10) echo 'selected'; ?> value="10">10%</option>
+                      <option <?php if ($product_data->item_discount_rate == 15) echo 'selected'; ?> value="15">15%</option>
+                      <option <?php if ($product_data->item_discount_rate == 20) echo 'selected'; ?> value="20">20%</option>
+                      <option <?php if ($product_data->item_discount_rate == 25) echo 'selected'; ?> value="25">25%</option>
+                      <option <?php if ($product_data->item_discount_rate == 30) echo 'selected'; ?> value="30">30%</option>
+                      <option <?php if ($product_data->item_discount_rate == 35) echo 'selected'; ?> value="35">35%</option>
+                      <option <?php if ($product_data->item_discount_rate == 40) echo 'selected'; ?> value="40">40%</option>
+                    <?php } else { ?>
+                      <option value="0" selected>0%</option>
+                      <option value="5">5%</option>
+                      <option value="10">10%</option>
+                      <option value="15">15%</option>
+                      <option value="20">20%</option>
+                      <option value="25">25%</option>
+                      <option value="30">30%</option>
+                      <option value="35">35%</option>
+                      <option value="40">40%</option>
+                    <?php } ?>
                   </select>
                 </td>
                 <th class="col-md-1"></th>
@@ -312,15 +489,28 @@
               <tr>
                 <th class="col-md-1 item-sell-price-header">판매가</th>
                 <td class="col-md-2">
-                  <input readonly class='form-control' id="item-sell-price" name="item_sell_price" type="text" value="0" />
+                  <?php if ($edit) { ?>
+                    <input class='form-control' id="item-sell-price" name="item_sell_price" type="text" value="<?php echo $product_data->item_sell_price; ?>" />
+                  <?php } else { ?>
+                    <input readonly class='form-control' id="item-sell-price" name="item_sell_price" type="text" value="0" />
+                  <?php } ?>
                 </td>
                 <th class="col-md-1 item-margin-header">마진율</th>
                 <td class="col-md-2">
-                  <input readonly class='form-control' id="item-margin" name="item_margin" type="text" value="<?php echo $shop_data->commission_rate; ?>%" />
+                  <?php if ($edit) { ?>
+                    <input readonly class='form-control' id="item-margin" name="item_margin" type="text" value="<?php echo $product_data->item_margin; ?>%" />
+                  <?php } else { ?>
+                    <input readonly class='form-control' id="item-margin" name="item_margin" type="text" value="<?php echo $shop_data->commission_rate; ?>%" />
+                  <?php } ?>
                 </td>
                 <th class="col-md-1 item-supply-price-header">공급가</th>
                 <td class="col-md-2">
-                  <input readonly class='form-control' id="item-supply-price" name="item_supply_price" type="text" value="0" />
+                  <?php if ($edit) { ?>
+                    <input readonly class='form-control' id="item-supply-price" name="item_supply_price" type="text"
+                           value="<?php echo $product_data->item_supply_price; ?>" />
+                  <?php } else { ?>
+                    <input readonly class='form-control' id="item-supply-price" name="item_supply_price" type="text" value="0" />
+                  <?php } ?>
                 </td>
                 <th class="col-md-1"></th>
                 <td class="col-md-2"></td>
@@ -348,13 +538,23 @@
                       구매최대갯수
                     </div>
                     <div class="col-md-2">
-                      <input class='form-control' id="purchase-max-cnt" name="purchase_max_cnt" type="number" value="0" />
+                      <?php if ($edit) { ?>
+                        <input class='form-control' id="purchase-max-cnt" name="purchase_max_cnt" type="number"
+                               value="<?php echo $product_data->purchase_max_cnt; ?>" />
+                      <?php } else { ?>
+                        <input class='form-control' id="purchase-max-cnt" name="purchase_max_cnt" type="number" value="0" />
+                      <?php } ?>
                     </div>
                     <div class="col-md-2">
                       묶음배송갯수
                     </div>
                     <div class="col-md-2">
-                      <input class='form-control' id="bundle-shipping-cnt" name="bundle_shipping_cnt" type="number" value="0" />
+                      <?php if ($edit) { ?>
+                        <input class='form-control' id="bundle-shipping-cnt" name="bundle_shipping_cnt" type="number"
+                               value="<?php echo $product_data->bundle_shipping_cnt; ?>" />
+                      <?php } else { ?>
+                        <input class='form-control' id="bundle-shipping-cnt" name="bundle_shipping_cnt" type="number" value="0" />
+                      <?php } ?>
                     </div>
                     <div class="col-md-6">
                     </div>
@@ -365,30 +565,58 @@
                 <th class="col-md-2 item-option-header">옵션여부선택<span class="required">*</span></th>
                 <td class="col-md-10">
                   <div class="col-md-12">
-                    <div class="col-md-2">
-                      <label style="text-align:left">
-                        <input checked onchange="change_option($(this));" class='form-checkbox' data-action="no_option" id="item-no-option" name="item_no_option" type="checkbox" value="2" />
-                        옵션없음(단품)
-                      </label>
-                    </div>
-                    <div class="col-md-2">
-                      <label style="text-align:left">
-                        <input onchange="change_option($(this));" class='form-checkbox' data-action="has_option" id="item-has-option" name="item_has_option" type="checkbox" value="1" />
-                        옵션있음
-                      </label>
-                    </div>
-                    <div class="col-md-2">
-                      <select disabled onchange="set_option_html();" class="form-control" id="item-option-count">
-                        <option value="0">옵션갯수</option>
-                        <option value="1">1개</option>
-                        <option value="2">2개</option>
-                        <option value="3">3개</option>
-                        <option value="4">4개</option>
-                        <option value="5">5개</option>
-                      </select>
-                    </div>
-                    <div class="col-md-6">
-                    </div>
+                    <?php if ($edit) { ?>
+                      <div class="col-md-2">
+                        <?php $option_cnt = $product_data->item_option_requires_cnt + $product_data->item_option_others_cnt; ?>
+                        <label style="text-align:left">
+                          <input <?php if ($option_cnt == 0) echo 'checked'; ?> onchange="change_option($(this));" class='form-checkbox' data-action="no_option" id="item-no-option" name="item_no_option" type="checkbox" value="2" />
+                          옵션없음(단품)
+                        </label>
+                      </div>
+                      <div class="col-md-2">
+                        <label style="text-align:left">
+                          <input <?php if ($option_cnt > 0) echo 'checked'; ?> onchange="change_option($(this));" class='form-checkbox' data-action="has_option" id="item-has-option" name="item_has_option" type="checkbox" value="1" />
+                          옵션있음
+                        </label>
+                      </div>
+                      <div class="col-md-2">
+                        <select disabled onchange="set_option_html();" class="form-control" id="item-option-count">
+                          <option <?php if ($option_cnt == 0) echo 'selected'; ?> value="0">옵션갯수</option>
+                          <option <?php if ($option_cnt == 1) echo 'selected'; ?> value="1">1개</option>
+                          <option <?php if ($option_cnt == 2) echo 'selected'; ?> value="2">2개</option>
+                          <option <?php if ($option_cnt == 3) echo 'selected'; ?> value="3">3개</option>
+                          <option <?php if ($option_cnt == 4) echo 'selected'; ?> value="4">4개</option>
+                          <option <?php if ($option_cnt == 5) echo 'selected'; ?> value="5">5개</option>
+                        </select>
+                      </div>
+                      <div class="col-md-6">
+                      </div>
+                    <?php } else { ?>
+                      <div class="col-md-2">
+                        <label style="text-align:left">
+                          <input checked onchange="change_option($(this));" class='form-checkbox' data-action="no_option" id="item-no-option" name="item_no_option" type="checkbox" value="2" />
+                          옵션없음(단품)
+                        </label>
+                      </div>
+                      <div class="col-md-2">
+                        <label style="text-align:left">
+                          <input onchange="change_option($(this));" class='form-checkbox' data-action="has_option" id="item-has-option" name="item_has_option" type="checkbox" value="1" />
+                          옵션있음
+                        </label>
+                      </div>
+                      <div class="col-md-2">
+                        <select disabled onchange="set_option_html();" class="form-control" id="item-option-count">
+                          <option value="0">옵션갯수</option>
+                          <option value="1">1개</option>
+                          <option value="2">2개</option>
+                          <option value="3">3개</option>
+                          <option value="4">4개</option>
+                          <option value="5">5개</option>
+                        </select>
+                      </div>
+                      <div class="col-md-6">
+                      </div>
+                    <?php } ?>
                   </div>
                 </td>
               </tr>
@@ -422,19 +650,55 @@
             </div>
             <table class="col-md-12" id="item-image-table">
               <tbody>
-              <tr>
-                <th class="col-md-2 item-image-header">필수이미지<span class="required">*</span></th>
-                <td class="col-md-6">
-                  <input class='form-control item-image' onchange="preview(this);" name="item_image[]" type="file" value="" />
-                </td>
-                <th class="col-md-2">
-                  <span class="preview-img" >
-                  </span>
-                </th>
-                <th class="col-md-2">
-<!--                  <span class="fa fa-times" onclick="del_item_image($(this));"></span>-->
-                </th>
-              </tr>
+              <?php if ($edit) { ?>
+                <tr>
+                  <th class="col-md-2 item-image-header">필수이미지<span class="required">*</span></th>
+                  <td class="col-md-6">
+                    <input class='form-control item-image' onchange="preview(this);" name="item_image[]" type="file" value="" />
+                  </td>
+                  <th class="col-md-2">
+                    <span class="preview-img" >
+                      <div style='float:left;border:4px solid #303641;padding:5px;margin:5px;'>
+                        <img height='50' width='50' src='<?php echo $product_data->item_image_url_0; ?>'></div>
+                    </span>
+                  </th>
+                  <th class="col-md-2">
+                    <!--                  <span class="fa fa-times" onclick="del_item_image($(this));"></span>-->
+                  </th>
+                  <?php for ($i = 1; $i < $product_data->item_image_count; $i++) {
+                    $item_image_url = 'item_image_url_'.$i;
+                    ?>
+                  <tr>
+                  <th class="col-md-2 item-image-header">추가이미지<span class="required">*</span></th>
+                  <td class="col-md-6">
+                    <input class='form-control item-image' onchange="preview(this);" name="item_image[]" type="file" value="" />
+                  </td>
+                  <th class="col-md-2">
+                    <span class="preview-img" >
+                      <div style='float:left;border:4px solid #303641;padding:5px;margin:5px;'>
+                        <img height='50' width='50' src='<?php echo $product_data->{$item_image_url}; ?>'></div>
+                    </span>
+                  </th>
+                  <th class="col-md-2">
+                    <span class="fa fa-times" onclick="del_item_image($(this));"></span>
+                  </th>
+                  <?php } ?>
+                </tr>
+              <?php } else { ?>
+                <tr>
+                  <th class="col-md-2 item-image-header">필수이미지<span class="required">*</span></th>
+                  <td class="col-md-6">
+                    <input class='form-control item-image' onchange="preview(this);" name="item_image[]" type="file" value="" />
+                  </td>
+                  <th class="col-md-2">
+                    <span class="preview-img" >
+                    </span>
+                  </th>
+                  <th class="col-md-2">
+                    <!--                  <span class="fa fa-times" onclick="del_item_image($(this));"></span>-->
+                  </th>
+                </tr>
+              <?php } ?>
               </tbody>
             </table>
           </div>
@@ -454,7 +718,11 @@
               <p>- 이미지가 비정상적으로 보여질 수 있으므로, 권장사이즈를 준수하여 주시기 바랍니다.</p>
             </div>
             <div class="col-md-12" style="width: 600px">
-              <textarea class="summernotes" id='summernotes' data-height="500" data-name="item-desc"></textarea>
+              <?php if ($edit) { ?>
+                <textarea class="summernotes" id='summernotes' data-height="500" data-name="item-desc"><?php echo $product_data->item_desc; ?></textarea>
+              <?php } else { ?>
+                <textarea class="summernotes" id='summernotes' data-height="500" data-name="item-desc"></textarea>
+              <?php } ?>
             </div>
           </div>
         </div>
@@ -540,7 +808,8 @@
       });
     }
   }
-  var item_image_count = 0;
+
+  let item_image_count = <?php if ($edit) { echo $product_data->item_image_count; } else { echo 0; } ?>;
   function add_item_image() {
     if (item_image_count >= 5) {
       alert('최대 5장까지 이미지 추가 가능합니다.');
@@ -611,6 +880,7 @@
       // console.log($('#summernotes').summernote('fullscreen.isFullscreen'));
     });
   }
+
   // summernote.image.upload
   function sendFile(file) {
     var upload_path = '<?php echo IMG_WEB_PATH_SHOP; ?>';
@@ -732,6 +1002,7 @@
       $('#item-importer-name').attr('disabled', true);
     }
   }
+
   function change_attention_point(elem) {
     var val = elem.find('option:selected').val();
     if (val === '1') {
@@ -740,12 +1011,15 @@
       elem.closest('tr').find('input').attr('disabled', true);
     }
   }
+
   function get_price_str(p) {
     return p.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
+
   function get_price_int(p) {
     return parseInt(p.replace(/,/g,""));
   }
+
   function change_general_price() {
     var commission_rate = <?php echo $shop_data->commission_rate; ?>;
     var general_price = get_price_int($('#item-general-price').val());
@@ -780,9 +1054,11 @@
     $('#item-margin').val(commission_rate + '%');
     $('#item-supply-price').val(get_price_str(parseInt(supply_price/100) * 100));
   }
+
   function change_discount_rate() {
     change_general_price();
   }
+
   function change_option(elem) {
     var action = elem.data('action');
 
@@ -798,12 +1074,16 @@
         $('#item-option-row').hide();
       } else {
         $('#item-has-option').prop('checked', true);
+        $('#item-option-count option:eq(' + item_option_cnt + ')').prop('selected', true);
         $('#item-option-count').attr('disabled', false);
+        $('#item-option-row').show();
       }
     } else {
       if (elem.is(':checked') === true) {
         $('#item-no-option').prop('checked', false);
         $('#item-option-count').attr('disabled', false);
+        $('#item-option-count option:eq(' + item_option_cnt + ')').prop('selected', true);
+        $('#item-option-row').show();
       } else {
         $('#item-no-option').prop('checked', true);
         $('#item-option-count option:eq(0)').prop('selected', true);
@@ -813,10 +1093,16 @@
     }
 
   }
+
+  let item_option_cnt = <?php if ($edit) echo $product_data->item_option_requires_cnt + $product_data->item_option_others_cnt; else echo 0; ?>;
   function set_option_html() {
-    var option_count = $('#item-option-count').find('option:selected').val();
-    var option_html = '<th class="col-md-2">옵션</th><td class="col-md-10"><table border="1" bordercolor="#EAEAEA" class="col-md-12">' +
-      '<thead><tr><th class="col-md-3">옵셥편집</th><th class="col-md-3">옵션명</th><th class="col-md-6">옵션값</th></tr></thead><tbody>';
+    let option_count = $('#item-option-count').find('option:selected').val();
+
+    if (item_option_cnt === 0) {
+
+    }
+
+    var option_html = '<th class="col-md-2">옵션</th><td class="col-md-10"><table border="1" bordercolor="#EAEAEA" class="col-md-12">' + '<thead><tr><th class="col-md-3">옵셥편집</th><th class="col-md-3">옵션명</th><th class="col-md-6">옵션값</th></tr></thead><tbody>';
 
     for (var i = 0; i < option_count; i++) {
       option_html += '<tr><td class="col-md-3 item-option-header"><div class="col-md-12">' +
@@ -853,6 +1139,8 @@
     // console.log(option_count);
     $('#item-option-row').html(option_html);
     $('#item-option-row').show();
+
+    item_option_cnt = option_count;
   }
 
   function save_item(e) {
@@ -1184,6 +1472,7 @@
     });
 
   }
+
   $(document).ready(function(){
     set_summer();
   });

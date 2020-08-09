@@ -50,7 +50,7 @@ class Shop extends CI_Controller
     $page_data['control'] = "shop";
 
     if ($para1 == 'forget_form') {
-//      $page_data['control'] = 'shop';
+      $page_data['control'] = 'shop';
       $this->load->view('back/forget_password', $page_data);
     } else if ($para1 == 'forget') {
       $this->load->library('form_validation');
@@ -97,10 +97,10 @@ QUERY;
         $user_data = $this->db->query($query)->row();
         if (empty($user_data) == false) {
           if (!($user_data->user_type & USER_TYPE_SHOP)) {
-            echo 'login_failed : not shop user';
+            echo '샵 회원이 아닙니다.';
           } else {
             if ($user_data->password != $password) {
-              echo 'login_failed : incorrect password';
+              echo '비밀번호가 잘못되었습니다.';
               exit;
             }
             $this->db->order_by('shop_id', 'asc');
@@ -114,7 +114,7 @@ QUERY;
             echo 'lets_login';
           }
         } else {
-          echo 'login_failed : incorrect email';
+          echo '이메일이 잘못되었습니다.';
         }
       }
     }
@@ -221,7 +221,7 @@ QUERY;
   }
 
 
-  function product($para1 = '', $para2 = '')
+  function product($para1 = '', $para2 = '', $para3 = '')
   {
     if (($page_data = $this->is_logged()) == false) {
       redirect(base_url() . 'shop');
@@ -270,6 +270,28 @@ QUERY;
       $page_data['item_name'] = $item_name;
       $page_data['page_name'] = "product_list";
       $this->load->view('back/shop/product_list', $page_data);
+
+    } else if ($para1 == 'view') {
+
+      $product_id = $para2;
+      $query = <<<QUERY
+select a.shop_name,b.status,b.register_at,b.approval_at,c.*
+from shop a, shop_product_id b, shop_product c 
+where a.shop_id=b.shop_id and b.product_id=c.product_id and c.product_id={$product_id}
+QUERY;
+      $page_data['product'] = $this->db->query($query)->row();
+      $this->load->view('back/shop/product_view', $page_data);
+
+    } else if ($para1 == 'status') {
+
+      $product_ids = json_decode($_POST['product_ids']);
+      $status = $_POST['change_status'];
+
+      $this->db->where_in('product_id', $product_ids);
+      $this->db->set('status', $status);
+      $this->db->update('shop_product_id');
+
+      echo 'done';
 
     } else if ($para1 == 'qna') {
 
@@ -393,37 +415,63 @@ QUERY;
 
     } else if ($para1 == 'register') {
 
+      $edit = ($_GET['e'] == 1);
+
       $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
-
-      if ($shop_data->set_ship_info == false || $shop_data->set_return_info == false || $shop_data->set_brand_info == false) {
-        $this->crud_model->alert_exit('공급사 정보를 먼저 입력해주세요.', base_url().'shop/account');
-      }
-
-      $shop_product_category = $this->db->get_where('shop_product_category', array('cat_level' => 1))->result();
       $shop_shipping = $this->db->get_where('shop_shipping', array('shop_id' => $shop_data->shop_id))->row();
 
-      $product = $this->db->get_where('shop_product_id',
-        array('shop_id' => $shop_data->shop_id, 'status' => SHOP_PRODUCT_STATUS_INIT))->row();
-      if (empty($product)) {
-        $ins = array(
-          'user_id' => $user_id,
-          'shop_id' => $shop_data->shop_id,
-          'product_code' => '',
-          'status' => SHOP_PRODUCT_STATUS_INIT,
-        );
-        $this->db->set($ins);
-        $this->db->set('register_at', 'NOW()', false);
-        $this->db->set('approval_at', 'NOW()', false);
-        $this->db->insert('shop_product_id');
-        $product_id = $this->db->insert_id();
+      if ($edit == true) {
+
+        $product_id = $_GET['p'];
+
+        $product = $this->db->get_where('shop_product_id', array('product_id' => $product_id))->row();
+        $product_data = $this->db->get_where('shop_product', array('product_id' => $product_id))->row();
+        $product_data->item_option_requires = json_decode($product_data->item_option_requires);
+        $product_data->item_option_others = json_decode($product_data->item_option_others);
+
+        $cat_1 = $this->db->get_where('shop_product_category', array('cat_level' => 1))->result();
+        $cat_2 = $this->db->get_where('shop_product_category', array('cat_level' => 2))->result();
+        $cat_3 = $this->db->get_where('shop_product_category', array('cat_level' => 3))->result();
+
+        $page_data['product_data'] = $product_data;
+        $page_data['cat_1'] = $cat_1;
+        $page_data['cat_2'] = $cat_2;
+        $page_data['cat_3'] = $cat_3;
+
       } else {
-        $product_id = $product->product_id;
+
+        if ($shop_data->set_ship_info == false || $shop_data->set_return_info == false || $shop_data->set_brand_info == false) {
+          $this->crud_model->alert_exit('공급사 정보를 먼저 입력해주세요.', base_url().'shop/account');
+        }
+
+        $shop_product_category = $this->db->get_where('shop_product_category', array('cat_level' => 1))->result();
+
+        $product = $this->db->get_where('shop_product_id',
+          array('shop_id' => $shop_data->shop_id, 'status' => SHOP_PRODUCT_STATUS_INIT))->row();
+        if (empty($product)) {
+          $ins = array(
+            'user_id' => $user_id,
+            'shop_id' => $shop_data->shop_id,
+            'product_code' => '',
+            'status' => SHOP_PRODUCT_STATUS_INIT,
+          );
+          $this->db->set($ins);
+          $this->db->set('register_at', 'NOW()', false);
+          $this->db->set('approval_at', 'NOW()', false);
+          $this->db->insert('shop_product_id');
+          $product_id = $this->db->insert_id();
+        } else {
+          $product_id = $product->product_id;
+        }
+
+        $page_data['shop_product_category'] = $shop_product_category;
       }
 
+      $page_data['edit'] = $edit;
+      $page_data['product'] = $product;
       $page_data['product_id'] = $product_id;
       $page_data['shop_data'] = $shop_data;
       $page_data['shop_shipping'] = $shop_shipping;
-      $page_data['shop_product_category'] = $shop_product_category;
       $page_data['page_name'] = "product_register";
       $this->load->view('back/shop/product_register', $page_data);
 

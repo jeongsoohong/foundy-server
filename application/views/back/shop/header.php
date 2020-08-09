@@ -16,7 +16,7 @@
   .navbar-content ul li a {
     width: 100px !important;
     text-align: center;
-    font-size: 16px;
+    font-size: 14px;
   }
 </style>
 <header id="navbar">

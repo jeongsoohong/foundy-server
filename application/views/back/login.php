@@ -40,7 +40,7 @@
           <img src="<?php echo base_url(). 'uploads/logo_image/logo_46.png'; ?>" class="log_icon">
         </a>
         <hr class="hr-log">
-        <p class="pad-btm">ADMIN</p>
+        <p class="pad-btm"><?php echo strtoupper($control); ?></p>
         <?php
         echo form_open(base_url().$control.'/login/', array(
           'method' => 'post',
@@ -61,9 +61,10 @@
         </div>
         <div class="row">
           <div class="col-xs-6 text-left">
-            <!--                        <div class="pad-ver">
-                            <a href="#" onclick="ajax_modal('forget_form','<?php /*echo ('forget_password'); */?>','<?php /*echo ('email_sent_with_new_password!'); */?>','forget','')" class="btn-link mar-rgt" style="color:#fff !important;"><?php /*echo ('forgot_password');*/?> ?</a>
-                        </div>-->
+            <div class="pad-ver">
+<!--              <a href="#" onclick="ajax_modal('forget_form','forget_password','email_sent_with_new_password!','forget','')"-->
+<!--                 class="btn-link mar-rgt" style="color:#fff !important;">비밀번호 리셋</a>-->
+            </div>
           </div>
           <div class="col-xs-6" style="margin-top : 10px;">
             <div class="form-group text-right main_login">
@@ -91,18 +92,18 @@
 <script src="<?php echo base_url(); ?>template/back/js/ajax_login.js"></script>
 <script>
   var base_url = "<?php echo base_url(); ?>";
-  var cancdd = "<?php echo ('cancelled'); ?>";
-  var req = "<?php echo ('this_field_is_required'); ?>";
-  var sing = "<?php echo ('signing_in...'); ?>";
-  var nps = "<?php echo ('new_password_sent_to_your_email'); ?>";
-  var lfil = "<?php echo ('login_failed!'); ?>";
-  var wrem = "<?php echo ('wrong_e-mail_address!_try_again'); ?>";
-  var lss = "<?php echo ('login_successful!'); ?>";
+  var cancdd = "<?php echo ('취소되었습니다.'); ?>";
+  var req = "<?php echo ('필수 입력 필드입니다.'); ?>";
+  var sing = "<?php echo ('로그인 ...'); ?>";
+  var nps = "<?php echo ('새로운 비밀번호가 이메일로 전송되었습니다.'); ?>";
+  var lfil = "<?php echo ('로그인에 실패하셨습니다!'); ?>";
+  var wrem = "<?php echo ('이메일이 잘못되었습니다. 다시 시도해주세요.'); ?>";
+  var lss = "<?php echo ('환영합니다!'); ?>";
   var sucss = "<?php echo ('SUCCESS!'); ?>";
-  var rpss = "<?php echo ('reset_password'); ?>";
+  var rpss = "<?php echo ('비밀번호 리셋'); ?>";
   var user_type = "<?php echo $control; ?>";
   var module = "login";
-  var unapproved = "<?php echo ('account_not_approved._wait_for_approval.'); ?>";
+  var unapproved = "승인중입니다.";
 
   window.addEventListener("keydown", checkKeyPressed, false);
   function checkKeyPressed(e) {
