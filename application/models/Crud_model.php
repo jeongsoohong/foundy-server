@@ -666,14 +666,16 @@ QUERY;
 
   function del_upload_image($web_path, $upload_path, $desc, $files, $except_files = array())
   {
-    $dom = new domDocument;
-    $dom->loadHTML(html_entity_decode($desc));
-    $dom->preserveWhiteSpace = false;
-    $imgs = $dom->getElementsByTagName("img");
-
     $links = array();
-    for($i = 0; $i < $imgs->length; $i++) {
-      $links[] = str_replace($web_path, $upload_path, $imgs->item($i)->getAttribute("src"));
+    if (!empty($desc) && strlen($desc) > 0) {
+      $dom = new domDocument;
+      $dom->loadHTML(html_entity_decode($desc));
+      $dom->preserveWhiteSpace = false;
+      $imgs = $dom->getElementsByTagName("img");
+  
+      for($i = 0; $i < $imgs->length; $i++) {
+        $links[] = str_replace($web_path, $upload_path, $imgs->item($i)->getAttribute("src"));
+      }
     }
 
     if (!empty($except_files)) {
@@ -682,6 +684,7 @@ QUERY;
 
     $files = glob($upload_path.$files);
     $result = array_diff($files, $links);
+//    $this->alert_exit(json_encode($result));
     foreach($result as $deleteFile) {
       if (file_exists($deleteFile)) {
         array_map('unlink', glob($deleteFile));
@@ -783,7 +786,7 @@ QUERY;
       $query .= " and product_code like '{$category}'";
     }
     if (isset($item_name) && strlen($item_name) > 0) {
-      $query .= " and item_name='{$item_name}'";
+      $query .= " and item_name like '%{$item_name}%'";
     }
     return $this->db->query($query)->row()->count;
   }
