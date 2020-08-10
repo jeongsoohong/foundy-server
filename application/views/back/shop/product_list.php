@@ -257,11 +257,11 @@
       </div>
       <div class="modal-body">
       </div>
-      <div class="modal-footer" style="display: flex;">
+      <div class="modal-footer" style="display: block;">
         <button type="button" class="btn btn-danger btn-theme-sm" data-dismiss="modal"
-                onclick="open_product_edit()">수정</button>
+                onclick="open_product_edit()" style="width:20%">수정</button>
         <button type="button" class="btn btn-theme btn-theme-sm" onclick="close_product()"
-                style="text-transform: none; font-weight: 400; color: #fff; background-color: black">확인</button>
+                style="text-transform: none; width: 20%; font-weight: 400; color: #fff; background-color: black">확인</button>
       </div>
     </div>
   </div>

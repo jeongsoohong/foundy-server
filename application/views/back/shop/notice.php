@@ -62,7 +62,11 @@
           <tbody>
           <?php foreach ($notice_data as $notice) { ?>
             <tr>
-              <td class="col-md-8 notice-title"><?php echo $notice->title; ?></td>
+              <td class="col-md-8 notice-title" >
+                <a href="javascript:void(0);" onclick="get_notice(<?php echo $notice->blog_id; ?>)">
+                  <?php echo $notice->title; ?>
+                </a>
+              </td>
               <td class="col-md-2">FOUNDY</td>
               <td class="col-md-2"><?php echo $notice->modified_at; ?></td>
             </tr>
@@ -114,6 +118,26 @@
     </div>
   </div>
 </div>
+<div class="modal fade" id="noticeModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" style="padding-top: 50px;">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="width: 5%">
+          <span class="pull-right" aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="noticeModalTitle"></h4>
+      </div>
+      <div class="modal-body" id="noticeModalDesc">
+      </div>
+      <div class="modal-footer" style="display: block;">
+<!--        <button type="button" class="btn btn-danger btn-theme-sm" data-dismiss="modal">취소</button>-->
+        <button type="button" class="btn btn-theme btn-theme-sm" onclick="close_notice()"
+                style="text-transform: none; width: 20%; font-weight: 400; color: #fff; background-color: black">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
 <style>
   .item-list-pagination {
     padding: 15px;
@@ -141,6 +165,36 @@
 
   let page = <?php echo $page; ?>;
   let query = '<?php echo $q; ?>';
+  
+  function close_notice() {
+    $('#noticeModal').modal('hide');
+  }
+
+  function get_notice(nid) {
+    let modal = $('#noticeModal');
+  
+    // console.log(nid);
+  
+    $.ajax({
+      url: '<?php echo base_url(); ?>shop/notice/detail?nid=' + nid,
+      type: 'GET', // form submit method get/post
+      cache: false,
+      contentType: 'application/json',
+      processData: false,
+      success: function (res) {
+        let notice = JSON.parse(res);
+        // console.log(notice);
+        $('#noticeModalTitle').text(notice.title);
+        $('#noticeModalDesc').html(notice.description);
+        
+        modal.modal('show');
+        modal.appendTo('body');
+      },
+      error: function (e) {
+        console.log(e);
+      }
+    });
+  }
 
   function get_notice_page(page) {
     console.log(query);

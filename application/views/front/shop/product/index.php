@@ -1324,7 +1324,7 @@
 
   let get_review_id = 0;
   function get_review_body(review_id) {
-    // console.log(ele);
+    console.log(ele);
     $(".item-content-review-body").remove();
 
     let s = $('#review-body-'+get_review_id).find('.fa-angle-up');
@@ -1398,7 +1398,7 @@
 
   let get_qna_id = 0;
   function get_reply(ele, qna_id) {
-    // console.log(ele);
+    console.log(ele);
     $(".item-content-qna-reply").remove();
 
     let s = $('#qna-title-'+get_qna_id).find('.fa-angle-up');
@@ -1407,22 +1407,23 @@
 
     // console.log(get_qna_id);
     // console.log(qna_id);
-    if (get_qna_id === qna_id) {
+    if (get_qna_id !== 0 && get_qna_id === qna_id) {
       get_qna_id = 0;
       return false;
     }
 
     let pw = '';
-    if (ele) {
+    if (ele !== null) {
       let select = $(ele);
       let is_private = select.data('private');
-      // console.log(is_private);
+      console.log(is_private);
       if (is_private === 1) {
         open_qna_pw(qna_id);
         return true;
       }
     } else {
       pw = $('#qna-reply-pw').val();
+      console.log(pw);
       if (check_pw(pw) === false) {
         return false;
       }

@@ -117,7 +117,7 @@
       <td class="col-md-2"><?php echo $qna->item_name; ?></td>
       <td class="col-md-1"><?php echo $qna->email; ?></td>
       <td class="col-md-4">
-        <a href="javascript:void(0);">
+        <a href="javascript:void(0);" onclick="get_qna(<?php echo $qna->qna_id; ?>)">
           <?php echo $qna->qes_title; ?>
         </a>
       </td>
@@ -193,13 +193,172 @@
   <div class="col-md-4">
   </div>
 </div>
+<div class="modal fade" id="qnaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="width: 5px; padding: 0 15px">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="qna-title">
+        </h4>
+      </div>
+      <div class="modal-body" style="padding-top: 0 !important;">
+        <div class="qna-title" style="height: 15px; line-height: 10px; border-bottom: 1px solid #EAEAEA; margin-bottom: 10px;">
+<!--          <span class="qna-title" id="qna-title">-->
+<!--          </span>-->
+          <span id="qna-meta" style="color: grey; font-size: 10px; "></span>
+          <span id="qna-replied" style="color: grey; font-size: 10px"></span>
+          <!--          <label style="width: 100%; font-size: 14px; border: none">-->
+<!--            제목-->
+<!--            <input readonly type="text" class="form-control" id="qna-title" name="qna_title">-->
+<!--          </label>-->
+        </div>
+        <div class="qna-body">
+          <label style="width: 100%; font-size: 16px">
+            문의 내용
+            <textarea readonly rows="10" data-height="500" name='qna_body' id='qna-body' class="form-control" wrap="hard"></textarea>
+          </label>
+        </div>
+        <div class="reply-body">
+          <label style="width: 100%; font-size: 16px;">
+            답변
+            <textarea readonly rows="10" data-height="500" name='qna_reply' id='qna-reply' class="form-control" wrap="hard"></textarea>
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer" style="display: block;">
+        <button type="button" class="btn btn-danger btn-theme-sm" style="width: 20%;"
+                onclick="edit_qna();">수정</button>
+        <button type="button" class="btn btn-theme btn-theme-sm" style="text-transform: none; background-color: black; color:white; width:20%; font-weight: 400;"
+                onclick="submit_reply();">저장</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
 
   let page = <?php echo $page; ?>;
   let replied = <?php echo $replied; ?>;
   let start_date = '<?php echo $start_date; ?>';
   let end_date = '<?php echo $end_date; ?>';
+ 
+  let qna_id = 0;
+  
+  function submit_reply() {
+    let qna_reply = $('#qna-reply').val();
+    
+    console.log(qna_id);
+    console.log(qna_reply);
+    
+    let formData = new FormData();
+    formData.append('qna_id', qna_id);
+    formData.append('qna_reply', qna_reply);
+  
+    $.ajax({
+      url: '<?php echo base_url(); ?>shop/product/qna/reply',
+      type: 'post', // form submit method get/post
+      dataType: 'html',
+      data: formData,
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function (data) {
+        console.log(data);
+        if (data === 'done' || data.search('done') !== -1) {
+          $.notify({
+            message: '저장되었습니다.',
+            icon: 'fa fa-check'
+          }, {
+            type: 'success',
+            timer: 1000,
+            delay: 2000,
+            animate: {
+              enter: 'animated lightSpeedIn',
+              exit: 'animated lightSpeedOut'
+            }
+          });
+          setTimeout(function(){location.reload(true);}, 1000);
+        } else {
+          var title = '<strong>실패하였습니다</strong>';
+          $.notify({
+            title: title,
+            message: data,
+            icon: 'fa fa-check'
+          }, {
+            type: 'warning',
+            timer: 1000,
+            delay: 5000,
+            animate: {
+              enter: 'animated lightSpeedIn',
+              exit: 'animated lightSpeedOut'
+            }
+          });
+        }
+      },
+      error: function (e) {
+        console.log(e);
+      }
+    });
+  }
 
+  function edit_qna() {
+    // console.log($('#qna-reply'));
+    $('#qna-reply').attr('readonly', false);
+    $('#qna-reply').focus();
+  }
+  
+  function close_qna() {
+    $('#qnaModal').modal('hide');
+  }
+
+  function get_qna(qid) {
+    let modal = $('#qnaModal');
+ 
+    qna_id = qid;
+    // console.log(qna_id);
+  
+    $.ajax({
+      url: '<?php echo base_url(); ?>shop/product/qna/get?qid=' + qna_id,
+      type: 'GET', // form submit method get/post
+      cache: false,
+      contentType: 'application/json',
+      processData: false,
+      success: function (res) {
+        // console.log(res);
+        let qna = JSON.parse(res);
+        // console.log(qna);
+        // console.log(qna.qes_title);
+        // console.log(qna.qes_body);
+        // console.log(qna.reply);
+        // console.log(qna.replied);
+        // console.log(qna.reply_at);
+        $('#qna-title').text(qna.qes_title);
+        $('#qna-meta').text(qna.email + ' | ' + qna.qes_at);
+        $('#qna-body').val(qna.qes_body);
+        $('#qna-reply').val(qna.reply);
+        
+        let replied = ' | 미답변';
+        if (qna.replied === '1') {
+          replied = ' | 답변완료(' + qna.reply_at + ')';
+        } else {
+          edit_qna();
+        }
+        $('#qna-replied').text(replied);
+        
+        modal.modal('show');
+        modal.appendTo('body');
+        
+        if (qna.replied === '0') {
+          edit_qna();
+        }
+      },
+      error: function (e) {
+        console.log(e);
+      }
+    });
+  
+  }
   function get_qna_page(page) {
     console.log(replied);
     console.log(start_date);

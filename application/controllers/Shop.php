@@ -17,7 +17,15 @@ class Shop extends CI_Controller
     /*cache control*/
     $this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
     $this->output->set_header('Pragma: no-cache');
-
+  
+    if (!$this->input->is_ajax_request()) {
+      $this->output->set_header('HTTP/1.0 200 OK');
+      $this->output->set_header('HTTP/1.1 200 OK');
+      $this->output->set_header('Last-Modified: ' . gmdate('D, d M Y H:i:s', time()) . ' GMT');
+      $this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate');
+      $this->output->set_header('Cache-Control: post-check=0, pre-check=0');
+      $this->output->set_header('Pragma: no-cache');
+    }
   }
 
   function echo_exit($msg) {
@@ -162,7 +170,7 @@ QUERY;
     echo 'done';
   }
 
-  function notice()
+  function notice($para1 = '')
   {
     if (($page_data = $this->is_logged()) == false) {
       redirect(base_url() . 'shop');
@@ -170,54 +178,67 @@ QUERY;
 
     // for login
     $page_data['control'] = "shop";
-
-    $page = 1;
-    if (isset($_GET['page'])) {
-      $page = $_GET['page'];
-    }
-    $q = '';
-    if (isset($_GET['q'])) {
-      $q = trim($_GET['q']);
-    }
+    
+    if ($para1 == 'detail') {
+      
+      $blog_id = $_GET['nid'];
+      $result = array();
+      
+      $notice = $this->db->get_where('blog', array('blog_id' => $blog_id))->row();
+      
+      echo json_encode($notice);
+      
+    } else {
+  
+      $page = 1;
+      if (isset($_GET['page'])) {
+        $page = $_GET['page'];
+      }
+      $q = '';
+      if (isset($_GET['q'])) {
+        $q = trim($_GET['q']);
+      }
 
 //    $size = SHOP_ADMIN_ITEM_LIST_PAGE_SIZE;
-    $size = 10;
-    $offset = $size *($page - 1);
-
-    $type = BLOG_TYPE_NOTICE_BRAND;
-
-    $select = "select *";
-    $from = "from blog a, category_blog b";
-    $where = "where a.blog_category=b.category_id and b.type={$type} and a.activate=1";
-    if (!empty($q)) {
-      $where .= " and (title like '%{$q}%' or description like '%{$q}%')";
+      $size = 10;
+      $offset = $size *($page - 1);
+  
+      $type = BLOG_TYPE_NOTICE_BRAND;
+  
+      $select = "select *";
+      $from = "from blog a, category_blog b";
+      $where = "where a.blog_category=b.category_id and b.type={$type} and a.activate=1";
+      if (!empty($q)) {
+        $where .= " and (title like '%{$q}%' or description like '%{$q}%')";
+      }
+  
+      $order_by = "order by blog_id desc";
+      $limit = "limit {$offset},{$size}";
+  
+      $query = $select.' '.$from.' '.$where.' '.$order_by.' '.$limit;
+      $notice_data = $this->db->query($query)->result();
+  
+      $select = "select count(*) as cnt";
+      $query = $select.' '.$from.' '.$where;
+      $total_cnt = $this->db->query($query)->row()->cnt;
+  
+      $total = (int)($total_cnt / $size) + ($total_cnt % $size > 0 ? 1 : 0);
+      $prev = $page > 1 ? $page - 1 : '';
+      $next = $total > $page ? $page + 1 : '';
+  
+      $page_data['total_cnt'] = $total_cnt;
+      $page_data['total'] = $total;
+      $page_data['prev'] = $prev;
+      $page_data['page'] = $page;
+      $page_data['next'] = $next;
+  
+      $page_data['q'] = $q;
+  
+      $page_data['notice_data'] = $notice_data;
+      $page_data['page_name'] = "notice";
+      $this->load->view('back/shop/index', $page_data);
+    
     }
-
-    $order_by = "order by blog_id desc";
-    $limit = "limit {$offset},{$size}";
-
-    $query = $select.' '.$from.' '.$where.' '.$order_by.' '.$limit;
-    $notice_data = $this->db->query($query)->result();
-
-    $select = "select count(*) as cnt";
-    $query = $select.' '.$from.' '.$where;
-    $total_cnt = $this->db->query($query)->row()->cnt;
-
-    $total = (int)($total_cnt / $size) + ($total_cnt % $size > 0 ? 1 : 0);
-    $prev = $page > 1 ? $page - 1 : '';
-    $next = $total > $page ? $page + 1 : '';
-
-    $page_data['total_cnt'] = $total_cnt;
-    $page_data['total'] = $total;
-    $page_data['prev'] = $prev;
-    $page_data['page'] = $page;
-    $page_data['next'] = $next;
-
-    $page_data['q'] = $q;
-
-    $page_data['notice_data'] = $notice_data;
-    $page_data['page_name'] = "notice";
-    $this->load->view('back/shop/index', $page_data);
   }
 
 
@@ -295,73 +316,116 @@ QUERY;
 
     } else if ($para1 == 'qna') {
 
-      $page = 1;
-      if (isset($_GET['page'])) {
-        $page = $_GET['page'];
-      }
-      $replied = 0;
-      if (isset($_GET['replied'])) {
-        $replied = $_GET['replied'];
-      }
-      $start_date = '';
-      $start_date_kor = '';
-      if (isset($_GET['start_date'])) {
-        $start_date = $_GET['start_date'];
-        $start_date_kor = date('Y-m-d H:i:s', strtotime($_GET['start_date']));
-      }
-      $end_date = '';
-      $end_date_kor = '';
-      if (isset($_GET['end_date'])) {
-        $end_date = $_GET['end_date'];
-        $end_date_kor = date('Y-m-d H:i:s', strtotime($_GET['end_date']));
-      }
+      if ($para2 == 'get') {
+        
+        $qna_id = $_GET['qid'];
 
+        $query = <<<QUERY
+select a.email,b.qna_id,b.qes_title,b.qes_body,b.reply,b.replied,b.is_private,b.qes_at,b.reply_at
+from user a, shop_product_qna b
+where a.user_id=b.user_id and b.qna_id={$qna_id}
+QUERY;
+        $qna = $this->db->query($query)->row();
 
-      $size = SHOP_ADMIN_ITEM_LIST_PAGE_SIZE;
-      $offset = $size*($page - 1);
-
-      $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
-
-      $select = "select a.shop_id,a.shop_name,b.email,c.item_name,d.*";
-      $from = "from shop a,user b,shop_product c, shop_product_qna d";
-      $limit = "limit {$offset},{$size}";
-      $order_by = "order by qna_id desc";
-      $where = "where a.shop_id=d.shop_id and b.user_id=d.user_id and c.product_id=d.product_id and d.shop_id={$shop_data->shop_id} and d.replied={$replied}";
-      if (!empty($start_date) && !empty($end_date)) {
-        $where .= " and '{$start_date_kor}' <= d.qes_at and d.qes_at <= '{$end_date_kor}'";
+        echo json_encode($qna);
+  
+      } else if ($para2 == 'reply') {
+        
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('qna_id', 'qna_id', 'trim|required|is_natural|max_length[10]');
+        $this->form_validation->set_rules('qna_reply', 'qna_reply', 'trim|required|min_length[1]|max_length[512]');
+        if ($this->form_validation->run() == FALSE) {
+//        $data = json_encode($_POST);
+//        $this->echo_exit($data);
+          echo '<br>' . validation_errors();
+        } else {
+          
+          $qna_id = $this->input->post('qna_id');
+          $qna_reply = $this->input->post('qna_reply');
+         
+          $upd = array(
+            'reply' => $qna_reply,
+            'replied' => 1,
+          );
+          $this->db->set('reply_at', 'NOW()', false);
+          $where = array(
+            'qna_id' => $qna_id
+          );
+          $this->db->update('shop_product_qna', $upd, $where);
+          
+          echo 'done';
+        }
+      
       } else {
+  
+        $page = 1;
+        if (isset($_GET['page'])) {
+          $page = $_GET['page'];
+        }
+        $replied = 0;
+        if (isset($_GET['replied'])) {
+          $replied = $_GET['replied'];
+        }
         $start_date = '';
+        $start_date_kor = '';
+        if (isset($_GET['start_date'])) {
+          $start_date = $_GET['start_date'];
+          $start_date_kor = date('Y-m-d H:i:s', strtotime($_GET['start_date']));
+        }
         $end_date = '';
-      }
-
-      $query = $select . ' ' . $from . ' ' . $where. ' ' . ' '. $order_by . ' ' . $limit;
+        $end_date_kor = '';
+        if (isset($_GET['end_date'])) {
+          $end_date = $_GET['end_date'];
+          $end_date_kor = date('Y-m-d H:i:s', strtotime($_GET['end_date']));
+        }
+  
+  
+        $size = SHOP_ADMIN_ITEM_LIST_PAGE_SIZE;
+        $offset = $size*($page - 1);
+  
+        $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
+  
+        $select = "select a.shop_id,a.shop_name,b.email,c.item_name,d.*";
+        $from = "from shop a,user b,shop_product c, shop_product_qna d";
+        $limit = "limit {$offset},{$size}";
+        $order_by = "order by qna_id desc";
+        $where = "where a.shop_id=d.shop_id and b.user_id=d.user_id and c.product_id=d.product_id and d.shop_id={$shop_data->shop_id} and d.replied={$replied}";
+        if (!empty($start_date) && !empty($end_date)) {
+          $where .= " and '{$start_date_kor}' <= d.qes_at and d.qes_at <= '{$end_date_kor}'";
+        } else {
+          $start_date = '';
+          $end_date = '';
+        }
+  
+        $query = $select . ' ' . $from . ' ' . $where. ' ' . ' '. $order_by . ' ' . $limit;
 
 //      $this->crud_model->alert_exit($query);
-      $qna_data = $this->db->query($query)->result();
-
-      $select = "select count(*) as cnt";
-      $query = $select . ' ' . $from . ' ' . $where . ' ';
-
-      $total_cnt = $this->db->query($query)->row()->cnt;
-
-      $total = (int)($total_cnt / $size) + ($total_cnt % $size > 0 ? 1 : 0);
-      $prev = $page > 1 ? $page - 1 : '';
-      $next = $total > $page ? $page + 1 : '';
-
-      $page_data['total_cnt'] = $total_cnt;
-      $page_data['total'] = $total;
-      $page_data['prev'] = $prev;
-      $page_data['page'] = $page;
-      $page_data['next'] = $next;
-
-      $page_data['replied'] = $replied;
-      $page_data['start_date'] = $start_date;
-      $page_data['end_date'] = $end_date;
-
-      $page_data['shop_data'] = $shop_data;
-      $page_data['qna_data'] = $qna_data;
-      $page_data['page_name'] = "product_qna";
-      $this->load->view('back/shop/product_qna', $page_data);
+        $qna_data = $this->db->query($query)->result();
+  
+        $select = "select count(*) as cnt";
+        $query = $select . ' ' . $from . ' ' . $where . ' ';
+  
+        $total_cnt = $this->db->query($query)->row()->cnt;
+  
+        $total = (int)($total_cnt / $size) + ($total_cnt % $size > 0 ? 1 : 0);
+        $prev = $page > 1 ? $page - 1 : '';
+        $next = $total > $page ? $page + 1 : '';
+  
+        $page_data['total_cnt'] = $total_cnt;
+        $page_data['total'] = $total;
+        $page_data['prev'] = $prev;
+        $page_data['page'] = $page;
+        $page_data['next'] = $next;
+  
+        $page_data['replied'] = $replied;
+        $page_data['start_date'] = $start_date;
+        $page_data['end_date'] = $end_date;
+  
+        $page_data['shop_data'] = $shop_data;
+        $page_data['qna_data'] = $qna_data;
+        $page_data['page_name'] = "product_qna";
+        $this->load->view('back/shop/product_qna', $page_data);
+      }
 
     } else if ($para1 == 'review') {
 
