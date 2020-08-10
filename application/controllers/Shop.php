@@ -246,7 +246,7 @@ QUERY;
 
       $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
       $shop_category = $this->db->get_where('shop_product_category', array('cat_level' => 1))->result();
-      $product_data = $this->crud_model->get_product_list($shop_data->shop_id, $status, $item_name, $cat, $offset, $size , 'asc');
+      $product_data = $this->crud_model->get_product_list($shop_data->shop_id, $status, $item_name, $cat, $offset, $size);
       if (isset($product_data) && !empty($product_data)) {
         $total_cnt = $this->crud_model->get_product_total_count($shop_data->shop_id, $status, $item_name, $cat);
       } else {
@@ -415,7 +415,7 @@ QUERY;
 
     } else if ($para1 == 'register') {
 
-      $edit = ($_GET['e'] == 1);
+      $edit = ($_GET['e'] == 1 ? 1 : 0);
 
       $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
       $shop_shipping = $this->db->get_where('shop_shipping', array('shop_id' => $shop_data->shop_id))->row();
@@ -476,6 +476,8 @@ QUERY;
       $this->load->view('back/shop/product_register', $page_data);
 
     } else if ($para1 == 'do_register') {
+      
+      $edit = $para2;
 
       $this->load->library('form_validation');
       $this->form_validation->set_rules('product_id', 'product_id', 'trim|required|is_natural|max_length[10]');
@@ -574,26 +576,52 @@ QUERY;
           $shipping_attention_point = '';
         }
 
+        $del_except_files = array();
         $item_image_urls = array();
+        $i = 0;
+        // idx가 더 크게 변할일은 없다
+        for (; $i < $item_image_file_count; $i++) {
+          if (isset($_FILES["item_image_file_{$i}"]) == false) {
+            $image_url = $this->input->post("item_image_file_{$i}");
+            $file_name = str_replace(IMG_WEB_PATH_SHOP, IMG_PATH_SHOP, substr($image_url , 0, strlen($image_url) - 14));
+            $new_file_name = 'product_' . $product_id . '_' . $i . '_thumb.jpg';
+            if (strcmp($file_name, IMG_PATH_SHOP.$new_file_name)) {
+              rename($file_name, IMG_PATH_SHOP . $new_file_name);
+            }
+            
+            $time = time();
+            $item_image_urls[$i] = IMG_WEB_PATH_SHOP . $new_file_name . '?id=' . $time;
+            $del_except_files[] = IMG_PATH_SHOP. $new_file_name; // http://webpath?id=xxxxxxxxxx
+          }
+        }
+        
         $i = 0;
         for (; $i < $item_image_file_count; $i++) {
           if (isset($_FILES["item_image_file_{$i}"]) == true) {
             $this->crud_model->file_validation($_FILES["item_image_file_{$i}"]);
             $file_name = 'product_' . $product_id . '_' . $i . '.jpg';
             $this->crud_model->upload_image(IMG_PATH_SHOP, $file_name, $_FILES["item_image_file_{$i}"], 400, 400, true, false);
+            
             $time = time();
             $file_name = 'product_' . $product_id . '_' . $i . '_thumb.jpg';
             $item_image_urls[$i] = IMG_WEB_PATH_SHOP . $file_name . '?id=' . $time;
+            $del_except_files[] = IMG_PATH_SHOP.$file_name;
           }
         }
+        
         for (; $i < SHOP_PRODUCT_IMAGE_FILE_COUNT_MAX; $i++) {
           $item_image_urls[$i] = '';
         }
-
-        $ins = array(
-          'product_id' => $product_id,
-          'product_code' => $product_code,
-          'shop_id' => $shop_data->shop_id,
+  
+        $files = 'product_'.$product_id.'_*.*';
+        $this->crud_model->del_upload_image(IMG_WEB_PATH_SHOP, IMG_PATH_SHOP, '', $files, $del_except_files);
+  
+        $files = 'product_info_'.$product_id.'_*.*';
+        $this->crud_model->del_upload_image(IMG_WEB_PATH_SHOP, IMG_PATH_SHOP, $item_desc, $files);
+  
+//        $this->crud_model->alert_exit(json_encode($del_except_files));
+  
+        $data = array(
           'item_name' => $item_name,
           'item_cat' => $item_cat,
           'item_type' => $item_type,
@@ -626,29 +654,30 @@ QUERY;
           'purchase_max_cnt' => $purchase_max_cnt,
           'bundle_shipping_cnt' => $bundle_shipping_cnt,
         );
-        $this->db->set($ins);
+        $this->db->set($data);
         for ($i = 0; $i < SHOP_PRODUCT_IMAGE_FILE_COUNT_MAX; $i++) {
           $this->db->set('item_image_url_'.$i, $item_image_urls[$i]);
         }
-        $this->db->insert('shop_product', $ins);
-
-        $files = 'product_info_'.$product_id.'_*.*';
-        $this->crud_model->del_upload_image(IMG_WEB_PATH_SHOP, IMG_PATH_SHOP, $item_desc, $files);
+        
+        if ($edit) {
+          $this->db->update('shop_product', $data, array('product_id' => $product_id));
+        } else {
+          $this->db->set('product_id', $product_id);
+          $this->db->set('product_code', $product_code);
+          $this->db->set('shop_id', $shop_data->shop_id);
+          $this->db->insert('shop_product', $data);
+  
+          // for update
+          $this->db->set('status', SHOP_PRODUCT_STATUS_REQUEST);
+          $this->db->set('brand_name', $shop_data->shop_name);
+        }
 
         $this->db->update('shop_product_id',
-          array('product_code' => $product_code,
-            'status' => SHOP_PRODUCT_STATUS_REQUEST,
-            'item_sell_price' => $item_sell_price,
-            'brand_name' => $shop_data->shop_name,
-            'item_name' => $item_name),
+          array('item_sell_price' => $item_sell_price, 'item_name' => $item_name),
           array('product_id' => $product_id)
         );
-
-        if ($this->db->affected_rows()) {
-          echo 'done';
-        } else {
-          echo 'fail : 문제가 발생했습니다';
-        }
+  
+        echo 'done';
       }
 
     } else if ($para1 == 'upload_image') {

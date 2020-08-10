@@ -132,7 +132,7 @@
 
   let pid = 0;
   function open_product_edit() {
-    console.log(pid);
+    // console.log(pid);
     $('#product_edit').click();
   }
 

@@ -1,4 +1,7 @@
 <style>
+  button {
+    border: none;
+  }
   select {
     width: 100%;
     height: 32px;
@@ -43,6 +46,9 @@
     height: 20px;
     line-height: 20px;
     background-color: #EAEAEA;
+  }
+  .item-option-header {
+    text-align: center;
   }
   .item-option-val-detail, .item-option-header div a, .item-option-val-detail div a {
     margin: 0 2px !important;
@@ -356,13 +362,13 @@
                 <td colspan="4" class="col-md-10">
                   <div class="col-md-12">
                     <?php if ($edit == false || $product_data->item_cert_need == false) { ?>
-                    <div class="col-md-2">
+                    <div class="col-md-2" style="text-align: center">
                       KC인증번호
                     </div>
                     <div class="col-md-4">
                       <input disabled class='form-control' id="item-kc-cert-number" name="item_kc_permit_number" type="text" value="" />
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2" style="text-align: center">
                       제품명
                     </div>
                     <div class="col-md-4">
@@ -370,33 +376,33 @@
                     </div>
                   </div>
                   <div class="col-md-12">
-                    <div class="col-md-2">
+                    <div class="col-md-2" style="text-align: center">
                       모델명
                     </div>
                     <div class="col-md-2">
                       <input disabled class='form-control' id="item-model-name" name="item_model_name" type="text" value="" />
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2" style="text-align: center">
                       제조업자명
                     </div>
                     <div class="col-md-2">
                       <input disabled class='form-control' id="item-manufacturer-name" name="item_manufacturer_name" type="text" value="" />
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2" style="text-align: center">
                       수업업자명
                     </div>
                     <div class="col-md-2">
                       <input disabled class='form-control' id="item-importer-name" name="item_importer_name" type="text" value="" />
                     </div>
                     <?php } else { ?>
-                    <div class="col-md-2">
+                    <div class="col-md-2" style="text-align: center">
                       KC인증번호
                     </div>
                     <div class="col-md-4">
                       <input class='form-control' id="item-kc-cert-number" name="item_kc_permit_number" type="text"
                              value="<?php echo $product_data->item_kc_cert_number; ?>" />
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2" style="text-align: center">
                       제품명
                     </div>
                     <div class="col-md-4">
@@ -405,21 +411,21 @@
                     </div>
                   </div>
                   <div class="col-md-12">
-                    <div class="col-md-2">
+                    <div class="col-md-2" style="text-align: center">
                       모델명
                     </div>
                     <div class="col-md-2">
                       <input class='form-control' id="item-model-name" name="item_model_name" type="text"
                              value="<?php echo $product_data->item_model_name; ?>" />
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2" style="text-align: center">
                       제조업자명
                     </div>
                     <div class="col-md-2">
                       <input class='form-control' id="item-manufacturer-name" name="item_manufacturer_name" type="text"
                              value="<?php echo $product_data->item_manufacturer_name; ?>" />
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2" style="text-align: center">
                       수업업자명
                     </div>
                     <div class="col-md-2">
@@ -534,7 +540,7 @@
                 <th class="col-md-2 item-option-base-header">기본옵션<span class="required">*</span></th>
                 <td class="col-md-10">
                   <div class="col-md-12">
-                    <div class="col-md-2">
+                    <div class="col-md-2" style="text-align: center">
                       구매최대갯수
                     </div>
                     <div class="col-md-2">
@@ -545,7 +551,7 @@
                         <input class='form-control' id="purchase-max-cnt" name="purchase_max_cnt" type="number" value="0" />
                       <?php } ?>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2" style="text-align: center">
                       묶음배송갯수
                     </div>
                     <div class="col-md-2">
@@ -580,7 +586,7 @@
                         </label>
                       </div>
                       <div class="col-md-2">
-                        <select disabled onchange="set_option_html();" class="form-control" id="item-option-count">
+                        <select onchange="set_option_html();" class="form-control" id="item-option-count">
                           <option <?php if ($option_cnt == 0) echo 'selected'; ?> value="0">옵션갯수</option>
                           <option <?php if ($option_cnt == 1) echo 'selected'; ?> value="1">1개</option>
                           <option <?php if ($option_cnt == 2) echo 'selected'; ?> value="2">2개</option>
@@ -620,7 +626,102 @@
                   </div>
                 </td>
               </tr>
-              <tr class="item-option" id="item-option-row" style="display:none">
+              <tr class="item-option" id="item-option-row">
+                <th class="col-md-2">옵션</th>
+                <td class="col-md-10">
+                  <table border="1" bordercolor="#EAEAEA" class="col-md-12">
+                    <thead>
+                    <tr>
+                      <th class="col-md-3">옵셥편집</th>
+                      <th class="col-md-3">옵션명</th>
+                      <th class="col-md-6">옵션값</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php if ($edit) { ?>
+                      <?php
+                      $option_idx = 1;
+                      foreach ($product_data->item_option_requires as $option) { ?>
+                        <tr id="item-option-row-<?php echo $option_idx; ?>">
+                          <td class="col-md-3 item-option-header">
+                            <div class="col-md-12">
+                              <a href="javascript:void(0);" onclick="move_option($(this),'up');"><span class="fa fa-caret-up"></span></a>
+                              <a href="javascript:void(0);" onclick="move_option($(this),'down');"><span class="fa fa-caret-down"></span></a>
+                              <a href="javascript:void(0);" onclick="add_option_val($(this));"><span class="fa fa-plus"></span></a>
+                            </div>
+                            <div class="col-md-12">
+                              <label style="text-align:left">
+                                <input <?php if ($option->item_option_require == true) echo 'checked'; ?>
+                                  class="form-checkbox item-require" name="item_require" type="checkbox" value="1"/>필수</label>
+                            </div>
+                          </td>
+                          <td class="col-md-3">
+                            <input value="<?php echo $option->item_option_name; ?>"
+                                   class="form-control item-option-name" name="item_option_name" type="text" placeholder="옵션명"/>
+                          </td>
+                          <td class="col-md-6 item-option-val">
+                            <?php foreach ($option->item_option_vals as $val) { ?>
+                              <div class="col-md-12 item-option-val-detail">
+                                <div class="col-md-4">
+                                  <input value="<?php echo $val->value; ?>" class="form-control item-option-value" name="item_option_value" type="text" placeholder="옵션" />
+                                </div>
+                                <div class="col-md-4">
+                                  <input value="<?php if ($val->price > 0) echo $val->price; ?>"
+                                         class="form-control item-option-price" name="item_option_price" type="text" placeholder='추가가격' />
+                                </div>
+                                <div class="col-md-4">
+                                  <a href="javascript:void(0);" onclick="move_option_val($(this),'up');"><span class="fa fa-caret-up"></span></a>
+                                  <a href="javascript:void(0);" onclick="move_option_val($(this),'down');"><span class="fa fa-caret-down"></span></a>
+                                  <a href="javascript:void(0);" onclick="del_option_val($(this));"><span class="fa fa-times"></span></a>
+                                </div>
+                              </div>
+                            <?php } ?>
+                          </td>
+                        </tr>
+                        <?php $option_idx++; } ?>
+                      <?php foreach ($product_data->item_option_others as $option) { ?>
+                        <tr id="item-option-row-<?php echo $option_idx; ?>">
+                          <td class="col-md-3 item-option-header">
+                            <div class="col-md-12">
+                              <a href="javascript:void(0);" onclick="move_option($(this),'up');"><span class="fa fa-caret-up"></span></a>
+                              <a href="javascript:void(0);" onclick="move_option($(this),'down');"><span class="fa fa-caret-down"></span></a>
+                              <a href="javascript:void(0);" onclick="add_option_val($(this));"><span class="fa fa-plus"></span></a>
+                            </div>
+                            <div class="col-md-12">
+                              <label style="text-align:left">
+                                <input <?php if ($option->item_option_require == true) echo 'checked'; ?>
+                                  class="form-checkbox item-require" name="item_require" type="checkbox" value="1"/>필수</label>
+                            </div>
+                          </td>
+                          <td class="col-md-3">
+                            <input value="<?php echo $option->item_option_name; ?>"
+                                   class="form-control item-option-name" name="item_option_name" type="text" placeholder="옵션명"/>
+                          </td>
+                          <td class="col-md-6 item-option-val">
+                            <?php foreach ($option->item_option_vals as $val) { ?>
+                              <div class="col-md-12 item-option-val-detail">
+                                <div class="col-md-4">
+                                  <input value="<?php echo $val->value; ?>"
+                                         class="form-control item-option-value" name="item_option_value" type="text" placeholder="옵션" />
+                                </div>
+                                <div class="col-md-4">
+                                  <input value="<?php if ($val->price > 0) echo $val->price; ?>"
+                                    class="form-control item-option-price" name="item_option_price" type="text" placeholder='추가가격' />
+                                </div>
+                                <div class="col-md-4">
+                                  <a href="javascript:void(0);" onclick="move_option_val($(this),'up');"><span class="fa fa-caret-up"></span></a>
+                                  <a href="javascript:void(0);" onclick="move_option_val($(this),'down');"><span class="fa fa-caret-down"></span></a>
+                                  <a href="javascript:void(0);" onclick="del_option_val($(this));"><span class="fa fa-times"></span></a>
+                                </div>
+                              </div>
+                            <?php } ?>
+                          </td>
+                        </tr>
+                        <?php $option_idx++; } ?>
+                    <?php } ?>
+                    </tbody>
+                  </table>
+                </td>
               </tr>
               </tbody>
             </table>
@@ -654,12 +755,15 @@
                 <tr>
                   <th class="col-md-2 item-image-header">필수이미지<span class="required">*</span></th>
                   <td class="col-md-6">
-                    <input class='form-control item-image' onchange="preview(this);" name="item_image[]" type="file" value="" />
+                    <input class='form-control item-image' data-target="<?php echo $product_data->item_image_url_0 ; ?>"
+                           onchange="preview(this);" name="item_image[]" type="file"
+                           value="<?php echo $product_data->item_image_url_0; ?>" />
                   </td>
                   <th class="col-md-2">
                     <span class="preview-img" >
                       <div style='float:left;border:4px solid #303641;padding:5px;margin:5px;'>
-                        <img height='50' width='50' src='<?php echo $product_data->item_image_url_0; ?>'></div>
+                        <img height='50' width='50' src='<?php echo $product_data->item_image_url_0; ?>'>
+                      </div>
                     </span>
                   </th>
                   <th class="col-md-2">
@@ -671,12 +775,15 @@
                   <tr>
                   <th class="col-md-2 item-image-header">추가이미지<span class="required">*</span></th>
                   <td class="col-md-6">
-                    <input class='form-control item-image' onchange="preview(this);" name="item_image[]" type="file" value="" />
+                    <input class='form-control item-image' data-target="<?php echo $product_data->{$item_image_url}; ?>"
+                           onchange="preview(this);" name="item_image[]" type="file"
+                           value="<?php echo $product_data->{$item_image_url}; ?>" />
                   </td>
                   <th class="col-md-2">
                     <span class="preview-img" >
                       <div style='float:left;border:4px solid #303641;padding:5px;margin:5px;'>
-                        <img height='50' width='50' src='<?php echo $product_data->{$item_image_url}; ?>'></div>
+                        <img height='50' width='50' src='<?php echo $product_data->{$item_image_url}; ?>'>
+                      </div>
                     </span>
                   </th>
                   <th class="col-md-2">
@@ -687,8 +794,8 @@
               <?php } else { ?>
                 <tr>
                   <th class="col-md-2 item-image-header">필수이미지<span class="required">*</span></th>
-                  <td class="col-md-6">
-                    <input class='form-control item-image' onchange="preview(this);" name="item_image[]" type="file" value="" />
+                  <td class="col-md-6" data-target="addition">
+                    <input class='form-control item-image' data-target="empty" onchange="preview(this);" name="item_image[]" type="file" value="" />
                   </td>
                   <th class="col-md-2">
                     <span class="preview-img" >
@@ -739,7 +846,43 @@
   </div>
 </div>
 <script>
-  var product_id = <?php echo $product_id; ?>;
+  let product_id = <?php echo $product_id; ?>;
+  
+  let item_option_cnt = <?php if ($edit) echo $product_data->item_option_requires_cnt + $product_data->item_option_others_cnt; else echo 0; ?>;
+  let remain_item_option_cnt = <?php if ($edit) echo $product_data->item_option_requires_cnt + $product_data->item_option_others_cnt; else echo 0; ?>;
+  function change_option(elem) {
+    let action = elem.data('action');
+  
+    // console.log('--------------------');
+    // console.log(action);
+    // console.log(elem.is(':checked'));
+  
+    if (action === 'no_option') {
+      if (elem.is(':checked') === true) {
+        $('#item-has-option').prop('checked', false);
+        $('#item-option-count option:eq(0)').prop('selected', true);
+        $('#item-option-count').attr('disabled', true);
+        $('#item-option-row').hide();
+      } else {
+        $('#item-has-option').prop('checked', true);
+        $('#item-option-count option:eq(' + item_option_cnt + ')').prop('selected', true);
+        $('#item-option-count').attr('disabled', false);
+        $('#item-option-row').show();
+      }
+    } else {
+      if (elem.is(':checked') === true) {
+        $('#item-no-option').prop('checked', false);
+        $('#item-option-count').attr('disabled', false);
+        $('#item-option-count option:eq(' + item_option_cnt + ')').prop('selected', true);
+        $('#item-option-row').show();
+      } else {
+        $('#item-no-option').prop('checked', true);
+        $('#item-option-count option:eq(0)').prop('selected', true);
+        $('#item-option-count').attr('disabled', true);
+        $('#item-option-row').hide();
+      }
+    }
+  }
   function add_option_val(elem) {
     var td = elem.closest('tr').find('td.item-option-val');
     var item_option_html = "<div class=\"col-md-12 item-option-val-detail\">" +
@@ -760,6 +903,61 @@
       "</div>";
     td.append(item_option_html);
   }
+  function set_option_html() {
+    let option_count = $('#item-option-count').find('option:selected').val();
+    if (item_option_cnt === option_count) {
+      return false;
+    }
+    if (item_option_cnt < option_count) {
+      let expand_cnt = (remain_item_option_cnt > option_count ? option_count : remain_item_option_cnt);
+      for (let i = parseInt(item_option_cnt) + 1; i <= expand_cnt; i++) {
+        $('#item-option-row-' + i).show();
+      }
+      for (let i = remain_item_option_cnt; i < option_count; i++) {
+        let option_html = '<tr id="item-option-row-' + (parseInt(i)+1) + '"><td class="col-md-3 item-option-header"><div class="col-md-12">' +
+          '<a href="javascript:void(0);" onclick="move_option($(this),\'up\');"><span class="fa fa-caret-up"></span></a>' +
+          '<a href="javascript:void(0);" onclick="move_option($(this),\'down\');"><span class="fa fa-caret-down"></span></a>' +
+          '<a href="javascript:void(0);" onclick="add_option_val($(this));"><span class="fa fa-plus"></span></a>' +
+          '</div><div class="col-md-12"><label style="text-align:left">' +
+          '<input class="form-checkbox item-require" name="item_require" type="checkbox" value="1"/>필수</label>' +
+          '</div></td><td class="col-md-3">' +
+          '<input class="form-control item-option-name" name="item_option_name" type="text" placeholder="옵션명"/>' +
+          '</td><td class="col-md-6 item-option-val"><div class="col-md-12 item-option-val-detail"><div class="col-md-4">' +
+          '<input class="form-control item-option-value" name="item_option_value" type="text" placeholder="옵션" />' +
+          '</div>' +
+          "<div class=\"col-md-4\">" +
+          "<input class=\"form-control item-option-price\" name=\"item_option_price\" type=\"text\" placeholder='추가가격' />" +
+          "</div>" +
+          '<div class="col-md-4"><a href="javascript:void(0);" onclick="move_option_val($(this),\'up\');">' +
+          '<span class="fa fa-caret-up"></span></a>' +
+          '<a href="javascript:void(0);" onclick="move_option_val($(this),\'down\');"><span class="fa fa-caret-down"></span></a>' +
+          '<a href="javascript:void(0);" onclick="del_option_val($(this));"><span class="fa fa-times"></span></a>' +
+          '</div></div><div class="col-md-12 item-option-val-detail"><div class="col-md-4">' +
+          '<input class="form-control item-option-value" name="item_option_value" type="text" placeholder="옵션" />' +
+          '</div>' +
+          "<div class=\"col-md-4\">" +
+          "<input class=\"form-control item-option-price\" name=\"item_option_price\" type=\"text\" placeholder='추가가격' />" +
+          "</div>" +
+          '<div class="col-md-4"><a href="javascript:void(0);" onclick="move_option_val($(this),\'up\');">' +
+          '<span class="fa fa-caret-up"></span></a>' +
+          '<a href="javascript:void(0);" onclick="move_option_val($(this),\'down\');"><span class="fa fa-caret-down"></span></a>' +
+          '<a href="javascript:void(0);" onclick="del_option_val($(this));"><span class="fa fa-times"></span></a>' +
+          '</div></div></td></tr>';
+        $('#item-option-row table tbody').append(option_html);
+      }
+    } else {
+      for (let i = item_option_cnt; i > option_count; i--) {
+        $('#item-option-row-' + i).hide();
+      }
+    }
+    $('#item-option-row').show();
+  
+    item_option_cnt = option_count;
+    if (item_option_cnt > remain_item_option_cnt) {
+      remain_item_option_cnt = item_option_cnt;
+    }
+  }
+
   function move_option(elem,updown) {
     var tr = elem.parent().parent().parent();
     // console.log(tr);
@@ -802,22 +1000,22 @@
           $(input).closest('tr').find('.preview-img div').remove();
           $(input).closest('tr').find('.preview-img').append("<div style='float:left;border:4px solid #303641;padding:5px;margin:5px;'>" +
             "<img height='50' width='50' src='" + e.target.result + "'></div>");
-          // $("#previewImg-"+id).append("<div style='float:left;border:4px solid #303641;padding:5px;margin:5px;'>" +
-          //   "<img height='50' width='50' src='" + e.target.result + "'></div>");
+          $(input).data('target', 'file');
         }
       });
     }
   }
 
-  let item_image_count = <?php if ($edit) { echo $product_data->item_image_count; } else { echo 0; } ?>;
+  let item_image_count = <?php if ($edit) { echo $product_data->item_image_count - 1; } else { echo 0; } ?>;
   function add_item_image() {
+    console.log(item_image_count);
     if (item_image_count >= 5) {
       alert('최대 5장까지 이미지 추가 가능합니다.');
       return false;
     }
     $('#item-image-table').append('<tr>' +
       '<th class="col-md-2">추가이미지</th><td class="col-md-6">' +
-      '<input class="form-control item-image" onchange="preview(this);" name="item_image[]" type="file" value="" />' +
+      '<input class="form-control item-image" data-target="empty" onchange="preview(this);" name="item_image[]" type="file" value="" />' +
       '</td><th class="col-md-2"><span class="preview-img"></span>' +
       '</th><th class="col-md-2"><span class="fa fa-times" onclick="del_item_image($(this));"></span>' +
       '</th></tr>'
@@ -829,7 +1027,7 @@
     // console.log(elem);
     elem.closest('tr').remove();
     item_image_count -= 1;
-    // console.log(item_image_count);
+    console.log(item_image_count);
   }
   function set_summer(){
     $('#summernotes').each(function() {
@@ -875,7 +1073,12 @@
           // },
         },
       });
+      <?php if ($edit) {?>
+      now.closest('div').find('.val').val('<?php echo $product_data->item_desc; ?>');
+      <?php } else { ?>
       now.closest('div').find('.val').val('');
+      <?php } ?>
+      // console.log(now.closest('div').find('.val').val());
       // now.closest('div').find('.val').val(now.summernote('code'));
       // console.log($('#summernotes').summernote('fullscreen.isFullscreen'));
     });
@@ -1042,12 +1245,12 @@
 
     var supply_price = sell_price * ((100 - commission_rate) / 100);
 
-    console.log('--------------------');
-    console.log(commission_rate);
-    console.log(general_price);
-    console.log(sell_price);
-    console.log(discount_rate);
-    console.log(supply_price);
+    // console.log('--------------------');
+    // console.log(commission_rate);
+    // console.log(general_price);
+    // console.log(sell_price);
+    // console.log(discount_rate);
+    // console.log(supply_price);
 
     $('#item-general-price').val(get_price_str(general_price));
     $('#item-sell-price').val(get_price_str(sell_price));
@@ -1057,90 +1260,6 @@
 
   function change_discount_rate() {
     change_general_price();
-  }
-
-  function change_option(elem) {
-    var action = elem.data('action');
-
-    // console.log('--------------------');
-    // console.log(action);
-    // console.log(elem.is(':checked'));
-
-    if (action === 'no_option') {
-      if (elem.is(':checked') === true) {
-        $('#item-has-option').prop('checked', false);
-        $('#item-option-count option:eq(0)').prop('selected', true);
-        $('#item-option-count').attr('disabled', true);
-        $('#item-option-row').hide();
-      } else {
-        $('#item-has-option').prop('checked', true);
-        $('#item-option-count option:eq(' + item_option_cnt + ')').prop('selected', true);
-        $('#item-option-count').attr('disabled', false);
-        $('#item-option-row').show();
-      }
-    } else {
-      if (elem.is(':checked') === true) {
-        $('#item-no-option').prop('checked', false);
-        $('#item-option-count').attr('disabled', false);
-        $('#item-option-count option:eq(' + item_option_cnt + ')').prop('selected', true);
-        $('#item-option-row').show();
-      } else {
-        $('#item-no-option').prop('checked', true);
-        $('#item-option-count option:eq(0)').prop('selected', true);
-        $('#item-option-count').attr('disabled', true);
-        $('#item-option-row').hide();
-      }
-    }
-
-  }
-
-  let item_option_cnt = <?php if ($edit) echo $product_data->item_option_requires_cnt + $product_data->item_option_others_cnt; else echo 0; ?>;
-  function set_option_html() {
-    let option_count = $('#item-option-count').find('option:selected').val();
-
-    if (item_option_cnt === 0) {
-
-    }
-
-    var option_html = '<th class="col-md-2">옵션</th><td class="col-md-10"><table border="1" bordercolor="#EAEAEA" class="col-md-12">' + '<thead><tr><th class="col-md-3">옵셥편집</th><th class="col-md-3">옵션명</th><th class="col-md-6">옵션값</th></tr></thead><tbody>';
-
-    for (var i = 0; i < option_count; i++) {
-      option_html += '<tr><td class="col-md-3 item-option-header"><div class="col-md-12">' +
-        '<a href="javascript:void(0);" onclick="move_option($(this),\'up\');"><span class="fa fa-caret-up"></span></a>' +
-        '<a href="javascript:void(0);" onclick="move_option($(this),\'down\');"><span class="fa fa-caret-down"></span></a>' +
-        '<a href="javascript:void(0);" onclick="add_option_val($(this));"><span class="fa fa-plus"></span></a>' +
-        '</div><div class="col-md-12"><label style="text-align:left">' +
-        '<input class="form-checkbox item-require" name="item_require" type="checkbox" value="1"/>필수</label>' +
-        '</div></td><td class="col-md-3">' +
-        '<input class="form-control item-option-name" name="item_option_name" type="text" placeholder="옵션명"/>' +
-        '</td><td class="col-md-6 item-option-val"><div class="col-md-12 item-option-val-detail"><div class="col-md-4">' +
-        '<input class="form-control item-option-value" name="item_option_value" type="text" placeholder="옵션" />' +
-        '</div>' +
-        "<div class=\"col-md-4\">" +
-        "<input class=\"form-control item-option-price\" name=\"item_option_price\" type=\"text\" placeholder='추가가격' />" +
-        "</div>" +
-        '<div class="col-md-4"><a href="javascript:void(0);" onclick="move_option_val($(this),\'up\');">' +
-        '<span class="fa fa-caret-up"></span></a>' +
-        '<a href="javascript:void(0);" onclick="move_option_val($(this),\'down\');"><span class="fa fa-caret-down"></span></a>' +
-        '<a href="javascript:void(0);" onclick="del_option_val($(this));"><span class="fa fa-times"></span></a>' +
-        '</div></div><div class="col-md-12 item-option-val-detail"><div class="col-md-4">' +
-        '<input class="form-control item-option-value" name="item_option_value" type="text" placeholder="옵션" />' +
-        '</div>' +
-        "<div class=\"col-md-4\">" +
-        "<input class=\"form-control item-option-price\" name=\"item_option_price\" type=\"text\" placeholder='추가가격' />" +
-        "</div>" +
-        '<div class="col-md-4"><a href="javascript:void(0);" onclick="move_option_val($(this),\'up\');">' +
-        '<span class="fa fa-caret-up"></span></a>' +
-        '<a href="javascript:void(0);" onclick="move_option_val($(this),\'down\');"><span class="fa fa-caret-down"></span></a>' +
-        '<a href="javascript:void(0);" onclick="del_option_val($(this));"><span class="fa fa-times"></span></a>' +
-        '</div></div></td></tr>';
-    }
-    option_html += '</tbody></table></td>';
-    // console.log(option_count);
-    $('#item-option-row').html(option_html);
-    $('#item-option-row').show();
-
-    item_option_cnt = option_count;
   }
 
   function save_item(e) {
@@ -1309,6 +1428,7 @@
           alert('옵션명을 정확히 입력해 주세요.');
           $('.item-option-header').addClass('header-required');
           ret = false;
+          return false;
         }
         if ($(item).find('.item-require').is(':checked') === true) {
           item_option_requires[item_option_requires_cnt] = Object();
@@ -1321,6 +1441,7 @@
               alert('옵션값을 정확히 입력해 주세요.');
               $('.item-option-header').addClass('header-required');
               ret = false;
+              return false;
             }
             item_option_requires[item_option_requires_cnt].item_option_vals[idx] = Object();
             item_option_requires[item_option_requires_cnt].item_option_vals[idx].idx = idx;
@@ -1342,6 +1463,7 @@
               alert('옵션값을 정확히 입력해 주세요.');
               $('.item-option-header').addClass('header-required');
               ret = false;
+              return false;
             }
             item_option_others[item_option_others_cnt].item_option_vals[idx] = Object();
             item_option_others[item_option_others_cnt].item_option_vals[idx].idx = idx;
@@ -1362,23 +1484,31 @@
     var item_image_files = Array();
     var item_image_file_count = 0;
     $.each($('#item-image-table').find('input.item-image'), function(idx,file){
-      if (idx === 0 && $(file).val() === '') {
+      if (idx === 0 && $(file).data('target') === 'empty') {
         alert('필수이미지는 꼭 첨부해주세요.');
         $('.item-image-header').addClass('header-required');
         ret = false;
+        return false;
       }
-      if ($(file).val()) {
+      if ($(file).data('target') === 'file') {
         item_image_files[item_image_file_count] = $(file)[0].files[0];
         item_image_file_count += 1;
-        // console.log($(file));
-        // console.log($(file)[0].files[0]);
+      } else if ($(file).data('target') !== 'empty') {
+        item_image_files[item_image_file_count] = $(file).data('target');
+        item_image_file_count += 1;
+      } else {
+        // empty file
       }
+      // console.log('item_image_file_count : ' + item_image_file_count);
+      // console.log('data-target : ' + $(file).data('target'));
+      // console.log('val : ' + $(file).val());
     });
     if (ret === false) {
       return false;
     }
 
     // console.log(item_image_files);
+    // console.log(item_desc);
 
     if (item_desc === '') {
       alert('상품상세페이지를 정확히 입력해주세요.');
@@ -1427,7 +1557,7 @@
     formData.append('bundle_shipping_cnt', bundle_shipping_cnt);
 
     $.ajax({
-      url: '<?php echo base_url(); ?>shop/product/do_register', // form action url
+      url: '<?php echo base_url()."shop/product/do_register/$edit"; ?>', // form action url
       type: 'POST', // form submit method get/post
       dataType: 'html', // request type html/json/xml
       data: formData, // serialize form data
@@ -1435,6 +1565,7 @@
       contentType: false,
       processData: false,
       success: function (data) {
+        console.log(data);
         if (data === 'done' || data.search('done') !== -1) {
           $.notify({
             message: '저장되었습니다.',
@@ -1475,5 +1606,10 @@
 
   $(document).ready(function(){
     set_summer();
+    if (item_option_cnt > 0) {
+      $('#item-option-row').show();
+    } else {
+      $('#item-option-row').hide();
+    }
   });
 </script>
