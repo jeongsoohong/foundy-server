@@ -1324,15 +1324,14 @@
 
   let get_review_id = 0;
   function get_review_body(review_id) {
-    console.log(ele);
     $(".item-content-review-body").remove();
 
     let s = $('#review-body-'+get_review_id).find('.fa-angle-up');
     s.removeClass('fa-angle-up');
     s.addClass('fa-angle-down');
 
-    // console.log(get_qna_id);
-    // console.log(qna_id);
+    // console.log(get_review_id);
+    // console.log(review_id);
     if (get_review_id === review_id) {
       get_review_id = 0;
       return false;
