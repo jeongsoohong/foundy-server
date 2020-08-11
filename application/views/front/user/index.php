@@ -40,7 +40,7 @@
           <ul class="pleft_nav">
             <a class="pnav_center_register" href="#profile_content"><li>센터 신청</li></a>
             <a class="pnav_teacher_register" href="#profile_content"><li>강사 신청</li></a>
-            <a class="pnav_shop_register" href="#profile_content"><li>샵 브랜드 신청</li></a>
+<!--            <a class="pnav_shop_register" href="#profile_content"><li>샵 브랜드 신청</li></a>-->
           </ul>
           <div class="information-title" style="margin-bottom: 0px; margin-top: 0px;">계정</div>
           <ul class="pleft_nav">
