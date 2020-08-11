@@ -34,7 +34,6 @@
   <div class="row">
     <div class="col-md-12">
       <div class="tabs-wrapper content-tabs">
-        <?php if ($admin) { ?>
         <ul class="nav nav-tabs">
           <li class="active">
             <a href="#tab1" data-toggle="tab">
@@ -47,7 +46,6 @@
             </a>
           </li>
         </ul>
-        <?php } ?>
         <div class="tab-content">
           <div class="tab-pane fade in active" id="tab1">
             <div class="details-wrap">
@@ -59,7 +57,7 @@
                 * 고화질의 사진은 업로드가 안될 수 있습니다. <br>
                 * 사진 선택 후 하단에서 사진 크기를 ‘작게’로 선택해 주세요.<br>
                 * 권장 비율 : 정사각형<br>
-                  - 가로형, 세로형 이미지의 경우 이미지가 잘릴 수 있습니다. 올리실때 참고해 주세요.
+                - 가로형, 세로형 이미지의 경우 이미지가 잘릴 수 있습니다. 올리실때 참고해 주세요.
               </p>
               <div class="details-box">
                 <?php
@@ -107,7 +105,6 @@
               </div>
             </div>
           </div>
-          <?php if ($admin) { ?>
           <div class="tab-pane fade" id="tab2">
             <div class="details-wrap">
               <div class="block-title alt"> <i class="fa fa-angle-down"></i>비밀번호 변경</div>
@@ -121,11 +118,11 @@
                 ?>
                 <div class="row">
                   <?php if ($user_data->password != '' || strlen($user_data->password) > 0) { ?>
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <input required name="password" type="password" placeholder="비밀번호" class="form-control">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <input required name="password" type="password" placeholder="비밀번호" class="form-control">
+                      </div>
                     </div>
-                  </div>
                   <?php } ?>
                   <div class="col-md-12">
                     <div class="form-group">
@@ -150,7 +147,6 @@
               </div>
             </div>
           </div>
-          <?php } ?>
         </div>
       </div>
     </div>
@@ -161,7 +157,7 @@
   $(document).ready(function() {
     $('html').animate({scrollTop:$('html, body').offset().top}, 100);
   });
-
+  
   window.preview = function (input) {
     if (input.files && input.files[0]) {
       $("#previewImg").html('');
@@ -174,7 +170,7 @@
       });
     }
   }
-
+  
   $(".post_confirm").click(function(){
     var id = $(this).attr('id');
     $(".post_confirm_close").click();

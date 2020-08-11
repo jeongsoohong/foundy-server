@@ -1,32 +1,66 @@
 <style>
-    .content-area {
-        background-color: #FFFFFF;
-    }
-    .btn-kakao-login {
-        border: none;
-    }
-    .btn-kakao-login:hover {
-        background-color: transparent;
-    }
-    footer {
-        background-color: #FFFFFF;
-        padding-top: 15px;
-        margin-top: 0px !important;
-    }
+  .content-area {
+    background-color: #FFFFFF;
+  }
+  .btn-kakao-login {
+    border: none;
+  }
+  .btn-kakao-login:hover {
+    background-color: transparent;
+  }
+  footer {
+    background-color: #FFFFFF;
+    padding-top: 15px;
+    margin-top: 0px !important;
+  }
 </style>
 <section class="page-section color" style="background-color: #ffffff">
   <div class="container" id="login">
     <div class="row margin-top-0">
       <div class="col-sm-12">
-        <div class="row">
-          <div class="col-sm-12 title" style="background-color: #ffffff; padding: 10px 20px 5px; text-transform: uppercase; font-size: 18px; line-height: 24px; font-weight: 700; color: #232323">
-            <!-- 로그인 -->
-            <div class="option" style="text-align: center !important; margin: 0 auto 10px; text-transform: none; font-size: 12px; line-height: 14px; font-weight: 400; color: #757575">
-              간편하게 로그인하고<br>
-              균형잡힌 삶을 찾아보세요
+        <div class="row box_shape" style="border: none; box-shadow: none;">
+          <div class="title">
+            <div class="col-sm-12 title" style="background-color: #ffffff; padding: 20px; height: 64px; font-weight: 700; color: #232323">
+              <!-- 로그인 -->
+              <div class="option" style="text-align: center !important; margin: 0 auto 10px; text-transform: none; font-size: 12px; line-height: 12px; font-weight: 400; color: #757575">
+                간편하게 로그인하고<br>
+                균형잡힌 삶을 찾아보세요
+              </div>
             </div>
           </div>
-          <!--                    <hr>-->
+<!--          <hr>-->
+          <div class="col-sm-12">
+            <div class="form-group">
+              <input class="form-control email" id="user-email" type="email" name="email" placeholder="<?php echo ('email');?>">
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <input class="form-control" id="user-password" type="password" name="password" placeholder="<?php echo ('password');?>">
+            </div>
+          </div>
+          <div class="col-sm-12 text-right pull-right">
+          </div>
+          <div class="col-sm-12">
+            <a href="javascript:void(0)" onclick="do_login()">
+              <span class="btn btn-theme-sm btn-block btn-theme-dark pull-right">
+                로그인
+              </span>
+            </a>
+          </div>
+          <div class="col-sm-12 title" style="display: flex; background-color: #ffffff; padding: 10px 15px; height: 40px font-weight: 400; color: #232323">
+            <div class="forgot-password" style="text-align: left; width: 50%; font-size: 12px; line-height: 20px;">
+              <a href="javascript:void(0)">
+                <u>비밀번호 찾기</u>
+              </a>
+            </div>
+            <div class="option" style="text-align: right; width: 50%; font-size: 12px; line-height: 20px;">
+              <a class="media-link" href="<?php echo base_url(); ?>home/register">
+                <u>일반회원가입</u>
+              </a>
+            </div>
+          </div>
+          <hr style="margin-top: 10px; margin-bottom: 10px;">
           <div class="col-sm-12">
             <span class="btn btn-theme-sm btn-block btn-theme-transparent pull-center kakao-login btn-kakao-login">
               카카오 로그인
@@ -34,7 +68,7 @@
           </div>
           <div class="col-sm-12 title" style="background-color: #ffffff; padding: 10px 20px 5px; text-transform: uppercase; font-size: 18px; line-height: 24px; font-weight: 700; color: #232323">
             <div class="option" style="text-align: center !important; margin: 0 auto 10px; text-transform: none; font-size: 10px; line-height: 14px; font-weight: 400; color: #757575">
-              * 강사회원/센터회원은 간편로그인 후 마이페이지에서 신청해주세요
+              * 강사회원/센터회원은 로그인 후 마이페이지에서 신청해주세요
             </div>
           </div>
           <div class="col-sm-12 title" style="background-color: #ffffff; padding: 10px 20px 5px; text-transform: uppercase; font-size: 18px; line-height: 24px; font-weight: 700; color: #232323">
@@ -90,14 +124,14 @@
 </div>
 <script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
 <script type="text/javascript">
-
+  
   function search_ship_modal() {
     $('#searchShipModal').modal('show');
   }
   function close_foundy_modal(id) {
     $('#' + id + 'Modal').modal('hide');
   }
-
+  
   function do_restore(restore) {
     let r;
     $('#restoreModal').modal('hide');
@@ -130,12 +164,58 @@
       }
     });
   }
+  
+  function do_login() {
+    let email = $('#user-email').val();
+    let password = $('#user-password').val();
+    
+    let formData = new FormData();
+    formData.append('email', email);
+    formData.append('password', password);
+    
+    console.log(email);
+    console.log(password);
+    
+    $.ajax({
+      url : '<?php echo base_url().'/home/login/email'; ?>',
+      type: 'post', // form submit method get/post
+      dataType: 'html',
+      data: formData,
+      cache: false,
+      contentType: false,
+      processData: false,
+      success : function(res) {
+        // console.log(res);
+        res = JSON.parse(res);
+        if (res.status === 'success') {
+          alert(res.message);
+          window.location.href = '<?php echo base_url(); ?>';
+        } else if (res.status === 'fail') {
+          let text = '<strong>실패하였습니다</strong><br>' + res.message;
+          notify(text,'warning','bottom','right');
+        } else if (res.status === 'restore') { // 복원
+          $('#restoreModal .modal-body .text-center').text(res.message);
+          $('#restoreModal').modal('show');
+        } else {
+          // console.log(res.status);
+          alert(res);
+        }
+      },
+      error: function(xhr, status, error){
+        // console.log(xhr);
+        // console.log(status);
+        // console.log(error);
+        alert('login fail : ' + error);
+        // window.location.href = base_url + 'home/login';
+      }
+    });
+  }
 
   document.addEventListener("DOMContentLoaded", function() {
     Kakao.init('8ee901a556539927d58b30a6bf21a781');
     // @breif 카카오 로그인 버튼을 생성합니다.
     Kakao.Auth.createLoginButton({
-
+      
       container : ".btn-kakao-login",
       size : 'medium',
       lang : 'kr',
@@ -143,13 +223,13 @@
         //console.log( 'auth : ' + JSON.stringify(authObj) );
         // UI code below
         //console.log('token : ' + getToken())
-
+        
         Kakao.API.request({
           url: "/v2/user/me",
           success: function(user_data) {
-
+            
             var base_url = '<?php echo base_url(); ?>';
-
+            
             // console.log(user_data);
             $.ajax({
               url : base_url + '/home/login/kakao',
@@ -159,8 +239,8 @@
               success : function(res) {
                 // console.log(res);
                 if (res.status === 'success') {
-                    alert(res.message);
-                    window.location.href = '<?php echo base_url(); ?>';
+                  alert(res.message);
+                  window.location.href = '<?php echo base_url(); ?>';
                 } else {
                   $('#restoreModal .modal-body .text-center').text(res.message);
                   $('#restoreModal').modal('show');
@@ -174,7 +254,7 @@
                 // window.location.href = base_url + 'home/login';
               }
             });
-
+            
             //console.log(Kakao.Auth.getAccessToken());
             //alert(JSON.stringify(res));
           },

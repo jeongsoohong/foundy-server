@@ -66,14 +66,14 @@ class Shop extends CI_Controller
       if ($this->form_validation->run() == FALSE) {
         echo validation_errors();
       } else {
-        $query = $this->db->get_where('user', array('email' => $this->input->post('email')));
+        $query = $this->db->get_where('shop', array('email' => $this->input->post('email')));
         if ($query->num_rows() > 0) {
-          $user_id = $query->row()->user_id;
+          $email = $query->row()->email;
           $password = substr(hash('sha512', rand()), 0, 12);
           $data['password'] = sha1($password);
-          $this->db->where('user_id', $user_id);
+          $this->db->where('email', $email);
           $this->db->update('user', $data);
-          if ($this->email_model->password_reset_email('shop', $user_id, $password)) {
+          if ($this->email_model->password_reset_email('shop', $email, $password)) {
             echo 'email_sent';
           } else {
             echo 'email_not_sent';
@@ -90,37 +90,23 @@ class Shop extends CI_Controller
       if ($this->form_validation->run() == FALSE) {
         echo validation_errors();
       } else {
-        $user_type = USER_TYPE_SHOP;
         $password = sha1($this->input->post('password'));
         $email = $this->input->post('email');
-
-//                $query = <<<QUERY
-//UPDATE user set password='{$password}',user_type=user_type+{$user_type} where email='{$email}'
-//QUERY;
-//                $this->db->query($query);
-
-        $query = <<<QUERY
-SELECT * from user where email='{$email}'
-QUERY;
-        $user_data = $this->db->query($query)->row();
-        if (empty($user_data) == false) {
-          if (!($user_data->user_type & USER_TYPE_SHOP)) {
-            echo '샵 회원이 아닙니다.';
-          } else {
-            if ($user_data->password != $password) {
-              echo '비밀번호가 잘못되었습니다.';
-              exit;
-            }
-            $this->db->order_by('shop_id', 'asc');
-            $this->db->limit(1,0);
-            $shop_data = $this->db->get_where('shop', array('user_id' => $user_data->user_id, 'activate' => 1))->row();
-            $this->session->set_userdata('shop_login', 'yes');
-            $this->session->set_userdata('user_id', $user_data->user_id);
-            $this->session->set_userdata('shop_id', $shop_data->shop_id);
-//            $this->session->set_userdata('title', 'shop');
-
-            echo 'lets_login';
+        
+        $this->db->order_by('shop_id', 'asc');
+        $shops = $this->db->get_where('shop', array('email' => $email, 'activate' => 1))->result();
+        if (empty($shops) == false) {
+          if ($shops[0]->password != $password) {
+            echo '비밀번호가 잘못되었습니다.';
+            exit;
           }
+          $this->session->set_userdata('shop_login', 'yes');
+          $this->session->set_userdata('shop_email', $email);
+          $this->session->set_userdata('shop_id', $shops[0]->shop_id);
+//          $this->session->set_userdata('shops', json_encode($shops));
+//          $this->session->set_userdata('title', 'shop');
+    
+          echo 'lets_login';
         } else {
           echo '이메일이 잘못되었습니다.';
         }
@@ -141,8 +127,13 @@ QUERY;
   {
     $page_data = array();
     if ($this->session->userdata('shop_login') == 'yes') {
-      $user_id = $this->session->userdata('user_id');
-      $shops= $this->db->get_where('shop', array('user_id' => $user_id, 'activate' => 1))->result();
+//      $shops = json_decode($this->session->userdata('shops'));
+//      $this->crud_model->alert_exit($this->session->userdata('shops'));
+      $shop_id = $this->session->userdata('shop_id');
+      $email = $this->session->userdata('shop_email');
+      $shop = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
+      $shops = $this->db->get_where('shop', array('email' => $email, 'activate' => 1))->result();
+      $page_data['shop'] = $shop;
       $page_data['shops'] = $shops;
       return $page_data;
     } else {
@@ -152,15 +143,11 @@ QUERY;
 
   function change()
   {
-    $user_id = $this->session->userdata('user_id');
     $shop_id = $this->input->get('id');
 
     $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
     if (empty($shop_data)) {
       $this->crud_model->alert_exit('샵이 존재하지 않습니다');
-    }
-    if ($shop_data->user_id != $user_id) {
-      $this->crud_model->alert_exit('해당 샵에 대한 권한이 없습니다');
     }
     if ($shop_data->activate != 1) {
       $this->crud_model->alert_exit('승인 대기 중입니다.');
@@ -531,7 +518,7 @@ QUERY;
           array('shop_id' => $shop_data->shop_id, 'status' => SHOP_PRODUCT_STATUS_INIT))->row();
         if (empty($product)) {
           $ins = array(
-            'user_id' => $user_id,
+            'user_id' => 0,
             'shop_id' => $shop_data->shop_id,
             'product_code' => '',
             'status' => SHOP_PRODUCT_STATUS_INIT,
@@ -816,7 +803,7 @@ QUERY;
 
     // for login
     $page_data['control'] = "shop";
-    $user_id = $this->session->userdata('user_id');
+//    $user_id = $this->session->userdata('user_id');
     $shop_id = $this->session->userdata('shop_id');
 
     $page = 1;
@@ -899,7 +886,6 @@ QUERY;
 
     // for login
     $page_data['control'] = "shop";
-    $user_id = $this->session->userdata('user_id');
     $shop_id = $this->session->userdata('shop_id');
 
     $page = 1;
@@ -923,7 +909,6 @@ QUERY;
     $size = SHOP_ADMIN_ITEM_LIST_PAGE_SIZE;
     $offset = $size*($page - 1);
 
-    $user_id = $this->session->userdata('user_id');
     $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
 
     $select = "select a.shop_id,a.shop_name,b.email,c.item_name,e.receiver_name,d.*";
@@ -981,10 +966,7 @@ QUERY;
 
     // for login
     $page_data['control'] = "shop";
-    $user_id = $this->session->userdata('user_id');
     $shop_id = $this->session->userdata('shop_id');
-
-    $user_id = $this->session->userdata('user_id');
     $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
 
     $type = $para1;
@@ -1240,18 +1222,18 @@ QUERY;
       }
 
     } else if ($type == 'brand') {
-
+  
       if ($action == 'upd') {
-
+    
         $this->load->library('form_validation');
         $this->form_validation->set_rules('brand_text_base', 'brand_text_base', 'trim|required|max_length[512]');
-
+    
         if ($this->form_validation->run() == FALSE) {
           echo '<br>' . validation_errors();
         } else {
-
+      
           $brand_text_base = $this->input->post('brand_text_base');
-
+      
           $data = array(
             'brand_text' => $brand_text_base,
           );
@@ -1260,16 +1242,16 @@ QUERY;
             'type' => SHOP_BRAND_INFO_TYPE_DEFAULT
           );
           $this->db->update('shop_brand_info', $data, $where);
-
+      
           if ($shop_data->set_brand_info == false) {
             $this->db->update('shop', array('set_brand_info' => 1), array('shop_id' => $shop_data->shop_id));
           }
-
+      
           echo 'done';
         }
-
+    
       } else {
-
+    
         $now = date('Y-m-d H:i:s');
         $query = <<<QUERY
 select * from shop_brand_info where shop_id={$shop_data->shop_id} and start_time<'{$now}' and '{$now}'<end_time
@@ -1279,11 +1261,76 @@ QUERY;
         $page_data['shop_brand_info'] = $shop_brand_info;
         $page_data['page_name'] = "account";
         $this->load->view('back/shop/shop_brand_info', $page_data);
-
+    
       }
+  
+    } else if ($type == 'password') {
+  
+      $this->load->library('form_validation');
+      $this->form_validation->set_rules('password', 'password', 'trim|required|max_length[32]');
+      $this->form_validation->set_rules('password1', 'password1', 'trim|required|max_length[32]');
+      $this->form_validation->set_rules('password2', 'password2', 'trim|required|max_length[32]');
+  
+      if ($this->form_validation->run() == FALSE) {
+        $result['message'] = validation_errors();
+        $result['status'] = 'fail';
+        echo json_encode($result);
+        exit;
+      }
+ 
+      $password = $this->input->post('password');
+      $password1 = $this->input->post('password1');
+      $password2 = $this->input->post('password2');
 
+      $shop_id = $this->session->userdata('shop_id');
+      $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
+      
+      if ($shop_data->password != sha1($password)) {
+        $result['status'] = 'fail';
+        $result['message'] = "입력하신 기존 비밀번호가 잘못되었습니다.";
+        echo json_encode($result);
+        exit;
+      }
+      
+      if ($password1 != $password2) {
+        $result['status'] = 'fail';
+        $result['message'] = "입력하신 새 비밀번호가 일치하지 않습니다.";
+        echo json_encode($result);
+        exit;
+      }
+  
+      $r = $this->crud_model->check_pw($password1);
+      if ($r[0] == false) {
+        $result['status'] = 'fail';
+        $result['message'] = $r[1];
+        echo json_encode($result);
+        exit;
+      }
+      
+      if (sha1($password) == sha1($password1)) {
+        $result['status'] = 'fail';
+        $result['message'] = "입력하신 새 비밀번호가 기존과 동일합니다.";
+        echo json_encode($result);
+        exit;
+      }
+  
+      $shop_id = $this->session->userdata('shop_id');
+      $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
+  
+      $upd = array(
+        'password' => sha1($password1)
+      );
+      $where = array(
+        'email' => $shop_data->email,
+      );
+      $this->db->update('shop', $upd, $where);
+  
+      $result['status'] = 'success';
+      $result['message'] = '비밀번호 변경에 설공하셨습니다.';
+      echo json_encode($result);
+      exit;
     } else {
-
+  
       $shop_worker = $this->db->get_where('shop_worker', array('shop_id' => $shop_data->shop_id))->result();
       $shop_shipping = $this->db->get_where('shop_shipping', array('shop_id' => $shop_data->shop_id))->row();
       $shop_shipping_company = $this->db->get_where('shop_shipping_company', array('shop_id' => $shop_data->shop_id))->result();

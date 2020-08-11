@@ -1034,5 +1034,30 @@ QUERY;
     $this->db->delete('teacher_video', array('teacher_id' => $teacher_id));
     $this->db->delete('teacher', array('teacher_id' => $teacher_id));
   }
+  
+  function check_pw($pw)
+  {
+    $num = preg_match('/[0-9]/u', $pw);
+    $eng = preg_match('/[a-z]/u', $pw);
+//    $spe = preg_match("/[\!\@\#\$\%\^\&\*]/u",$pw);
+    $kor = preg_match("/[\xE0-\xFF][\x80-\xFF][\x80-\xFF]/", $pw);
 
+    if ($kor == 1) {
+      return array(false, "비밀번호는 한글을 사용하실 수 없습니다.");
+    }
+    
+    if(strlen($pw) < 8 || strlen($pw) > 30) {
+      return array(false,"비밀번호는 영문, 숫자를 혼합하여 최소 8자리 ~ 최대 30자리 이내로 입력해주세요.");
+    }
+    
+    if(preg_match("/\s/u", $pw) == true) {
+      return array(false, "비밀번호는 공백없이 입력해주세요.");
+    }
+    
+    if( $num == 0 || $eng == 0) {
+      return array(false, "영문, 숫자를 혼합하여 입력해주세요.");
+    }
+    
+    return array(true, '');
+  }
 }

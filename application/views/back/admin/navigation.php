@@ -165,6 +165,9 @@
   ul ul ul li a:hover{
     background:#2f343b !important;
   }
+  #floating-top-right {
+    z-index: 1050 !important;
+  }
 </style>
 <script>
   function limitLines(obj, e) {

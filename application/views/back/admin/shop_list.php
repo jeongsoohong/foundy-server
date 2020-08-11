@@ -49,9 +49,9 @@
              onclick="ajax_modal('approval','shop_approval','successfully_approval!','shop_approval','<?php echo $row['shop_id']; ?>')" data-original-title="View" data-container="body">
             <?php echo ($row['activate'] ? '미승인' : '승인');?>
           </a>
-<!--          <a onclick="delete_confirm('--><?php //echo $row['shop_id']; ?><!--',' --><?php //echo ('정말 삭제하시겠습니까?'); ?><!--')" class="btn btn-xs btn-danger btn-labeled fa fa-trash" data-toggle="tooltip" data-original-title="Delete" data-container="body"> -->
-            <?php //echo ('삭제');?>
-<!--          </a>-->
+          <a onclick="open_password(<? echo $row['shop_id']; ?>)" class="btn btn-xs btn-danger btn-labeled fa fa-trash">
+            비밀번호변경
+          </a>
         </td>
       </tr>
       <?php
@@ -60,6 +60,112 @@
     </tbody>
   </table>
 </div>
+<div class="modal fade" id="pwModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">비밀번호 변경</h4>
+      </div>
+      <div class="modal-body">
+        <div class="pw1">
+          <input type="password" class="form-control" id="password1" name="password1" placeholder="비밀번호">
+        </div>
+        <div class="pw2">
+          <input type="password" class="form-control" id="password2" name="password2" placeholder="비밀번호 확인">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-theme-sm" data-dismiss="modal" onclick="clear_password();">취소</button>
+        <button type="button" class="btn btn-theme btn-theme-sm"style="background-color: black; color: white; text-transform: none; font-weight: 400;"
+                onclick="change_password();">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  .pw1, .pw2 {
+    margin: 10px;
+  }
+</style>
+<script>
+  
+  function clear_password() {
+    // console.log($('#password1').val());
+    // console.log($('#password2').val());
+    
+    $('#password1').val('');
+    $('#password2').val('');
+    $('#pwModal').modal('hide');
+  }
+ 
+  let shop_id = 0;
+  function open_password(id) {
+    clear_password();
+   
+    // console.log('shop_id : ' + shop_id);
+    
+    shop_id = id;
+    $('#pwModal').modal('show');
+  }
+  
+  function change_password() {
+    let password1 = $('#password1').val();
+    let password2 = $('#password2').val();
+    
+    // console.log(shop_id);
+    // console.log(password1);
+    // console.log(password2);
+    
+    let formData = new FormData();
+    formData.append('shop_id', shop_id);
+    formData.append('password1', password1);
+    formData.append('password2', password2);
+  
+    $.ajax({
+      url : '<?php echo base_url().'admin/shop/password'; ?>',
+      type: 'post', // form submit method get/post
+      dataType: 'html',
+      data: formData,
+      cache: false,
+      contentType: false,
+      processData: false,
+      success : function(res) {
+        // console.log(res);
+        res = JSON.parse(res);
+        if (res.status === 'success') {
+          // alert(res.message);
+          let text = '<strong>' + res.message + '</strong>';
+          $.activeitNoty({
+            type: 'success',
+            icon : 'fa fa-plus',
+            message : text,
+            container : 'floating',
+            timer : 3000
+          });
+          setTimeout(function() {location.reload();}, 1000);
+        } else {
+          let text = '<strong>실패하였습니다</strong><br>' + res.message;
+          $.activeitNoty({
+            type: 'danger',
+            icon : 'fa fa-minus',
+            message : text,
+            container : 'floating',
+            timer : 3000
+          });
+        }
+      },
+      error: function(xhr, status, error){
+        // console.log(xhr);
+        // console.log(status);
+        // console.log(error);
+        alert('fail : ' + error);
+        // window.location.href = base_url + 'home/login';
+      }
+    });
+  }
+  
+</script>
 <div id="vendr"></div>
 <div id='export-div' style="padding:40px;">
   <h1 id ='export-title' style="display:none;">shops</h1>

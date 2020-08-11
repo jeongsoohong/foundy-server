@@ -943,6 +943,9 @@ QUERY;
           if (empty($shop_data->commission_rate) == true || $shop_data->commission_rate == '') {
             $this->crud_model->alert_exit("샵의 수수료율 등 추가정보를 먼저 업데이트 해주세요. commission_rate: {$shop_data->commission_rate}");
           }
+          if (isset($shop_data->password) == false || empty($shop_data->password) == true || $shop_data->password == '') {
+            $this->crud_model->alert_exit("샵의 비밀번호를 세팅해주세요.");
+          }
         } else {
           $data['activate'] = 0;
           $this->db->update('shop_product_id', array('status' => SHOP_PRODUCT_STATUS_REJECT), array('shop_id' => $shop_id));
@@ -986,44 +989,36 @@ QUERY;
         $this->db->where('shop_id', $shop_id);
         $this->db->delete('shop');
         echo 'done';
-
-      } else if ($type == 'edit') {
-
-        $shop_id = $para2;
-        $page_data['shop_data'] = $this->db->get_where('shop', array('shop_id' => $shop_id))->result_array();
-        $this->load->view('back/admin/shop_edit', $page_data);
-
-      } elseif ($type == "update") {
-
-        $shop_id = $para2;
-
-//        $data = $this->input->post('business_license_num');
-//        echo "<script>alert('$data');</script>";
-//        exit;
-
+  
+      } else if ($type == 'add') {
+  
+        $this->load->view('back/admin/shop_add', $page_data);
+  
+      } else if ($type == 'do_add') {
+  
         $this->load->library('form_validation');
         $this->form_validation->set_rules('shop_name', 'shop_name', 'trim|required|max_length[128]');
         $this->form_validation->set_rules('representative_name', 'representative_name', 'trim|required|max_length[128]');
         $this->form_validation->set_rules('shop_phone', 'shop_phone', 'trim|required|numeric|max_length[32]');
         $this->form_validation->set_rules('shop_items', 'shop_items', 'trim|required|max_length[128]');
-        $this->form_validation->set_rules('shop_homepage_url', 'shop_homepage_url', 'trim|valid_url|max_length[256]');
+        $this->form_validation->set_rules('shop_homepage_url', 'shop_homepage_url', 'trim|required|valid_url|max_length[256]');
         $this->form_validation->set_rules('email', 'email', 'trim|required|valid_email|max_length[128]');
         $this->form_validation->set_rules('sns_url', 'sns_url', 'trim|valid_url|max_length[256]');
         $this->form_validation->set_rules('business_license_num', 'business_license_num', 'trim|max_length[32]');
         $this->form_validation->set_rules('business_conditions', 'business_conditions', 'trim|max_length[128]');
         $this->form_validation->set_rules('business_type', 'business_type', 'trim|max_length[128]');
-        $this->form_validation->set_rules('commission_rate', 'commission_rate', 'trim|numeric|max_length[16]');
+        $this->form_validation->set_rules('commission_rate', 'commission_rate', 'trim|required|numeric|max_length[16]');
         $this->form_validation->set_rules('bank_name', 'bank_name', 'trim|max_length[64]');
         $this->form_validation->set_rules('bank_account_num', 'bank_account_num', 'trim|max_length[32]');
         $this->form_validation->set_rules('bank_depositor', 'bank_depositor', 'trim|max_length[64]');
         $this->form_validation->set_rules('postcode', 'postcode', 'trim|max_length[8]');
         $this->form_validation->set_rules('address_1', 'address_1', 'trim|max_length[128]');
         $this->form_validation->set_rules('address_2', 'address_2', 'trim|max_length[128]');
-
+  
         if ($this->form_validation->run() == FALSE) {
           echo '<br>' . validation_errors();
         } else {
-
+  
           $shop_name = $this->input->post('shop_name');
           $shop_items = $this->input->post('shop_items');
           $shop_phone = $this->input->post('shop_phone');
@@ -1039,9 +1034,121 @@ QUERY;
           $bank_account_num = $this->input->post('bank_account_num');
           $bank_depositor = $this->input->post('bank_depositor');
           $postcode = $this->input->post('postcode');
-          $address_1= $this->input->post('address_1');
+          $address_1 = $this->input->post('address_1');
           $address_2 = $this->input->post('address_2');
+          
+          $dup = $this->db->get_where('shop', array('shop_name' => $shop_name))->row();
+          if (isset($dup) == true && empty($dup) == false) {
+            echo '브랜드가 이미 존재합니다';
+            exit;
+          }
+          
+          $shop_data = $this->db->get_where('shop', array('email' => $email))->row();
+          if (isset($shop_data) == true && empty($shop_data) == false) {
+            $password = $shop_data->password;
+          } else {
+            $password = '';
+          }
+  
+          $data = array(
+            'shop_name' => $shop_name,
+            'representative_name' => $representative_name,
+            'shop_phone' => $shop_phone,
+            'shop_items' => $shop_items,
+            'shop_homepage_url' => $shop_homepage_url,
+            'email' => $email,
+            'sns_url' => $sns_url,
+            'business_license_num' => $business_license_num,
+            'business_conditions' => $business_conditions,
+            'business_type' => $business_type,
+            'commission_rate' => $commission_rate,
+            'bank_name' => $bank_nmae,
+            'bank_account_num' => $bank_account_num,
+            'bank_depositor' => $bank_depositor,
+            'postcode' => $postcode,
+            'address_1' => $address_1,
+            'address_2' => $address_2,
+            'password' => $password,
+          );
+ 
+          $this->db->set('register_at', 'NOW()', false);
+          $this->db->set('contract_at', 'NOW()', false);
+          $this->db->set('unregister_at', 'NOW()', false);
+          $this->db->insert('shop', $data);
+  
+          $shop_id = $this->db->insert_id();
+  
+          if (isset($_FILES["business_license_img"])) {
+            $error = $this->crud_model->file_validation($_FILES['business_license_img'], false);
+            if ($error == UPLOAD_ERR_OK) {
+              $file_name = 'shop_' . $shop_id . '.jpg';
+              $this->crud_model->upload_image(IMG_PATH_SHOP, $file_name, $_FILES["business_license_img"], 0, 0, false, true);
+              $time = time();
+              $business_image_url = IMG_WEB_PATH_SHOP . $file_name . '?id=' . $time;
+              $data['business_license_url'] = $business_image_url;
+            } else if ($error != UPLOAD_ERR_NO_FILE) {
+              $this->crud_model->file_validation_alert($error);
+            }
+          }
+  
+          echo 'done';
+        }
+        
+      } else if ($type == 'edit') {
+  
+        $shop_id = $para2;
+        $page_data['shop_data'] = $this->db->get_where('shop', array('shop_id' => $shop_id))->result_array();
+        $this->load->view('back/admin/shop_edit', $page_data);
+  
+      } elseif ($type == "update") {
+  
+        $shop_id = $para2;
 
+//        $data = $this->input->post('business_license_num');
+//        echo "<script>alert('$data');</script>";
+//        exit;
+  
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('shop_name', 'shop_name', 'trim|required|max_length[128]');
+        $this->form_validation->set_rules('representative_name', 'representative_name', 'trim|required|max_length[128]');
+        $this->form_validation->set_rules('shop_phone', 'shop_phone', 'trim|required|numeric|max_length[32]');
+        $this->form_validation->set_rules('shop_items', 'shop_items', 'trim|required|max_length[128]');
+        $this->form_validation->set_rules('shop_homepage_url', 'shop_homepage_url', 'trim|valid_url|required|max_length[256]');
+        $this->form_validation->set_rules('email', 'email', 'trim|required|valid_email|max_length[128]');
+        $this->form_validation->set_rules('sns_url', 'sns_url', 'trim|valid_url|max_length[256]');
+        $this->form_validation->set_rules('business_license_num', 'business_license_num', 'trim|max_length[32]');
+        $this->form_validation->set_rules('business_conditions', 'business_conditions', 'trim|max_length[128]');
+        $this->form_validation->set_rules('business_type', 'business_type', 'trim|max_length[128]');
+        $this->form_validation->set_rules('commission_rate', 'commission_rate', 'trim|required|numeric|max_length[16]');
+        $this->form_validation->set_rules('bank_name', 'bank_name', 'trim|max_length[64]');
+        $this->form_validation->set_rules('bank_account_num', 'bank_account_num', 'trim|max_length[32]');
+        $this->form_validation->set_rules('bank_depositor', 'bank_depositor', 'trim|max_length[64]');
+        $this->form_validation->set_rules('postcode', 'postcode', 'trim|max_length[8]');
+        $this->form_validation->set_rules('address_1', 'address_1', 'trim|max_length[128]');
+        $this->form_validation->set_rules('address_2', 'address_2', 'trim|max_length[128]');
+  
+        if ($this->form_validation->run() == FALSE) {
+          echo '<br>' . validation_errors();
+        } else {
+    
+          $shop_name = $this->input->post('shop_name');
+          $shop_items = $this->input->post('shop_items');
+          $shop_phone = $this->input->post('shop_phone');
+          $shop_homepage_url = $this->input->post('shop_homepage_url');
+          $representative_name = $this->input->post('representative_name');
+          $email = $this->input->post('email');
+          $sns_url = $this->input->post('sns_url');
+          $business_license_num = $this->input->post('business_license_num');
+          $business_conditions = $this->input->post('business_conditions');
+          $business_type = $this->input->post('business_type');
+          $commission_rate = $this->input->post('commission_rate');
+          $bank_nmae = $this->input->post('bank_name');
+          $bank_account_num = $this->input->post('bank_account_num');
+          $bank_depositor = $this->input->post('bank_depositor');
+          $postcode = $this->input->post('postcode');
+          $address_1 = $this->input->post('address_1');
+          $address_2 = $this->input->post('address_2');
+    
           $where = array(
             'shop_id' => $shop_id
           );
@@ -1076,13 +1183,64 @@ QUERY;
               $this->crud_model->file_validation_alert($error);
             }
           }
-
+    
           $this->db->update('shop', $data, $where);
-
+    
           echo 'done';
 //          redirect(base_url() . 'admin/shop');
         }
+  
+      } else if ($type == 'password') {
+  
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('password1', 'password1', 'trim|required|max_length[32]');
+        $this->form_validation->set_rules('password2', 'password2', 'trim|required|max_length[32]');
+  
+        if ($this->form_validation->run() == FALSE) {
+          $message = '';
+          $message .= json_encode(array(
+            'password1' => $this->input->post('password1'),
+            'password2' => $this->input->post('password2'),
+          ));;
+          $result['message'] = $message.'<br>' . validation_errors();
+          $result['status'] = 'fail';
+          echo json_encode($result);
+          exit;
+        }
+  
+        $password1 = $this->input->post('password1');
+        $password2 = $this->input->post('password2');
+        if ($password1 != $password2) {
+          $result['status'] = 'fail';
+          $result['message'] = "입력하신 비밀번호가 일치하지 않습니다.";
+          echo json_encode($result);
+          exit;
+        }
+  
+        $r = $this->crud_model->check_pw($password1);
+        if ($r[0] == false) {
+          $result['status'] = 'fail';
+          $result['message'] = $r[1];
+          echo json_encode($result);
+          exit;
+        }
 
+        $shop_id = $this->input->post('shop_id');
+        $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
+        
+        $upd = array(
+          'password' => sha1($password1)
+        );
+        $where = array(
+          'email' => $shop_data->email,
+        );
+        $this->db->update('shop', $upd, $where);
+  
+        $result['status'] = 'success';
+        $result['message'] = '비밀번호 변경에 설공하셨습니다.';
+        echo json_encode($result);
+        exit;
+  
       } else { // shop main
 
         $page_data['page_name'] = "shop";
