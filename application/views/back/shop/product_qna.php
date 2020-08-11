@@ -248,8 +248,8 @@
   function submit_reply() {
     let qna_reply = $('#qna-reply').val();
     
-    console.log(qna_id);
-    console.log(qna_reply);
+    // console.log(qna_id);
+    // console.log(qna_reply);
     
     let formData = new FormData();
     formData.append('qna_id', qna_id);
@@ -264,7 +264,7 @@
       contentType: false,
       processData: false,
       success: function (data) {
-        console.log(data);
+        // console.log(data);
         if (data === 'done' || data.search('done') !== -1) {
           $.notify({
             message: '저장되었습니다.',
@@ -359,10 +359,11 @@
     });
   
   }
+
   function get_qna_page(page) {
-    console.log(replied);
-    console.log(start_date);
-    console.log(end_date);
+    // console.log(replied);
+    // console.log(start_date);
+    // console.log(end_date);
 
     $(".product-content").html(loading_set);
     $(".product-content").load(
@@ -377,9 +378,9 @@
     let _start_date = $('#start-date').val();
     let _end_date = $('#end-date').val();
 
-    console.log(_replied);
-    console.log(_start_date);
-    console.log(_end_date);
+    // console.log(_replied);
+    // console.log(_start_date);
+    // console.log(_end_date);
 
     $(".product-content").html(loading_set);
     $(".product-content").load(

@@ -429,53 +429,70 @@ QUERY;
 
     } else if ($para1 == 'review') {
 
-      $page = 1;
-      if (isset($_GET['page'])) {
-        $page = $_GET['page'];
+      if ($para2 == 'get') {
+  
+        $review_id = $_GET['rid'];
+        
+        $query = <<<QUERY
+select review_score,review_body,review_file_cnt,review_img_url_1,review_img_url_2,review_img_url_3,review_at
+from shop_product_review where review_id={$review_id}
+QUERY;
+        
+        $review = $this->db->query($query)->row();
+
+        echo json_encode($review);
+        
+      } else {
+  
+        $page = 1;
+        if (isset($_GET['page'])) {
+          $page = $_GET['page'];
+        }
+        $item_name = '';
+        if (isset($_GET['item_name'])) {
+          $item_name = $_GET['item_name'];
+        }
+        $size = SHOP_ADMIN_ITEM_LIST_PAGE_SIZE;
+        $offset = $size*($page - 1);
+  
+        $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
+  
+        $select = "select a.shop_id,a.shop_name,b.email,c.item_name,d.*";
+        $from = "from shop a,user b,shop_product c, shop_product_review d";
+        $order_by = "order by review_id desc";
+        $limit = "limit {$offset},{$size}";
+        $where = "where a.shop_id=d.shop_id and b.user_id=d.user_id and c.product_id=d.product_id and d.shop_id={$shop_data->shop_id}";
+        if (!empty($item_name)) {
+          $where .= " and c.item_name like '%{$item_name}%'";
+        }
+  
+        $query = $select . ' ' . $from . ' ' . $where. ' ' . $order_by . ' ' . $limit;
+  
+        $review_data = $this->db->query($query)->result();
+  
+        $select = "select count(*) as cnt";
+        $query = $select . ' ' . $from . ' ' . $where . ' ';
+  
+        $total_cnt = $this->db->query($query)->row()->cnt;
+  
+        $total = (int)($total_cnt / $size) + ($total_cnt % $size > 0 ? 1 : 0);
+        $prev = $page > 1 ? $page - 1 : '';
+        $next = $total > $page ? $page + 1 : '';
+  
+        $page_data['total_cnt'] = $total_cnt;
+        $page_data['total'] = $total;
+        $page_data['prev'] = $prev;
+        $page_data['page'] = $page;
+        $page_data['next'] = $next;
+  
+        $page_data['item_name'] = $item_name;
+  
+        $page_data['shop_data'] = $shop_data;
+        $page_data['review_data'] = $review_data;
+        $page_data['page_name'] = "product_review";
+        $this->load->view('back/shop/product_review', $page_data);
+        
       }
-      $item_name = '';
-      if (isset($_GET['item_name'])) {
-        $item_name = $_GET['item_name'];
-      }
-      $size = SHOP_ADMIN_ITEM_LIST_PAGE_SIZE;
-      $offset = $size*($page - 1);
-
-      $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
-
-      $select = "select a.shop_id,a.shop_name,b.email,c.item_name,d.*";
-      $from = "from shop a,user b,shop_product c, shop_product_review d";
-      $order_by = "order by review_id desc";
-      $limit = "limit {$offset},{$size}";
-      $where = "where a.shop_id=d.shop_id and b.user_id=d.user_id and c.product_id=d.product_id and d.shop_id={$shop_data->shop_id}";
-      if (!empty($item_name)) {
-        $where .= " and c.item_name like '%{$item_name}%'";
-      }
-
-      $query = $select . ' ' . $from . ' ' . $where. ' ' . $order_by . ' ' . $limit;
-
-      $review_data = $this->db->query($query)->result();
-
-      $select = "select count(*) as cnt";
-      $query = $select . ' ' . $from . ' ' . $where . ' ';
-
-      $total_cnt = $this->db->query($query)->row()->cnt;
-
-      $total = (int)($total_cnt / $size) + ($total_cnt % $size > 0 ? 1 : 0);
-      $prev = $page > 1 ? $page - 1 : '';
-      $next = $total > $page ? $page + 1 : '';
-
-      $page_data['total_cnt'] = $total_cnt;
-      $page_data['total'] = $total;
-      $page_data['prev'] = $prev;
-      $page_data['page'] = $page;
-      $page_data['next'] = $next;
-
-      $page_data['item_name'] = $item_name;
-
-      $page_data['shop_data'] = $shop_data;
-      $page_data['review_data'] = $review_data;
-      $page_data['page_name'] = "product_review";
-      $this->load->view('back/shop/product_review', $page_data);
 
     } else if ($para1 == 'register') {
 

@@ -208,8 +208,6 @@
   }
   .review-star, .item-review-star {
     height: 60px;
-  }
-  .review-star, .item-review-star {
     text-align: center;
   }
   .review-star span img, .item-review-star span img {
@@ -1228,7 +1226,7 @@
   }
 
   function clear_review() {
-    console.log('clear_review');
+    // console.log('clear_review');
     review_score = 0;
     for (let i = 1; i <= 5; i++) {
       $('#review-score-'+i).find('img').prop('src', '<?php echo base_url(); ?>uploads/icon/icon12_star.png');
@@ -1246,19 +1244,19 @@
   function submit_review() {
     let review_body = $('#review-body').val();
 
-    console.log(review_score);
+    // console.log(review_score);
 
     let review_file_cnt = 0;
     let review_files = Array();
     for (let i = 0; i < 3; i++) {
-      console.log(review_img[i]);
+      // console.log(review_img[i]);
       if (review_img[i]) {
         review_files[review_file_cnt] = review_img[i];
         review_file_cnt += 1;
       }
     }
 
-    console.log(review_body);
+    // console.log(review_body);
 
     let formData = new FormData();
     formData.append('review_score', review_score);
@@ -1397,7 +1395,7 @@
 
   let get_qna_id = 0;
   function get_reply(ele, qna_id) {
-    console.log(ele);
+    // console.log(ele);
     $(".item-content-qna-reply").remove();
 
     let s = $('#qna-title-'+get_qna_id).find('.fa-angle-up');
@@ -1415,14 +1413,14 @@
     if (ele !== null) {
       let select = $(ele);
       let is_private = select.data('private');
-      console.log(is_private);
+      // console.log(is_private);
       if (is_private === 1) {
         open_qna_pw(qna_id);
         return true;
       }
     } else {
       pw = $('#qna-reply-pw').val();
-      console.log(pw);
+      // console.log(pw);
       if (check_pw(pw) === false) {
         return false;
       }
@@ -1469,7 +1467,7 @@
   function open_qna_pw(qna_id) {
     $('#qna-reply-pw').data('id', qna_id);
     $('#qnaPwModal').modal('show');
-    console.log($('#qna-reply-pw').data('id'));
+    // console.log($('#qna-reply-pw').data('id'));
     //window.location.href = "<?php //echo base_url().'home/shop/qna?id='.$product->product_id; ?>//";
   }
 
@@ -1512,7 +1510,7 @@
   }
 
   function clear_qna_list() {
-    console.log($('.item-content-qna-ul ul').find('li'));
+    // console.log($('.item-content-qna-ul ul').find('li'));
     $('.item-content-qna-ul ul').find('li').remove();
     qna_page = 0;
   }
