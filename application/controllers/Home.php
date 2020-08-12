@@ -624,7 +624,6 @@ class Home extends CI_Controller
   
       $ins = array(
         'user_id' => $user_data->user_id,
-        'kakao_id' => $user_data->kakao_id,
         'account' => '',
         'unregistered' => 0,
       );
@@ -635,7 +634,6 @@ class Home extends CI_Controller
   
       $ins = array(
         'user_id' => $user_data->user_id,
-        'kakao_id' => $user_data->kakao_id,
         'account' => '',
         'session_id' => $this->crud_model->get_session_id(),
         'ip' => $this->crud_model->get_session_ip(),

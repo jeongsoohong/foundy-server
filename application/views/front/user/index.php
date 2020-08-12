@@ -262,11 +262,11 @@
       success : function(res) {
         if (res.status === 'success') {
           alert(res.message);
-          console.log(res.message);
+          // console.log(res.message);
           window.location.href = res.redirect_url;
         } else {
           alert(res.message);
-          console.log(res.message);
+          // console.log(res.message);
           window.location.href = res.redirect_url;
         }
       },
@@ -298,9 +298,30 @@
       do_logout();
     }
   });
-
+  
   function do_user_unregister() {
-    $('#userUnregisterConfirmModal').modal('hide');
+    $.ajax({
+      url : '<?php echo base_url().'/home/unregister'; ?>',
+      dataType : 'json', // 받을 데이터 방식
+      success : function(res) {
+        if (res.status === 'success') {
+          alert(res.message);
+          window.location.href = base_url;
+        } else {
+          console.log(res.message);
+          alert(res.message);
+          // window.location.href = base_url;
+        }
+      },
+      error: function(xhr, status, error){
+        console.log(error);
+        // alert(error);
+        // window.location.href = base_url + 'home/login';
+      }
+    });
+  }
+
+  function do_kakao_unregister() {
     $.getScript("https://developers.kakao.com/sdk/js/kakao.min.js", function() {
       Kakao.init('8ee901a556539927d58b30a6bf21a781');
       if (!Kakao.Auth.getAccessToken()) {
@@ -309,30 +330,8 @@
         Kakao.API.request({
           url: '/v1/user/unlink',
           success: function(response) {
-            console.log(response);
-
-            var base_url = '<?php echo base_url(); ?>';
-
-            $.ajax({
-              url : base_url + '/home/unregister',
-              dataType : 'json', // 받을 데이터 방식
-              success : function(res) {
-                if (res.status === 'success') {
-                  alert(res.message);
-                  window.location.href = base_url;
-                } else {
-                  console.log(res.message);
-                  // alert(res.message);
-                  // window.location.href = base_url;
-                }
-              },
-              error: function(xhr, status, error){
-                console.log(error);
-                // alert(error);
-                // window.location.href = base_url + 'home/login';
-              }
-            });
-
+            // console.log(response);
+            do_user_unregister()
           },
           fail: function(error) {
             console.log(error);
@@ -353,7 +352,12 @@
         if (res.status === 'success') {
 
           if (res.message === '') {
-            do_user_unregister();
+            $('#userUnregisterConfirmModal').modal('hide');
+            if (login_type === 'kakao') {
+              do_kakao_unregister();
+            } else {
+              do_user_unregister();
+            }
           } else {
             $('#userUnregisterConfirmModal .modal-body .text-center').text(res.message);
             $('#userUnregisterConfirmModal').modal('show');
