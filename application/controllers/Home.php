@@ -53,7 +53,9 @@ class Home extends CI_Controller
       $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
       if ($user_data->unregister == 1 && $this->session->userdata('user_restore') != 'yes') {
         $this->session->sess_destroy();
-        $this->crud_model->alert_exit("(탈퇴회원) 탈퇴 후 7일간 로그인이 불가능합니다.", base_url().'home');
+        $this->crud_model->alert_exit("(탈퇴회원) 탈퇴 후 7일간 로그인이 불가능합니다.", base_url() . 'home');
+      } else if (isset($user_data) == false || empty($user_data) == true) {
+        $this->session->sess_destroy();
       } else {
         $this->session->set_userdata('user_data', json_encode($user_data));
       }
@@ -610,6 +612,13 @@ class Home extends CI_Controller
       $this->db->set('create_at', 'NOW()', false);
       $this->db->set('last_login_at', 'NOW()', false);
       $this->db->insert('user', $ins);
+      
+      if ($this->db->affected_rows() == 0) {
+        $result['status'] = 'fail';
+        $result['message'] = '관리자에게 문의 바랍니다(not inserted)';
+        echo json_encode($result);
+        exit;
+      }
   
       $user_id = $this->db->insert_id();
       $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
