@@ -613,7 +613,7 @@ class Home extends CI_Controller
       $this->db->set('last_login_at', 'NOW()', false);
       $this->db->insert('user', $ins);
       
-      if ($this->db->affected_rows() == 0) {
+      if ($this->db->affected_rows() <= 0) {
         $result['status'] = 'fail';
         $result['message'] = '관리자에게 문의 바랍니다(not inserted)';
         echo json_encode($result);
