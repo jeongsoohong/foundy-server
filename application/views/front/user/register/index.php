@@ -108,7 +108,7 @@
       processData: false,
       success : function(res) {
         console.log(res);
-        res = JSON.parse(res);
+        // res = JSON.parse(res);
         if (res.status === 'success') {
           alert(res.message);
           window.location.href = '<?php echo base_url(); ?>';

@@ -595,7 +595,6 @@ class Home extends CI_Controller
       }
   
       $ins = array(
-        'kakao_id' => 0,
         'user_type' => USER_TYPE_GENERAL,
         'username' => '',
         'nickname' => '',
