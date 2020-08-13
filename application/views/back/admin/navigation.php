@@ -18,13 +18,13 @@
             </li>
             <li <?php if($page_name=="slider"){?> class="active-sub"<?php } ?> >
               <a href="#">
-                <i class="fa fa-user"></i>
+                <i class="fa fa-sliders"></i>
                 <span class="menu-title">
-                  Main
+                  Slider
                 </span>
                 <i class="fa arrow"></i>
               </a>
-              <ul class="collapse <?php if($page_name=="blog"){ echo 'in'; } ?>" >
+              <ul class="collapse <?php if($page_name=="slider"){ echo 'in'; } ?>" >
                 <!--Menu list item-->
                 <li <?php if($page_name=="slider"){?> class="active-link" <?php } ?> >
                   <a href="<?php echo base_url(); ?>admin/slider/">
@@ -34,9 +34,27 @@
                 </li>
               </ul>
             </li>
+            <li <?php if($page_name=="email"){?> class="active-sub"<?php } ?> >
+              <a href="#">
+                <i class="fa fa-mail-forward"></i>
+                <span class="menu-title">
+                  이메일
+                </span>
+                <i class="fa arrow"></i>
+              </a>
+              <ul class="collapse <?php if($page_name=="email"){ echo 'in'; } ?>" >
+                <!--Menu list item-->
+                <li <?php if($page_name=="email"){?> class="active-link" <?php } ?> >
+                  <a href="<?php echo base_url(); ?>admin/email/">
+                    <i class="fa fa-circle fs_i"></i>
+                    이메일
+                  </a>
+                </li>
+              </ul>
+            </li>
             <li <?php if($page_name=="blog" || $page_name=="blog_category" ){?> class="active-sub"<?php } ?> >
               <a href="#">
-                <i class="fa fa-user"></i>
+                <i class="fa fa-bell"></i>
                 <span class="menu-title">
                   블로그
                 </span>
@@ -60,7 +78,7 @@
             </li>
             <li <?php if($page_name=="center"){ ?> class="active-sub"<?php } ?>>
               <a href="#">
-                <i class="fa fa-user"></i>
+                <i class="fa fa-spotify"></i>
                 <span class="menu-title">
                   센터 관리
                 </span>
@@ -84,7 +102,7 @@
             </li>
             <li <?php if($page_name=="teacher"){?> class="active-sub"<?php } ?>>
               <a href="#">
-                <i class="fa fa-user"></i>
+                <i class="fa fa-book"></i>
                 <span class="menu-title">
                   강사 관리
                 </span>
@@ -108,7 +126,7 @@
             </li>
             <li <?php if($page_name=="shop"){?> class="active-sub"<?php } ?>>
               <a href="#">
-                <i class="fa fa-user"></i>
+                <i class="fa fa-shopping-cart"></i>
                 <span class="menu-title">
                   샵 관리
                 </span>

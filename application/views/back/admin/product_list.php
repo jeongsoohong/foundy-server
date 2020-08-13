@@ -5,7 +5,8 @@
   }
 </style>
 <div class="panel-body" id="demo_s">
-  <table id="demo-table" class="table table-striped"  data-pagination="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-search="true" >
+  <table id="demo-table" class="table table-striped"
+         data-pagination="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-search="true" >
     <thead>
     <tr>
       <th><?php echo ('브랜드명');?></th>

@@ -107,7 +107,7 @@
       contentType: false,
       processData: false,
       success : function(res) {
-        console.log(res);
+        // console.log(res);
         res = JSON.parse(res);
         if (res.status === 'success') {
           alert(res.message);

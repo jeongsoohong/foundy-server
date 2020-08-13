@@ -972,17 +972,14 @@ QUERY;
     $this->db->update('teacher_video', $upd, $where);
     $this->db->update('center_teacher', $upd, $where);
 
-    if ($activate == true) {
-      $upd = array(
-        'teacher_name' => $teacher_data->name,
-        'activate' => 1
-      );
-    } else {
-      $upd = array(
-        'teacher_name' => 'Unknown',
-        'activate' => 0
-      );
+    $teacher_name = $teacher_data->name;
+    if (activate != 1) {
+      $teacher_name = 'Unknown';
     }
+    $upd = array(
+      'teacher_name' => $teacher_name,
+      'activate' => $activate
+    );
     $this->db->update('center_schedule', $upd, $where);
 
     $centers = $this->db->get_where('center_teacher', array('teacher_id' => $teacher_id))->result();

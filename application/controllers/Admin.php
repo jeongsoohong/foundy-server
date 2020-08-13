@@ -32,6 +32,8 @@ class Admin extends CI_Controller
     defined('IMG_WEB_PATH_BLOG')  OR define('IMG_WEB_PATH_BLOG', base_url().'uploads/blog_image/');
     defined('IMG_PATH_SLIDER')      OR define('IMG_PATH_SLIDER', '/web/public_html/uploads/slider_image/');
     defined('IMG_WEB_PATH_SLIDER')  OR define('IMG_WEB_PATH_SLIDER', base_url().'uploads/slider_image/');
+    defined('IMG_PATH_SERVER')      OR define('IMG_PATH_SERVER', '/web/public_html/uploads/server_image/');
+    defined('IMG_WEB_PATH_SERVER')  OR define('IMG_WEB_PATH_SERVER', base_url().'uploads/server_image/');
 
   }
 
@@ -517,8 +519,10 @@ QUERY;
     if ($para1 == 'list') {
 
       if ($para2 == 'approval') {
-        $this->db->order_by('center_id', 'desc');
-        $page_data['all_centers'] = $this->db->get_where('center', array('activate' => 0))->result_array();
+        $query = <<<QUERY
+select * from center where activate=0 or activate=2 order by center_id desc
+QUERY;
+        $page_data['all_centers'] = $this->db->query($query)->result_array();
       } else {
         $this->db->order_by('center_id', 'desc');
         $page_data['all_centers'] = $this->db->get_where('center', array('activate' => 1))->result_array();
@@ -550,19 +554,21 @@ QUERY;
       $user_id = $para3;
 
       $approval = $this->input->post('approval');
-      if ($approval == 'ok') {
-        $data['activate'] = 1;
+      if ($approval == '0') {
+        $activate = 0;
+      } else if ($approval == '1') {
+        $activate = 1;
       } else {
-        $data['activate'] = 0;
+        $activate = 2;
       }
 
       $query = <<<QUERY
-UPDATE center set activate={$data['activate']},approval_at=NOW() where center_id={$center_id}
+UPDATE center set activate={$activate},approval_at=NOW() where center_id={$center_id}
 QUERY;
       $this->db->query($query);
 
       $query = <<<QUERY
-UPDATE center_category set activate={$data['activate']} where center_id={$center_id}
+UPDATE center_category set activate={$activate} where center_id={$center_id}
 QUERY;
       $this->db->query($query);
 
@@ -586,22 +592,35 @@ UPDATE user set user_type={$user_type} where user_id={$user_id}
 QUERY;
         $this->db->query($query);
       }
+  
+//      if ($activate == 1) {
+//        $user_id = $this->db->get_where('center', array('center_id' => $center_id))->row()->user_id;
+//        $email = $this->db->get_where('user', array('user_id' => $user_id))->row()->email;
+//        $email_data = $this->email_model->get_center_approval_data();
+//        $email_data->to = $email;
+//        $this->email_model->sendmail($email_data);
+//      } else if($activate == 2) {
+//        $user_id = $this->db->get_where('center', array('center_id' => $center_id))->row()->user_id;
+//        $email = $this->db->get_where('user', array('user_id' => $user_id))->row()->email;
+//        $email_data = $this->email_model->get_center_reject_data();
+//        $email_data->to = $email;
+//        $this->email_model->sendmail($email_data);
+//      }
 
-//      echo "<script>alert('$center_id:$user_id:$user_type:$center_cnt:$user_data->user_type');</script>";
-//      exit;
       echo 'done';
-
-      //            $this->email_model->status_email('teacher', $teacher);
 
     }else {
       if ($para1 == 'approval_list') {
         $page_data['page_name'] = "center";
         $page_data['list_type'] = "approval";
-        $page_data['all_centers'] = $this->db->get_where('center', array('activate' => 0))->result_array();
+//        $query = <<<QUERY
+//select * from center where activate=0 or activate=2
+//QUERY;
+//        $page_data['all_centers'] = $this->db->query($query)->result_array();
       } else {
         $page_data['page_name'] = "center";
         $page_data['list_type'] = "";
-        $page_data['all_centers'] = $this->db->get_where('center', array('activate' => 1))->result_array();
+//        $page_data['all_centers'] = $this->db->get_where('center', array('activate' => 1))->result_array();
       }
       $this->load->view('back/index', $page_data);
     }
@@ -621,7 +640,11 @@ QUERY;
 
       if ($para2 == 'approval') {
         $this->db->order_by('teacher_id', 'desc');
-        $page_data['all_teachers'] = $this->db->get_where('teacher', array('activate' => 0))->result_array();
+        $query = <<<QUERY
+select * from teacher where activate=0 or activate=2 order by teacher_id desc
+QUERY;
+
+        $page_data['all_teachers'] = $this->db->query($query)->result_array();
       } else {
         $this->db->order_by('teacher_id', 'desc');
         $page_data['all_teachers'] = $this->db->get_where('teacher', array('activate' => 1))->result_array();
@@ -652,14 +675,33 @@ QUERY;
       $teacher_id = $para2;
       $user_id = $para3;
       $approval = $this->input->post('approval');
-
-      if ($approval == 'ok') {
+      if ($approval == '0') {
+        $activate = 0;
+      } else if ($approval == '1') {
         $activate = 1;
       } else {
-        $activate = 0;
+        $activate = 2;
       }
 
       $this->crud_model->do_teacher_activate($teacher_id, $user_id, $activate);
+      
+//      if ($activate == 1) {
+//
+//        $user_id = $this->db->get_where('teacher', array('teacher_id' => $teacher_id))->row()->user_id;
+//        $email = $this->db->get_where('user', array('user_id' => $user_id))->row()->email;
+//        $email_data = $this->email_model->get_teacher_approval_data();
+//        $email_data->to = $email;
+//        $this->email_model->sendmail($email_data);
+//
+//      } else if($activate == 2) {
+//
+//        $user_id = $this->db->get_where('teacher', array('teacher_id' => $teacher_id))->row()->user_id;
+//        $email = $this->db->get_where('user', array('user_id' => $user_id))->row()->email;
+//        $email_data = $this->email_model->get_teacher_reject_data();
+//        $email_data->to = $email;
+//        $this->email_model->sendmail($email_data);
+//
+//      }
 
       echo 'done';
 
@@ -748,7 +790,6 @@ QUERY;
       $this->db->query($query);
 
       echo 'done';
-      //            $this->email_model->status_email('teacher', $teacher);
 
     } elseif ($type == 'edit') {
 
@@ -975,6 +1016,14 @@ UPDATE user set user_type={$user_type} where user_id={$user_id}
 QUERY;
         }
         $this->db->query($query);
+ 
+//        if ($data['activate'] == 1) {
+//          $email = $this->db->get_where('shop', array('shop_id' => $shop_id))->row()->email;
+//          $email_data = $this->email_model->get_center_approval_data();
+//          $email_data->to = $email;
+//          $this->email_model->sendmail($email_data);
+//        }
+        
         echo 'done';
 
       } else if ($type == 'view') {
@@ -1252,5 +1301,178 @@ QUERY;
     }
 
   }
+  
+  function email($para1 = '', $para2 = '')
+  {
+    // for login
+    $page_data['control'] = "admin";
+    
+    if ($this->is_logged() == false) {
+      redirect(base_url() . 'admin');
+    }
+    
+    $type = $para1;
+    
+    if ($type == 'add') {
+      
+      $email = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_DEFAULT))->row();
+      if (empty($email) == true) {
+        $ins = array(
+          'type' => SERVER_EMAIL_TYPE_DEFAULT,
+          'type_desc' => '',
+          'from' => '',
+          'from_name' => '',
+          'subject' => '',
+          'email_body' => '',
+          'substitute_Str' => '',
+          'mailtype' => '',
+          'activate' => 0,
+        );
+        $this->db->set('create_at', 'NOW()', false);
+        $this->db->set('modified_at', 'NOW()', false);
+        $this->db->set('approval_at', 'NOW()', false);
+        
+        $this->db->insert('server_email');
+        
+        $email_id = $this->db->insert_id();
+      } else {
+        $email_id = $email->email_id;
+      }
+      
+      $page_data['email_id'] = $email_id;
+      
+      $this->load->view('back/admin/email_add', $page_data);
+      
+    } elseif ($type == 'do_add') {
+      
+      $email_id = $para2;
+      
+      $data['type'] = $this->input->post('type');
+      $data['type_desc'] = $this->db->get_where('category_email', array('type' => $data['type']))->row()->desc;
+      $data['subject'] = $this->input->post('subject');
+      $data['from'] = $this->input->post('from');
+      $data['from_name'] = $this->input->post('from_name');
+      $data['email_body'] = $this->input->post('email_body');
+      $data['substitute_str'] = $this->input->post('substitute_str');
+      $data['mailtype'] = $this->input->post('mailtype');
+      $data['activate'] = 0;
+      
+      $this->db->set('create_at', 'NOW()', false);
+      $this->db->set('modified_at', 'NOW()', false);
+      $where = array('email_id' => $email_id);
+      $this->db->update('server_email', $data, $where);
+  
+      $email_body = $this->input->post('email_body');
+      $files = 'email_'.$email_id.'_*.*';
+      $this->crud_model->del_upload_image(IMG_WEB_PATH_SERVER, IMG_PATH_SERVER, $email_body, $files);
 
+      echo 'done';
+    
+    } else if ($type == 'approval') { // 안씀
+      
+      $email_id = $para2;
+      
+      $page_data['email_id'] = $email_id;
+      $email = $this->db->get_where('server_email', array('email_id' => $email_id))->row();
+      $page_data['activate'] = $email->activate;
+      $this->load->view('back/admin/email_approval', $page_data);
+      
+    } else if ($type == 'approval_set') {
+      
+      $email_id = $para2;
+      $approval = $_GET['req'];
+      if ($approval == 'ok') {
+        $data['activate'] = 1;
+      } else {
+        $data['activate'] = 0;
+      }
+      
+      $query = <<<QUERY
+UPDATE server_email set activate={$data['activate']},approval_at=NOW() where email_id={$email_id}
+QUERY;
+      $this->db->query($query);
+      
+      echo 'done';
+      
+    } elseif ($type == 'edit') {
+      
+      $email_id = $para2;
+      $page_data['email'] = $this->db->get_where('server_email', array('email_id' => $email_id))->row();
+      $this->load->view('back/admin/email_edit', $page_data);
+      
+    } elseif ($type == 'update') {
+      
+      $email_id = $para2;
+  
+      $data['type'] = $this->input->post('type');
+      $data['type_desc'] = $this->db->get_where('category_email', array('type' => $data['type']))->row()->desc;
+      $data['subject'] = $this->input->post('subject');
+      $data['from'] = $this->input->post('from');
+      $data['from_name'] = $this->input->post('from_name');
+      $data['email_body'] = $this->input->post('email_body');
+      $data['substitute_str'] = $this->input->post('substitute_str');
+      $data['mailtype'] = $this->input->post('mailtype');
+  
+      $this->db->set('modified_at', 'NOW()', false);
+      
+      $where = array('email_id' => $email_id);
+      $this->db->update('server_email', $data, $where);
+  
+      $email_body = $this->input->post('email_body');
+      $files = 'email_'.$email_id.'_*.*';
+      $this->crud_model->del_upload_image(IMG_WEB_PATH_SERVER, IMG_PATH_SERVER, $email_body, $files);
+  
+      echo 'done';
+  
+    } elseif ($para1 == 'upload_image') {
+  
+      $email_id = $para2;
+  
+      if (isset($_FILES["file"])) {
+        $error = $this->crud_model->file_validation($_FILES['file'], false);
+        if ($error != UPLOAD_ERR_OK) {
+          echo json_encode(array('success' => false, 'error' => $error));
+        } else {
+          $time = gettimeofday();
+          $file_name = 'email_' . $email_id . '_' . $time['sec'] . $time['usec'] . '.jpg';
+          $this->crud_model->upload_image(IMG_PATH_SERVER, $file_name, $_FILES["file"], 400, 0, false, true);
+          echo json_encode(array('success' => true, 'filename' => $file_name));
+        }
+      } else {
+        echo json_encode(array('success' => false, 'error' => 4));
+      }
+      
+    } elseif ($type == 'delete') {
+      
+      $email_id = $para2;
+      $this->db->where('email_id', $email_id);
+      $this->db->delete('server_email');
+      echo 'done';
+    
+    } elseif ($type == 'view') {
+      
+      $email_id = $para2;
+      $email = $this->db->get_where('server_email', array('email_id' => $email_id))->row();
+      $page_data['email'] = $email;
+      $this->load->view('back/admin/email_view', $page_data);
+      
+    } elseif ($type == 'list') {
+    
+      $type = SERVER_EMAIL_TYPE_DEFAULT;
+      $query = <<<QUERY
+select * from server_email where type > {$type} order by email_id desc
+QUERY;
+
+      $page_data['emails'] = $this->db->query($query)->result();
+      $this->load->view('back/admin/email_list', $page_data);
+      
+    } else {
+      
+      $page_data['page_name'] = "email";
+      $page_data['emails'] = $this->db->get('server_email')->result();
+      $this->load->view('back/index', $page_data);
+      
+    }
+    
+  }
 }

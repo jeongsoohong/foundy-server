@@ -50,9 +50,9 @@
           </div>
           <div class="col-sm-12 title" style="display: flex; background-color: #ffffff; padding: 10px 15px; height: 40px font-weight: 400; color: #232323">
             <div class="forgot-password" style="text-align: left; width: 50%; font-size: 12px; line-height: 20px;">
-              <a href="javascript:void(0)">
-                <u>비밀번호 찾기</u>
-              </a>
+<!--              <a href="javascript:void(0)" onclick="open_forget_password()">-->
+<!--                <u>비밀번호 찾기</u>-->
+<!--              </a>-->
             </div>
             <div class="option" style="text-align: right; width: 50%; font-size: 12px; line-height: 20px;">
               <a class="media-link" href="<?php echo base_url(); ?>home/register">
@@ -122,8 +122,83 @@
     </div>
   </div>
 </div>
+<div class="modal fade" id="forgetPwModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="find-modal-title" id="myModalLabel">비밀번호 찾기</h4>
+      </div>
+      <div class="modal-body" id="forget-password-modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-theme-sm" data-dismiss="modal"">취소</button>
+        <button type="button" class="btn btn-dark btn-theme-sm" onclick="reset_password()" style="background-color: black; color:white; text-transform: none; font-weight: 400;"">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
 <script type="text/javascript">
+  
+  function reset_password() {
+    event.preventDefault();
+    
+    let email = $('#forget_email').val();
+    let approval_code = $('#approval_code').val();
+    
+    let formData = new FormData();
+    formData.append('email', email);
+    formData.append('approval_code', approval_code);
+  
+    $.ajax({
+      url: '<?php echo base_url(); ?>' + 'home/login/forget', // form action url
+      type: 'POST', // form submit method get/post
+      dataType: 'html', // request type html/json/xml
+      data: formData, // serialize form data
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function (data) {
+        if (data === 'done' || data.search('done') !== -1) {
+          var text = '<strong>성공하였습니다</strong>';
+          notify(text,'success','bottom','right');
+          setTimeout(function(){window.location.reload(true);}, 1000);
+        } else {
+          var text = '<strong>실패하였습니다</strong>' + data;
+          notify(text,'warning','bottom','right');
+        }
+      },
+      error: function (e) {
+        console.log(e)
+      }
+    });
+  
+  }
+  
+  function close_forget_password() {
+    let list = $('#forget-password-modal-body');
+    list.html('');
+    $('#forgetPwModal').modal('hide');
+  }
+  
+  function open_forget_password() {
+    let list = $('#forget-password-modal-body');
+    $.ajax({
+      url: '<?php echo base_url().'home/login/forget_form'; ?>',
+      beforeSend: function() {
+        list.html(''); // change submit button text
+      },
+      success: function(data) {
+        list.html('');
+        list.html(data).fadeIn();
+        $('#forgetPwModal').modal('show');
+      },
+      error: function(e) {
+        console.log(e)
+      }
+    });
+  }
   
   function search_ship_modal() {
     $('#searchShipModal').modal('show');

@@ -31,9 +31,9 @@
           <a class="btn btn-edit btn-xs btn-labeled fa fa-wrench" data-toggle="tooltip" onclick="ajax_set_full('edit','<?php echo ('edit_blog'); ?>','정상적으로 수정되었습니다!','blog_edit','<?php echo $slider->slider_id; ?>');proceed('to_list');" data-original-title="Edit" data-container="body">
             수정
           </a>
-          <a class="btn <?php if ($slider->activate) {echo 'btn-warning';}else{echo 'btn-success';}?> btn-xs btn-labeled fa fa-check" data-toggle="tooltip"
+          <a class="btn btn-warning btn-xs btn-labeled fa fa-check" data-toggle="tooltip"
              onclick="confirmActivate(<?php echo $slider->slider_id;?>,<?php echo $slider->activate;?>)" data-original-title="View" data-container="body">
-            <?php if($slider->activate){echo 'inactivate';}else{echo 'activate';} ?>
+            상태변경
           </a>
           <a onclick="delete_confirm('<?php echo $slider->slider_id; ?>','정말 삭제하시겠습니까?')" class="btn btn-danger btn-xs btn-labeled fa fa-trash" data-toggle="tooltip" data-original-title="Delete" data-container="body">
             삭제
@@ -48,7 +48,8 @@
 </div>
 <script>
   function confirmActivate(id,activate) {
-    var msg = '상태를 변경하시겠습니까?';
+    let change_status = activate ? 'inactivate' : 'activate';
+    var msg = change_status + ' 상태로 변경하시겠습니까?';
     var req = activate ? 'no' : 'ok';
 
     msg = '<div class="modal-title">'+msg+'</div>';

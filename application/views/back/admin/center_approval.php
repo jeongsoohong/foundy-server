@@ -12,15 +12,18 @@
     <div class="form-group">
       <label class="col-sm-2 control-label" for="demo-hor-1"> </label>
       <div class="col-sm-2">
-        <h4>미승인</h4>
+        <h4>상태변경</h4>
       </div>
       <div class="col-sm-4 text-center">
-        <input id="pub_<?php echo $center_id; ?>"  data-size="switchery-lg" class='sw1 form-control'
-               name="approval" type="checkbox" value="ok" data-id='<?php echo $center_id; ?>' <?php if
-               ($activate == 1){ ?>checked<?php } ?> />
+        <input hidden id="center-activate"  data-size="switchery-lg" class='form-control' name="approval"
+               type="text" value="<?php echo $activate; ?>" data-id='<?php echo $center_id; ?>' style="display: none;"/>
+        <select class="chosen-choices form-control" id="center-activate-select" onchange="change_status();">
+          <option <?php if ($activate == 0) echo 'selected'; ?> value="0">신청</option>
+          <option <?php if ($activate == 1) echo 'selected'; ?> value="1">승인</option>
+          <option <?php if ($activate == 2) echo 'selected'; ?> value="2">반려</option>
+        </select>
       </div>
       <div class="col-sm-2">
-        <h4>승인</h4>
       </div>
     </div>
 
@@ -28,10 +31,13 @@
   </form>
 </div>
 <script type="text/javascript">
+  function change_status() {
+    let activate = $('#center-activate-select').find('option:checked').val();
+    $('#center-activate').val(activate);
+  }
+  
   $(document).ready(function() {
     set_switchery();
-  });
-  $(document).ready(function() {
     $("form").submit(function(e){
       //return false;
     });

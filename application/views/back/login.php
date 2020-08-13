@@ -61,10 +61,14 @@
         </div>
         <div class="row">
           <div class="col-xs-6 text-left">
-            <div class="pad-ver">
-<!--              <a href="#" onclick="ajax_modal('forget_form','forget_password','email_sent_with_new_password!','forget','')"-->
-<!--                 class="btn-link mar-rgt" style="color:#fff !important;">비밀번호 리셋</a>-->
-            </div>
+            <?php if ($control == 'shop') { ?>
+<!--              <div class="pad-ver">-->
+<!--                <a href="#" onclick="ajax_modal('forget_form','forget_password','email_sent_with_new_password!','forget','')"-->
+<!--                   class="btn-link mar-rgt" style="color:#fff !important;">-->
+<!--                  비밀번호 찾기-->
+<!--                </a>-->
+<!--              </div>-->
+            <?php } ?>
           </div>
           <div class="col-xs-6" style="margin-top : 10px;">
             <div class="form-group text-right main_login">

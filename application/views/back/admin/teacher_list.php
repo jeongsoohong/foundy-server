@@ -40,26 +40,24 @@
         <td><?php echo $row['name']; ?></td>
         <td><?php echo $row['about']; ?></td>
         <td>
-          <div class="label label-<?php if($row['activate'] == 1){ ?>purple<?php } else { ?>danger<?php }
-          ?>">
-            <?php echo $row['activate'] ? '승인' : '미승인'; ?>
+          <div class="label label-<?php if($row['activate'] == 0){echo 'purple';} elseif($row['activate'] == 1) {echo 'success';} else { echo 'danger';} ?>">
+            <?php echo $row['activate'] == 1 ? '승인' : ($row['activate'] == 2 ? '반려' : '신청'); ?>
           </div>
         </td>
         <td class="text-right">
           <a class="btn btn-dark btn-xs btn-labeled fa fa-user" data-toggle="tooltip"
-             onclick="ajax_modal('view','<?php echo ('view_profile'); ?>','<?php echo ('successfully_viewed!');
-             ?>','teacher_view','<?php echo $row['teacher_id']; ?>')" data-original-title="View"
+             onclick="ajax_modal('view','<?php echo ('view_profile'); ?>','<?php echo ('successfully_viewed!'); ?>','teacher_view','<?php echo $row['teacher_id']; ?>')" data-original-title="View"
              data-container="body">
-            <?php echo ('프로필');?>
+            프로필
           </a>
-          <a class="btn btn-<?php echo ($row['activate'] ? 'warning' : 'success');?> btn-xs btn-labeled fa fa-check" data-toggle="tooltip"
+          <a class="btn btn-warning btn-xs btn-labeled fa fa-check" data-toggle="tooltip"
              onclick="ajax_modal('approval','<?php echo ('teacher_approval'); ?>','<?php echo ('successfully_viewed!'); ?>','teacher_approval','<?php echo $row['teacher_id']; ?>')" data-original-title="View" data-container="body">
-            <?php echo ($row['activate'] ? '미승인' : '승인');?>
+            상태변경
           </a>
           <a onclick="delete_confirm('<?php echo $row['teacher_id']; ?>','<?php echo ('정말 삭제하시겠습니까?');
           ?>')" class="btn btn-xs btn-danger btn-labeled fa fa-trash" data-toggle="tooltip"
              data-original-title="Delete" data-container="body">
-            <?php echo ('삭제');?>
+            삭제
           </a>
         </td>
       </tr>
@@ -93,9 +91,6 @@
       <th><?php echo ('이메일');?></th>
     </tr>
     </thead>
-
-
-
     <tbody >
     <?php
     $i = 0;
