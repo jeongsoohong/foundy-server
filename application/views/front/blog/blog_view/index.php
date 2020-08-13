@@ -52,7 +52,7 @@
     max-width: 100%;
     margin: 0px !important;
   }
-  .post-body .post-excerpt p {
+  .post-body .post-excerpt {
     padding: 0 15px;
   }
   .page-section {

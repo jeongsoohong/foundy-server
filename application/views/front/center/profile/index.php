@@ -32,7 +32,7 @@
     line-height: 50px;
     background-color: #F3EFEB;
   }
-  #info .recent-post p {
+  #info .recent-post {
     padding: 0 15px;
   }
   #info .recent-post img {
