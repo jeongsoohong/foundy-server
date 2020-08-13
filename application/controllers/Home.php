@@ -1544,7 +1544,7 @@ QUERY;
       }
 
       if ($center_data->teacher_cnt > 0) {
-        $teacher_data = $this->db->get_where('center_teacher', array('center_id' => $center_data->center_id))->result();
+        $teacher_data = $this->db->get_where('center_teacher', array('center_id' => $center_data->center_id,'activate' => 1))->result();
       } else {
         $teacher_data = null;
       }

@@ -686,21 +686,17 @@ QUERY;
       $this->crud_model->do_teacher_activate($teacher_id, $user_id, $activate);
       
 //      if ($activate == 1) {
-//
 //        $user_id = $this->db->get_where('teacher', array('teacher_id' => $teacher_id))->row()->user_id;
 //        $email = $this->db->get_where('user', array('user_id' => $user_id))->row()->email;
 //        $email_data = $this->email_model->get_teacher_approval_data();
 //        $email_data->to = $email;
 //        $this->email_model->sendmail($email_data);
-//
 //      } else if($activate == 2) {
-//
 //        $user_id = $this->db->get_where('teacher', array('teacher_id' => $teacher_id))->row()->user_id;
 //        $email = $this->db->get_where('user', array('user_id' => $user_id))->row()->email;
 //        $email_data = $this->email_model->get_teacher_reject_data();
 //        $email_data->to = $email;
 //        $this->email_model->sendmail($email_data);
-//
 //      }
 
       echo 'done';

@@ -954,8 +954,11 @@ QUERY;
   function do_teacher_activate($teacher_id, $user_id, $activate) {
 
     $teacher_data = $this->db->get_where('teacher', array('teacher_id' => $teacher_id))->row();
-
-    if ($activate == true) {
+    if ($teacher_data->activate == $activate) {
+      return false;
+    }
+    
+    if ($activate == 1) {
       $teacher_cnt = 'teacher_cnt + 1';
     } else {
       $teacher_cnt = 'teacher_cnt - 1';
@@ -1001,7 +1004,7 @@ QUERY;
 
     $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
 
-    if ($activate == true) {
+    if ($activate == 1) {
       $user_type = ($user_data->user_type | USER_TYPE_TEACHER);
       $query = <<<QUERY
 UPDATE user set user_type={$user_type} where user_id={$user_id}
@@ -1015,6 +1018,7 @@ QUERY;
 
     $this->db->query($query);
 
+    return true;
   }
 
   function delete_teacher_data($user_data) {
