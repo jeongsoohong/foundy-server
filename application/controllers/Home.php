@@ -568,10 +568,15 @@ class Home extends CI_Controller
       }
   
       $email = $this->input->post('email');
-      $dup = $this->db->get_where('user', array('email' => $email))->row();
-      if (!empty($dup)) {
+      $user_data = $this->db->get_where('user', array('email' => $email))->row();
+      if ($user_data->unregister == 0) {
         $result['status'] = 'fail';
         $result['message'] = "중복된 이메일이 존재합니다.";
+        echo json_encode($result);
+        exit;
+      } else {
+        $result['status'] = 'fail';
+        $result['message'] = "탈퇴한 회원입니다. 계정 복원 / 삭제를 원하시면 해당 이메일로 로그인해주세요.";
         echo json_encode($result);
         exit;
       }
@@ -1031,7 +1036,7 @@ QUERY;
           $file_name = 'profile_'.$user_id.'.jpg';
           $error = $this->crud_model->file_validation($_FILES['profile_img'], false);
           if ($error == UPLOAD_ERR_OK) {
-            $this->crud_model->upload_image(IMG_PATH_PROFILE, $file_name, $_FILES["profile_img"], 100, 0, true, true);
+            $this->crud_model->upload_image(IMG_PATH_PROFILE, $file_name, $_FILES["profile_img"], 120, 0, true, true);
             $time=time();
             $profile_image_url = base_url().'uploads/profile_image/profile_'.$user_id.'_thumb.jpg?id='.$time;
             $this->db->set('profile_image_url', $profile_image_url);

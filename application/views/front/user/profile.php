@@ -72,7 +72,9 @@
             <tbody>
             <tr style="height: 20px">
               <td rowspan="3" style="text-align: center">
-                <div class="media-object img-bg" id="blah" style="margin: auto; border-radius: 30px; background-size: cover; background-position-x: center; background-position-y: top; width: 60px; height: 60px; background-image: url('<?php
+                <div class="media-object img-bg" id="blah" style="margin: auto; border-radius: 50%;
+                  background-size: cover; background-position-x: center; background-position-y: center;
+                  width: 60px; height: 60px; background-image: url('<?php
                 if (empty($profile_image_url) || strlen($profile_image_url) == 0) {
                   echo base_url() . 'uploads/icon/profile_icon.png';
                 } else {

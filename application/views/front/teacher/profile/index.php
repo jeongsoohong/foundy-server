@@ -76,13 +76,16 @@
                     <tbody>
                     <tr style="height: 20px;">
                       <td rowspan="3" style="text-align: center">
-                        <div class="media-object img-bg" id="blah" style="margin: auto; background-size: cover; background-position-x: center; background-position-y: top; width: 60px; height: 60px; border-radius: 30px; background-image: url('<?php
+                        <div class="media-object img-bg" id="blah"
+                             style="margin: auto; background-size: cover; background-position-x: center;
+                               background-position-y: center; width: 60px; height: 60px; border-radius: 50%; background-image: url('<?php
                         if (empty($user_data->profile_image_url)) {
                           echo base_url() . 'uploads/icon/profile_icon.png';
                         } else {
                           echo $user_data->profile_image_url;
                         }
-                        ?>'); "></div>
+                        ?>'); ">
+                        </div>
                       </td>
                       <td style="width: 65%; padding-left: 3px;">
                         <?php echo $teacher_data->name; ?>
