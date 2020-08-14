@@ -41,9 +41,11 @@ class Email_model extends CI_Model
     $data = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_TEACHER_REJECT, 'activate' => 1))->row();
     return $data;
   }
-  function get_shop_approval_data()
+  function get_shop_approval_data($brand, $email)
   {
     $data = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_SHOP_APPROVAL, 'activate' => 1))->row();
+    $data->email_body = str_replace('{{BRAND}}',$brand, $data->email_body);
+    $data->email_body = str_replace('{{EMAIL}}',$email, $data->email_body);
     return $data;
   }
   function get_user_approval_data($code)

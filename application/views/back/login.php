@@ -62,12 +62,12 @@
         <div class="row">
           <div class="col-xs-6 text-left">
             <?php if ($control == 'shop') { ?>
-<!--              <div class="pad-ver">-->
-<!--                <a href="#" onclick="ajax_modal('forget_form','forget_password','email_sent_with_new_password!','forget','')"-->
-<!--                   class="btn-link mar-rgt" style="color:#fff !important;">-->
-<!--                  비밀번호 찾기-->
-<!--                </a>-->
-<!--              </div>-->
+              <div class="pad-ver">
+                <a href="#" onclick="ajax_modal('forget_form','forget_password','email_sent_with_new_password!','forget','')"
+                   class="btn-link mar-rgt" style="color:#fff !important;">
+                  비밀번호 등록 / 재설정
+                </a>
+              </div>
             <?php } ?>
           </div>
           <div class="col-xs-6" style="margin-top : 10px;">
@@ -99,7 +99,7 @@
   var cancdd = "<?php echo ('취소되었습니다.'); ?>";
   var req = "<?php echo ('필수 입력 필드입니다.'); ?>";
   var sing = "<?php echo ('로그인 ...'); ?>";
-  var nps = "<?php echo ('새로운 비밀번호가 이메일로 전송되었습니다.'); ?>";
+  var nps = "<?php echo ('본인인증이 완료되었습니다. 해당 이메일 주소로 비밀번호가 발급되었으니 확인 후 로그인해 주세요.'); ?>";
   var lfil = "<?php echo ('로그인에 실패하셨습니다!'); ?>";
   var wrem = "<?php echo ('이메일이 잘못되었습니다. 다시 시도해주세요.'); ?>";
   var lss = "<?php echo ('환영합니다!'); ?>";

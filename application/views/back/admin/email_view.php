@@ -52,6 +52,10 @@
     border-right: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
   }
+  .custom_td img {
+    width: 100% !important;
+    height: auto !important;
+  }
 </style>
 <script type="text/javascript">
   $(document).ready(function(){

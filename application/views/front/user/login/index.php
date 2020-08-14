@@ -50,9 +50,9 @@
           </div>
           <div class="col-sm-12 title" style="display: flex; background-color: #ffffff; padding: 10px 15px; height: 40px font-weight: 400; color: #232323">
             <div class="forgot-password" style="text-align: left; width: 50%; font-size: 12px; line-height: 20px;">
-<!--              <a href="javascript:void(0)" onclick="open_forget_password()">-->
-<!--                <u>비밀번호 찾기</u>-->
-<!--              </a>-->
+              <a href="javascript:void(0)" onclick="open_forget_password()">
+                <u>비밀번호 찾기</u>
+              </a>
             </div>
             <div class="option" style="text-align: right; width: 50%; font-size: 12px; line-height: 20px;">
               <a class="media-link" href="<?php echo base_url(); ?>home/register">
@@ -161,9 +161,9 @@
       processData: false,
       success: function (data) {
         if (data === 'done' || data.search('done') !== -1) {
-          var text = '<strong>성공하였습니다</strong>';
+          var text = '<strong>본인인증이 완료되었습니다.</strong>' + ' 해당 이메일 주소로 비밀번호가 발급되었으니 확인 후 로그인해 주세요.';
           notify(text,'success','bottom','right');
-          setTimeout(function(){window.location.reload(true);}, 1000);
+          setTimeout(function(){window.location.reload(true);}, 3000);
         } else {
           var text = '<strong>실패하였습니다</strong>' + data;
           notify(text,'warning','bottom','right');
@@ -248,8 +248,8 @@
     formData.append('email', email);
     formData.append('password', password);
     
-    console.log(email);
-    console.log(password);
+    // console.log(email);
+    // console.log(password);
     
     $.ajax({
       url : '<?php echo base_url().'/home/login/email'; ?>',
