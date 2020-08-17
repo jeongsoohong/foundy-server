@@ -849,87 +849,194 @@ QUERY;
     }
   }
 
-  public function order()
+  public function order($para1 = '', $para2 = '')
   {
+  
     if (($page_data = $this->is_logged()) == false) {
       redirect(base_url() . 'shop');
     }
-
+  
     // for login
     $page_data['control'] = "shop";
 //    $user_id = $this->session->userdata('user_id');
     $shop_id = $this->session->userdata('shop_id');
-
-    $page = 1;
-    if (isset($_GET['page'])) {
-      $page = $_GET['page'];
-    }
-    $ship_status = SHOP_SHIPPING_STATUS_ORDER_COMPLETED;
-    if (isset($_GET['ship_status'])) {
-      $ship_status = $_GET['ship_status'];
-    }
-    $start_date = '';
-    $start_date_kor = '';
-    if (isset($_GET['start_date'])) {
-      $start_date = $_GET['start_date'];
-      $start_date_kor = date('Y-m-d H:i:s', strtotime($_GET['start_date']));
-    }
-    $end_date = '';
-    $end_date_kor = '';
-    if (isset($_GET['end_date'])) {
-      $end_date = $_GET['end_date'];
-      $end_date_kor = date('Y-m-d H:i:s', strtotime($_GET['end_date']));
-    }
-    $confirm_delay = 0;
-    if (isset($_GET['confirm_delay'])) {
-      $confirm_delay= $_GET['confirm_delay'];
-    }
-
-    $size = SHOP_ADMIN_ITEM_LIST_PAGE_SIZE;
-    $offset = $size*($page - 1);
-
-    $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
-
-    $select = "select a.shop_id,a.shop_name,b.email,c.item_name,d.*";
-    $from = "from shop a,user b,shop_product c, shop_purchase_product d";
-    $order_by = "order by purchase_product_id desc";
-    $limit = "limit {$offset},{$size}";
-    $where = "where a.shop_id=d.shop_id and b.user_id=d.user_id and c.product_id=d.product_id and d.shop_id={$shop_data->shop_id} and shipping_status={$ship_status}";
-    if (!empty($start_date) && !empty($end_date)) {
-      $where .= " and '{$start_date_kor}' <= d.purchase_at and d.purchase_at <= '{$end_date_kor}'";
+  
+    if ($para1 == 'update') {
+      
+      if ($para2 == 'ship') {
+        
+        $purchase_product_id = $_POST['purchase_product_id'];
+        $shipping_data = $_POST['shipping_data'];
+       
+        $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $purchase_product_id))->row();
+        $ins = array(
+          'purchase_product_id' => $purchase_product->purchase_product_id,
+          'shipping_status' => $purchase_product->shipping_status,
+          'shipping_status_code' => $this->crud_model->get_shipping_status_str($purchase_product->shipping_status),
+          'shipping_data' => $shipping_data,
+        );
+        $this->db->set('modified_at', 'NOW()', false);
+        $this->db->insert('shop_purchase_product_status', $ins);
+  
+        $this->db->set('shipping_data', $shipping_data);
+        $this->db->set('modified_at', 'NOW()', false);
+        $this->db->where('purchase_product_id', $purchase_product_id);
+        $this->db->update('shop_purchase_product');
+  
+        echo 'done';
+      
+      } else {
+  
+        $ship_status = $_POST['ship_status'];
+        $next_status = $_POST['next_status'];
+        $shipping_infos = json_decode($_POST['shipping_infos']);
+  
+        if ($next_status == SHOP_SHIPPING_STATUS_PREPARE || $next_status == SHOP_SHIPPING_STATUS_COMPLETED) {
+          $purchase_product_ids = array();
+          foreach ($shipping_infos as $info) {
+            $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $info->purchase_product_id))->row();
+            if ($purchase_product->shipping_status != $ship_status) {
+              continue;
+            }
+            $ins = array(
+              'purchase_product_id' => $purchase_product->purchase_product_id,
+              'shipping_status' => $next_status,
+              'shipping_status_code' => $this->crud_model->get_shipping_status_str($next_status),
+              'shipping_data' => '',
+            );
+            $this->db->set('modified_at', 'NOW()', false);
+            $this->db->insert('shop_purchase_product_status', $ins);
+      
+            $purchase_product_ids[] = $info->purchase_product_id;
+          }
+          if (count($purchase_product_ids) > 0) {
+            $this->db->where_in('purchase_product_id', $purchase_product_ids);
+            $this->db->set('shipping_status', $next_status);
+            $this->db->set('shipping_status_code', $this->crud_model->get_shipping_status_str($next_status));
+            $this->db->set('modified_at', 'NOW()', false);
+            $this->db->update('shop_purchase_product');
+          }
+        } else if ($next_status == SHOP_SHIPPING_STATUS_IN_PROGRESS) {
+          foreach ($shipping_infos as $info) {
+            $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $info->purchase_product_id))->row();
+            if ($purchase_product->shipping_status != $ship_status) {
+              continue;
+            }
+            $shipping_data = new stdClass();
+            $shipping_data->shipping_company = $info->shipping_company;
+            $shipping_data->shipping_code = $info->shipping_code;
+            $ins = array(
+              'purchase_product_id' => $purchase_product->purchase_product_id,
+              'shipping_status' => $next_status,
+              'shipping_status_code' => $this->crud_model->get_shipping_status_str($next_status),
+              'shipping_data' => json_encode($shipping_data),
+            );
+            $this->db->set('modified_at', 'NOW()', false);
+            $this->db->insert('shop_purchase_product_status', $ins);
+      
+            $this->db->set('shipping_status', $next_status);
+            $this->db->set('shipping_status_code', $this->crud_model->get_shipping_status_str($next_status));
+            $this->db->set('shipping_data', json_encode($shipping_data));
+            $this->db->set('modified_at', 'NOW()', false);
+            $this->db->where('purchase_product_id', $info->purchase_product_id);
+            $this->db->update('shop_purchase_product');
+          }
+        }
+  
+        echo 'done';
+      }
+  
     } else {
+  
+      $page = 1;
+      if (isset($_GET['page'])) {
+        $page = $_GET['page'];
+      }
+      $ship_status = SHOP_SHIPPING_STATUS_ORDER_COMPLETED;
+      if (isset($_GET['ship_status'])) {
+        $ship_status = $_GET['ship_status'];
+      }
       $start_date = '';
+      $start_date_kor = '';
+      if (isset($_GET['start_date'])) {
+        $start_date = $_GET['start_date'];
+        $start_date_kor = date('Y-m-d H:i:s', strtotime($_GET['start_date']));
+      }
       $end_date = '';
+      $end_date_kor = '';
+      if (isset($_GET['end_date'])) {
+        $end_date = $_GET['end_date'];
+        $end_date_kor = date('Y-m-d H:i:s', strtotime($_GET['end_date']));
+      }
+      $confirm_delay = false;
+      if (isset($_GET['confirm_delay'])) {
+        $confirm_delay = ($_GET['confirm_delay'] == '1');
+      }
+  
+      $size = SHOP_ADMIN_ITEM_LIST_PAGE_SIZE;
+      $offset = $size * ($page - 1);
+  
+      $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
+      $shop_shipping_compary = $this->db->get_where('shop_shipping_company', array('shop_id' => $shop_id))->result();
+  
+      $select = "select a.shop_id,a.shop_name,b.email,c.item_name,d.*";
+      $from = "from shop a,user b,shop_product c, shop_purchase_product d";
+      $order_by = "order by purchase_product_id desc";
+      $limit = "limit {$offset},{$size}";
+      $where = "where a.shop_id=d.shop_id and b.user_id=d.user_id and c.product_id=d.product_id and d.shop_id={$shop_data->shop_id} and shipping_status={$ship_status}";
+      if (($ship_status == SHOP_SHIPPING_STATUS_ORDER_COMPLETED || $ship_status == SHOP_SHIPPING_STATUS_PREPARE) && $confirm_delay == true) {
+        $purchase_date = date('Y-m-d', strtotime('-1 days'));
+//      $this->crud_model->alert_exit($purchase_date);
+        $where .= " and d.purchase_at <= '{$purchase_date}'";
+      } else if (!empty($start_date) && !empty($end_date)) {
+        $where .= " and '{$start_date_kor}' <= d.purchase_at and d.purchase_at <= '{$end_date_kor}'";
+      } else {
+        $start_date = '';
+        $end_date = '';
+      }
+  
+      $query = $select . ' ' . $from . ' ' . $where. ' ' . $order_by . ' ' . $limit;
+  
+      $order_data = $this->db->query($query)->result();
+  
+      $select = "select count(*) as cnt";
+      $query = $select . ' ' . $from . ' ' . $where . ' ';
+  
+      $total_cnt = $this->db->query($query)->row()->cnt;
+  
+      $total = (int)($total_cnt / $size) + ($total_cnt % $size > 0 ? 1 : 0);
+      $prev = $page > 1 ? $page - 1 : '';
+      $next = $total > $page ? $page + 1 : '';
+  
+      $page_data['total_cnt'] = $total_cnt;
+      $page_data['total'] = $total;
+      $page_data['prev'] = $prev;
+      $page_data['page'] = $page;
+      $page_data['next'] = $next;
+  
+      if ($ship_status == SHOP_SHIPPING_STATUS_ORDER_COMPLETED) {
+        $next_status = SHOP_SHIPPING_STATUS_PREPARE;
+      } else if ($ship_status == SHOP_SHIPPING_STATUS_PREPARE) {
+        $next_status = SHOP_SHIPPING_STATUS_IN_PROGRESS;
+      } else if ($ship_status == SHOP_SHIPPING_STATUS_IN_PROGRESS) {
+        $next_status = SHOP_SHIPPING_STATUS_COMPLETED;
+      } else {
+        $next_status = SHOP_SHIPPING_STATUS_WAIT;
+      }
+  
+      $page_data['ship_status'] = $ship_status;
+      $page_data['next_status'] = $next_status;
+      $page_data['start_date'] = $start_date;
+      $page_data['end_date'] = $end_date;
+      $page_data['confirm_delay'] = $confirm_delay == true ? '1' : '0';
+  
+      $page_data['order_data'] = $order_data;
+      $page_data['shop_data'] = $shop_data;
+      $page_data['shop_shipping_company'] = $shop_shipping_compary;
+      $page_data['page_name'] = "order";
+      $this->load->view('back/shop/index', $page_data);
+    
     }
-
-    $query = $select . ' ' . $from . ' ' . $where. ' ' . $order_by . ' ' . $limit;
-
-    $order_data = $this->db->query($query)->result();
-
-    $select = "select count(*) as cnt";
-    $query = $select . ' ' . $from . ' ' . $where . ' ';
-
-    $total_cnt = $this->db->query($query)->row()->cnt;
-
-    $total = (int)($total_cnt / $size) + ($total_cnt % $size > 0 ? 1 : 0);
-    $prev = $page > 1 ? $page - 1 : '';
-    $next = $total > $page ? $page + 1 : '';
-
-    $page_data['total_cnt'] = $total_cnt;
-    $page_data['total'] = $total;
-    $page_data['prev'] = $prev;
-    $page_data['page'] = $page;
-    $page_data['next'] = $next;
-
-    $page_data['ship_status'] = $ship_status;
-    $page_data['start_date'] = $start_date;
-    $page_data['end_date'] = $end_date;
-    $page_data['confirm_delay'] = $confirm_delay;
-
-    $page_data['order_data'] = $order_data;
-    $page_data['shop_data'] = $shop_data;
-    $page_data['page_name'] = "order";
-    $this->load->view('back/shop/index', $page_data);
   }
 
   public function income()
