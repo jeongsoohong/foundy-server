@@ -944,8 +944,8 @@ QUERY;
       case SHOP_SHIPPING_STATUS_IN_PROGRESS: return '배송중';
       case SHOP_SHIPPING_STATUS_COMPLETED: return '배송완료';
       case SHOP_SHIPPING_STATUS_PURCHASE_COMPLETED: return '구매완료';
-      case SHOP_SHIPPING_STATUS_PURCHASE_CANCELED: return '구매취소(반품)';
-      case SHOP_SHIPPING_STATUS_PURCHASE_CANCELING: return '취소중(반품)';
+      case SHOP_SHIPPING_STATUS_PURCHASE_CANCELED: return '반품완료(구매취소)';
+      case SHOP_SHIPPING_STATUS_PURCHASE_CANCELING: return '반품중(구매취소중)';
       case SHOP_SHIPPING_STATUS_PURCHASE_CHANGED: return '교환완료';
       case SHOP_SHIPPING_STATUS_PURCHASE_CHANGING: return '교환중';
     }

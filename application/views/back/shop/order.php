@@ -167,15 +167,23 @@
           <div class="col-md-2">
             <?php if ($ship_status == SHOP_SHIPPING_STATUS_ORDER_COMPLETED) { ?>
               <button class="order-change-status btn-dark" disabled id="order-status-change-btn" onclick="change_status();">
-                <배송준비중>으로 변경
+                <<?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PREPARE); ?>>으로 변경
               </button>
             <?php } else if ($ship_status == SHOP_SHIPPING_STATUS_PREPARE) { ?>
               <button class="order-change-status btn-dark" disabled id="order-status-change-btn" onclick="change_status();">
-                <배송중>으로 변경
+                <<?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_IN_PROGRESS); ?>>으로 변경
               </button>
             <?php } else if ($ship_status == SHOP_SHIPPING_STATUS_IN_PROGRESS) { ?>
               <button class="order-change-status btn-dark" disabled id="order-status-change-btn" onclick="change_status();">
-                <배송완료>로 변경
+                <<?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_COMPLETED); ?>>으로 변경
+              </button>
+            <?php } else if ($ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CANCELING) { ?>
+              <button class="order-change-status btn-dark" disabled id="order-status-change-btn" onclick="change_status();">
+                <<?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PURCHASE_CANCELED); ?>>으로 변경
+              </button>
+            <?php } else if ($ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CHANGING) { ?>
+              <button class="order-change-status btn-dark" disabled id="order-status-change-btn" onclick="change_status();">
+                <<?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PURCHASE_CHANGED); ?>>으로 변경
               </button>
             <?php } else { ?>
             <?php } ?>
@@ -215,7 +223,7 @@
                 <td class="col-md-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
                 <td class="col-md-1"><?php echo $this->crud_model->get_product_shipping_free_str($order->free_shipping); ?></td>
                 <td class="col-md-1" style="width: 100%; margin: auto">
-                  <button class="btn btn-danger" style="font-size: 10px; width: auto; height: 30px; margin: auto">취소</button>
+                  <button class="btn btn-danger" style="font-size: 10px; width: auto; height: 30px; margin: auto">주문취소</button>
                 </td>
               </tr>
             <?php }?>
@@ -264,7 +272,7 @@
                   <input class="form-control shipping-code" name="shipping-code" style="font-size: 10px; width: auto; height: 30px; border: none;" placeholder="운송장번호"/>
                 </td>
                 <td class="col-md-1" style="width: 100%; margin: auto">
-                  <button class="btn btn-danger" style="font-size: 10px; width: auto; height: 30px; margin: auto">취소</button>
+                  <button class="btn btn-danger" style="font-size: 10px; width: auto; height: 30px; margin: auto">주문취소</button>
                 </td>
               </tr>
             <?php }?>
@@ -318,8 +326,8 @@
               </td>
               <td class="col-md-1" style="width: 100%; margin: auto">
                 <button class="btn btn-mint" onclick="change_shipping_data(this)" data-id="<?php echo $order->purchase_product_id; ?>"
-                        style="font-size: 10px; width: auto; height: 30px;margin: 0 1px;">송장수정</button>
-                <button class="btn btn-danger" style="font-size: 10px; width: auto; height: 30px; margin: auto">취소</button>
+                        style="font-size: 10px; width: auto; height: 30px;margin: auto;">송장수정</button>
+<!--                <button class="btn btn-danger" style="font-size: 10px; width: auto; height: 30px; margin: auto">반품</button>-->
               </td>
             </tr>
           <?php }?>
@@ -372,7 +380,10 @@
                   value="<?php echo $order->shipping_data->shipping_code; ?>"/>
                 </td>
                 <td class="col-md-1" style="width: 100%; margin: auto">
-                  <button class="btn btn-danger" style="font-size: 10px; width: auto; height: 30px; margin: auto">취소</button>
+                  <button class="btn btn-mint" onclick="open_cancel_modal(<?php echo $order->purchase_product_id; ?>)"
+                          style="font-size: 10px; width: auto; height: 30px;margin: 0 1px;">교환</button>
+                  <button class="btn btn-danger" onclick="open_cancel_modal(<?php echo $order->purchase_product_id; ?>)"
+                          style="font-size: 10px; width: auto; height: 30px; margin: auto">반품</button>
                 </td>
               </tr>
             <?php }?>
@@ -617,6 +628,12 @@
         console.log(e)
       }
     });
+  }
+  
+  let cancel_id = 0;
+  function open_cancel_modal(id) {
+    console.log(id);
+    candel_id = id;
   }
   function change_shipping_data(e) {
     let purchase_product_id =  $(e).data('id');

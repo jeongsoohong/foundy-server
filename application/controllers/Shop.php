@@ -1020,6 +1020,10 @@ QUERY;
         $next_status = SHOP_SHIPPING_STATUS_IN_PROGRESS;
       } else if ($ship_status == SHOP_SHIPPING_STATUS_IN_PROGRESS) {
         $next_status = SHOP_SHIPPING_STATUS_COMPLETED;
+      } else if ($ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CANCELING) {
+        $next_status = SHOP_SHIPPING_STATUS_PURCHASE_CANCELED;
+      } else if ($ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CHANGING) {
+        $next_status = SHOP_SHIPPING_STATUS_PURCHASE_CHANGED;
       } else {
         $next_status = SHOP_SHIPPING_STATUS_WAIT;
       }
