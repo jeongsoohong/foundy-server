@@ -790,6 +790,7 @@ QUERY;
           $this->db->insert('shop_product', $data);
   
           // for update
+          $this->db->set('product_code', $product_code);
           $this->db->set('status', SHOP_PRODUCT_STATUS_REQUEST);
           $this->db->set('brand_name', $shop_data->shop_name);
         }
