@@ -56,15 +56,26 @@
     padding: 0 10px;
     height: 40px;
     width: 100px;
+    display: none;
   }
   .coupon-title {
     color: rgb(217,93,40);
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     width: 70%;
   }
-  .coupon-desc, .coupon-datetime {
+  .coupon-desc {
     font-size: 12px;
+    color: black;
+    width: 80%;
+  }
+  .coupon-benefit{
+    font-size: 12px;
+    color: black;
+    width: 80%;
+  }
+  .coupon-datetime {
+    font-size: 10px;
     color: black;
     width: 80%;
   }
@@ -74,11 +85,11 @@
     width: 20%;
   }
   .btn {
-    font-size: 12px;
+    font-size: 10px;
     padding: 6px;
     width: 80%;
     height: 24px;
-    line-height: 12px;
+    line-height: 10px;
     text-align: center;
     margin: auto;
     color: white;
@@ -92,7 +103,7 @@
   .coupon-table {
     width: 100%;
   }
-  .coupon-list ul li:last-child {
+  .coupon-list ul li:last-child, .my-coupon-list ul li:last-child {
     border: none;
   }
 </style>
