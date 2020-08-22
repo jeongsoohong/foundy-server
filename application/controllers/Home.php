@@ -645,16 +645,18 @@ class Home extends CI_Controller
   
       $email = $this->input->post('email');
       $user_data = $this->db->get_where('user', array('email' => $email))->row();
-      if ($user_data->unregister == 0) {
-        $result['status'] = 'fail';
-        $result['message'] = "중복된 이메일이 존재합니다.";
-        echo json_encode($result);
-        exit;
-      } else {
-        $result['status'] = 'fail';
-        $result['message'] = "탈퇴한 회원입니다. 계정 복원 / 삭제를 원하시면 해당 이메일로 로그인해주세요.";
-        echo json_encode($result);
-        exit;
+      if (isset($user_data) == true && empty($user_data) == false) {
+        if ($user_data->unregister == 0) {
+          $result['status'] = 'fail';
+          $result['message'] = "중복된 이메일이 존재합니다.";
+          echo json_encode($result);
+          exit;
+        } else {
+          $result['status'] = 'fail';
+          $result['message'] = "탈퇴한 회원입니다. 계정 복원 / 삭제를 원하시면 해당 이메일로 로그인해주세요.";
+          echo json_encode($result);
+          exit;
+        }
       }
   
       $password1 = $this->input->post('password1');
@@ -665,7 +667,6 @@ class Home extends CI_Controller
         echo json_encode($result);
         exit;
       }
-     
       
       $r = $this->crud_model->check_pw($password1);
       if ($r[0] == false) {
