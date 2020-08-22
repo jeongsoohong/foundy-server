@@ -45,12 +45,18 @@
   <!--SCRIPT-->
   <!--=================================================-->
   <!--jQuery [ REQUIRED ]-->
-  <script src="<?php echo base_url(); ?>template/back/js/jquery-2.1.1.min.js"></script>
+<!--  <script src="--><?php //echo base_url(); ?><!--template/back/js/jquery-2.1.1.min.js"></script>-->
+  <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
   <!--BootstrapJS [ RECOMMENDED ]-->
   <script src="<?php echo base_url(); ?>template/back/js/bootstrap.min.js"></script>
   <link href="<?php echo base_url(); ?>template/back/colorpicker/dist/css/bootstrap-colorpicker.min.css" rel="stylesheet">
   <!--Page Load Progress Bar [ OPTIONAL ]-->
   <script src="<?php echo base_url(); ?>template/back/colorpicker/dist/js/bootstrap-colorpicker.js"></script>
   <link rel="shortcut icon" href="<?php echo base_url(); ?>uploads/others/favicon.png">
-
+ 
+  <script src="//cdn.jsdelivr.net/momentjs/2.14.1/moment.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css">
 </head>

@@ -223,7 +223,8 @@
                 <td class="col-md-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
                 <td class="col-md-1"><?php echo $this->crud_model->get_product_shipping_free_str($order->free_shipping); ?></td>
                 <td class="col-md-1" style="width: 100%; margin: auto">
-                  <button class="btn btn-danger" style="font-size: 10px; width: auto; height: 30px; margin: auto">주문취소</button>
+                  <button class="btn btn-danger" onclick="open_req_order_modal(<?php echo $order->purchase_product_id; ?>, <?php echo SHOP_ORDER_REQ_TYPE_CANCEL; ?>)"
+                          style="font-size: 10px; width: auto; height: 30px; margin: auto"><?php echo $this->crud_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CANCEL); ?></button>
                 </td>
               </tr>
             <?php }?>
@@ -272,7 +273,8 @@
                   <input class="form-control shipping-code" name="shipping-code" style="font-size: 10px; width: auto; height: 30px; border: none;" placeholder="운송장번호"/>
                 </td>
                 <td class="col-md-1" style="width: 100%; margin: auto">
-                  <button class="btn btn-danger" style="font-size: 10px; width: auto; height: 30px; margin: auto">주문취소</button>
+                  <button class="btn btn-danger" onclick="open_req_order_modal(<?php echo $order->purchase_product_id; ?>, <?php echo SHOP_ORDER_REQ_TYPE_CANCEL; ?>)"
+                          style="font-size: 10px; width: auto; height: 30px; margin: auto"><?php echo $this->crud_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CANCEL); ?></button>
                 </td>
               </tr>
             <?php }?>
@@ -380,10 +382,62 @@
                   value="<?php echo $order->shipping_data->shipping_code; ?>"/>
                 </td>
                 <td class="col-md-1" style="width: 100%; margin: auto">
-                  <button class="btn btn-mint" onclick="open_cancel_modal(<?php echo $order->purchase_product_id; ?>)"
-                          style="font-size: 10px; width: auto; height: 30px;margin: 0 1px;">교환</button>
-                  <button class="btn btn-danger" onclick="open_cancel_modal(<?php echo $order->purchase_product_id; ?>)"
-                          style="font-size: 10px; width: auto; height: 30px; margin: auto">반품</button>
+                  <button class="btn btn-mint" onclick="open_req_order_modal(<?php echo $order->purchase_product_id; ?>, <?php echo SHOP_ORDER_REQ_TYPE_CHANGE; ?>)"
+                          style="font-size: 10px; width: auto; height: 30px; margin: auto"><?php echo $this->crud_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CHANGE); ?></button>
+                  <button class="btn btn-danger" onclick="open_req_order_modal(<?php echo $order->purchase_product_id; ?>, <?php echo SHOP_ORDER_REQ_TYPE_RETURN; ?>)"
+                          style="font-size: 10px; width: auto; height: 30px; margin: auto"><?php echo $this->crud_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_RETURN); ?></button>
+                </td>
+              </tr>
+            <?php }?>
+            </tbody>
+          <?php } else if ($ship_status == SHOP_SHIPPING_STATUS_ORDER_CANCELED ||
+          $ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CHANGING ||
+            $ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CHANGED||
+            $ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CANCELED||
+          $ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CANCELING) {
+            if ($ship_status == SHOP_SHIPPING_STATUS_ORDER_CANCELED) {
+              $req_type = SHOP_ORDER_REQ_TYPE_CANCEL;
+            } else if ($ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CHANGING || $ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CHANGED) {
+                $req_type = SHOP_ORDER_REQ_TYPE_CHANGE;
+            } else if ($ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CANCELING || $ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CANCELED) {
+              $req_type = SHOP_ORDER_REQ_TYPE_RETURN;
+            }
+            ?>
+            <thead>
+            <tr>
+              <th class="col-md-1">
+                <input class="form-control" id="item-list-all" type="checkbox" name="list_all" onchange="check_all()"/>
+              </th>
+              <th class="col-md-1">구매번호/날짜</th>
+              <th class="col-md-1">주문자</th>
+              <th class="col-md-2">상품명/옵션</th>
+              <th class="col-md-1">수량</th>
+              <th class="col-md-1">주문상태</th>
+              <th class="col-md-1"><?php echo $this->crud_model->get_order_req_type_str($req_type); ?> 일자</th>
+              <th class="col-md-3"><?php echo $this->crud_model->get_order_req_type_str($req_type); ?> 사유</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($order_data as $order) {
+              $order->shipping_data = json_decode($order->shipping_data);
+              ?>
+              <tr>
+                <td class="col-md-1">
+                  <input class="form-control item-list-checkbox" data-id="<?php echo $order->purchase_product_id; ?>"
+                         type="checkbox" name="list[]" onclick="check_change();" value="1"/>
+                </td>
+                <td class="col-md-1 purchase-code" data-code="<?php echo $order->purchase_code; ?>">
+                  <?php echo $order->purchase_code; ?> /<br><?php echo $order->purchase_at; ?>
+                </td>
+                <td class="col-md-1"><?php echo $order->email; ?></td>
+                <td class="col-md-2"><?php echo $order->item_name; ?></td>
+                <td class="col-md-1"><?php echo $order->total_purchase_cnt; ?></td>
+                <td class="col-md-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
+                <td class="col-md-1">
+                  <?php echo $order->canceled_at; ?>
+                </td>
+                <td class="col-md-3">
+                  <?php echo $order->cancel_reason; ?>
                 </td>
               </tr>
             <?php }?>
@@ -432,6 +486,31 @@
       </ul>
     </div>
     <div class="col-md-4">
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="reqOrderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="width: 5px; padding: 0 15px">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="req-title">
+        </h4>
+      </div>
+      <div class="modal-body" style="padding-top: 0 !important;">
+        <div class="req-reason-body">
+          <label style="width: 100%; font-size: 16px;">
+            사유
+            <textarea rows="10" data-height="500" name='req_reason' id='req-reason' class="form-control" wrap="hard"></textarea>
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer" style="display: block;">
+        <button type="button" class="btn btn-theme btn-theme-sm" style="text-transform: none; background-color: black; color:white; width:20%; font-weight: 400;"
+                onclick="order_req();">확인</button>
+      </div>
     </div>
   </div>
 </div>
@@ -630,10 +709,84 @@
     });
   }
   
-  let cancel_id = 0;
-  function open_cancel_modal(id) {
+  let req_id = 0;
+  let req_type = <?php echo SHOP_ORDER_REQ_TYPE_DEFAULT; ?>;
+  function open_req_order_modal(id, type) {
     console.log(id);
-    candel_id = id;
+    req_id = id;
+    req_type = type;
+    
+    if (type === <?php echo SHOP_ORDER_REQ_TYPE_CANCEL; ?>) {
+      $('#req-title').text('<?php echo $this->crud_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CANCEL); ?> 신청')
+    } else if (type === <?php echo SHOP_ORDER_REQ_TYPE_CHANGE; ?>) {
+      $('#req-title').text('<?php echo $this->crud_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CHANGE); ?> 신청')
+    } else if (type === <?php echo SHOP_ORDER_REQ_TYPE_RETURN; ?>) {
+      $('#req-title').text('<?php echo $this->crud_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_RETURN); ?> 신청')
+    } else {
+      return false;
+    }
+    
+    $('#reqOrderModal').modal('show');
+    return true;
+  }
+  function order_req() {
+    let req_reason = $('#req-reason').val();
+    
+    console.log(req_id);
+    console.log(req_type);
+    console.log(req_reason);
+    
+    let formData = new FormData();
+    formData.append('req_id', req_id);
+    formData.append('req_type', req_type);
+    formData.append('req_reason', req_reason);
+  
+    $.ajax({
+      url: '<?php echo base_url(); ?>shop/order/req',
+      type: 'post', // form submit method get/post
+      dataType: 'html',
+      data: formData,
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function (data) {
+        console.log(data);
+        if (data === 'done' || data.search('done') !== -1) {
+          $.notify({
+            message: '신청되었습니다.',
+            icon: 'fa fa-check'
+          }, {
+            type: 'success',
+            timer: 1000,
+            delay: 2000,
+            animate: {
+              enter: 'animated lightSpeedIn',
+              exit: 'animated lightSpeedOut'
+            }
+          });
+          setTimeout(function(){location.reload();}, 1000);
+        } else {
+          var title = '<strong>실패하였습니다</strong>';
+          $.notify({
+            title: title,
+            message: data,
+            icon: 'fa fa-check'
+          }, {
+            type: 'warning',
+            timer: 1000,
+            delay: 5000,
+            animate: {
+              enter: 'animated lightSpeedIn',
+              exit: 'animated lightSpeedOut'
+            }
+          });
+        }
+      },
+      error: function (e) {
+        console.log(e);
+      }
+    });
+  
   }
   function change_shipping_data(e) {
     let purchase_product_id =  $(e).data('id');

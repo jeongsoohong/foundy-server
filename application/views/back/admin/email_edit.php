@@ -78,7 +78,7 @@
         </div>
         <div class="col-md-1">
           <span class="btn btn-success btn-md btn-labeled fa fa-upload pull-right enterer"
-                onclick="form_submit('email_add','정상적으로 업로드되었습니다!');proceed('to_add');" >업로드</span>
+                onclick="form_submit('email_edit','정상적으로 업로드되었습니다!');proceed('to_add');" >업로드</span>
         </div>
       </div>
     </div>

@@ -78,7 +78,7 @@
         // console.log($(".purchase-list ul li").length % 10);
 
         var listCnt = $(".purchase-list ul li").length;
-        if ( listCnt === 0 || listCnt % 2 !== 0 || prevCnt === listCnt) {
+        if ( listCnt === 0 || listCnt % <?php echo SHOP_PRODUCT_PURCHASE_LIST_PAGE_SIZE; ?> !== 0 || prevCnt === listCnt) {
           $('#view_more').hide();
         } else {
           $('#view_more').show();

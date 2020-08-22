@@ -4584,4 +4584,106 @@ QUERY;
 
     }
   }
+  
+  function coupon($para1 = '', $para2 = '', $para3 = '')
+  {
+    if ($this->is_login() == false) {
+      $this->crud_model->alert_exit('로그인 후 이용이 가능합니다.', base_url().'home');
+    }
+    
+    $user_id = $this->session->userdata('user_id');
+  
+    if ($para1 == 'list') {
+      if ($para2 == 'my') {
+        $page = $_GET['page'];
+        $limit = COUPON_LIST_PAGE_SIZE;
+        $offset = $limit * ($page - 1);
+        $query = <<<QUERY
+select * from user_coupon where user_id={$user_id} order by user_coupon_id desc limit {$offset},{$limit}
+QUERY;
+        $coupons = $this->db->query($query)->result();
+        $page_data['coupons'] = $coupons;
+        $this->load->view('front/coupon/my_coupon_list', $page_data);
+      } else {
+        $page = $_GET['page'];
+        $limit = COUPON_LIST_PAGE_SIZE;
+        $offset = $limit * ($page - 1);
+        $query = <<<QUERY
+select * from server_coupon where activate=1 and start_at < NOW() and NOW() < end_at order by coupon_id desc limit {$offset},{$limit}
+QUERY;
+        $coupons = $this->db->query($query)->result();
+        $page_data['coupons'] = $coupons;
+        $page_data['user_id'] = $user_id;
+        $this->load->view('front/coupon/coupon_list', $page_data);
+      }
+  
+    } else if ($para1 == 'receive') {
+      
+      $coupon_id = $_GET['id'];
+     
+      $now = date('Y-m-d H:i:s');
+      $coupon_data = $this->db->get_where('server_coupon', array('coupon_id' => $coupon_id))->row();
+      if ($coupon_data->start_at > $now || $now > $coupon_data->end_at) {
+        echo '발급 기간이 지났습니다.';
+        exit;
+      }
+      if ($coupon_data->activate == 0) {
+        echo '발급 중지된 쿠폰입니다.';
+        exit;
+      }
+      $received = $this->db->get_where('user_coupon', array('user_id' => $user_id, 'coupon_id' => $coupon_id))->row();
+      if (isset($received) == true && empty($received) == false) {
+        echo '이미 발급 받은 쿠폰입니다.';
+        exit;
+      }
+  
+      if ($coupon_data->user_type == COUPON_USER_TYPE_REGISTER) {
+        if ($coupon_data->coupon_count > 0) {
+          $query = <<<QUERY
+select user_id from user order by user_id asc limit 0,{$coupon_data->coupon_count}
+QUERY;
+          $user_ids = $this->db->query($query)->result();
+          
+          $where_in = false;
+          foreach ($user_ids as $u) {
+//            $this->crud_model->alert_exit(json_encode($u));
+            if ($u->user_id == $user_id) {
+              $where_in = true;
+            }
+          }
+          if ($where_in == false) {
+            echo '쿠폰 발급 대상자가 아닙니다.';
+            exit;
+          }
+        }
+      }
+     
+      $coupon_code = sprintf('%s%010d%010d', date('ymdHis'), $user_id, $coupon_id);
+      $ins = array(
+        'user_id' => $user_id,
+        'coupon_code' => $coupon_code,
+        'coupon_id' => $coupon_id,
+        'coupon_type' => $coupon_data->coupon_type,
+        'coupon_benefit' => $coupon_data->coupon_benefit,
+        'coupon_title' => $coupon_data->coupon_title,
+        'coupon_desc' => $coupon_data->coupon_desc,
+        'coupon_img_url' => $coupon_data->coupon_img_url,
+        'used' => 0,
+        'use_at' => $coupon_data->use_at,
+      );
+      $this->db->set('create_at', 'NOW()', false);
+      $this->db->set('used_at', 'NOW()', false);
+      
+      $this->db->insert('user_coupon', $ins);
+   
+      echo 'done';
+      
+    } else {
+      $page_data['page_name'] = "coupon";
+      $page_data['asset_page'] = "user_profile";
+      $page_data['page_title'] = "coupon";
+      $this->load->view('front/index', $page_data);
+    }
+  }
+
 }

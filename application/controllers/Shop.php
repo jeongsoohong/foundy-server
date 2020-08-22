@@ -864,12 +864,12 @@ QUERY;
     $shop_id = $this->session->userdata('shop_id');
   
     if ($para1 == 'update') {
-      
+  
       if ($para2 == 'ship') {
-        
+    
         $purchase_product_id = $_POST['purchase_product_id'];
         $shipping_data = $_POST['shipping_data'];
-       
+    
         $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $purchase_product_id))->row();
         $ins = array(
           'purchase_product_id' => $purchase_product->purchase_product_id,
@@ -879,46 +879,21 @@ QUERY;
         );
         $this->db->set('modified_at', 'NOW()', false);
         $this->db->insert('shop_purchase_product_status', $ins);
-  
+    
         $this->db->set('shipping_data', $shipping_data);
         $this->db->set('modified_at', 'NOW()', false);
         $this->db->where('purchase_product_id', $purchase_product_id);
         $this->db->update('shop_purchase_product');
-  
+    
         echo 'done';
-      
+    
       } else {
-  
+    
         $ship_status = $_POST['ship_status'];
         $next_status = $_POST['next_status'];
         $shipping_infos = json_decode($_POST['shipping_infos']);
-  
-        if ($next_status == SHOP_SHIPPING_STATUS_PREPARE || $next_status == SHOP_SHIPPING_STATUS_COMPLETED) {
-          $purchase_product_ids = array();
-          foreach ($shipping_infos as $info) {
-            $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $info->purchase_product_id))->row();
-            if ($purchase_product->shipping_status != $ship_status) {
-              continue;
-            }
-            $ins = array(
-              'purchase_product_id' => $purchase_product->purchase_product_id,
-              'shipping_status' => $next_status,
-              'shipping_status_code' => $this->crud_model->get_shipping_status_str($next_status),
-              'shipping_data' => '',
-            );
-            $this->db->set('modified_at', 'NOW()', false);
-            $this->db->insert('shop_purchase_product_status', $ins);
-      
-            $purchase_product_ids[] = $info->purchase_product_id;
-          }
-          if (count($purchase_product_ids) > 0) {
-            $this->db->where_in('purchase_product_id', $purchase_product_ids);
-            $this->db->set('shipping_status', $next_status);
-            $this->db->set('shipping_status_code', $this->crud_model->get_shipping_status_str($next_status));
-            $this->db->set('modified_at', 'NOW()', false);
-            $this->db->update('shop_purchase_product');
-          }
-        } else if ($next_status == SHOP_SHIPPING_STATUS_IN_PROGRESS) {
+    
+        if ($next_status == SHOP_SHIPPING_STATUS_IN_PROGRESS) {
           foreach ($shipping_infos as $info) {
             $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $info->purchase_product_id))->row();
             if ($purchase_product->shipping_status != $ship_status) {
@@ -935,7 +910,7 @@ QUERY;
             );
             $this->db->set('modified_at', 'NOW()', false);
             $this->db->insert('shop_purchase_product_status', $ins);
-      
+        
             $this->db->set('shipping_status', $next_status);
             $this->db->set('shipping_status_code', $this->crud_model->get_shipping_status_str($next_status));
             $this->db->set('shipping_data', json_encode($shipping_data));
@@ -943,10 +918,95 @@ QUERY;
             $this->db->where('purchase_product_id', $info->purchase_product_id);
             $this->db->update('shop_purchase_product');
           }
+        } else {
+          $purchase_product_ids = array();
+          foreach ($shipping_infos as $info) {
+            $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $info->purchase_product_id))->row();
+            if ($purchase_product->shipping_status != $ship_status) {
+              continue;
+            }
+            $ins = array(
+              'purchase_product_id' => $purchase_product->purchase_product_id,
+              'shipping_status' => $next_status,
+              'shipping_status_code' => $this->crud_model->get_shipping_status_str($next_status),
+            );
+            $this->db->set('modified_at', 'NOW()', false);
+            $this->db->insert('shop_purchase_product_status', $ins);
+    
+            $purchase_product_ids[] = $info->purchase_product_id;
+          }
+          if (count($purchase_product_ids) > 0) {
+            $this->db->where_in('purchase_product_id', $purchase_product_ids);
+            $this->db->set('shipping_status', $next_status);
+            $this->db->set('shipping_status_code', $this->crud_model->get_shipping_status_str($next_status));
+            $this->db->set('modified_at', 'NOW()', false);
+            $this->db->update('shop_purchase_product');
+          }
         }
-  
+    
         echo 'done';
       }
+  
+    } else if ($para1 == 'req') {
+      
+      $purchase_product_id = $_POST['req_id'];
+      $req_type  = $_POST['req_type'];
+      $req_reason = $_POST['req_reason'];
+      
+      $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $purchase_product_id))->row();
+      
+      if ($req_type == SHOP_ORDER_REQ_TYPE_CANCEL) {
+        $next_status = SHOP_SHIPPING_STATUS_ORDER_CANCELED;
+        $canceled = 1;
+        
+        if ($purchase_product->shipping_status != SHOP_SHIPPING_STATUS_ORDER_COMPLETED && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_PREPARE) {
+          echo "잘못된 접근입니다.({$purchase_product->shipping_status})";
+          exit;
+        }
+      
+      } else if ($req_type == SHOP_ORDER_REQ_TYPE_CHANGE) {
+        $next_status = SHOP_SHIPPING_STATUS_PURCHASE_CHANGING;
+        $canceled = 0;
+        
+        if ($purchase_product->shipping_status != SHOP_SHIPPING_STATUS_COMPLETED) {
+          echo "잘못된 접근입니다.({$purchase_product->shipping_status})";
+          exit;
+        }
+  
+      } else if ($req_type == SHOP_ORDER_REQ_TYPE_RETURN) {
+        $next_status = SHOP_SHIPPING_STATUS_PURCHASE_CANCELING;
+        $canceled = 1;
+  
+        if ($purchase_product->shipping_status != SHOP_SHIPPING_STATUS_COMPLETED) {
+          echo "잘못된 접근입니다.({$purchase_product->shipping_status})";
+          exit;
+        }
+        
+      } else {
+        echo '잘못된 접근입니다.';
+        exit;
+      }
+  
+      $ins = array(
+        'purchase_product_id' => $purchase_product_id,
+        'shipping_status' => $next_status,
+        'shipping_status_code' => $this->crud_model->get_shipping_status_str($next_status),
+        'shipping_data' => $req_reason,
+      );
+      $this->db->set('modified_at', 'NOW()', false);
+      $this->db->insert('shop_purchase_product_status', $ins);
+
+      $upd = array(
+        'shipping_status' => $next_status,
+        'shipping_status_code' => $this->crud_model->get_shipping_status_str($next_status),
+        'canceled' => $canceled,
+        'cancel_reason' => $req_reason,
+      );
+      $this->db->set('canceled_at', 'NOW()', false);
+      $this->db->where('purchase_product_id', $purchase_product_id);
+      $this->db->update('shop_purchase_product', $upd);
+      
+      echo 'done';
   
     } else {
   

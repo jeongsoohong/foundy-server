@@ -1328,7 +1328,7 @@ QUERY;
         $this->db->set('modified_at', 'NOW()', false);
         $this->db->set('approval_at', 'NOW()', false);
         
-        $this->db->insert('server_email');
+        $this->db->insert('server_email', $ins);
         
         $email_id = $this->db->insert_id();
       } else {
@@ -1469,6 +1469,183 @@ QUERY;
       $this->load->view('back/index', $page_data);
       
     }
+  }
+  
+  function coupon($para1 = '', $para2 = '')
+  {
+    // for login
+    $page_data['control'] = "admin";
     
+    if ($this->is_logged() == false) {
+      redirect(base_url() . 'admin');
+    }
+    
+    $type = $para1;
+    
+    if ($type == 'add') {
+      
+      $coupon = $this->db->get_where('server_coupon', array('coupon_type' => COUPON_TYPE_DEFAULT))->row();
+      if (empty($coupon) == true) {
+        $ins = array(
+          'activate' => 0,
+          'user_type' => COUPON_USER_TYPE_DEFAULT,
+          'coupon_type' => COUPON_TYPE_DEFAULT,
+          'coupon_benefit' => 0,
+          'coupon_title' => '',
+          'coupon_desc' => '',
+          'coupon_img_url' => '',
+        );
+        $this->db->set('start_at', 'NOW()', false);
+        $this->db->set('end_at', 'NOW()', false);
+        $this->db->set('use_at', 'NOW()', false);
+        
+        $this->db->insert('server_coupon', $ins);
+        
+        $coupon_id = $this->db->insert_id();
+      } else {
+        $coupon_id = $coupon->coupon_id;
+      }
+      
+      $page_data['coupon_id'] = $coupon_id;
+      
+      $this->load->view('back/admin/coupon_add', $page_data);
+      
+    } else if ($type == 'do_add') {
+      
+      $coupon_id = $para2;
+  
+      $data['activate'] = 0;
+      $data['coupon_title'] = $this->input->post('coupon_title');
+      $data['user_type'] = $this->input->post('user_type');
+      $data['coupon_count'] = $this->input->post('coupon_count');
+      $data['coupon_type'] = $this->input->post('coupon_type');
+      $data['coupon_benefit'] = $this->input->post('coupon_benefit');
+      $data['coupon_desc'] = $this->input->post('coupon_desc');
+      $data['start_at'] = date('Y-m-d H:i:s', strtotime($this->input->post('start_at')));
+      $data['end_at'] = date('Y-m-d H:i:s', strtotime($this->input->post('end_at')));
+      $data['use_at'] = date('Y-m-d H:i:s', strtotime($this->input->post('use_at')));
+      
+      if ($data['user_type'] == COUPON_USER_TYPE_DEFAULT || $data['coupon_type'] == COUPON_TYPE_DEFAULT) {
+        echo '유저 / 쿠폰 타입을 정확히 입력해 주세요.';
+        exit;
+      }
+
+      $where = array('coupon_id' => $coupon_id);
+      $this->db->update('server_coupon', $data, $where);
+      
+//      $coupon_desc= $this->input->post('coupon_desc');
+//      $files = 'coupon_'.$coupon_id.'_*.*';
+//      $this->crud_model->del_upload_image(IMG_WEB_PATH_SERVER, IMG_PATH_SERVER, $coupon_desc, $files);
+      
+      echo 'done';
+      
+//    } else if ($type == 'approval') { // 안씀
+//
+//      $coupon_id = $para2;
+//
+//      $page_data['coupon_id'] = $coupon_id;
+//      $coupon = $this->db->get_where('server_coupon', array('coupon_id' => $coupon_id))->row();
+//      $page_data['activate'] = $coupon->activate;
+//      $this->load->view('back/admin/coupon_approval', $page_data);
+//
+    } else if ($type == 'approval_set') {
+      
+      $coupon_id = $para2;
+      $approval = $_GET['req'];
+      if ($approval == 'ok') {
+        $data['activate'] = 1;
+      } else {
+        $data['activate'] = 0;
+      }
+      
+      $query = <<<QUERY
+UPDATE server_coupon set activate={$data['activate']} where coupon_id={$coupon_id}
+QUERY;
+      $this->db->query($query);
+      
+      echo 'done';
+      
+    } elseif ($type == 'edit') {
+      
+      $coupon_id = $para2;
+      $page_data['coupon'] = $this->db->get_where('server_coupon', array('coupon_id' => $coupon_id))->row();
+      $this->load->view('back/admin/coupon_edit', $page_data);
+      
+    } elseif ($type == 'update') {
+      
+      $coupon_id = $para2;
+  
+      $data['coupon_title'] = $this->input->post('coupon_title');
+      $data['user_type'] = $this->input->post('user_type');
+      $data['coupon_count'] = $this->input->post('coupon_count');
+      $data['coupon_type'] = $this->input->post('coupon_type');
+      $data['coupon_benefit'] = $this->input->post('coupon_benefit');
+      $data['coupon_desc'] = $this->input->post('coupon_desc');
+      $data['start_at'] = date('Y-m-d H:i:s', strtotime($this->input->post('start_at')));
+      $data['end_at'] = date('Y-m-d H:i:s', strtotime($this->input->post('end_at')));
+      $data['use_at'] = date('Y-m-d H:i:s', strtotime($this->input->post('use_at')));
+  
+      if ($data['user_type'] == COUPON_USER_TYPE_DEFAULT || $data['coupon_type'] == COUPON_TYPE_DEFAULT) {
+        echo '유저 / 쿠폰 타입을 정확히 입력해 주세요.';
+        exit;
+      }
+  
+      $where = array('coupon_id' => $coupon_id);
+      $this->db->update('server_coupon', $data, $where);
+  
+//      $coupon_desc= $this->input->post('coupon_desc');
+//      $files = 'coupon_'.$coupon_id.'_*.*';
+//      $this->crud_model->del_upload_image(IMG_WEB_PATH_SERVER, IMG_PATH_SERVER, $coupon_desc, $files);
+      
+      echo 'done';
+      
+    } else if ($para1 == 'upload_image') {
+      
+      $coupon_id = $para2;
+      
+      if (isset($_FILES["file"])) {
+        $error = $this->crud_model->file_validation($_FILES['file'], false);
+        if ($error != UPLOAD_ERR_OK) {
+          echo json_encode(array('success' => false, 'error' => $error));
+        } else {
+          $time = gettimeofday();
+          $file_name = 'coupon_' . $coupon_id . '_' . $time['sec'] . $time['usec'] . '.jpg';
+          $this->crud_model->upload_image(IMG_PATH_SERVER, $file_name, $_FILES["file"], 400, 0, false, true);
+          echo json_encode(array('success' => true, 'filename' => $file_name));
+        }
+      } else {
+        echo json_encode(array('success' => false, 'error' => 4));
+      }
+      
+    } elseif ($type == 'delete') {
+      
+      $coupon_id = $para2;
+      $this->db->where('coupon_id', $coupon_id);
+      $this->db->delete('server_coupon');
+      echo 'done';
+      
+    } elseif ($type == 'view') {
+      
+      $coupon_id = $para2;
+      $coupon = $this->db->get_where('server_coupon', array('coupon_id' => $coupon_id))->row();
+      $page_data['coupon'] = $coupon;
+      $this->load->view('back/admin/coupon_view', $page_data);
+      
+    } elseif ($type == 'list') {
+      
+      $coupon_type = COUPON_TYPE_DEFAULT;
+      $query = <<<QUERY
+select * from server_coupon where coupon_type > {$coupon_type} order by coupon_id desc
+QUERY;
+      
+      $page_data['coupons'] = $this->db->query($query)->result();
+      $this->load->view('back/admin/coupon_list', $page_data);
+      
+    } else {
+      
+      $page_data['page_name'] = "coupon";
+      $this->load->view('back/index', $page_data);
+      
+    }
   }
 }

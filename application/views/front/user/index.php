@@ -34,7 +34,7 @@
           <ul class="pleft_nav">
             <a class="pnav_shop_wishlist" href="<?php echo base_url(); ?>home/shop?cat=wish&col=product_id&order=desc"><li>위시리스트</li></a>
             <a class="pnav_shop_orderlist" href="<?php echo base_url();?>home/shop/order"><li>주문내역</li></a>
-            <a class="pnav_coupon_box" href="javascript:void(0)"><li>쿠폰박스</li></a>
+            <a class="pnav_coupon_box" href="<?php echo base_url();?>home/coupon"><li>쿠폰박스</li></a>
           </ul>
           <div class="information-title" style="margin-bottom: 0px; margin-top: 0px;">신청</div>
           <ul class="pleft_nav">

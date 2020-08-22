@@ -52,6 +52,24 @@
                 </li>
               </ul>
             </li>
+            <li <?php if($page_name=="coupon"){?> class="active-sub"<?php } ?> >
+              <a href="#">
+                <i class="fa fa-apple"></i>
+                <span class="menu-title">
+                  쿠폰
+                </span>
+                <i class="fa arrow"></i>
+              </a>
+              <ul class="collapse <?php if($page_name=="coupon"){ echo 'in'; } ?>" >
+                <!--Menu list item-->
+                <li <?php if($page_name=="coupon"){?> class="active-link" <?php } ?> >
+                  <a href="<?php echo base_url(); ?>admin/coupon/">
+                    <i class="fa fa-circle fs_i"></i>
+                    쿠폰
+                  </a>
+                </li>
+              </ul>
+            </li>
             <li <?php if($page_name=="blog" || $page_name=="blog_category" ){?> class="active-sub"<?php } ?> >
               <a href="#">
                 <i class="fa fa-bell"></i>

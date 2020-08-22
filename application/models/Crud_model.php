@@ -936,7 +936,7 @@ QUERY;
   }
 
   function get_shipping_status_str($status) {
-    switch($status) {
+    switch ($status) {
       case SHOP_SHIPPING_STATUS_WAIT: return '입금대기';
       case SHOP_SHIPPING_STATUS_ORDER_COMPLETED: return '주문완료';
       case SHOP_SHIPPING_STATUS_ORDER_CANCELED: return '주문취소';
@@ -951,6 +951,14 @@ QUERY;
     }
   }
 
+  function get_order_req_type_str($type) {
+    switch ($type) {
+      case SHOP_ORDER_REQ_TYPE_DEFAULT : return '기본';
+      case SHOP_ORDER_REQ_TYPE_CANCEL: return '주문취소';
+      case SHOP_ORDER_REQ_TYPE_CHANGE: return '교환';
+      case SHOP_ORDER_REQ_TYPE_RETURN: return '반품';
+    }
+  }
   function do_teacher_activate($teacher_id, $user_id, $activate) {
 
     $teacher_data = $this->db->get_where('teacher', array('teacher_id' => $teacher_id))->row();
@@ -1060,5 +1068,21 @@ QUERY;
     }
     
     return array(true, '');
+  }
+  
+  function get_coupon_user_type_str($type) {
+    switch ($type) {
+      case COUPON_USER_TYPE_DEFAULT: return '적용회원';
+      case COUPON_USER_TYPE_REGISTER: return '회원가입';
+    }
+    return '';
+  }
+  function get_coupon_type_str($type) {
+    switch ($type) {
+      case COUPON_TYPE_DEFAULT: return '쿠폰타입';
+      case COUPON_TYPE_SHOP_DISCOUNT_PRICE: return '샵할인금액';
+      case COUPON_TYPE_SHOP_DISCOUNT_PERCENT: return '샵할인율';
+    }
+    return '';
   }
 }
