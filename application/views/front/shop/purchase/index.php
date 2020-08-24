@@ -5,7 +5,7 @@
     padding-right: 15px;
     margin-bottom: 70px;
   }
-  .cart-header, .shipping-info-header, .total-balance-header, .pay-agree {
+  .cart-header, .shipping-info-header, .total-balance-header, .pay-agree, .coupon-header {
     border-bottom: 1px solid #EAEAEA;
     height: 40px;
     line-height: 40px;
@@ -207,6 +207,15 @@
   .require {
     color: red;
   }
+   .coupon-choice {
+     width: 100%;
+     padding: 10px;
+   }
+   .total-balance-detail {
+     padding: 10px;
+     font-size: 14px;
+     text-align: center;
+   }
 </style>
 <section class="page-section">
   <div class="container">
@@ -277,8 +286,25 @@
         <div class="shipping-new-info" id="shipping-new-info" style="display: none">
           <?php include 'shipping_address_new.php'; ?>
         </div>
+        <div class="coupon-header">
+          쿠폰
+        </div>
+        <div class="coupon-choice">
+          <select class="form-control" id="coupon-select" onchange="get_coupon_info()">
+            <option value="0">선택안함</option>
+            <?php foreach ($coupons as $coupon) { ?>
+              <option value="<?php echo $coupon->user_coupon_id; ?>">
+                <?php echo $coupon->coupon_benefit; ?><?php echo ($coupon->coupon_type == COUPON_TYPE_SHOP_DISCOUNT_PERCENT ? '%' : '원'); ?> 할인
+                (<?php echo $coupon->coupon_title; ?>)
+              </option>
+            <?php } ?>
+          </select>
+        </div>
         <div class="total-balance-header">
-          결제금액<span class="pull-right"><h6><?php echo $this->crud_model->get_price_str($purchase_info->total_balance); ?>원</h6></span>
+          결제금액<span class="pull-right"><h6 id="total-balance"><?php echo $this->crud_model->get_price_str($purchase_info->total_balance); ?>원</h6></span>
+        </div>
+        <div class="total-balance-detail">
+          <span id="total-balance-detail"><?php echo $this->crud_model->get_price_str($purchase_info->total_balance); ?>원</span> - <span id="coupon-discount">0원</span>
         </div>
         <div class="pay-agree">
           <label style="text-align:left">
@@ -304,6 +330,9 @@
   let purchase_code = '<?php echo $purchase_info->purchase_code; ?>';
   let is_canceled = false;
   let is_done = false;
+  let discount_type = <?php echo COUPON_TYPE_DEFAULT; ?>;
+  let discount = 0;
+  let user_coupon_id = 0;
 
   function del_address(e) {
     let id = e.data('id');
@@ -531,8 +560,8 @@
       user_address = '(' + user_postcode + ')' + ' ' + user_address_1 + ' ' + user_address_2;
     }
 
-    if (user_name === '' || user_phone === '') {
-      alert('구매자 필수 정보(이름/연락처)를 입력해주세요.');
+    if (user_name === '' || user_phone === '' || user_email === '') {
+      alert('구매자 필수 정보(이름/연락처/이메일)를 입력해주세요.');
       return false;
     }
 
@@ -623,6 +652,8 @@
     formData.append('address_1', user_address_1);
     formData.append('address_2', user_address_2);
     formData.append('user_save', user_save === true ? '1' : '0');
+    formData.append('discount', discount);
+    formData.append('user_coupon_id', user_coupon_id);
 
     $.ajax({
       url: '<?php echo base_url(); ?>home/shop/purchase/paying', // form action url
@@ -635,9 +666,9 @@
       success: function (msg) {
         is_canceled = false;
         if (msg === 'done' || msg.search('done') !== -1) {
-          // console.log(msg);
+          console.log(msg);
         } else {
-          // console.log(msg);
+          console.log(msg);
         }
       },
       error: function (e) {
@@ -675,7 +706,9 @@
 
     let purchase_info = {
       purchase_code : purchase_code,
-      total_balance : total_balance
+      total_balance : total_balance,
+      discount : discount,
+      user_coupon_id : user_coupon_id
     }
 
     // console.log(shipping_info);
@@ -684,7 +717,7 @@
     // console.log(shipping_req);
 
     BootPay.request({
-      price: total_balance,
+      price: total_balance - discount,
       application_id: "5ee197af8f0751001e4f2562",
       name: '<?php echo $cart_items[0]->product->item_name.' 등 '.$purchase_info->total_purchase_cnt.' 건'; ?>',
       pg: 'inicis',
@@ -717,6 +750,8 @@
       var enable = true; // 재고 수량 관리 로직 혹은 다른 처리
       if (data.params.purchase_info.total_balance !== total_balance) {
         enable = false;
+      } else if (data.params.purchase_info.discount !== discount) {
+          enable = false;
       } else if (data.params.purchase_info.purchase_code !== purchase_code) {
         enable = false;
       }
@@ -798,6 +833,43 @@
       });
 
       is_done = true;
+    });
+  }
+  
+  function get_coupon_info() {
+    let id = $('#coupon-select').find('option:selected').val();
+    // console.log(user_coupon_id);
+    
+    $.ajax({
+      url: '<?php echo base_url(); ?>home/coupon/get?id=' + id, // form action url
+      type: 'GET', // form submit method get/post
+      dataType: 'html', // request type html/json/xml
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function (msg) {
+        // console.log(msg);
+        msg = JSON.parse(msg);
+        if (msg.status === 'success') {
+          discount_type = msg.coupon.coupon_type;
+          if (discount_type === <?php echo COUPON_TYPE_SHOP_DISCOUNT_PRICE; ?>) {
+            discount = msg.coupon.coupon_benefit;
+          } else {
+            discount = parseInt(parseInt(total_balance * msg.coupon.coupon_benefit / 100) / 10) * 10;
+          }
+          user_coupon_id = id;
+          // console.log(discount_type);
+          // console.log(discount);
+          
+          $('#coupon-discount').text(get_price_str(discount) + '원');
+          $('#total-balance').text(get_price_str(total_balance - discount) + '원');
+        } else {
+          alert(msg.message);
+        }
+      },
+      error: function (e) {
+        console.log(e)
+      }
     });
   }
 

@@ -925,12 +925,14 @@ QUERY;
       case SHOP_PURCHASE_STATUS_PREPARED : return '구매 준비';
       case SHOP_PURCHASE_STATUS_PURCHASING: return '구매중';
       case SHOP_PURCHASE_STATUS_PAYING: return '결제중';
-      case SHOP_PURCHASE_STATUS_PAYING_CANCELED: return '결제취소';
+      case SHOP_PURCHASE_STATUS_PAYING_CANCELED: return '결제중 취소';
       case SHOP_PURCHASE_STATUS_CONFIRM_SUCCESS: return '결제 확인 성공';
       case SHOP_PURCHASE_STATUS_CONFIRM_FAIL: return '결제 확인 실패';
       case SHOP_PURCHASE_STATUS_DONE_SUCCESS: return '결제 검증 성공';
       case SHOP_PURCHASE_STATUS_DONE_FAIL: return '결제 검증 실패';
       case SHOP_PURCHASE_STATUS_COMPLETED: return '결제 완료';
+      case SHOP_PURCHASE_STATUS_PART_CANCELED: return '부분 결제취소';
+      case SHOP_PURCHASE_STATUS_ALL_CANCELED: return '전체 결제취소';
     }
     return '';
   }
@@ -1084,5 +1086,139 @@ QUERY;
       case COUPON_TYPE_SHOP_DISCOUNT_PERCENT: return '샵할인율';
     }
     return '';
+  }
+  
+  function cancel_payment($purchase_product_id, $cancel_reason, $shipping_status, $user_cancel)
+  {
+    $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $purchase_product_id))->row();
+    $purchase_info = $this->db->get_where('shop_purchase', array('purchase_id' => $purchase_product->purchase_id))->row();
+    $user_id = $this->session->userdata('user_id');
+  
+    if (empty($purchase_product) || empty($purchase_info)) {
+      $this->crud_model->alert_exit('잘못된 접근입니다.');
+    }
+    if ($purchase_product->user_id != $user_id) {
+      $this->crud_model->alert_exit('잘못된 접근입니다.');
+    }
+    if ($user_cancel == 1 && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_PREPARE && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_ORDER_COMPLETED) {
+      $status = $this->crud_model->get_shipping_status_str($purchase_product->shipping_status);
+      $this->crud_model->alert_exit('주문취소가 불가능한 상태입니다. 관리자에게 문의해주세요.(주문상태:'.$status.')');
+    }
+    if ($user_cancel == 0 && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_PREPARE && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_ORDER_COMPLETED && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_PURCHASE_CANCELING) {
+      $status = $this->crud_model->get_shipping_status_str($purchase_product->shipping_status);
+      $this->crud_model->alert_exit('주문취소가 불가능한 상태입니다. 관리자에게 문의해주세요.(주문상태:'.$status.')');
+    }
+    if ($purchase_info->status == SHOP_PURCHASE_STATUS_ALL_CANCELED) {
+      $status = $this->crud_model->get_purchase_status_str($purchase_info->status);
+      $this->crud_model->alert_exit('주문취소가 불가능한 상태입니다. 관리자에게 문의해주세요.(결제상태:'.$status.')');
+    }
+  
+    $url = 'https://api.bootpay.co.kr/request/token';
+    $app_key = '5ee197af8f0751001e4f2565';
+    $private_key = 'e5KGzIH4VAY4FU1gY3o3AekqPk2AzF1fFaVx47MhI2Q=';
+  
+    $post_data = array(
+      'application_id' => $app_key,
+      'private_key' => $private_key
+    );
+//        $params = sprintf( 'application_id=%s&private_key=%s', $app_key, $private_key);
+  
+    $opts = array(
+      CURLOPT_URL => $url,
+      CURLOPT_SSL_VERIFYPEER => false,
+      CURLOPT_POST => true,
+      CURLOPT_POSTFIELDS => http_build_query($post_data), // $params 처럼
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_HEADER => false,
+    );
+    $ch = curl_init();
+    curl_setopt_array($ch, $opts);
+    $result = json_decode(curl_exec($ch));
+  
+    if ($result->status != 200) {
+      $this->crud_model->alert_exit('토큰에 문제가 발생했습니다. 관리자에게 문의바랍니다.(1)');
+    }
+  
+    $access_token = $result->data->token;
+  
+    $url = 'https://api.bootpay.co.kr/cancel';
+    $post_data = array(
+      'receipt_id' => $purchase_info->receipt_id,
+      'name' => $purchase_info->sender_name.'('.$purchase_info->sender_email.')',
+      'reason' => $cancel_reason,
+      'cancel_id' => $purchase_product_id,
+      'price' => $purchase_product->total_balance - $purchase_product->discount,
+    );
+  
+    $opts = array(
+      CURLOPT_URL => $url,
+      CURLOPT_SSL_VERIFYPEER => false,
+      CURLOPT_POST => true,
+      CURLOPT_POSTFIELDS => http_build_query($post_data),
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_HTTPHEADER => array("Authorization: ".$access_token)
+    );
+    $ch = curl_init();
+    curl_setopt_array($ch, $opts);
+    $result = json_decode(curl_exec($ch));
+  
+    curl_close($ch);
+  
+    if ($result->status != 200) {
+      $this->crud_model->alert_exit(json_encode($result));
+    }
+  
+    $request_cancel_price = $result->data->request_cancel_price;
+    $remain_price = $result->data->remain_price;
+    $canceled_price = $result->data->cancelled_price;
+    
+    $reason = array();
+    if (empty($purchase_info->cancel_reason) == false) {
+      $reason = json_decode($purchase_info->cancel_reason);
+    }
+    $reason[] = $cancel_reason;
+  
+    $status = SHOP_PURCHASE_STATUS_ALL_CANCELED;
+    if ($remain_price > 0) {
+      $status = SHOP_PURCHASE_STATUS_PART_CANCELED;
+    }
+  
+    $cancel_data = array();
+    if (empty($purchase_info->cancel_reason) == false) {
+      $cancel_data = json_decode($purchase_info->cancel_data);
+    }
+    $cancel_data[] = json_encode($result);
+  
+    $upd = array(
+      'cancel_price' => $canceled_price,
+      'cancel_reason' => json_encode($reason),
+      'cancel_data' => json_encode($cancel_data),
+      'status' => $status,
+      'status_code' => $this->crud_model->get_purchase_status_str($status),
+    );
+    $this->db->set('canceled_at', 'NOW()', false);
+    $this->db->where('purchase_id', $purchase_info->purchase_id);
+    $this->db->update('shop_purchase', $upd);
+  
+    $upd = array(
+      'canceled' => 1,
+      'cancel_price' => $request_cancel_price,
+      'cancel_data' => json_encode($result),
+      'cancel_reason' => json_encode($cancel_reason),
+      'shipping_status' => $shipping_status,
+      'shipping_status_code' => $this->crud_model->get_shipping_status_str($shipping_status),
+    );
+    $this->db->set('canceled_at', 'NOW()', false);
+    $this->db->where('purchase_product_id', $purchase_product_id);
+    $this->db->update('shop_purchase_product', $upd);
+  
+    $ins = array(
+      'purchase_product_id' => $purchase_product_id,
+      'shipping_status' => $shipping_status,
+      'shipping_status_code' => $this->crud_model->get_shipping_status_str($shipping_status),
+      'shipping_data' => json_encode($result),
+    );
+    $this->db->set('modified_at', 'NOW()', false);
+    $this->db->insert('shop_purchase_product_status', $ins);
   }
 }

@@ -339,8 +339,14 @@
 
   function go_purchase() {
     // for beta service
+    <?php
+    $today = date('Y-m-d H:i:s');
+    $beta_service = $this->db->get_where('server_settings', array('type' => SERVER_SETTINGS_TYPE_BETA_SERVICE))->row();
+    ?>
+    <?php if ($beta_service->start_at < $today && $today < $beta_service->end_at) { ?>
     open_beta_modal();
     return false;
+    <?php } ?>
 
     // grand open
     let formData = new FormData();

@@ -13,7 +13,7 @@
     </td>
   </tr>
   <tr>
-    <th>이메일</th>
+    <th>이메일<span class="require">*</span></th>
     <td class="user-email">
       <input type="email" class="form-control" value="<?php echo $user_info->email; ?>" id="user-email" name="user_email">
     </td>

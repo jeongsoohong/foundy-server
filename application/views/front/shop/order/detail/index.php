@@ -104,8 +104,10 @@
         </div>
       <?php } else { ?>
         <div class="order-detail-info">
-          <h6>주문번호 : <span style="color:saddlebrown;"><?php echo $purchase_code; ?></span><span class="pull-right"><u>주문취소</u></span></h6>
-
+          <h6>주문번호 :
+            <span style="color:saddlebrown;"><?php echo $purchase_code; ?></span>
+<!--            <span class="pull-right"><u>주문취소</u></span>-->
+          </h6>
         </div>
       <?php }?>
     </div>
@@ -121,7 +123,7 @@
                 <span class="item-brand"><?php echo $item->shop->shop_name.' '; ?></span><?php echo $item->product->item_name; ?>
               </div>
               <!--                <div class="item-name"></div>-->
-              <div class="item-price" ><?php echo $this->crud_model->get_price_str($item->item_sell_price); ?>원</div>
+              <div class="item-price" ><?php echo $this->crud_model->get_price_str($item->item_sell_price + $item->total_shipping_fee); ?>원(배송비:<?php echo $this->crud_model->get_price_str($item->total_shipping_fee); ?>원)</div>
               <div class="item-option" >
                 <?php
                 $opt_str = '';
@@ -138,6 +140,14 @@
                 $opt_str .= "수량 $item->total_purchase_cnt 개";
                 echo $opt_str;
                 ?>
+              </div>
+              <div class="item-status">
+                <?php echo $this->crud_model->get_shipping_status_str($item->shipping_status); ?>
+                <?php if ($item->shipping_status == SHOP_SHIPPING_STATUS_ORDER_COMPLETED || $item->shipping_status == SHOP_SHIPPING_STATUS_PREPARE) { ?>
+                  <a href="javascript:void(0)" onclick="open_cancel_order(<?php echo $item->purchase_product_id; ?>)" >
+                    <u>[주문취소]</u>
+                  </a>
+                <?php } ?>
               </div>
             </div>
             <div class="cart-item-image">
@@ -176,7 +186,12 @@
           </tr>
           <tr>
             <th>결제금액</th>
-            <td><?php echo $this->crud_model->get_price_str($purchase_info->total_balance);?></td>
+            <td>
+              <?php echo $this->crud_model->get_price_str($purchase_info->total_balance);?>원 -
+              <?php echo $this->crud_model->get_price_str($purchase_info->discount);?>원(할인) -
+              <?php echo $this->crud_model->get_price_str($purchase_info->cancel_price);?>원(취소) =
+              <?php echo $this->crud_model->get_price_str($purchase_info->total_balance - $purchase_info->discount - $purchase_info->cancel_price);?>원
+            </td>
           </tr>
           </tbody>
         </table>
@@ -237,3 +252,73 @@
     </div>
   </div>
 </section>
+<div class="modal fade" id="cancelOrderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="width: 5px; padding: 0 15px">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="req-title">주문취소</h4>
+      </div>
+      <div class="modal-body" style="padding-top: 0 !important;">
+        <div class="cancel-reason-body">
+          <label style="width: 100%; font-size: 16px;">
+            사유
+            <textarea rows="10" data-height="500" name='cancel_reason' id='cancel-reason' class="form-control" wrap="hard"></textarea>
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer" style="display: block;">
+        <button type="button" class="btn btn-theme btn-theme-sm" style="text-transform: none; background-color: black; color:white; width:20%; font-weight: 400; border: none"
+                onclick="purchase_product_cancel();">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  let cancel_id = 0;
+  function open_cancel_order(id) {
+    cancel_id = id;
+    $('#cancelOrderModal').modal('show');
+  }
+  function purchase_product_cancel(id) {
+    let cancel_reason = $('#cancel-reason').val();
+    
+    console.log(id);
+    console.log(cancel_reason);
+    
+    if (cancel_reason.length < 5) {
+      alert('최소 5자 이상 적어주세요.');
+      return false;
+    }
+    
+    event.preventDefault();
+    
+    let formData = new FormData();
+    formData.append('id', cancel_id);
+    formData.append('reason', cancel_reason);
+    $.ajax({
+      url: '<?php echo base_url(); ?>home/shop/purchase/cancel', // form action url
+      type: 'POST', // form submit method get/post
+      dataType: 'html', // request type html/json/xml
+      data: formData, // serialize form data
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function (data) {
+        if (data === 'done' || data.search('done') !== -1) {
+          let text = '<strong>성공하였습니다</strong>';
+          notify(text,'success','bottom','right');
+          setTimeout(function() {location.reload();}, 1000);
+        } else {
+          var text = '<strong>실패하였습니다</strong>' + data;
+          notify(text,'warning','bottom','right');
+        }
+      },
+      error: function (e) {
+        console.log(e)
+      }
+    });
+  }
+</script>

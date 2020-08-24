@@ -107,7 +107,7 @@
     <div class="col-md-12 col-sm-12 col-xs-12">
       <div class="thumbnail my-2 no-scale no-border no-padding thumbnail-banner">
         <div class="media">
-          <a class="media-link" href="javascript:void(0);" onclick="open_find_modal('문의하기')">
+          <a class="media-link" href="javascript:void(0);" onclick="open_qna_modal()">
             <div class="col-md-6 img-bg image_delay" data-src="<?php echo base_url(); ?>uploads/icon_0604/question.png"
                  style="background-image: url('<?php echo base_url(); ?>uploads/icon_0604/question.png');">
             </div>
@@ -127,12 +127,40 @@
       <div class="modal-body">
         <div style="text-align: center">
           Sorry! <br>
-          본 서비스는 오픈인 8/24부터 가능합니다.
+          본 서비스는 아직 준비중입니다.
         </div>
       </div>
       <div class="modal-footer">
         <!--        <button type="button" class="btn btn-danger btn-theme-sm" data-dismiss="modal"">취소</button>-->
         <button type="button" class="btn btn-danger btn-theme-sm" onclick="close_find_modal()" style="text-transform: none; font-weight: 400;"">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="qnaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">1:1 문의하기</h4>
+      </div>
+      <div class="modal-body">
+        <div class="qna-email">
+          <label style="width: 100%; font-size: 14px">
+            이메일
+            <input type="email" class="form-control" id="qna-email" name="qna_email">
+          </label>
+        </div>
+        <div class="qna-body-modal">
+          <label style="width: 100%; font-size: 14px">
+            문의할 내용을 입력해주세요.
+            <textarea rows="10" data-height="500" name='qna_body' id='qna-body' class="form-control" wrap="hard"></textarea>
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-theme-sm" data-dismiss="modal" onclick="clear_qna();">취소</button>
+        <button type="button" class="btn btn-theme btn-theme-sm"style="text-transform: none; font-weight: 400;" onclick="submit_qna();">확인</button>
       </div>
     </div>
   </div>
@@ -151,6 +179,56 @@
     location.href = '<?php echo base_url().'home/find/search?q='; ?>' + q;
   }
 
+  function open_qna_modal() {
+    $('#qnaModal').modal('show');
+  }
+  function clear_qna() {
+    $('#qna-body').val('');
+  }
+  function submit_qna() {
+    let qna_body = trim($('#qna-body').val());
+    let qna_email = trim($('#qna-email').val());
+  
+    // console.log(qna_body);
+    // console.log(qna_email);
+  
+    if (isValidEmailAddress(qna_email) === false) {
+      alert('유효한 이메일을 입력바랍니다.');
+      return false;
+    }
+    if (qna_body.toString().length < 10) {
+      alert('최소 10자 이상 입력바랍니다.');
+      return false;
+    }
+  
+    let formData = new FormData();
+    formData.append('qna_body', qna_body);
+    formData.append('email', qna_email);
+  
+    $.ajax({
+      url: '<?php echo base_url(); ?>home/qna', // form action url
+      type: 'POST', // form submit method get/post
+      dataType: 'html', // request type html/json/xml
+      data: formData, // serialize form data
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function (data) {
+        if (data === 'done' || data.search('done') !== -1) {
+          let text = '<strong>성공하였습니다</strong>';
+          notify(text,'success','bottom','right');
+          $('#qnaModal').modal('hide');
+          window.location.reload(true);
+        } else {
+          let text = '<strong>실패하였습니다</strong>' + data;
+          notify(text,'warning','bottom','right');
+        }
+      },
+      error: function (e) {
+        console.log(e)
+      }
+    });
+  }
   $(document).ready(function() {
     var input = document.getElementById('search-text');
 

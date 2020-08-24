@@ -1488,7 +1488,7 @@ QUERY;
           echo "fail : not inserted";
         }
       }
-
+  
     } elseif ($view_type == 'service') {
       $this->load->view('front/user/terms_of_use');
     } elseif ($view_type == 'privacy') {
@@ -3643,7 +3643,7 @@ QUERY;
         }
 
         $where = array(
-          'status' => SHOP_PURCHASE_STATUS_COMPLETED
+          'status >=' => SHOP_PURCHASE_STATUS_COMPLETED
         );
         $this->db->limit($limit, $offset);
         $this->db->order_by('purchase_id', 'desc');
@@ -3685,10 +3685,24 @@ QUERY;
 
         $purchase_product_ids = array();
         $cart_ids = json_decode($purchase_info->cart_ids);
+        $total_discount = 0;
+        $item_cnt = count($cart_ids);
+        $idx = 0;
         foreach ($cart_ids as $id) {
-
+          
           $item = $this->db->get_where('shop_cart', array('cart_id' => $id))->row();
-
+         
+          $discount = 0;
+          if ($purchase_info->discount > 0) {
+            $idx += 1;
+            if ($idx == $item_cnt) {
+              $discount = $purchase_info->discount - $total_discount;
+            } else {
+              $discount = (int)(($purchase_info->discount * $item->total_balance / $purchase_info->total_balance) / 100) * 100;
+              $total_discount += $discount;
+            }
+          }
+          
           $ins = array(
             'purchase_id' => $purchase_info->purchase_id,
             'purchase_code' => $purchase_info->purchase_code,
@@ -3720,11 +3734,24 @@ QUERY;
             'shipping_data' => '',
             'reviewed' => 0,
             'canceled' => 0,
+            'discount' => $discount,
+            'user_coupon_id' => $purchase_info->user_coupon_id,
           );
           $this->db->set('purchase_at', 'NOW()', false);
           $this->db->set('modified_at', 'NOW()', false);
           $this->db->set('canceled_at', 'NOW()', false);
           $this->db->insert('shop_purchase_product', $ins);
+ 
+          $purchase_product_id = $this->db->insert_id();
+          
+          $ins = array(
+            'purchase_product_id' => $purchase_product_id,
+            'shipping_status' => SHOP_SHIPPING_STATUS_ORDER_COMPLETED,
+            'shipping_status_code' => $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_COMPLETED),
+            'shipping_data' => '',
+          );
+          $this->db->set('modified_at', 'NOW()', false);
+          $this->db->insert('shop_purchase_product_status', $ins);
 
           if ($this->db->affected_rows()) {
             $purchase_product_ids[] = $this->db->insert_id();
@@ -3740,6 +3767,14 @@ QUERY;
         );
         $this->db->set('done_at', 'NOW()', false);
         $this->db->update('shop_purchase', $upd, array('purchase_id' => $purchase_info->purchase_id));
+        
+        if ($purchase_info->user_coupon_id > 0) {
+          $this->db->set('used', 1);
+          $this->db->set('used_at', 'NOW()', false);
+          $this->db->set('used_purchase_id', $purchase_info->purchase_id);
+          $this->db->where('user_coupon_id', $purchase_info->user_coupon_id);
+          $this->db->update('user_coupon');
+        }
 
         redirect(base_url() . "home/shop/order/complete?c={$purchase_code}", 'refresh');
 
@@ -3787,7 +3822,6 @@ QUERY;
           echo 'fail';
         }
 
-
       } elseif ($type == 'confirm') {
 
         // check total balance
@@ -3800,7 +3834,9 @@ QUERY;
 
         if ($data->params->purchase_info->purchase_code == $purchase_info->purchase_code) { // success
 
-          if ($data->params->purchase_info->total_balance == $purchase_info->total_balance) { // success
+          if ($data->params->purchase_info->total_balance == $purchase_info->total_balance &&
+          $data->params->purchase_info->discount == $purchase_info->discount &&
+          $data->params->purchase_info->user_coupon_id == $purchase_info->user_coupon_id) { // success
 
             $upd = array(
               'status' => SHOP_PURCHASE_STATUS_CONFIRM_SUCCESS,
@@ -3847,8 +3883,8 @@ QUERY;
 
         }
 
-      } elseif ($type == 'canceled') {
-
+      } elseif ($type == 'canceled') { // 결제 중 취소
+  
         $purchase_code = $this->input->post('purchase_code');
         $upd = array(
           'status' => SHOP_PURCHASE_STATUS_PAYING_CANCELED,
@@ -3856,9 +3892,18 @@ QUERY;
         );
         $this->db->set('canceled_at', 'NOW()', false);
         $this->db->update('shop_purchase', $upd, array('purchase_code' => $purchase_code));
-
+  
         echo 'done';
-
+  
+      } elseif ($type == 'cancel') { // 유저가 주문 취소 요청
+        
+        $purchase_product_id = $this->input->post('id');
+        $cancel_reason = $this->input->post('reason');
+        
+        $this->crud_model->cancel_payment($purchase_product_id, $cancel_reason, SHOP_SHIPPING_STATUS_ORDER_CANCELED, 1);
+        
+        echo 'done';
+        
       } elseif ($type == 'paying') {
 
         $purchase_code = $this->input->post('purchase_code');
@@ -3869,10 +3914,14 @@ QUERY;
         $address_1 = $this->input->post('address_1');
         $address_2 = $this->input->post('address_2');
         $user_save = $this->input->post('user_save') == '1';
+        $discount = $this->input->post('discount');
+        $user_coupon_id = $this->input->post('user_coupon_id');
 
         $upd = array(
           'status' => SHOP_PURCHASE_STATUS_PAYING,
           'status_code' => $this->crud_model->get_purchase_status_str(SHOP_PURCHASE_STATUS_PAYING),
+          'discount' => $discount,
+          'user_coupon_id' => $user_coupon_id,
         );
         $this->db->set('request_at', 'NOW()', false);
         $this->db->update('shop_purchase', $upd, array('purchase_code' => $purchase_code));
@@ -4097,7 +4146,16 @@ QUERY;
           $user_info->address_1 = '';
           $user_info->address_2 = '';
         }
+        
+        $coupons = null;
+        if ($this->is_login()) {
+          $query = <<<QUERY
+select * from user_coupon where user_id={$user_id} and used=0 order by user_coupon_id desc
+QUERY;
+          $coupons = $this->db->query($query)->result();
+        }
 
+        $page_data['coupons'] = $coupons;
         $page_data['user_info'] = $user_info;
         $page_data['purchase_info'] = $purchase_info;
         $page_data['total_purchase_cnt'] = $total_purchase_cnt;
@@ -4619,9 +4677,9 @@ QUERY;
       }
   
     } else if ($para1 == 'receive') {
-      
+  
       $coupon_id = $_GET['id'];
-     
+  
       $now = date('Y-m-d H:i:s');
       $coupon_data = $this->db->get_where('server_coupon', array('coupon_id' => $coupon_id))->row();
       if ($coupon_data->start_at > $now || $now > $coupon_data->end_at) {
@@ -4644,7 +4702,7 @@ QUERY;
 select user_id from user order by user_id asc limit 0,{$coupon_data->coupon_count}
 QUERY;
           $user_ids = $this->db->query($query)->result();
-          
+      
           $where_in = false;
           foreach ($user_ids as $u) {
 //            $this->crud_model->alert_exit(json_encode($u));
@@ -4658,7 +4716,7 @@ QUERY;
           }
         }
       }
-     
+  
       $coupon_code = sprintf('%s%010d%010d', date('ymdHis'), $user_id, $coupon_id);
       $ins = array(
         'user_id' => $user_id,
@@ -4674,10 +4732,43 @@ QUERY;
       );
       $this->db->set('create_at', 'NOW()', false);
       $this->db->set('used_at', 'NOW()', false);
-      
+  
       $this->db->insert('user_coupon', $ins);
-   
+  
       echo 'done';
+  
+    } else if ($para1 == 'get') {
+      
+      $user_coupon_id = $_GET['id'];
+      $user_id = $this->session->userdata('user_id');
+      
+      $coupon = $this->db->get_where('user_coupon', array('user_coupon_id' => $user_coupon_id))->row();
+      if (empty($coupon)) {
+        $result['status'] = 'error';
+        $result['message'] = "존재하지 않는 쿠폰입니다.";
+        echo json_encode($result);
+        exit;
+      }
+      
+      if ($coupon->user_id != $user_id) {
+        $result['status'] = 'error';
+        $result['message'] = "존재하지 않는 쿠폰입니다.";
+        echo json_encode($result);
+        exit;
+      }
+     
+      $now = date('Y-m-d H:i:s');
+      if ($coupon->use_at < $now) {
+        $result['status'] = 'error';
+        $result['message'] = "사용기간이 지났습니다.";
+        echo json_encode($result);
+        exit;
+      }
+      
+      $result['coupon'] = $coupon;
+      $result['status'] = 'success';
+      $result['message'] = "";
+      echo json_encode($result);
       
     } else {
       $page_data['page_name'] = "coupon";
@@ -4686,5 +4777,38 @@ QUERY;
       $this->load->view('front/index', $page_data);
     }
   }
-
+  
+  function qna()
+  {
+    $user_id = 0;
+    if ($this->is_login() == true) {
+      $user_id = $this->session->userdata('user_id');
+    }
+  
+    $this->load->library('form_validation');
+    $this->form_validation->set_rules('qna_body', 'qna_body', 'trim|required|max_length[500]');
+    $this->form_validation->set_rules('email', 'email', 'trim|required|valid_email|max_length[64]');
+    
+    if ($this->form_validation->run() == FALSE) {
+      echo '<br>' . validation_errors();
+    } else {
+      $question = $this->input->post('qna_body');
+      $email = $this->input->post('email');
+    
+      $ins = array(
+        'user_id' => $user_id,
+        'email' => $email,
+        'question' => $question,
+        'reply' => '',
+        'replied' => 0,
+      );
+      $this->db->set('question_at', 'NOW()', false);
+      $this->db->set('reply_at', 'NOW()', false);
+    
+      $this->db->insert('user_qna', $ins);
+    
+      echo 'done';
+    }
+  }
+  
 }

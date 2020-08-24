@@ -966,7 +966,7 @@
     window.location.href = '<?php echo base_url(); ?>home/shop/cart';
   }
   function go_shop() {
-    window.location.href = '<?php echo base_url(); ?>home/shop/main';
+    window.location.href = '<?php echo base_url(); ?>home/shop?cat=all&col=product_id&order=desc';
   }
 
   function add_opt() {
