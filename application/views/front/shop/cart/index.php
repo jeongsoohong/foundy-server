@@ -197,7 +197,7 @@
       <div class="modal-body">
         <div style="text-align: center">
           Sorry! <br>
-          결제는 본 서비스 오픈인 8/24부터 가능합니다.
+          결제는 본 서비스 오픈인 8/26일 부터 가능합니다.
         </div>
       </div>
       <div class="modal-footer">
