@@ -3702,6 +3702,15 @@ QUERY;
           );
           $this->db->set('modified_at', 'NOW()', false);
           $this->db->insert('shop_purchase_product_status', $ins);
+          
+//          $query = <<<QUERY
+//update shop_product_id set sell=sell+1 where product_id={$item->product_id}
+//QUERY;
+//          $this->db->query($query);
+          $this->db->set('sell', 'sell+1', false);
+          $this->db->where('product_id', $item->product_id);
+          $this->db->update('shop_product_id');
+
 
           if ($this->db->affected_rows()) {
             $purchase_product_ids[] = $this->db->insert_id();

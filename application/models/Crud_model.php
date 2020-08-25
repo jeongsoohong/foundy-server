@@ -1224,5 +1224,9 @@ QUERY;
     );
     $this->db->set('modified_at', 'NOW()', false);
     $this->db->insert('shop_purchase_product_status', $ins);
+    
+    $this->db->set('sell', 'sell-1', false);
+    $this->db->where('product_id', $purchase_product->product_id);
+    $this->db->update('shop_product_id');
   }
 }
