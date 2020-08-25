@@ -23,6 +23,14 @@
 
 $today = date('Y-m-d H:i:s');
 $beta_service = $this->db->get_where('server_settings', array('type' => SERVER_SETTINGS_TYPE_BETA_SERVICE))->row();
+
+$is_admin = false;
+if ($this->session->userdata('user_login') == "yes") {
+  $user_data = json_decode($this->session->userdata('user_data'));
+  if ($user_data->user_type & USER_TYPE_ADMIN) {
+    $is_admin = true;
+  }
+}
 ?>
 <!-- HEADER -->
 <style>
@@ -33,7 +41,7 @@ $beta_service = $this->db->get_where('server_settings', array('type' => SERVER_S
     width: 25%;
   }
   .navigation-wrapper .container .navigation ul li.shop-nav {
-  <?php if ($beta_service->start_at < $today && $today < $beta_service->end_at) { ?>
+  <?php if ($beta_service->start_at < $today && $today < $beta_service->end_at && $is_admin == false) { ?>
     width: 25%;
   <?php } else { ?>
     width: 20%;
@@ -93,7 +101,7 @@ $beta_service = $this->db->get_where('server_settings', array('type' => SERVER_S
       <nav class="navigation clearfix">
         <ul class="nav sf-menu">
           <?php if (!strncasecmp($page_name,'shop',4)) { ?>
-            <?php if ($beta_service->start_at >= $today || $today >= $beta_service->end_at) { ?>
+            <?php if ($beta_service->start_at >= $today || $today >= $beta_service->end_at || $is_admin == true) { ?>
               <li class="shop-nav main">
                 <a href="<?php echo base_url().'home/shop/main'; ?>" >MAIN</a>
               </li>
@@ -125,7 +133,7 @@ $beta_service = $this->db->get_where('server_settings', array('type' => SERVER_S
               <a href="<?php echo base_url().'home/blog'; ?>" >LIFE</a>
             </li>
             <li class="main-nav shop">
-              <?php if ($beta_service->start_at < $today && $today < $beta_service->end_at) { ?>
+              <?php if ($beta_service->start_at < $today && $today < $beta_service->end_at && $is_admin == false) { ?>
                 <a id="go-shop" href="<?php echo base_url().'home/shop?cat=all&col=product_id&order=desc'; ?>" >SHOP</a>
               <?php } else { ?>
                 <a id="go-shop" href="<?php echo base_url().'home/shop/main'; ?>" >SHOP</a>

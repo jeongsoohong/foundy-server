@@ -744,6 +744,8 @@ QUERY;
       $data['slider_image_url'] = '';
       $data['category'] = $this->input->post('category');
       $data['title'] = $this->input->post('title');
+      $data['type'] = $this->input->post('slider_type');
+      $data['link'] = $this->input->post('slider_link');
       $data['desc'] = $this->input->post('desc');
       $data['activate'] = 0;
       $this->db->insert('main_slider', $data);
@@ -798,16 +800,20 @@ QUERY;
       $slider_id = $para2;
 
       if (isset($_FILES["img"])) {
-        $this->crud_model->file_validation($_FILES['img']);
-        $time = time();
-        $file_name = 'slider_'.$slider_id.'.jpg';
-        $slider_image_url = base_url().'uploads/slider_image/slider_'.$slider_id.'_thumb.jpg?id='.$time;
-        $this->crud_model->upload_image(IMG_PATH_SLIDER, $file_name, $_FILES["img"], 400, 250, true, false);
-        $data['slider_image_url'] = $slider_image_url;
+        $error = $this->crud_model->file_validation($_FILES['img'], false);
+        if ($error == UPLOAD_ERR_OK) {
+          $time = time();
+          $file_name = 'slider_'.$slider_id.'.jpg';
+          $slider_image_url = base_url().'uploads/slider_image/slider_'.$slider_id.'_thumb.jpg?id='.$time;
+          $this->crud_model->upload_image(IMG_PATH_SLIDER, $file_name, $_FILES["img"], 400, 250, true, false);
+          $data['slider_image_url'] = $slider_image_url;
+        }
       }
 
       $data['category'] = $this->input->post('category');
       $data['title'] = $this->input->post('title');
+      $data['type'] = $this->input->post('slider_type');
+      $data['link'] = $this->input->post('slider_link');
       $data['desc'] = $this->input->post('desc');
       $this->db->set('date', 'NOW()', false);
       $this->db->where('slider_id', $slider_id);

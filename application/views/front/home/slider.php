@@ -24,7 +24,13 @@
         $i++;
         ?>
         <div class="slider-nav-item">
-          <img class="slide-<?php echo $i; ?> slider-img" src="<?php echo $slider->slider_image_url; ?>" alt="">
+          <?php if (empty($slider->link) == false && strlen($slider->link) > 0) { ?>
+          <a href="<?php echo $slider->link; ?>">
+            <?php } ?>
+            <img class="slide-<?php echo $i; ?> slider-img" src="<?php echo $slider->slider_image_url; ?>" alt="">
+            <?php if (empty($slider->link) == false && strlen($slider->link) > 0) { ?>
+          </a>
+        <?php } ?>
         </div>
       <?php } ?>
     </div>
@@ -77,6 +83,9 @@
       text-shadow: unset;
     }
     .slider-nav-item img {
+      width: inherit;
+    }
+    .slider-nav-item a, .slider-nav-item a img {
       width: inherit;
     }
   </style>

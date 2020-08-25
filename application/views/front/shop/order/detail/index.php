@@ -149,6 +149,13 @@
                   </a>
                 <?php } ?>
               </div>
+              <?php if (empty($item->shipping_data) == false) { ?>
+                <div class="item-shipping-search">
+                  <a href="<?php echo base_url(); ?>home/shop/shipping/search?id=<?php echo $item->purchase_product_id; ?>" target="_blank">
+                    배송조회
+                  </a>
+                </div>
+              <?php } ?>
             </div>
             <div class="cart-item-image">
               <a href="<?php echo base_url().'home/shop/product?id='.$item->product->product_id; ?>">

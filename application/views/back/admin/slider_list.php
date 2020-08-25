@@ -6,6 +6,8 @@
       <th>제목</th>
       <th>카테고리</th>
       <th>설명</th>
+      <th>링크</th>
+      <th>위치</th>
       <th>상태</th>
       <th class="text-right">옵션</th>
     </tr>
@@ -21,6 +23,13 @@
         <td><?php echo $slider->title; ?></td>
         <td><?php echo $slider->category; ?></td>
         <td><?php echo $slider->desc; ?></td>
+        <td><?php echo empty($slider->link) == true ? '없음' : $slider->link; ?></td>
+        <td>
+          <div id='type' class="label label-<?php if($slider->type == MAIN_SLIDER_TYPE_HOME){ ?>success<?php } else { ?>info<?php }
+          ?>">
+            <?php echo $slider->type == MAIN_SLIDER_TYPE_HOME ? 'home' : 'shop'; ?>
+          </div>
+        </td>
         <td>
           <div id='status' class="label label-<?php if($slider->activate == 1){ ?>purple<?php } else { ?>danger<?php }
           ?>">

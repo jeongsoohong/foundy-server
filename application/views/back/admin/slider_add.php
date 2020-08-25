@@ -30,6 +30,21 @@
               </div>
             </div>
             <div class="form-group btm_border">
+              <label class="col-sm-4 control-label" for="demo-hor-2">위치</label>
+              <div class="col-sm-6">
+                <select class="form-control required" name="slider_type">
+                  <option value="<?php echo MAIN_SLIDER_TYPE_HOME; ?>"><?php echo 'home'; ?></option>
+                  <option value="<?php echo MAIN_SLIDER_TYPE_SHOP; ?>"><?php echo 'shop'; ?></option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group btm_border">
+              <label class="col-sm-4 control-label" for="demo-hor-2">링크</label>
+              <div class="col-sm-6">
+                <input type="text" name="slider_link" id="demo-hor-1" placeholder="링크 연결시 입력해주세요" class="form-control">
+              </div>
+            </div>
+            <div class="form-group btm_border">
               <label class="col-sm-4 control-label" for="demo-hor-12">Slider Image</label>
               <div class="col-sm-6">
                 <span class="pull-left btn btn-default btn-file">파일열기

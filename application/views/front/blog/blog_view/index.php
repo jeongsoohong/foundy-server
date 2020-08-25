@@ -98,9 +98,9 @@
               <?php echo $blog->summery; ?>
             </div>
           </div>
-          <div class="post-media">
-            <img class="img-responsive" src="<?php echo $blog->main_image_url; ?>" alt="" style="min-height: 100%;"/>
-          </div>
+<!--          <div class="post-media">-->
+<!--            <img class="img-responsive" src="--><?php //echo $blog->main_image_url; ?><!--" alt="" style="min-height: 100%;"/>-->
+<!--          </div>-->
           <div class="post-body">
             <div class="post-excerpt">
               <p>

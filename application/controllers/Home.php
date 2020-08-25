@@ -97,7 +97,7 @@ class Home extends CI_Controller
     }
 
     $this->db->order_by('date', 'asc');
-    $sliders = $this->db->get_where('main_slider', array('activate' => 1))->result();
+    $sliders = $this->db->get_where('main_slider', array('activate' => 1, 'type' => MAIN_SLIDER_TYPE_HOME))->result();
 
 //    $blog_category = $this->db->get_where('category_blog', array('name' => 'shop'))->row();
     $blogs = $this->db->get_where('blog', array('main_view' => 1, 'activate' => 1))->result();
@@ -3384,12 +3384,14 @@ QUERY;
 
         }
       }
-
+      
+      $sliders = $this->db->get_where('main_slider', array('activate' => 1, 'type' => MAIN_SLIDER_TYPE_SHOP))->result();
       $blogs = $this->db->get_where('blog', array('shop_view' => 1, 'activate' => 1))->result();
 
       $page_data['best_items'] = $best_items;
       $page_data['new_items'] = $new_items;
       $page_data['recommend_items'] = $recommend_items;
+      $page_data['sliders'] = $sliders;
       $page_data['blogs'] = $blogs;
       $page_data['page_name'] = "shop/main";
       $page_data['asset_page'] = "shop";
@@ -3616,6 +3618,7 @@ QUERY;
           $item->shop = $this->db->get_where('shop', array('shop_id' => $item->product->shop_id))->row();
           $item->item_option_requires = json_decode($item->item_option_requires);
           $item->item_option_others = json_decode($item->item_option_others);
+          $item->shipping_data = json_decode($item->shipping_data);
         }
 
         $page_data['page_type'] = $type;
@@ -4244,9 +4247,41 @@ QUERY;
         }
 
       } elseif ($type == 'new') {
-
+  
         $this->load->view('front/shop/purchase/shipping_address_new');
-
+  
+      } else if ($type == 'search') {
+        
+        $purchase_product_id = $_GET['id'];
+        $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $purchase_product_id))->row();
+        if (empty($purchase_product) == true) {
+          $this->crud_model->alert_exit('잘못된 접근입니다.');
+        }
+        
+        $shipping_data = json_decode($purchase_product->shipping_data);
+        if (empty($shipping_data) == true) {
+          $this->crud_model->alert_exit('잘못된 접근입니다.');
+        }
+  
+        $url = sprintf('https://info.sweettracker.co.kr/api/v1/trackingInfo?t_key=%s&t_code=%s&t_invoice=%s', 'OiMqBmE0a9g8ibCUoY8yng', $shipping_data->shipping_company, $shipping_data->shipping_code);
+        
+        $opts = array(
+          CURLOPT_URL => $url,
+          CURLOPT_SSL_VERIFYPEER => false,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_HEADER => false,
+        );
+        $ch = curl_init();
+        curl_setopt_array($ch, $opts);
+        $result = json_decode(curl_exec($ch));
+        
+        $shipping_data->shipping_company_name = $this->db->get_where('shipping_company', array('company_code' => $shipping_data->shipping_company))->row()->company_name;
+        
+        $shipping_data->data = $result->trackingDetails;
+        
+        curl_close($ch);
+        
+        echo json_encode($shipping_data);
       } else {
 
         if ($this->is_login() == true) {

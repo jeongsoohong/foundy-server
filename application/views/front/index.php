@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title><?php echo $page_title; ?> | fivendime </title>
+    <title><?php echo $page_title; ?></title>
     <?php
     include 'includes/top/index.php';
     ?>
