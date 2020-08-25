@@ -342,8 +342,15 @@
     <?php
     $today = date('Y-m-d H:i:s');
     $beta_service = $this->db->get_where('server_settings', array('type' => SERVER_SETTINGS_TYPE_BETA_SERVICE))->row();
+    $is_admin = false;
+    if ($this->session->userdata('user_login') == "yes") {
+      $user_data = json_decode($this->session->userdata('user_data'));
+      if ($user_data->user_type & USER_TYPE_ADMIN) {
+        $is_admin = true;
+      }
+    }
     ?>
-    <?php if ($beta_service->start_at < $today && $today < $beta_service->end_at) { ?>
+    <?php if ($beta_service->start_at < $today && $today < $beta_service->end_at && $is_admin == false) { ?>
     open_beta_modal();
     return false;
     <?php } ?>
