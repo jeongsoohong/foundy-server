@@ -323,7 +323,7 @@
 </section>
 <div id="layer" style="display:none;position:fixed;overflow:hidden;z-index:1000;-webkit-overflow-scrolling:touch;">
 <!--<img src="//i1.daumcdn.net/localimg/localimages/07/postcode/320/close.png" id="btnCloseLayer" style="cursor:pointer;position:absolute;left:0px;top:0px;z-index:1" onclick="closeDaumPostcode()" alt="닫기 버튼">-->
-  <button id="btnCloseLayer" style="cursor:pointer;position:absolute;width:20vw;height:40px;color:white;background-color:black;border:none;left:40vw;top:80vh;z-index:1" onclick="closeDaumPostcode()" alt="닫기 버튼">닫기</button>
+  <button id="btnCloseLayer" style="cursor:pointer;position:absolute;width:20vw;height:40px;color:white;background-color:black;border:none;left:40vw;bottom:30px;z-index:1" onclick="closeDaumPostcode()" alt="닫기 버튼">닫기</button>
 </div>
 
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
