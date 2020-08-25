@@ -106,7 +106,7 @@
         <div class="order-detail-info">
           <h6>주문번호 :
             <span style="color:saddlebrown;"><?php echo $purchase_code; ?></span>
-<!--            <span class="pull-right"><u>주문취소</u></span>-->
+            <!--            <span class="pull-right"><u>주문취소</u></span>-->
           </h6>
         </div>
       <?php }?>
@@ -142,20 +142,24 @@
                 ?>
               </div>
               <div class="item-status">
-                <?php echo $this->crud_model->get_shipping_status_str($item->shipping_status); ?>
+                주문상태 : <?php echo $this->crud_model->get_shipping_status_str($item->shipping_status); ?>
+              </div>
+              <div class="item-btn" style="display: flex; width: 100%; padding: 10px 0;">
                 <?php if ($item->shipping_status == SHOP_SHIPPING_STATUS_ORDER_COMPLETED || $item->shipping_status == SHOP_SHIPPING_STATUS_PREPARE) { ?>
-                  <a href="javascript:void(0)" onclick="open_cancel_order(<?php echo $item->purchase_product_id; ?>)" >
-                    <u>[주문취소]</u>
-                  </a>
+                  <div class="item-cancel-order" style="width: 30%; background-color: black; height: 30px; margin-right: 10px; line-height: 30px; text-align: center">
+                    <a href="javascript:void(0)" onclick="open_cancel_order(<?php echo $item->purchase_product_id; ?>)" style="font-size: 12px; color: white;">
+                      주문취소
+                    </a>
+                  </div>
+                <?php } ?>
+                <?php if (empty($item->shipping_data) == false) { ?>
+                  <div class="item-shipping-search" style="width: 30%; background-color: black; font-size: 14px; height: 30px; margin-right: 10px; line-height: 30px; text-align: center">
+                    <a href="<?php echo base_url().'home/shop/shipping/search?id='.$item->purchase_product_id; ?>" style="font-size: 12px; color: white;" <?php if (empty($item->shipping_data) == false) echo 'target="_blank"'; ?>>
+                      배송조회
+                    </a>
+                  </div>
                 <?php } ?>
               </div>
-              <?php if (empty($item->shipping_data) == false) { ?>
-                <div class="item-shipping-search">
-                  <a href="<?php echo base_url(); ?>home/shop/shipping/search?id=<?php echo $item->purchase_product_id; ?>" target="_blank">
-                    배송조회
-                  </a>
-                </div>
-              <?php } ?>
             </div>
             <div class="cart-item-image">
               <a href="<?php echo base_url().'home/shop/product?id='.$item->product->product_id; ?>">
@@ -286,6 +290,10 @@
 <script>
   let cancel_id = 0;
   function open_cancel_order(id) {
+    if (id === 0) {
+      alert('배송이 시작되면 주문취소할 수 없습니다. 관리자에게 문의바랍니다.');
+      return false;
+    }
     cancel_id = id;
     $('#cancelOrderModal').modal('show');
   }

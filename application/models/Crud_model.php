@@ -742,6 +742,10 @@ QUERY;
       $category .= '%';
       $query .= " and a.product_code like '{$category}'";
     }
+    
+    if ($order_col == 'best' || $order_col == 'recommend') {
+      $query .= " and {$order_col} > 0";
+    }
 
     if (isset($item_name) && strlen($item_name) > 0) {
       $query .= " and a.item_name like '%{$item_name}%'";

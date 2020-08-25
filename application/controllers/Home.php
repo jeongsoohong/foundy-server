@@ -3345,59 +3345,6 @@ QUERY;
       $page_data['page_title'] = "shop";
       $this->load->view('front/index', $page_data);
 
-    } else if ($view == 'main') {
-
-      $category = 'all';
-      $page = 1;
-      $order = 'asc';
-      $limit = 6;
-      $offset = ($page - 1) * $limit;
-      $status = SHOP_PRODUCT_STATUS_ON_SALE;
-
-      $order_col = 'best';
-      $best_items = $this->crud_model->get_product_list(0, $status, '', $category, $offset, $limit, $order, $order_col);
-      foreach ($best_items as $item) {
-        $item->like = false;
-        if ($this->is_login() == true) {
-          $user_id = $this->session->userdata('user_id');
-          $item->like = $this->crud_model->get_sns_mark('product', 'like', $user_id, $item->product_id);
-
-        }
-      }
-      $order_col = 'new';
-      $new_items = $this->crud_model->get_product_list(0, $status, '', $category, $offset, $limit, $order, $order_col);
-      foreach ($new_items as $item) {
-        $item->like = false;
-        if ($this->is_login() == true) {
-          $user_id = $this->session->userdata('user_id');
-          $item->like = $this->crud_model->get_sns_mark('product', 'like', $user_id, $item->product_id);
-
-        }
-      }
-      $order_col = 'recommend';
-      $recommend_items = $this->crud_model->get_product_list(0, $status, '', $category, $offset, $limit, $order, $order_col);
-      foreach ($recommend_items as $item) {
-        $item->like = false;
-        if ($this->is_login() == true) {
-          $user_id = $this->session->userdata('user_id');
-          $item->like = $this->crud_model->get_sns_mark('product', 'like', $user_id, $item->product_id);
-
-        }
-      }
-      
-      $sliders = $this->db->get_where('main_slider', array('activate' => 1, 'type' => MAIN_SLIDER_TYPE_SHOP))->result();
-      $blogs = $this->db->get_where('blog', array('shop_view' => 1, 'activate' => 1))->result();
-
-      $page_data['best_items'] = $best_items;
-      $page_data['new_items'] = $new_items;
-      $page_data['recommend_items'] = $recommend_items;
-      $page_data['sliders'] = $sliders;
-      $page_data['blogs'] = $blogs;
-      $page_data['page_name'] = "shop/main";
-      $page_data['asset_page'] = "shop";
-      $page_data['page_title'] = "shop";
-      $this->load->view('front/index', $page_data);
-
     } else if ($view == 'cart') {
 
       if ($type == 'add') {
@@ -4274,6 +4221,10 @@ QUERY;
         $ch = curl_init();
         curl_setopt_array($ch, $opts);
         $result = json_decode(curl_exec($ch));
+//        $this->crud_model->alert_exit(json_encode($result));
+        if (isset($result->status) && $result->status == false) {
+          $this->crud_model->alert_exit($result->msg.' code : '.$result->code);
+        }
         
         $shipping_data->shipping_company_name = $this->db->get_where('shipping_company', array('company_code' => $shipping_data->shipping_company))->row()->company_name;
         
@@ -4281,7 +4232,9 @@ QUERY;
         
         curl_close($ch);
         
-        echo json_encode($shipping_data);
+        $page_data['shipping_data'] = $shipping_data;
+        $this->load->view('front/shop/shipping/search', $page_data);
+        
       } else {
 
         if ($this->is_login() == true) {
@@ -4529,7 +4482,60 @@ QUERY;
         $page_data['review_data'] = $review_data;
         $this->load->view('front/shop/review/list', $page_data);
       }
-
+  
+    } else if ($view == 'main') {
+  
+      $category = 'all';
+      $page = 1;
+      $order = 'asc';
+      $limit = 6;
+      $offset = ($page - 1) * $limit;
+      $status = SHOP_PRODUCT_STATUS_ON_SALE;
+  
+      $order_col = 'best';
+      $best_items = $this->crud_model->get_product_list(0, $status, '', $category, $offset, $limit, $order, $order_col);
+      foreach ($best_items as $item) {
+        $item->like = false;
+        if ($this->is_login() == true) {
+          $user_id = $this->session->userdata('user_id');
+          $item->like = $this->crud_model->get_sns_mark('product', 'like', $user_id, $item->product_id);
+      
+        }
+      }
+      $order_col = 'new';
+      $new_items = $this->crud_model->get_product_list(0, $status, '', $category, $offset, $limit, $order, $order_col);
+      foreach ($new_items as $item) {
+        $item->like = false;
+        if ($this->is_login() == true) {
+          $user_id = $this->session->userdata('user_id');
+          $item->like = $this->crud_model->get_sns_mark('product', 'like', $user_id, $item->product_id);
+      
+        }
+      }
+      $order_col = 'recommend';
+      $recommend_items = $this->crud_model->get_product_list(0, $status, '', $category, $offset, $limit, $order, $order_col);
+      foreach ($recommend_items as $item) {
+        $item->like = false;
+        if ($this->is_login() == true) {
+          $user_id = $this->session->userdata('user_id');
+          $item->like = $this->crud_model->get_sns_mark('product', 'like', $user_id, $item->product_id);
+      
+        }
+      }
+  
+      $sliders = $this->db->get_where('main_slider', array('activate' => 1, 'type' => MAIN_SLIDER_TYPE_SHOP))->result();
+      $blogs = $this->db->get_where('blog', array('shop_view' => 1, 'activate' => 1))->result();
+  
+      $page_data['best_items'] = $best_items;
+      $page_data['new_items'] = $new_items;
+      $page_data['recommend_items'] = $recommend_items;
+      $page_data['sliders'] = $sliders;
+      $page_data['blogs'] = $blogs;
+      $page_data['page_name'] = "shop/main";
+      $page_data['asset_page'] = "shop";
+      $page_data['page_title'] = "shop";
+      $this->load->view('front/index', $page_data);
+  
     } else if ($view == 'list') {
 
       $category = $_GET['cat'];
@@ -4571,10 +4577,16 @@ QUERY;
       $category = $_GET['cat'];
       $order_col = $_GET['col'];
       $order = $_GET['order'];
+      
+      if (strncmp($category, '01', 2) == 0) {
+        $best_order_col = 'best';
+      } else {
+        $best_order_col = 'sell';
+      }
 
       if ($category != 'all' && $category != 'ALL' && $category != 'wish' && $category != 'WISH') {
         $best_items = $this->crud_model->get_product_list(0, SHOP_PRODUCT_STATUS_ON_SALE, '', $category, 0,
-          SHOP_PRODUCT_BEST_LIST_PAGE_SIZE, 'desc', 'best');
+          SHOP_PRODUCT_BEST_LIST_PAGE_SIZE, 'asc', $best_order_col);
         foreach ($best_items as $item) {
           $item->like = false;
           if ($this->is_login() == true) {
