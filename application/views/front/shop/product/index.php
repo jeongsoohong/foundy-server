@@ -1014,7 +1014,6 @@
   let item_margin = <?php echo $product->item_margin; ?>;
   let item_supply_price = <?php echo $product->item_supply_price; ?>;
 
-
   function init_options() {
     $.each($('.item-option').find('.item-option-row'), function(idx, opt) {
       let select = $(opt).find('select');
@@ -1067,7 +1066,7 @@
       alert('수량을 선택해 주세요');
       return false;
     }
-
+    
     // console.log(product_id);
     // console.log(total_purchase_cnt);
     // console.log(total_price);
@@ -1076,6 +1075,8 @@
     // console.log(total_balance);
     // console.log(item_option_requires);
     // console.log(item_option_others);
+    
+    $('#loading_set').show();
 
     let formData = new FormData();
     formData.append('product_id', product_id);
@@ -1109,6 +1110,7 @@
       contentType: false,
       processData: false,
       success: function (data) {
+        $("#loading_set").fadeOut(500);
         if (data === 'done' || data.search('done') !== -1) {
           // var text = '<strong>성공하였습니다</strong>';
           // notify(text,'success','bottom','right');
@@ -1261,7 +1263,7 @@
     }
     for (let i = 1; i <= 3; i++) {
       let s = $('#preview-img-' + i).closest('.review-img-file');
-      console.log(s);
+      // console.log(s);
       s.html('');
       s.html('<span class="pull-left btn btn-default btn-file" id="preview-img-' + i + '" data-id="' + i + '" onclick="open_review_file(this);">+</span>');
       review_img[i-1] = null;
@@ -1285,7 +1287,9 @@
     }
 
     // console.log(review_body);
-
+  
+    $('#loading_set').show();
+    
     let formData = new FormData();
     formData.append('review_score', review_score);
     formData.append('review_body', review_body);
@@ -1303,6 +1307,7 @@
       contentType: false,
       processData: false,
       success: function (data) {
+        $("#loading_set").fadeOut(500);
         if (data === 'done' || data.search('done') !== -1) {
           var text = '<strong>성공하였습니다</strong>';
           notify(text,'success','bottom','right');
@@ -1321,9 +1326,7 @@
   let review_page = 0;
   let review_total_cnt = <?php echo $product->review; ?>;
   function ajax_review_list() {
-
     review_page = review_page + 1;
-
     $.ajax({
       url: "<?php echo base_url().'home/shop/review/list?id='; ?>" + product_id + '&page=' + review_page,
       type: 'GET', // form submit method get/post
@@ -1343,9 +1346,7 @@
         console.log(e)
       }
     });
-
     // $('#page_num').val(page);
-
   }
 
   let get_review_id = 0;
@@ -1394,9 +1395,7 @@
   let qna_page = 0;
   let qna_total_cnt = <?php echo $product->qna; ?>;
   function ajax_qna_list() {
-
     qna_page = qna_page + 1;
-
     $.ajax({
       url: "<?php echo base_url().'home/shop/qna/list?id='; ?>" + product_id + '&page=' + qna_page,
       type: 'GET', // form submit method get/post
@@ -1416,9 +1415,7 @@
         console.log(e)
       }
     });
-
     // $('#page_num').val(page);
-
   }
 
   let get_qna_id = 0;
@@ -1557,7 +1554,9 @@
     if (qna_private === '1' && check_pw(qna_pw) === false) {
       return false;
     }
-
+  
+    $('#loading_set').show();
+    
     let formData = new FormData();
     formData.append('qna_title', qna_title);
     formData.append('qna_body', qna_body);
@@ -1573,6 +1572,7 @@
       contentType: false,
       processData: false,
       success: function (data) {
+        $("#loading_set").fadeOut(500);
         if (data === 'done' || data.search('done') !== -1) {
           var text = '<strong>성공하였습니다</strong>';
           notify(text,'success','bottom','right');

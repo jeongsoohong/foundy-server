@@ -227,10 +227,12 @@
     });
     $('.video_delete_confirm').click(function(e) {
       $('.video_delete_close').click();
-      e.preventDefault();
+      // e.preventDefault();
+      $('#loading_set').show();
       $.ajax({
         url: '<?php echo base_url().'home/teacher/do_del_video/'.$video_data->video_id.'/'.$user_data->user_id; ?>',
         success: function(data) {
+          $("#loading_set").fadeOut(500);
           if(data == 'done' || data.search('done') !== -1){
             notify('신청에 성공했습니다.','success','bottom','right');
             setTimeout(function(){

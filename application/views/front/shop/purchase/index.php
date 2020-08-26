@@ -351,6 +351,7 @@
   let user_coupon_id = 0;
 
   function del_address(e) {
+    $('#loading_set').show();
     let id = e.data('id');
     let formData = new FormData();
     formData.append('id', id);
@@ -363,6 +364,7 @@
       contentType: false,
       processData: false,
       success: function (data) {
+        $("#loading_set").fadeOut(500);
         if (data === 'done' || data.search('done') !== -1) {
           let text = '<strong>성공하였습니다</strong>';
           notify(text,'success','bottom','right');
@@ -548,6 +550,8 @@
       // console.log($('#shipping-new-req-direct-input').val());
       shipping_req = $('#shipping-new-req-direct-input').val();
     }
+    
+    $('#loading_set').show();
 
     let formData = new FormData();
     formData.append('address_name', address_name);
@@ -569,6 +573,7 @@
       contentType: false,
       processData: false,
       success: function (data) {
+        $("#loading_set").fadeOut(500);
         if (data === 'done' || data.search('done') !== -1) {
           // let text = '<strong>성공하였습니다</strong>';
           // notify(text,'success','bottom','right');
@@ -642,33 +647,13 @@
       alert('배송지를 선택해 주세요.');
       return false;
     }
-
-    let items = [
-      <?php foreach ($cart_items as $item) {
-      echo "{
-          item_name: '{$item->product->item_name}',
-          qty: {$item->total_purchase_cnt},
-          unique: '{$item->product->product_code}',
-          price: {$item->product->item_sell_price},
-          cat1: '{$this->crud_model->get_product_category_str($item->product->item_cat, 1)}',
-          cat2: '{$this->crud_model->get_product_category_str($item->product->item_cat, 2)}',
-          cat3: '{$this->crud_model->get_product_category_str($item->product->item_cat, 3)}'
-          },";
-    }?>
-    ];
-
-    let user_info = {
-      username: user_name,
-      email: user_email,
-      addr: user_address,
-      phone: user_phone
-    }
-
+  
     function purchase_cancel() {
-
       if (is_canceled === true || is_done === true) {
         return false;
       }
+      
+      $('#loading_set').show();
 
       let formData = new FormData();
       formData.append('purchase_code', purchase_code);
@@ -681,6 +666,7 @@
         contentType: false,
         processData: false,
         success: function (msg) {
+          $("#loading_set").fadeOut(500);
           if (msg === 'done' || msg.search('done') !== -1) {
             console.log(msg);
           } else {
@@ -697,7 +683,30 @@
       });
       is_canceled = true;
     }
-
+  
+    let items = [
+      <?php foreach ($cart_items as $item) {
+      echo "{
+          item_name: '{$item->product->item_name}',
+          qty: {$item->total_purchase_cnt},
+          unique: '{$item->product->product_code}',
+          price: {$item->product->item_sell_price},
+          cat1: '{$this->crud_model->get_product_category_str($item->product->item_cat, 1)}',
+          cat2: '{$this->crud_model->get_product_category_str($item->product->item_cat, 2)}',
+          cat3: '{$this->crud_model->get_product_category_str($item->product->item_cat, 3)}'
+          },";
+    }?>
+    ];
+  
+    let user_info = {
+      username: user_name,
+      email: user_email,
+      addr: user_address,
+      phone: user_phone
+    }
+  
+    $('#loading_set').show();
+  
     let formData = new FormData();
     formData.append('purchase_code', purchase_code);
     formData.append('username', user_name);
@@ -743,7 +752,6 @@
       shipping_req = '';
     }
 
-
     let receiver_info = {
       address_id : shipping_address_id,
       shipping_req_code : shipping_req_code,
@@ -774,7 +782,7 @@
     BootPay.request({
       price: total_balance - discount,
       application_id: "5ee197af8f0751001e4f2562",
-      name: '<?php echo $cart_items[0]->product->item_name.' 등 '.$purchase_info->total_purchase_cnt.' 건'; ?>',
+      name: '<?php echo $cart_items[0]->product->item_name.' 등 '.count($cart_items).' 건'; ?>',
       pg: 'inicis',
       method: 'card',
       show_agree_window: 0,
@@ -790,9 +798,11 @@
         quota: '0,2,3,4,5,6'
       }
     }).error(function (data) {
+      $("#loading_set").fadeOut(500);
       alert('문제가 발생했습니다 - ' + data);
       console.log('error : ' + data);
     }).cancel(function (data) {
+      $("#loading_set").fadeOut(500);
       console.log('cancel : ' + data);
       purchase_cancel();
     }).ready(function (data) {
@@ -811,7 +821,7 @@
         enable = false;
       }
 
-      console.log('confirm : ' + data);
+      // console.log('confirm : ' + data);
 
       if (enable) {
 
@@ -850,17 +860,16 @@
 
     }).close(function (data) {
       // 결제창이 닫힐때 수행됩니다. (성공,실패,취소에 상관없이 모두 수행됨)
+      $("#loading_set").fadeOut(500);
       console.log('close : ' + data);
       if (is_done === false) {
         purchase_cancel();
       }
     }).done(function (data) {
-
+      // console.log('done : ' + data);
+  
       //결제가 정상적으로 완료되면 수행됩니다
       //비즈니스 로직을 수행하기 전에 결제 유효성 검증을 하시길 추천합니다.
-
-      console.log('done : ' + data);
-
       let formData = new FormData();
       formData.append('purchase_code', purchase_code);
       formData.append('bootpay_done_data', JSON.stringify(data));
@@ -874,6 +883,7 @@
         contentType: false,
         processData: false,
         success: function (msg) {
+          $("#loading_set").fadeOut(500);
           if (msg=== 'done' || msg.search('done') !== -1) {
             window.location.href = '<?php echo base_url();?>home/shop/purchase/complete?c=<?php echo $purchase_info->purchase_code; ?>';
           } else {
@@ -920,6 +930,7 @@
           $('#total-balance').text(get_price_str(total_balance - discount) + '원');
         } else {
           alert(msg.message);
+          $('#coupon-select').find('option:selected').prop('selected', false);
         }
       },
       error: function (e) {

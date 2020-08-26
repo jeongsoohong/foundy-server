@@ -237,6 +237,7 @@
   }
 
   function cart_item_del() {
+    $('#loading_set').show();
     $.each($('.cart-item-all').find('input:checkbox'),function(idx,item) {
       let checked = $(item).prop('checked');
       if (checked === true) {
@@ -260,6 +261,7 @@
           contentType: false,
           processData: false,
           success: function (data) {
+            $("#loading_set").fadeOut(500);
             if (data === 'done' || data.search('done') !== -1) {
               
               if (purchable === true) {
@@ -298,7 +300,6 @@
         });
       }
     });
-
   }
 
   function change_balance() {
@@ -371,7 +372,7 @@
     open_beta_modal();
     return false;
     <?php } ?>
-
+  
     // grand open
     let formData = new FormData();
     let item_cnt = 0;
@@ -392,7 +393,7 @@
       }
     });
     
-    console.log(purchable);
+    // console.log(purchable);
     if (purchable === false) {
       return false;
     }
@@ -401,7 +402,9 @@
       alert('상품을 선택해주세요.');
       return false;
     }
-
+    
+    $('#loading_set').show();
+  
     $.ajax({
       url: '<?php echo base_url(); ?>home/shop/purchase/add', // form action url
       type: 'POST', // form submit method get/post
@@ -411,6 +414,7 @@
       contentType: false,
       processData: false,
       success: function (data) {
+        $("#loading_set").fadeOut(500);
         if (data === 'done' || data.search('done') !== -1) {
           window.location.href = '<?php echo base_url().'home/shop/purchase'; ?>';
         }

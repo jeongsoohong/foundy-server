@@ -22,7 +22,7 @@ if(isset($from_admin)){
             $("#loading-center").click(function() {
                 $("#loading").fadeOut(500);
             });
-            setTimeout(function(){ load_iamges(); }, 1000);
+            // setTimeout(function(){ load_iamges(); }, 1000);
 
         });
     </script>

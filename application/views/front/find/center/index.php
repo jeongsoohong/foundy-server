@@ -140,27 +140,22 @@
 <!--  <input id="page_num" type="hidden" value="0"/>-->
 <!--</label>-->
 <script>
-  var page = 0;
-  var filter = '';
+  let page = 0;
+  let filter = '';
 
   function ajax_center_list() {
-
     page = page + 1;
-
     //console.log('page : ' + page + ', filter : ' + filter + ', center_type : ' + '<?php //echo $center_type; ?>//');
-
     $.ajax({
       url: "<?php echo base_url().'home/find/center/list/'.$center_type.'?page='; ?>" + page + '&filter=' + filter,
       type: 'GET', // form submit method get/post
       dataType: 'html', // request type html/json/xml
       success: function(data) {
-        var prevCnt = $(".center_ul li").length;
-
+        let prevCnt = $(".center_ul li").length;
         // console.log(data);
         $('.center_ul').append(data);
         // console.log($(".center_ul a li").length % 10);
-
-        var listCnt = $(".center_ul li").length;
+        let listCnt = $(".center_ul li").length;
         if ( listCnt === 0 || listCnt % 10 !== 0 || prevCnt === listCnt) {
           $('#view_more').hide();
         } else {

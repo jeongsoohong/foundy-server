@@ -93,7 +93,7 @@
       <div class="modal-body">
         <div style="text-align: center">
           Sorry! <br>
-          본 서비스는 오픈인 8/24부터 가능합니다.
+          본 서비스는 아직 준비중입니다.
         </div>
       </div>
       <div class="modal-footer">
@@ -142,7 +142,7 @@
 <script type="text/javascript">
   
   function reset_password() {
-    event.preventDefault();
+    $('#loading_set').show();
     
     let email = $('#forget_email').val();
     let approval_code = $('#approval_code').val();
@@ -160,6 +160,7 @@
       contentType: false,
       processData: false,
       success: function (data) {
+        $("#loading_set").fadeOut(500);
         if (data === 'done' || data.search('done') !== -1) {
           var text = '<strong>본인인증이 완료되었습니다.</strong>' + ' 해당 이메일 주소로 비밀번호가 발급되었으니 확인 후 로그인해 주세요.';
           notify(text,'success','bottom','right');
@@ -183,6 +184,7 @@
   }
   
   function open_forget_password() {
+    $('#loading_set').show();
     let list = $('#forget-password-modal-body');
     $.ajax({
       url: '<?php echo base_url().'home/login/forget_form'; ?>',
@@ -190,6 +192,7 @@
         list.html(''); // change submit button text
       },
       success: function(data) {
+        $("#loading_set").fadeOut(500);
         list.html('');
         list.html(data).fadeIn();
         $('#forgetPwModal').modal('show');
@@ -210,6 +213,7 @@
   function do_restore(restore) {
     let r;
     $('#restoreModal').modal('hide');
+    $('#loading_set').show();
     if (restore === 1) {
       r = 'ok';
     } else {
@@ -220,6 +224,7 @@
       type : 'GET',
       dataType : 'html', // 받을 데이터 방식
       success : function(data) {
+        $("#loading_set").fadeOut(500);
         // console.log(data);
         if(data == 'done' || data.search('done') !== -1){
           var text = '<div>성공하셨습니다.</div>';
@@ -243,6 +248,8 @@
   function do_login() {
     let email = $('#user-email').val();
     let password = $('#user-password').val();
+  
+    $('#loading_set').show();
     
     let formData = new FormData();
     formData.append('email', email);
@@ -260,6 +267,7 @@
       contentType: false,
       processData: false,
       success : function(res) {
+        $("#loading_set").fadeOut(500);
         // console.log(res);
         res = JSON.parse(res);
         if (res.status === 'success') {
@@ -290,7 +298,6 @@
     Kakao.init('8ee901a556539927d58b30a6bf21a781');
     // @breif 카카오 로그인 버튼을 생성합니다.
     Kakao.Auth.createLoginButton({
-      
       container : ".btn-kakao-login",
       size : 'medium',
       lang : 'kr',
@@ -298,7 +305,8 @@
         //console.log( 'auth : ' + JSON.stringify(authObj) );
         // UI code below
         //console.log('token : ' + getToken())
-        
+  
+        $('#loading_set').show();
         Kakao.API.request({
           url: "/v2/user/me",
           success: function(user_data) {
@@ -312,6 +320,7 @@
               data : user_data,
               dataType : 'json', // 받을 데이터 방식
               success : function(res) {
+                $("#loading_set").fadeOut(500);
                 // console.log(res);
                 if (res.status === 'success') {
                   alert(res.message);

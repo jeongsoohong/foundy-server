@@ -247,8 +247,6 @@
     });
     infowindow.open(map, marker);
   });
-</script>
-<script>
 
   var valid_title = false;
   var valid_phone = false;

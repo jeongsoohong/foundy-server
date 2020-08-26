@@ -272,8 +272,7 @@
 <!--<script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>-->
 <script type="text/javascript">
 
-  var top = Number(200);
-  var loading_set = '<div style="text-align:center;width:100%;height:'+(top*2)+'px; position:relative;top:'+top+'px;"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>';
+  let loading_set = '<div style="text-align:center;width:100%;height:400px; position:relative;top:200px;"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>';
 
   $('.pnav_info').on('click',function(){
     $("#profile_content").html(loading_set);
@@ -283,11 +282,12 @@
   });
   
   function do_logout() {
-  
+    $('#loading_set').show();
     $.ajax({
       url : '<?php echo base_url().'/home/logout'; ?>',
       dataType : 'json', // 받을 데이터 방식
       success : function(res) {
+        $("#loading_set").fadeOut(500);
         if (res.status === 'success') {
           alert(res.message);
           // console.log(res.message);
@@ -308,14 +308,17 @@
   let login_type = '<? echo $this->session->userdata('login_type'); ?>';
   
   $('.pnav_logout').click(function(e) {
-    console.log(login_type);
+    $('#loading_set').show();
+    // console.log(login_type);
     if (login_type === 'kakao') {
       $.getScript("https://developers.kakao.com/sdk/js/kakao.min.js", function() {
         Kakao.init('8ee901a556539927d58b30a6bf21a781');
         if (!Kakao.Auth.getAccessToken()) {
+          $("#loading_set").fadeOut(500);
           // alert('Not logged in.');
           do_logout();
         } else {
+          $("#loading_set").fadeOut(500);
           Kakao.Auth.logout(function() {
             //alert('logout: ' + Kakao.Auth.getAccessToken());
             do_logout();
@@ -328,10 +331,12 @@
   });
   
   function do_user_unregister() {
+    $('#loading_set').show();
     $.ajax({
       url : '<?php echo base_url().'/home/unregister'; ?>',
       dataType : 'json', // 받을 데이터 방식
       success : function(res) {
+        $("#loading_set").fadeOut(500);
         if (res.status === 'success') {
           alert(res.message);
           window.location.href = base_url;
@@ -350,14 +355,17 @@
   }
 
   function do_kakao_unregister() {
+    $('#loading_set').show();
     $.getScript("https://developers.kakao.com/sdk/js/kakao.min.js", function() {
       Kakao.init('8ee901a556539927d58b30a6bf21a781');
       if (!Kakao.Auth.getAccessToken()) {
+        $("#loading_set").fadeOut(500);
         alert('Not logged in.');
       } else {
         Kakao.API.request({
           url: '/v1/user/unlink',
           success: function(response) {
+            $("#loading_set").fadeOut(500);
             // console.log(response);
             do_user_unregister()
           },
@@ -370,15 +378,14 @@
   }
 
   function user_unregister() {
-
     $('#userUnregisterModal').modal('hide');
-
+    $('#loading_set').show();
     $.ajax({
       url : base_url + '/home/unregister/confirm',
       dataType : 'json',
       success : function(res) {
+        $("#loading_set").fadeOut(500);
         if (res.status === 'success') {
-
           if (res.message === '') {
             $('#userUnregisterConfirmModal').modal('hide');
             if (login_type === 'kakao') {
@@ -390,7 +397,6 @@
             $('#userUnregisterConfirmModal .modal-body .text-center').text(res.message);
             $('#userUnregisterConfirmModal').modal('show');
           }
-
         } else {
           alert(res.message);
           window.location.href = base_url;
@@ -493,6 +499,8 @@
       return false;
     }
   
+    $('#loading_set').show();
+  
     let formData = new FormData();
     formData.append('qna_body', qna_body);
     formData.append('email', qna_email);
@@ -506,6 +514,7 @@
       contentType: false,
       processData: false,
       success: function (data) {
+        $("#loading_set").fadeOut(500);
         if (data === 'done' || data.search('done') !== -1) {
           let text = '<strong>성공하였습니다</strong>';
           notify(text,'success','bottom','right');

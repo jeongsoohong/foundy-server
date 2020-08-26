@@ -1874,6 +1874,13 @@ QUERY;
           echo json_encode($result);
           exit;
         }
+        
+        if ($teacher_data->activate != 1) {
+          $result['status'] = 'fail';
+          $result['message'] = "해당 강사는 활동 중이 아닙니다.(code:{$teacher_data->activate})";
+          echo json_encode($result);
+          exit;
+        }
 
         $result['status'] = 'success';
         $result['teacher_name'] = $teacher_data->name;
@@ -4124,9 +4131,10 @@ QUERY;
         }
         
         $coupons = null;
+        $now = date('Y-m-d H:i:s');
         if ($this->is_login()) {
           $query = <<<QUERY
-select * from user_coupon where user_id={$user_id} and used=0 order by user_coupon_id desc
+select * from user_coupon where user_id={$user_id} and used=0 and '{$now}' < use_at order by user_coupon_id desc
 QUERY;
           $coupons = $this->db->query($query)->result();
         }

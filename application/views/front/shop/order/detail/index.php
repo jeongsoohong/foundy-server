@@ -300,15 +300,15 @@
   function purchase_product_cancel(id) {
     let cancel_reason = $('#cancel-reason').val();
     
-    console.log(id);
-    console.log(cancel_reason);
+    // console.log(id);
+    // console.log(cancel_reason);
     
     if (cancel_reason.length < 5) {
       alert('최소 5자 이상 적어주세요.');
       return false;
     }
     
-    event.preventDefault();
+    $('#loading_set').show();
     
     let formData = new FormData();
     formData.append('id', cancel_id);
@@ -322,6 +322,7 @@
       contentType: false,
       processData: false,
       success: function (data) {
+        $("#loading_set").fadeOut(500);
         if (data === 'done' || data.search('done') !== -1) {
           let text = '<strong>성공하였습니다</strong>';
           notify(text,'success','bottom','right');

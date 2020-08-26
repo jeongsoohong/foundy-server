@@ -57,6 +57,8 @@
       alert('옵바른 이메일 주소를 입력바랍니다');
       return false;
     }
+  
+    $('#loading_set').show();
     
     let formData = new FormData();
     formData.append('email', email);
@@ -70,6 +72,7 @@
       contentType: false,
       processData: false,
       success: function (data) {
+        $("#loading_set").fadeOut(500);
         if (data === 'done' || data.search('done') !== -1) {
           alert('인증코드가 전송되었습니다. 이메일 확인 후 입력바랍니다.');
           $('#approval_code').prop('disabled', false);

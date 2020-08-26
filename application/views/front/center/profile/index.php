@@ -521,6 +521,8 @@ if ($center_data->shower || $center_data->towel || $center_data->parking || $cen
   }
 
   function get_schedule_content(date) {
+    $('#loading_set').show();
+    
     // set current month
     var d = new Date(date);
     var currentMonth = get_month_str(d.getMonth());
@@ -538,6 +540,7 @@ if ($center_data->shower || $center_data->towel || $center_data->parking || $cen
       type: 'GET', // form submit method get/post
       dataType: 'html', // request type html/json/xml
       success: function(data) {
+        $("#loading_set").fadeOut(500);
         // alert(data);
         $('.schedule-detail table').remove();
         $('.schedule-detail').append(data);

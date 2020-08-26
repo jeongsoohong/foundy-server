@@ -201,6 +201,8 @@
       return false;
     }
   
+    $('#loading_set').show();
+    
     let formData = new FormData();
     formData.append('qna_body', qna_body);
     formData.append('email', qna_email);
@@ -214,11 +216,12 @@
       contentType: false,
       processData: false,
       success: function (data) {
+        $("#loading_set").fadeOut(500);
         if (data === 'done' || data.search('done') !== -1) {
           let text = '<strong>성공하였습니다</strong>';
           notify(text,'success','bottom','right');
           $('#qnaModal').modal('hide');
-          window.location.reload(true);
+          setTimeout(function(){location.reload();},1000);
         } else {
           let text = '<strong>실패하였습니다</strong>' + data;
           notify(text,'warning','bottom','right');
@@ -230,7 +233,7 @@
     });
   }
   $(document).ready(function() {
-    var input = document.getElementById('search-text');
+    let input = document.getElementById('search-text');
 
     input.addEventListener('keyup', function(e) {
       // console.log(e.key);

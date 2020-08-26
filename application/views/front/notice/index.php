@@ -70,11 +70,8 @@
 <script>
   var page = 0;
   function ajax_notice_list() {
-
     page = page + 1;
-
-    console.log('page : ' + page);
-
+    // console.log('page : ' + page);
     $.ajax({
       url: "<?php echo base_url().'home/notice/list?type='.$type.'&page='; ?>" + page,
       type: 'GET', // form submit method get/post
@@ -105,7 +102,7 @@
 
   function get_notice(id) {
     $('#notice-detail-' + notice_id).remove();
-
+    
     let s = $('#notice-title-' + notice_id + ' .fa');
     s.removeClass('fa-angle-up');
     s.addClass('fa-angle-down');
@@ -114,21 +111,17 @@
       notice_id = 0;
       return false;
     }
-
+  
     $.ajax({
       url: "<?php echo base_url().'home/notice/detail?id='; ?>" + id,
       type: 'GET', // form submit method get/post
       dataType: 'html', // request type html/json/xml
       success: function(html) {
-
         $('#notice-list-li-' + id).closest('li').after(html);
-
         s = $('#notice-title-' + id + ' .fa');
         s.removeClass('fa-angle-down');
         s.addClass('fa-angle-up');
-
         notice_id = id;
-
       },
       error: function(e) {
         console.log(e)

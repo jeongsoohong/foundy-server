@@ -91,6 +91,8 @@
     // console.log(password1);
     // console.log(password2);
     
+    $('#loading_set').show();
+    
     let formData = new FormData();
     formData.append('email', email);
     formData.append('password1', password1);
@@ -107,6 +109,7 @@
       contentType: false,
       processData: false,
       success : function(res) {
+        $("#loading_set").fadeOut(500);
         // console.log(res);
         res = JSON.parse(res);
         if (res.status === 'success') {

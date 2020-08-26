@@ -16,42 +16,45 @@
 <!--</form>-->
 
 <script>
-    function filter_blog(page){
-        var form = $('#filter_form');
-        var alert = $('#result');
-        var formdata = false;
-        if (window.FormData){
-            formdata = new FormData(form[0]);
-        }
-        $.ajax({
-            url: form.attr('action')+page+'/', // form action url
-            type: 'POST', // form submit method get/post
-            dataType: 'html', // request type html/json/xml
-            data: formdata ? formdata : form.serialize(), // serialize form data
-            cache       : false,
-            contentType : false,
-            processData : false,
-            beforeSend: function() {
-                var top = '200';
-                alert.fadeOut();
-                alert.html('<div style="text-align:center;width:100%;position:relative;top:'+top+'px;"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>').fadeIn(); // change submit button text
-            },
-            success: function(data) {
-                setTimeout(function(){
-                    alert.html(data); // fade in response data
-                }, 20);
-                setTimeout(function(){
-                    alert.fadeIn(); // fade in response data
-                }, 30);
-            },
-            error: function(e) {
-                console.log(e)
-            }
-        });
-
+  function filter_blog(page){
+    $('#loading_set').show();
+    
+    var form = $('#filter_form');
+    var alert = $('#result');
+    var formdata = false;
+    if (window.FormData){
+      formdata = new FormData(form[0]);
     }
-
-    $(document).ready(function() {
-        filter_blog('0');
+    $.ajax({
+      url: form.attr('action')+page+'/', // form action url
+      type: 'POST', // form submit method get/post
+      dataType: 'html', // request type html/json/xml
+      data: formdata ? formdata : form.serialize(), // serialize form data
+      cache       : false,
+      contentType : false,
+      processData : false,
+      beforeSend: function() {
+        var top = '200';
+        alert.fadeOut();
+        alert.html('<div style="text-align:center;width:100%;position:relative;top:'+top+'px;"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>').fadeIn(); // change submit button text
+      },
+      success: function(data) {
+        $("#loading_set").fadeOut(500);
+        setTimeout(function(){
+          alert.html(data); // fade in response data
+        }, 20);
+        setTimeout(function(){
+          alert.fadeIn(); // fade in response data
+        }, 30);
+      },
+      error: function(e) {
+        console.log(e)
+      }
     });
+    
+  }
+  
+  $(document).ready(function() {
+    filter_blog('0');
+  });
 </script>

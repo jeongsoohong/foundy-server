@@ -58,26 +58,22 @@
   </div>
 </section>
 <script>
-  var page = 0;
-
+  let page = 0;
   function ajax_order_list() {
-
     page = page + 1;
-
     // console.log('page : ' + page + ', cateogory : ' + category);
-
     $.ajax({
       url: "<?php echo base_url().'home/shop/order/list?page='; ?>" + page,
       type: 'GET', // form submit method get/post
       dataType: 'html', // request type html/json/xml
       success: function(data) {
-        var prevCnt = $(".purchase-list ul li").length;
+        let prevCnt = $(".purchase-list ul li").length;
 
         // console.log(data);
         $('.purchase-list ul').append(data);
         // console.log($(".purchase-list ul li").length % 10);
 
-        var listCnt = $(".purchase-list ul li").length;
+        let listCnt = $(".purchase-list ul li").length;
         if ( listCnt === 0 || listCnt % <?php echo SHOP_PRODUCT_PURCHASE_LIST_PAGE_SIZE; ?> !== 0 || prevCnt === listCnt) {
           $('#view_more').hide();
         } else {

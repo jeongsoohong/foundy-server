@@ -125,26 +125,21 @@
 <!--  <input id="page_num" type="hidden" value="0"/>-->
 <!--</label>-->
 <script>
-  var page = 0;
-  var filter = '';
+  let page = 0;
+  let filter = '';
 
   function ajax_class_list() {
-
     page = page + 1;
-
     // console.log('page : ' + page + ', filter : ' + filter);
-
     $.ajax({
       url: "<?php echo base_url().'home/find/class/list?page='; ?>" + page + '&filter=' + filter,
       type: 'GET', // form submit method get/post
       dataType: 'html', // request type html/json/xml
       success: function(data) {
-        var prevCnt = $(".video_ul a li").length;
-
+        let prevCnt = $(".video_ul a li").length;
         $('.video_ul').append(data);
         // console.log($(".video_ul a li").length % 10);
-
-        var listCnt = $(".video_ul a li").length;
+        let listCnt = $(".video_ul a li").length;
         if ( listCnt === 0 || listCnt % 10 !== 0 || prevCnt === listCnt) {
           $('#view_more').hide();
         } else {
@@ -157,9 +152,7 @@
         console.log(e)
       }
     });
-
     // $('#page_num').val(page);
-
   }
 
   $(function() {

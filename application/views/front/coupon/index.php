@@ -148,21 +148,17 @@
 <script>
   let coupon_page = 0;
   function ajax_coupon_list() {
-  
     coupon_page = coupon_page + 1;
     // console.log('coupon_page : ' + coupon_page);
-  
     $.ajax({
       url: "<?php echo base_url().'home/coupon/list?page='; ?>" + coupon_page,
       type: 'GET', // form submit method get/post
       dataType: 'html', // request type html/json/xml
       success: function(data) {
       let prevCnt = $(".coupon-list ul li").length;
-    
       // console.log(data);
       $('.coupon-list ul').append(data);
        //console.log($(".coupon-list ul li").length % <?php //echo COUPON_LIST_PAGE_SIZE; ?>//);
-    
       let listCnt = $(".coupon-list ul li").length;
       if ( listCnt === 0 || listCnt % <?php echo COUPON_LIST_PAGE_SIZE; ?> !== 0 || prevCnt === listCnt) {
         $('#coupon_view_more').hide();
@@ -179,23 +175,18 @@
   }
   
   let my_coupon_page = 0;
-
   function ajax_my_coupon_list() {
-  
     my_coupon_page = my_coupon_page + 1;
     // console.log('my_coupon_page : ' + my_coupon_page);
-  
     $.ajax({
       url: "<?php echo base_url().'home/coupon/list/my?page='; ?>" + my_coupon_page,
       type: 'GET', // form submit method get/post
       dataType: 'html', // request type html/json/xml
       success: function(data) {
         let prevCnt = $(".my-coupon-list ul li").length;
-      
         // console.log(data);
         $('.my-coupon-list ul').append(data);
         //console.log($(".my-coupon-list ul li").length % <?php //echo COUPON_LIST_PAGE_SIZE; ?>//);
-      
         let listCnt = $(".my-coupon-list ul li").length;
         if ( listCnt === 0 || listCnt % <?php echo COUPON_LIST_PAGE_SIZE; ?> !== 0 || prevCnt === listCnt) {
           $('#my_coupon_view_more').hide();
@@ -213,8 +204,7 @@
 
   function change_coupon_info_tab(e) {
     let target = e.data('target');
-    console.log(target);
-
+    // console.log(target);
     $('.coupon-info-tab').find('div').removeClass('active');
     $('.' + target + '-tab').addClass('active');
     if (target === 'coupon') {
@@ -235,8 +225,7 @@
   }
 
   function get_coupon(id) {
-    event.preventDefault();
-  
+    $('#loading_set').show();
     $.ajax({
       url: '<?php echo base_url(); ?>home/coupon/receive?id=' + id, // form action url
       type: 'GET', // form submit method get/post
@@ -245,6 +234,7 @@
       contentType: false,
       processData: false,
       success: function (data) {
+        $("#loading_set").fadeOut(500);
         if (data === 'done' || data.search('done') !== -1) {
           let text = '<strong>성공하였습니다</strong>';
           notify(text,'success','bottom','right');

@@ -100,28 +100,22 @@
 </section>
 <!-- /PAGE WITH SIDEBAR -->
 <script>
-
-  var page = 0;
-  var category = <?php echo $category; ?>;
+  let page = 0;
+  let category = <?php echo $category; ?>;
 
   function ajax_blog_list() {
-
     page = page + 1;
-
     // console.log('page : ' + page + ', cateogory : ' + category);
-
     $.ajax({
       url: "<?php echo base_url().'home/blog/list?page='; ?>" + page + '&category=' + category,
       type: 'GET', // form submit method get/post
       dataType: 'html', // request type html/json/xml
       success: function(data) {
-        var prevCnt = $(".blog_ul li").length;
-
+        let prevCnt = $(".blog_ul li").length;
         // console.log(data);
         $('.blog_ul').append(data);
         // console.log($(".center_ul a li").length % 10);
-
-        var listCnt = $(".blog_ul li").length;
+        let listCnt = $(".blog_ul li").length;
         if ( listCnt === 0 || listCnt % 2 !== 0 || prevCnt === listCnt) {
           $('#view_more').hide();
         } else {
@@ -134,9 +128,7 @@
         console.log(e)
       }
     });
-
     // $('#page_num').val(page);
-
   }
 
   $(document).ready(function(){
