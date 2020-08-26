@@ -358,7 +358,7 @@
     let change_status = $('#product-status-change').find('option:selected').val();
 
     if (change_status === status) {
-      console.log('status is not changed');
+      // console.log('status is not changed');
       return false;
     }
 

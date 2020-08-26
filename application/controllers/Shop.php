@@ -863,7 +863,24 @@ QUERY;
 //    $user_id = $this->session->userdata('user_id');
     $shop_id = $this->session->userdata('shop_id');
   
-    if ($para1 == 'update') {
+    if ($para1 == 'view') {
+      $purchase_product_id = $para2;
+      
+      $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $purchase_product_id))->row();
+      $purchase_info = $this->db->get_where('shop_purchase', array('purchase_id' => $purchase_product->purchase_id))->row();
+      $purchase_status = $this->db->order_by('history_id', 'asc')->get_where('shop_purchase_product_status', array('purchase_product_id' => $purchase_product_id))->result();
+      $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
+      $product_id_info = $this->db->get_where('shop_product_id', array('product_id' => $purchase_product->product_id))->row();
+  
+//      $this->crud_model->alert_exit(json_encode($product_info));
+      
+      $page_data['purchase_product'] = $purchase_product;
+      $page_data['purchase_info'] = $purchase_info;
+      $page_data['purchase_status'] = $purchase_status;
+      $page_data['product_info'] = $product_info;
+      $page_data['product_id_info'] = $product_id_info;
+      $this->load->view('back/shop/order_view', $page_data);
+    } elseif ($para1 == 'update') {
   
       if ($para2 == 'ship') {
     

@@ -162,7 +162,7 @@
   <div class="col-md-4">
   </div>
 </div>
-<div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="padding-top: 50px;">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header" style="display: block">
@@ -255,7 +255,7 @@
   function get_review(rid) {
     let modal = $('#reviewModal');
   
-    console.log('rid: ' + rid);
+    // console.log('rid: ' + rid);
   
     $.ajax({
       url: '<?php echo base_url(); ?>shop/product/review/get?rid=' + rid,
@@ -264,16 +264,16 @@
       contentType: 'application/json',
       processData: false,
        success: function (res) {
-         console.log(res);
+         // console.log(res);
          let review = JSON.parse(res);
-         console.log(review);
-         console.log(review.review_score);
-         console.log(review.review_body);
-         console.log(review.review_file_cnt);
-         console.log(review.review_img_url_1);
-         console.log(review.review_img_url_2);
-         console.log(review.review_img_url_3);
-         console.log(review.review_at);
+         // console.log(review);
+         // console.log(review.review_score);
+         // console.log(review.review_body);
+         // console.log(review.review_file_cnt);
+         // console.log(review.review_img_url_1);
+         // console.log(review.review_img_url_2);
+         // console.log(review.review_img_url_3);
+         // console.log(review.review_at);
    
          put_review_score(review.review_score);
          $('#review-body-pre').html('<pre>' + review.review_body + '</pre>');
@@ -315,7 +315,7 @@
   function search_review_page() {
     var item_name = $('#item-name').val();
 
-    console.log(item_name);
+    // console.log(item_name);
 
     $(".product-content").html(loading_set);
     $(".product-content").load(

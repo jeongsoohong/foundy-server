@@ -136,15 +136,15 @@
                   $opt_str = '';
                   foreach ($item->item_option_requires as $opt) {
                     if ($opt->val != -1) {
-                      $opt_str .= "[$opt->name]$opt->option / ";
+                      $opt_str .= "[$opt->name] $opt->option / ";
                     }
                   }
                   foreach ($item->item_option_others as $opt) {
                     if ($opt->val != -1) {
-                      $opt_str .= "[$opt->name]$opt->option / ";
+                      $opt_str .= "[$opt->name] $opt->option / ";
                     }
                   }
-                  $opt_str .= '[배송비]';
+                  $opt_str .= '[배송비] ';
                   if ($item->shipping_fee == 0) $opt_str .= '무료';
                   else $opt_str .= $this->crud_model->get_price_str($item->shipping_fee).'원';
                   

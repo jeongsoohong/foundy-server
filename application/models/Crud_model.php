@@ -1190,12 +1190,12 @@ QUERY;
     if (empty($purchase_info->cancel_reason) == false) {
       $cancel_data = json_decode($purchase_info->cancel_data);
     }
-    $cancel_data[] = json_encode($result);
+    $cancel_data[] = json_encode($result, JSON_UNESCAPED_UNICODE);
   
     $upd = array(
       'cancel_price' => $canceled_price,
-      'cancel_reason' => json_encode($reason),
-      'cancel_data' => json_encode($cancel_data),
+      'cancel_reason' => json_encode($reason, JSON_UNESCAPED_UNICODE),
+      'cancel_data' => json_encode($cancel_data, JSON_UNESCAPED_UNICODE),
       'status' => $status,
       'status_code' => $this->crud_model->get_purchase_status_str($status),
     );
@@ -1206,8 +1206,8 @@ QUERY;
     $upd = array(
       'canceled' => 1,
       'cancel_price' => $request_cancel_price,
-      'cancel_data' => json_encode($result),
-      'cancel_reason' => json_encode($cancel_reason),
+      'cancel_data' => json_encode($result, JSON_UNESCAPED_UNICODE),
+      'cancel_reason' => $cancel_reason,
       'shipping_status' => $shipping_status,
       'shipping_status_code' => $this->crud_model->get_shipping_status_str($shipping_status),
     );
@@ -1219,7 +1219,7 @@ QUERY;
       'purchase_product_id' => $purchase_product_id,
       'shipping_status' => $shipping_status,
       'shipping_status_code' => $this->crud_model->get_shipping_status_str($shipping_status),
-      'shipping_data' => json_encode($result),
+      'shipping_data' => json_encode($result, JSON_UNESCAPED_UNICODE),
     );
     $this->db->set('modified_at', 'NOW()', false);
     $this->db->insert('shop_purchase_product_status', $ins);

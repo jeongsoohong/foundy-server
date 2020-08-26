@@ -13,6 +13,7 @@
     text-align: center;
   }
   .order-content table tr td {
+    text-align: center;
     padding: 5px 15px;
   }
   .order-content table tr td div {
@@ -200,12 +201,12 @@
               </th>
               <th class="col-md-2">구매날짜</th>
               <th class="col-md-1">구매번호</th>
-              <th class="col-md-2">주문자</th>
+              <th class="col-md-1">주문자</th>
               <th class="col-md-2">상품명/옵션</th>
               <th class="col-md-1">수량</th>
               <th class="col-md-1">주문상태</th>
               <th class="col-md-1">상품배송유형</th>
-              <th class="col-md-1">기타</th>
+              <th class="col-md-2">기타</th>
             </tr>
             </thead>
             <tbody>
@@ -217,12 +218,14 @@
                 </td>
                 <td class="col-md-2"><?php echo $order->purchase_at; ?></td>
                 <td class="col-md-1"><?php echo $order->purchase_code; ?></td>
-                <td class="col-md-2"><?php echo $order->email; ?></td>
+                <td class="col-md-1"><?php echo $order->email; ?></td>
                 <td class="col-md-2"><?php echo $order->item_name; ?></td>
                 <td class="col-md-1"><?php echo $order->total_purchase_cnt; ?></td>
                 <td class="col-md-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
                 <td class="col-md-1"><?php echo $this->crud_model->get_product_shipping_free_str($order->free_shipping); ?></td>
-                <td class="col-md-1" style="width: 100%; margin: auto">
+                <td class="col-md-2" style="width: 100%; margin: auto">
+                  <button class="btn btn-info" onclick="get_info(<?php echo $order->purchase_product_id; ?>)"
+                          style="font-size: 10px; width: auto; height: 30px; margin: auto">정보</button>
                   <button class="btn btn-danger" onclick="open_req_order_modal(<?php echo $order->purchase_product_id; ?>, <?php echo SHOP_ORDER_REQ_TYPE_CANCEL; ?>)"
                           style="font-size: 10px; width: auto; height: 30px; margin: auto"><?php echo $this->crud_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CANCEL); ?></button>
                 </td>
@@ -273,6 +276,8 @@
                   <input class="form-control shipping-code" name="shipping-code" style="font-size: 10px; width: auto; height: 30px; border: none;" placeholder="운송장번호"/>
                 </td>
                 <td class="col-md-1" style="width: 100%; margin: auto">
+                  <button class="btn btn-info" onclick="get_info(<?php echo $order->purchase_product_id; ?>)"
+                          style="font-size: 10px; width: auto; height: 30px; margin: auto">정보</button>
                   <button class="btn btn-danger" onclick="open_req_order_modal(<?php echo $order->purchase_product_id; ?>, <?php echo SHOP_ORDER_REQ_TYPE_CANCEL; ?>)"
                           style="font-size: 10px; width: auto; height: 30px; margin: auto"><?php echo $this->crud_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CANCEL); ?></button>
                 </td>
@@ -327,6 +332,8 @@
                 value="<?php echo $order->shipping_data->shipping_code; ?>"/>
               </td>
               <td class="col-md-1" style="width: 100%; margin: auto">
+                <button class="btn btn-info" onclick="get_info(<?php echo $order->purchase_product_id; ?>)"
+                        style="font-size: 10px; width: auto; height: 30px; margin: auto">정보</button>
                 <button class="btn btn-mint" onclick="change_shipping_data(this)" data-id="<?php echo $order->purchase_product_id; ?>"
                         style="font-size: 10px; width: auto; height: 30px;margin: auto;">송장수정</button>
 <!--                <button class="btn btn-danger" style="font-size: 10px; width: auto; height: 30px; margin: auto">반품</button>-->
@@ -382,6 +389,8 @@
                   value="<?php echo $order->shipping_data->shipping_code; ?>"/>
                 </td>
                 <td class="col-md-1" style="width: 100%; margin: auto">
+                  <button class="btn btn-info" onclick="get_info(<?php echo $order->purchase_product_id; ?>)"
+                          style="font-size: 10px; width: auto; height: 30px; margin: auto">정보</button>
                   <button class="btn btn-mint" onclick="open_req_order_modal(<?php echo $order->purchase_product_id; ?>, <?php echo SHOP_ORDER_REQ_TYPE_CHANGE; ?>)"
                           style="font-size: 10px; width: auto; height: 30px; margin: auto"><?php echo $this->crud_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CHANGE); ?></button>
                   <button class="btn btn-danger" onclick="open_req_order_modal(<?php echo $order->purchase_product_id; ?>, <?php echo SHOP_ORDER_REQ_TYPE_RETURN; ?>)"
@@ -414,7 +423,8 @@
               <th class="col-md-1">수량</th>
               <th class="col-md-1">주문상태</th>
               <th class="col-md-1"><?php echo $this->crud_model->get_order_req_type_str($req_type); ?> 일자</th>
-              <th class="col-md-3"><?php echo $this->crud_model->get_order_req_type_str($req_type); ?> 사유</th>
+              <th class="col-md-2"><?php echo $this->crud_model->get_order_req_type_str($req_type); ?> 사유</th>
+              <th class="col-md-1">기타</th>
             </tr>
             </thead>
             <tbody>
@@ -436,9 +446,12 @@
                 <td class="col-md-1">
                   <?php echo $order->canceled_at; ?>
                 </td>
-                <td class="col-md-3">
+                <td class="col-md-2">
                   <?php echo $order->cancel_reason; ?>
                 </td>
+                <td class="col-md-1" style="width: 100%; margin: auto">
+                  <button class="btn btn-info" onclick="get_info(<?php echo $order->purchase_product_id; ?>)"
+                          style="font-size: 10px; width: auto; height: 30px; margin: auto">정보</button>
               </tr>
             <?php }?>
             </tbody>
@@ -514,6 +527,25 @@
     </div>
   </div>
 </div>
+<div class="modal fade" id="orderInfoModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" style="padding-top: 50px;">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="width: 5%">
+          <span class="pull-right" aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">주문정보</h4>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer" style="display: block;">
+        <button type="button" class="btn btn-theme btn-theme-sm" onclick="close_info()"
+                style="text-transform: none; width: 20%; font-weight: 400; color: #fff; background-color: black">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
 <style>
   .item-list-pagination {
     padding: 15px;
@@ -545,11 +577,25 @@
   let end_date = '<?php echo $end_date; ?>';
   let confirm_delay = <?php echo $confirm_delay; ?>;
 
+  function close_info() {
+    $('#orderInfoModal').modal('hide');
+  }
+
+  function get_info(id) {
+    let modal = $('#orderInfoModal');
+    let info = $('#orderInfoModal .modal-body');
+  
+    modal.modal('show');
+    modal.appendTo('body');
+    info.html(loading_set);
+    info.load("<?php echo base_url()?>shop/order/view/" + id);
+  };
+  
   function get_order_page(page) {
-    console.log(ship_status);
-    console.log(start_date);
-    console.log(end_date);
-    console.log(confirm_delay);
+    // console.log(ship_status);
+    // console.log(start_date);
+    // console.log(end_date);
+    // console.log(confirm_delay);
 
     window.location.href = encodeURI("<?php echo base_url();?>shop/order?page=" + page + "&ship_status=" + ship_status
     + "&start_date=" + start_date + "&end_date=" + end_date + "&confirm_delay=" + confirm_delay);
@@ -561,10 +607,10 @@
     let _end_date = $('#end-date').val();
     let _confirm_delay = ($('#confirm-delay').prop('checked') === true ? '1' : '0');
 
-    console.log(_ship_status);
-    console.log(_start_date);
-    console.log(_end_date);
-    console.log(_confirm_delay);
+    // console.log(_ship_status);
+    // console.log(_start_date);
+    // console.log(_end_date);
+    // console.log(_confirm_delay);
 
     window.location.href = encodeURI("<?php echo base_url();?>shop/order?page=1" + "&ship_status=" + _ship_status
       + "&start_date=" + _start_date + "&end_date=" + _end_date + "&confirm_delay=" + _confirm_delay);
@@ -654,9 +700,9 @@
       return false;
     }
   
-    console.log(ship_status);
-    console.log(next_status);
-    console.log(shipping_infos);
+    // console.log(ship_status);
+    // console.log(next_status);
+    // console.log(shipping_infos);
     
     let formData = new FormData();
     formData.append('ship_status', ship_status);
@@ -712,7 +758,7 @@
   let req_id = 0;
   let req_type = <?php echo SHOP_ORDER_REQ_TYPE_DEFAULT; ?>;
   function open_req_order_modal(id, type) {
-    console.log(id);
+    // console.log(id);
     req_id = id;
     req_type = type;
     
@@ -732,9 +778,9 @@
   function order_req() {
     let req_reason = $('#req-reason').val();
     
-    console.log(req_id);
-    console.log(req_type);
-    console.log(req_reason);
+    // console.log(req_id);
+    // console.log(req_type);
+    // console.log(req_reason);
     
     let formData = new FormData();
     formData.append('req_id', req_id);
@@ -807,8 +853,8 @@
     shipping_data.shipping_company = shipping_company;
     shipping_data.shipping_code = shipping_code;
   
-    console.log(purchase_product_id);
-    console.log(shipping_data);
+    // console.log(purchase_product_id);
+    // console.log(shipping_data);
     
     let formData = new FormData();
     formData.append('purchase_product_id', purchase_product_id);
@@ -859,6 +905,7 @@
       }
     });
   }
+  
   $(document).ready(function(){
     $('#datetimepicker1').datetimepicker();
     $('#datetimepicker2').datetimepicker();
