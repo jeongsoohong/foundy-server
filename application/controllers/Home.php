@@ -3951,6 +3951,19 @@ QUERY;
 
       } elseif ($type == 'add') {
 
+        // 기존에 구매하려고 했던것들을 지운다
+        if ($this->is_login() == true) {
+          $user_id = $this->session->userdata('user_id');
+          $user_key = array('user_id' => $user_id);
+        } else {
+          $session_id = $this->crud_model->get_session_id();
+          $user_key = array('session_id' => $session_id);
+        }
+        $where = $user_key;
+        $where['purchase'] = 1;
+        $upd['purchase'] = 0;
+        $this->db->update('shop_cart', $upd, $where);
+  
         $cart_ids = $this->input->post('cart_ids');
         foreach ($cart_ids as $cart_id) {
           $this->db->set('purchase_at', 'NOW()', false);
