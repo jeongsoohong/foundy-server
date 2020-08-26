@@ -226,13 +226,18 @@
         </div>
         <div class="cart-item-all">
           <?php foreach ($cart_items as $item) { ?>
-            <div class="cart-item" data-id="<?php echo $item->cart_id; ?>" data-price="<?php echo $item->item_sell_price; ?>" data-additional-price="<?php echo $item->additional_price;?>" data-shipping-fee="<?php echo $item->shipping_fee; ?>" data-purchase-cnt="<?php echo $item->total_purchase_cnt;?>">
+            <div class="cart-item" data-id="<?php echo $item->cart_id; ?>" data-price="<?php echo $item->item_sell_price; ?>" data-additional-price="<?php echo $item->additional_price;?>" data-shipping-fee="<?php echo $item->shipping_fee; ?>" data-purchase-cnt="<?php echo $item->total_purchase_cnt;?>" data-status="<?php echo $item->product_id->status; ?>"
+              <?php if ($item->product_id->status != SHOP_PRODUCT_STATUS_ON_SALE) echo 'style="color: grey;"'; ?>>
               <div class="cart-item-info">
                 <div class="item-name">
                   <span class="item-brand"><?php echo $item->shop->shop_name.' '; ?></span><?php echo $item->product->item_name; ?>
                 </div>
 <!--                <div class="item-name"></div>-->
-                <div class="item-price" ><?php echo $this->crud_model->get_price_str($item->item_sell_price); ?>원</div>
+                <div class="item-price" >
+                  [가격]
+                  <?php echo $this->crud_model->get_price_str($item->total_price); ?>원
+                  <?php echo '('.$this->crud_model->get_price_str($item->item_sell_price).'원*'.$item->total_purchase_cnt.'개)'; ?>
+                </div>
                 <div class="item-option" >
                   <?php
                   $opt_str = '';
@@ -246,8 +251,14 @@
                       $opt_str .= "[$opt->name]$opt->option / ";
                     }
                   }
-                  $opt_str .= "수량 $item->total_purchase_cnt 개";
+                  $opt_str .= '[배송비]';
+                  if ($item->shipping_fee == 0) $opt_str .= '무료';
+                  else $opt_str .= $this->crud_model->get_price_str($item->shipping_fee).'원';
+                  
                   echo $opt_str;
+                  if ($item->product_id->status != SHOP_PRODUCT_STATUS_ON_SALE) {
+                    echo ' / 판매중지상품';
+                  }
                   ?>
                 </div>
               </div>

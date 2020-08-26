@@ -3291,7 +3291,7 @@ QUERY;
 
       $product_id = $_GET['id'];
       $query = <<<QUERY
-select a.product_code,a.brand_name,a.review,a.review_score,a.qna,b.* from shop_product_id a, shop_product b
+select a.product_code,a.brand_name,a.review,a.review_score,a.status,a.qna,b.* from shop_product_id a, shop_product b
 where a.product_id=b.product_id and a.product_id={$product_id}
 QUERY;
 
@@ -3473,21 +3473,29 @@ QUERY;
           $item->shop_shipping = $this->db->get_where('shop_shipping', array('shop_id' => $item->product->shop_id))->row();
 
           // total purchase cnt
-          $total_purchase_cnt += $item->total_purchase_cnt;
+          if ($item->product_id->status == SHOP_PRODUCT_STATUS_ON_SALE) {
+            $total_purchase_cnt += $item->total_purchase_cnt;
+          }
 
           // total price
           $item->total_price = ($item->product->item_sell_price * $item->total_purchase_cnt);
-          $total_price += $item->total_price;
+          if ($item->product_id->status == SHOP_PRODUCT_STATUS_ON_SALE) {
+            $total_price += $item->total_price;
+          }
 
           // shipping fee
           $item->shipping_fee = 0;
           if ($item->product->item_shipping_free == false) {
 
-            $item->shipping_fee = ($item->shop_shipping->free_shipping_cond_price *
-              ((int)($item->total_purchase_cnt / $item->product->bundle_shipping_cnt) +
-                ($item->total_purchase_cnt % $item->product->bundle_shipping_cnt > 0 ? 1 : 0)));
-
-            $total_shipping_fee += $item->shipping_fee;
+            if ($item->total_price < $item->shop_shipping->free_shipping_total_price) {
+              $item->shipping_fee = ($item->shop_shipping->free_shipping_cond_price *
+                ((int)($item->total_purchase_cnt / $item->product->bundle_shipping_cnt) +
+                  ($item->total_purchase_cnt % $item->product->bundle_shipping_cnt > 0 ? 1 : 0)));
+            }
+  
+            if ($item->product_id->status == SHOP_PRODUCT_STATUS_ON_SALE) {
+              $total_shipping_fee += $item->shipping_fee;
+            }
 
           }
 
@@ -3496,14 +3504,18 @@ QUERY;
           $item->additional_price = 0;
           foreach ($item->item_option_requires as $opt) {
             $item->additional_price += $opt->price;
-            $total_additional_price += $opt->price;
+            if ($item->product_id->status == SHOP_PRODUCT_STATUS_ON_SALE) {
+              $total_additional_price += $opt->price;
+            }
           }
           $item->item_option_others = json_decode($item->item_option_others);
           foreach ($item->item_option_others as $opt) {
             $item->additional_price += $opt->price;
-            $total_additional_price += $opt->price;
+            if ($item->product_id->status == SHOP_PRODUCT_STATUS_ON_SALE) {
+              $total_additional_price += $opt->price;
+            }
           }
-
+  
           $item->total_balance = $item->total_price + $item->shipping_fee + $item->additional_price;
 
           $upd = array(
@@ -3971,7 +3983,10 @@ QUERY;
           $item->product_id = $this->db->get_where('shop_product_id', array('product_id' => $item->product_id))->row();
           $item->shop = $this->db->get_where('shop', array('shop_id' => $item->product->shop_id))->row();
           $item->shop_shipping = $this->db->get_where('shop_shipping', array('shop_id' => $item->product->shop_id))->row();
-
+  
+          if ($item->product_id->status != SHOP_PRODUCT_STATUS_ON_SALE) {
+            $this->crud_model->alert_exit('판매중지상품이 포함되어있습니다. 장바구니에서 확인 후 다시 구매해주세요.', base_url().'home/shop/cart');
+          }
           // cart ids
           $cart_ids[] = $item->cart_id;
 
@@ -3985,10 +4000,12 @@ QUERY;
           // shipping fee
           $item->shipping_fee = 0;
           if ($item->product->item_shipping_free == false) {
-
-            $item->shipping_fee = ($item->shop_shipping->free_shipping_cond_price *
-              ((int)($item->total_purchase_cnt / $item->product->bundle_shipping_cnt) +
-                ($item->total_purchase_cnt % $item->product->bundle_shipping_cnt > 0 ? 1 : 0)));
+  
+            if ($item->total_price < $item->shop_shipping->free_shipping_total_price) {
+              $item->shipping_fee = ($item->shop_shipping->free_shipping_cond_price *
+                ((int)($item->total_purchase_cnt / $item->product->bundle_shipping_cnt) +
+                  ($item->total_purchase_cnt % $item->product->bundle_shipping_cnt > 0 ? 1 : 0)));
+            }
 
             $total_shipping_fee += $item->shipping_fee;
 

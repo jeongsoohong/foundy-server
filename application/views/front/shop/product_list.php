@@ -9,10 +9,10 @@ if (isset($shop_items)) {
         <div class="col-md-12 item-img">
           <a href="<?php echo base_url().'home/shop/product?id='.$item->product_id; ?>">
             <img class="img-responsive" src="<?php echo $item->item_image_url_0; ?>" alt=""/>
-            <?php if ($item->item_discount_rate > 0) { ?>
-              <img class="img-responsive item-banner" src="<?php echo base_url().'uploads/shop/sale.png'; ?>" alt=""/>
-            <?php } elseif ($item->status == SHOP_PRODUCT_STATUS_STOP_SALE) { ?>
+            <?php if ($item->status == SHOP_PRODUCT_STATUS_STOP_SALE) { ?>
               <img class="img-responsive item-banner" src="<?php echo base_url().'uploads/shop/sold out.png'; ?>" alt=""/>
+            <?php } elseif ($item->item_discount_rate > 0) { ?>
+              <img class="img-responsive item-banner" src="<?php echo base_url().'uploads/shop/sale.png'; ?>" alt=""/>
             <?php } else { ?>
               <img class="img-responsive item-banner" src="<?php echo base_url().'uploads/shop/new.png'; ?>" alt=""/>
             <?php } ?>

@@ -378,14 +378,31 @@
     border-bottom: 1px solid #EAEAEA;
     padding: 10px;
   }
+  .product-content {
+    position: relative;
+  }
+  .img-responsive {
+    width: 100%;
+  }
+  .product-content .item-banner {
+    position: absolute;
+    z-index: 10;
+    right: 10px;
+    top: 10px;
+    width: 30px;
+    height: 30px;
+  }
 </style>
 <section class="page-section">
   <div class="container">
     <div class="row">
       <div class="col-md-12 product-content">
+        <?php if ($product->status != SHOP_PRODUCT_STATUS_ON_SALE) { ?>
+          <img class="img-responsive item-banner" src="<?php echo base_url().'uploads/shop/sold out.png'; ?>" alt=""/>
+        <?php } ?>
         <div class="col-md-12 item-images">
           <?php
-            for ($i = 0; $i < $product->item_image_count; $i++) {
+          for ($i = 0; $i < $product->item_image_count; $i++) {
             ?>
             <div class="item-image">
               <img class="slider-img" src="<?php echo $product->{'item_image_url_'.$i}; ?>" alt="">
@@ -969,8 +986,13 @@
     window.location.href = '<?php echo base_url(); ?>home/shop?cat=all&col=product_id&order=desc';
   }
 
+  let purchable = <? echo ($product->status == SHOP_PRODUCT_STATUS_ON_SALE ? 'true' : 'false'); ?>;
   function add_opt() {
-    $('#itemOptModal').modal('show');
+    if (purchable === true) {
+      $('#itemOptModal').modal('show');
+    } else {
+      alert('판매중지상품은 구매하실 수 없습니다.');
+    }
   }
 
   let product_id = <?php echo $product->product_id; ?>;
@@ -1027,12 +1049,18 @@
 
   function add_cart() {
     let shop_id = <?php echo $product->shop_id; ?>;
+    let addable = true;
 
     for (let i = 0; i < item_option_requires_cnt; i++) {
-      if (item_option_requires[i].val === -1) {
+      if (item_option_requires[i].val === '-1') {
         alert('필수 옵션을 선택해 주세요');
+        addable = false;
         return false;
       }
+    }
+    
+    if (addable === false) {
+      return false;
     }
 
     if (total_purchase_cnt === 0) {

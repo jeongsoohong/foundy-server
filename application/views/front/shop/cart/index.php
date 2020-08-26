@@ -116,17 +116,22 @@
         </div>
         <div class="cart-item-all">
           <?php foreach ($cart_items as $item) { ?>
-            <div class="cart-item" data-id="<?php echo $item->cart_id; ?>" data-price="<?php echo $item->item_sell_price; ?>" data-additional-price="<?php echo $item->additional_price;?>" data-shipping-fee="<?php echo $item->shipping_fee; ?>" data-purchase-cnt="<?php echo $item->total_purchase_cnt;?>">
+            <div class="cart-item" data-id="<?php echo $item->cart_id; ?>" data-price="<?php echo $item->item_sell_price; ?>" data-additional-price="<?php echo $item->additional_price;?>" data-shipping-fee="<?php echo $item->shipping_fee; ?>" data-purchase-cnt="<?php echo $item->total_purchase_cnt;?>" data-status="<?php echo $item->product_id->status; ?>"
+            <?php if ($item->product_id->status != SHOP_PRODUCT_STATUS_ON_SALE) echo 'style="color: grey;"'; ?>>
               <div class="cart-item-info">
                 <div class="item-brand">
                   <label style="text-align:left">
-                    <input checked onchange="change_balance()" class='form-checkbox' id="cart-item-check-all" name="cart_item_check_all" type="checkbox" value="1">
+                    <input <?php if ($item->product_id->status == SHOP_PRODUCT_STATUS_ON_SALE) echo 'checked'; ?> onchange="change_balance()" class='form-checkbox' id="cart-item-check-all" name="cart_item_check_all" type="checkbox" value="1" data-status="<?php echo $item->product_id->status; ?>"/>
                     <?php echo $item->shop->shop_name; ?>
                   </label>
                 </div>
                 <div class="item-name"><?php echo $item->product->item_name; ?></div>
-                <div class="item-price" ><?php echo $this->crud_model->get_price_str($item->item_sell_price); ?>원</div>
-                <div class="item-option" >
+                <div class="item-price">
+                  [가격]
+                  <?php echo $this->crud_model->get_price_str($item->total_price); ?>원
+                  <?php echo '('.$this->crud_model->get_price_str($item->item_sell_price).'원*'.$item->total_purchase_cnt.'개)'; ?>
+                </div>
+                <div class="item-option">
                   <?php
                   $opt_str = '';
                   foreach ($item->item_option_requires as $opt) {
@@ -139,8 +144,14 @@
                       $opt_str .= "[$opt->name]$opt->option / ";
                     }
                   }
-                  $opt_str .= "수량 $item->total_purchase_cnt 개";
+                  $opt_str .= '[배송비]';
+                  if ($item->shipping_fee == 0) $opt_str .= '무료';
+                  else $opt_str .= $this->crud_model->get_price_str($item->shipping_fee).'원';
+                  
                   echo $opt_str;
+                  if ($item->product_id->status != SHOP_PRODUCT_STATUS_ON_SALE) {
+                    echo ' / 판매중지상품';
+                  }
                   ?>
                 </div>
               </div>
@@ -208,7 +219,7 @@
   </div>
 </div>
 <script>
-  let cart_item_cnt = <?php echo $total_purchase_cnt; ?>;
+  let cart_item_cnt = <?php echo count($cart_items); ?>;
   let total_purchase_cnt = <?php echo $total_purchase_cnt; ?>;
   let total_price = <?php echo $total_price; ?>;
   let total_shipping_fee = <?php echo $total_shipping_fee; ?>;
@@ -235,7 +246,9 @@
         let additional_price = cart_item.data('additional-price');
         let shipping_fee = cart_item.data('shipping-fee');
         let purchase_cnt = cart_item.data('purchase-cnt');
-
+        let purchable = cart_item.data('status') === <?php echo SHOP_PRODUCT_STATUS_ON_SALE; ?>;
+        
+        // console.log(purchable);
         let formData = new FormData();
         formData.append('cart_id', cart_id);
         $.ajax({
@@ -248,24 +261,26 @@
           processData: false,
           success: function (data) {
             if (data === 'done' || data.search('done') !== -1) {
-
-              total_purchase_cnt -= purchase_cnt;
-              total_price -= (price * purchase_cnt);
-              total_shipping_fee -= shipping_fee;
-              total_additional_price -= additional_price;
-              total_balance = total_price + total_shipping_fee + total_additional_price;
-
-              $('#total-purchase-cnt').text(total_purchase_cnt + '개');
-              $('#total-price').text(get_price_str(total_price) + '원');
-              $('#total-additional-price').text(get_price_str(total_additional_price) + '원');
-              $('#total-shipping-fee').text(get_price_str(total_shipping_fee) + '원');
-              $('#total-balance').text(get_price_str(total_balance) + '원');
+              
+              if (purchable === true) {
+                total_purchase_cnt -= purchase_cnt;
+                total_price -= (price * purchase_cnt);
+                total_shipping_fee -= shipping_fee;
+                total_additional_price -= additional_price;
+                total_balance = total_price + total_shipping_fee + total_additional_price;
+  
+                $('#total-purchase-cnt').text(total_purchase_cnt + '개');
+                $('#total-price').text(get_price_str(total_price) + '원');
+                $('#total-additional-price').text(get_price_str(total_additional_price) + '원');
+                $('#total-shipping-fee').text(get_price_str(total_shipping_fee) + '원');
+                $('#total-balance').text(get_price_str(total_balance) + '원');
+              }
 
               cart_item.remove();
 
               cart_item_cnt -= 1;
 
-              console.log(cart_item_cnt);
+              // console.log(cart_item_cnt);
               if (cart_item_cnt === 0) {
                 cart_on(false);
               }
@@ -297,17 +312,19 @@
     $.each($('.cart-item-all').find('input:checkbox'),function(idx,item) {
       let checked = $(item).prop('checked');
       if (checked === true) {
-        let cart_item = $(item).closest('.cart-item');
-        let cart_id = cart_item.data('id');
-        let price = cart_item.data('price');
-        let additional_price = cart_item.data('additional-price');
-        let shipping_fee = cart_item.data('shipping-fee');
-        let purchase_cnt = cart_item.data('purchase-cnt');
-
-        total_purchase_cnt += purchase_cnt;
-        total_price += (price * purchase_cnt);
-        total_shipping_fee += shipping_fee;
-        total_additional_price += additional_price;
+        if ($(item).data('status') === <?php echo SHOP_PRODUCT_STATUS_ON_SALE; ?>) {
+          let cart_item = $(item).closest('.cart-item');
+          let cart_id = cart_item.data('id');
+          let price = cart_item.data('price');
+          let additional_price = cart_item.data('additional-price');
+          let shipping_fee = cart_item.data('shipping-fee');
+          let purchase_cnt = cart_item.data('purchase-cnt');
+  
+          total_purchase_cnt += purchase_cnt;
+          total_price += (price * purchase_cnt);
+          total_shipping_fee += shipping_fee;
+          total_additional_price += additional_price;
+        }
       } else {
         all_checked = false;
       }
@@ -358,16 +375,27 @@
     // grand open
     let formData = new FormData();
     let item_cnt = 0;
+    let purchable = true;
 
     $.each($('.cart-item-all').find('input:checkbox'),function(idx,item) {
       let checked = $(item).prop('checked');
       if (checked === true) {
+        if ($(item).data('status') !== <?php echo SHOP_PRODUCT_STATUS_ON_SALE; ?>) {
+          alert('판매중지상품은 구매하실 수 없습니다.');
+          purchable = false;
+          return false;
+        }
         let cart_item = $(item).closest('.cart-item');
         let cart_id = cart_item.data('id');
         formData.append('cart_ids[]', cart_id);
         item_cnt += 1;
       }
     });
+    
+    console.log(purchable);
+    if (purchable === false) {
+      return false;
+    }
 
     if (item_cnt === 0) {
       alert('상품을 선택해주세요.');
@@ -394,5 +422,9 @@
     });
 
   }
+  
+  $(document).ready(function() {
+    change_balance();
+  });
 
 </script>

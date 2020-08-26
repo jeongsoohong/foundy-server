@@ -887,7 +887,6 @@ QUERY;
   }
 
   function cart_on() {
-    $cart_on = 0;
     if ($this->session->userdata('user_login') == 'yes') {
       $user_id = $this->session->userdata('user_id');
       $query = <<<QUERY
