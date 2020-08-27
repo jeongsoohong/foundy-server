@@ -11,11 +11,11 @@ git pull
 
 echo
 echo '----====---- application start ----====----'
-rsync -avz --delete $GIT_PATH/application $WEB_PATH
+rsync -avz --delete --exclude="logs" $GIT_PATH/application $WEB_PATH
 
 echo
 echo '----====---- system start ----====----'
-rsync -avz --delete --exclude="logs" $GIT_PATH/system $WEB_PATH
+rsync -avz --delete $GIT_PATH/system $WEB_PATH
 
 echo
 echo '----====---- template start ----====----'
