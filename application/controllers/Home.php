@@ -3907,7 +3907,7 @@ QUERY;
         if ($user_save == true) {
 
           $user_id = 0;
-          $session_id = 0;
+          $session_id = '';
           if ($this->is_login() == true) {
             $user_id = $this->session->userdata('user_id');
             $user_key = array('user_id' => $user_id);

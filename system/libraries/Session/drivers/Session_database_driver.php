@@ -295,36 +295,55 @@ class CI_Session_database_driver extends CI_Session_driver implements SessionHan
 	 */
 	public function destroy($session_id)
 	{
-    // shop_cart, shop_shipping_address, shop_purchase_user, must not delete , shop_purchase_product, shop_purchase
-    $this->_db->delete('shop_cart', array('session_id' => $session_id));
-    $this->_db->delete('shop_shipping_address', array('session_id' => $session_id));
-    $this->_db->delete('shop_purchase_user', array('session_id' => $session_id));
-
     if ($this->_lock)
 		{
-			// Prevent previous QB calls from messing with our queries
-			$this->_db->reset_query();
-
-			$this->_db->where('id', $session_id);
-			if ($this->_config['match_ip'])
-			{
-				$this->_db->where('ip_address', $_SERVER['REMOTE_ADDR']);
-			}
-
-			if ( ! $this->_db->delete($this->_config['save_path']))
-			{
-				return $this->_failure;
-			}
-		}
-
-		if ($this->close() === $this->_success)
-		{
-			$this->_cookie_destroy();
-			return $this->_success;
-		}
-
-		return $this->_failure;
-	}
+      log_message('debug', "Session: session destroy : {$session_id}");
+      
+      // shop_cart, shop_shipping_address, shop_purchase_user, must not delete , shop_purchase_product, shop_purchase
+      $this->_db->reset_query();
+      $this->_db->where('session_id', $session_id);
+      $this->_db->delete('shop_cart');
+      if ($this->_db->affected_rows() > 0) {
+        log_message('debug', "Session destroy: shop_cart is deleted, session_id : {$session_id}");
+      }
+      
+      $this->_db->reset_query();
+      $this->_db->where('session_id', $session_id);
+      $this->_db->delete('shop_shipping_address');
+      if ($this->_db->affected_rows() > 0) {
+        log_message('debug', "Session destroy: shop_shipping_address is deleted, session_id : {$session_id}");
+      }
+      
+      $this->_db->reset_query();
+      $this->_db->where('session_id', $session_id);
+      $this->_db->delete('shop_purchase_user');
+      if ($this->_db->affected_rows() > 0) {
+        log_message('debug', "Session destroy: shop_purchase_user is deleted, session_id : {$session_id}");
+      }
+      
+      // Prevent previous QB calls from messing with our queries
+      $this->_db->reset_query();
+      
+      $this->_db->where('id', $session_id);
+      if ($this->_config['match_ip'])
+      {
+        $this->_db->where('ip_address', $_SERVER['REMOTE_ADDR']);
+      }
+      
+      if ( ! $this->_db->delete($this->_config['save_path']))
+      {
+        return $this->_failure;
+      }
+    }
+    
+    if ($this->close() === $this->_success)
+    {
+      $this->_cookie_destroy();
+      return $this->_success;
+    }
+    
+    return $this->_failure;
+  }
 
 	// ------------------------------------------------------------------------
 
@@ -338,12 +357,60 @@ class CI_Session_database_driver extends CI_Session_driver implements SessionHan
 	 */
 	public function gc($maxlifetime)
 	{
-    // Prevent previous QB calls from messing with our queries
-		$this->_db->reset_query();
+    // customize
+    
+    $deleted = false;
 
-		return ($this->_db->delete($this->_config['save_path'], 'timestamp < '.(time() - $maxlifetime)))
-			? $this->_success
-			: $this->_failure;
+    // shop_cart, shop_shipping_address, shop_purchase_user, must not delete , shop_purchase_product, shop_purchase
+    $gc_datas = $this->_db->get_where($this->_config['save_path'], 'timestamp < '.(time() - $maxlifetime))->result();
+    foreach ($gc_datas as $session_data) {
+      $session_id = $session_data->id;
+  
+      // shop_cart, shop_shipping_address, shop_purchase_user, must not delete , shop_purchase_product, shop_purchase
+      $this->_db->reset_query();
+      $this->_db->where('session_id', $session_id);
+      $this->_db->delete('shop_cart');
+      if ($this->_db->affected_rows() > 0) {
+        log_message('debug', "Session garbage collector: shop_cart is deleted, session_id : {$session_id}");
+      }
+      
+      $this->_db->reset_query();
+      $this->_db->where('session_id', $session_id);
+      $this->_db->delete('shop_shipping_address');
+      if ($this->_db->affected_rows() > 0) {
+        log_message('debug', "Session garbage collector: shop_shipping_address is deleted, session_id : {$session_id}");
+      }
+      
+      $this->_db->reset_query();
+      $this->_db->where('session_id', $session_id);
+      $this->_db->delete('shop_purchase_user');
+      if ($this->_db->affected_rows() > 0) {
+        log_message('debug', "Session garbage collector: shop_purchase_user is deleted, session_id : {$session_id}");
+      }
+  
+      $this->_db->reset_query();
+      $this->_db->where('id', $session_id);
+      if ($this->_config['match_ip']) {
+        $this->_db->where('ip_address', $_SERVER['REMOTE_ADDR']);
+      }
+  
+      $this->_db->delete($this->_config['save_path']);
+      if ($this->_db->affected_rows() > 0) {
+        log_message('debug', "Session garbage collector: ci_sessions is deleted, session_id : {$session_id}");
+        $deleted = true;
+      }
+    }
+
+    return $deleted == true ? $this->_success : $this->_failure;
+    
+    // end of customize
+    
+    // Prevent previous QB calls from messing with our queries
+//		$this->_db->reset_query();
+//
+//		return ($this->_db->delete($this->_config['save_path'], 'timestamp < '.(time() - $maxlifetime)))
+//			? $this->_success
+//			: $this->_failure;
 	}
 
 	// --------------------------------------------------------------------
