@@ -29,7 +29,7 @@ $status_str = $this->crud_model->get_product_status_str($product->status);
   </div>
   <hr>
   <div class="row">
-    <div class="col-sm-12">
+    <div class="col-md-12 col-sm-12 col-xs-12">
       <div class="panel-body">
         <table class="table table-striped" style="border-radius:3px;">
           <tbody>

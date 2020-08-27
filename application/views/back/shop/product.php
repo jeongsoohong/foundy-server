@@ -41,30 +41,30 @@
 </style>
 <div id="content-container">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12 col-sm-12 col-xs-12">
       <!-- product nav -->
-      <div class="col-md-12" style="padding-left: 0; padding-right: 0">
-        <div class="col-md-12" id="page-title">
+      <div class="col-md-12 col-sm-12 col-xs-12" style="padding-left: 0; padding-right: 0">
+        <div class="col-md-12 col-sm-12 col-xs-12" id="page-title">
           <h1 class="page-header text-overflow">상품관리</h1>
         </div>
-        <div class="col-md-12 product-navbar-content">
+        <div class="col-md-12 col-sm-12 col-xs-12 product-navbar-content">
           <ul class="nav">
 <!--            <li class="col-md-2"></li>-->
-            <li class="col-md-3" id="product_list"><a href="javascript:void(0);">상품리스트</a></li>
-            <li class="col-md-3" id="product_qna"><a href="javascript:void(0);">상품Q&A</a></li>
-            <li class="col-md-3" id="product_review"><a href="javascript:void(0);">상품리뷰</a></li>
-            <li class="col-md-3" id="product_register"><a href="javascript:void(0);">상품등록</a></li>
-            <li class="col-md-3" id="product_edit" style="display:none"><a href="javascript:void(0);">상품정보수정</a></li>
+            <li class="col-md-3 col-sm-3 col-xs-3" id="product_list"><a href="javascript:void(0);">상품리스트</a></li>
+            <li class="col-md-3 col-sm-3 col-xs-3" id="product_qna"><a href="javascript:void(0);">상품Q&A</a></li>
+            <li class="col-md-3 col-sm-3 col-xs-3" id="product_review"><a href="javascript:void(0);">상품리뷰</a></li>
+            <li class="col-md-3 col-sm-3 col-xs-3" id="product_register"><a href="javascript:void(0);">상품등록</a></li>
+            <li class="col-md-3 col-sm-3 col-xs-3" id="product_edit" style="display:none"><a href="javascript:void(0);">상품정보수정</a></li>
           </ul>
         </div>
       </div>
-      <div class="col-md-12">
+      <div class="col-md-12 col-sm-12 col-xs-12">
         <hr style="width: 100%; border: 1px solid #EAEAEA; margin: 0">
       </div>
-      <div class="col-md-12" id="page-content">
+      <div class="col-md-12 col-sm-12 col-xs-12" id="page-content">
         <div class="row">
           <!-- product content -->
-          <div class="col-md-12 product-content">
+          <div class="col-md-12 col-sm-12 col-xs-12 product-content">
 
           </div>
         </div>
@@ -85,13 +85,13 @@
     if (open === false) {
       if (edit_open === true) {
         // $('ul .nav li:first-child').remove();
-        $('ul .nav').append('<li class="col-md-3" id="product_edit"><a href="javascript:void(0);">상품정보수정</a></li>')
+        $('ul .nav').append('<li class="col-md-3 col-sm-3 col-xs-3" id="product_edit"><a href="javascript:void(0);">상품정보수정</a></li>')
         // $('#product_edit').show();
       }
     } else {
       if (edit_open === false) {
         $('#product_edit').remove();
-        // $('ul .nav').prepend('<li class="col-md-2"></li>');
+        // $('ul .nav').prepend('<li class="col-md-2 col-sm-2 col-xs-2"></li>');
         // $('#product_edit').hide();
       }
     }

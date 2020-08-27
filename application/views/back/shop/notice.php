@@ -33,42 +33,42 @@
   </div>
   <div class="notice-content" id="page-content">
     <div class="row">
-      <div class="col-md-12">
-        <table class="col-md-12">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <table class="col-md-12 col-sm-12 col-xs-12">
           <tbody>
           <tr>
-            <td class="col-md-10">
+            <td class="col-md-10 col-sm-10 col-xs-10">
               <input value="<?php echo $q; ?>" id="query" class="form-control" value="" type="text" name="notice-search" alt="" placeholder="검색정보를 입력하세요"/>
             </td>
-            <td class="col-md-2">
+            <td class="col-md-2 col-sm-2 col-xs-2">
               <button class="notice-search-btn btn-dark" onclick="search_notice_page()">검색</button>
             </td>
           </tr>
           </tbody>
         </table>
       </div>
-      <div class="col-md-12">
+      <div class="col-md-12 col-sm-12 col-xs-12">
         <hr style="width: 100%; bnotice: 1px solid #EAEAEA">
       </div>
-      <div class="col-md-12 notice-list">
-        <table class="col-md-12">
+      <div class="col-md-12 col-sm-12 col-xs-12 notice-list">
+        <table class="col-md-12 col-sm-12 col-xs-12">
           <thead>
           <tr>
-            <th class="col-md-8">타이틀</th>
-            <th class="col-md-2">작성자</th>
-            <th class="col-md-2">등록일</th>
+            <th class="col-md-8 col-sm-8 col-xs-8">타이틀</th>
+            <th class="col-md-2 col-sm-2 col-xs-2">작성자</th>
+            <th class="col-md-2 col-sm-2 col-xs-2">등록일</th>
           </tr>
           </thead>
           <tbody>
           <?php foreach ($notice_data as $notice) { ?>
             <tr>
-              <td class="col-md-8 notice-title" >
+              <td class="col-md-8 col-sm-8 col-xs-8 notice-title" >
                 <a href="javascript:void(0);" onclick="get_notice(<?php echo $notice->blog_id; ?>)">
                   <?php echo $notice->title; ?>
                 </a>
               </td>
-              <td class="col-md-2">FOUNDY</td>
-              <td class="col-md-2"><?php echo $notice->modified_at; ?></td>
+              <td class="col-md-2 col-sm-2 col-xs-2">FOUNDY</td>
+              <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $notice->modified_at; ?></td>
             </tr>
           <?php } ?>
           </tbody>
@@ -76,45 +76,45 @@
       </div>
     </div>
   </div>
-  <div class="col-md-12 item-list-pagination">
-    <div class="col-md-4">
+  <div class="col-md-12 col-sm-12 col-xs-12 item-list-pagination">
+    <div class="col-md-4 col-sm-4 col-xs-4">
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4 col-sm-4 col-xs-4">
       <ul class="nav">
-        <li class="col-md-1 li-empty"></li>
-        <li class="col-md-1 li-empty"></li>
-        <li class="col-md-1 li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
         <?php if ($prev>= 2) { ?>
-          <a href="javascript:void(0);" onclick="get_notice_page('1');"><li class="col-md-1"><span class="fa fa-angle-double-left"></span></li></a>
-          <a href="javascript:void(0);" onclick="get_notice_page('<?php echo $prev - 1; ?>');"><li class="col-md-1"><span class="fa fa-angle-left"></span></li></a>
+          <a href="javascript:void(0);" onclick="get_notice_page('1');"><li class="col-md-1 col-sm-1 col-xs-1"><span class="fa fa-angle-double-left"></span></li></a>
+          <a href="javascript:void(0);" onclick="get_notice_page('<?php echo $prev - 1; ?>');"><li class="col-md-1 col-sm-1 col-xs-1"><span class="fa fa-angle-left"></span></li></a>
         <?php } else { ?>
-          <li class="col-md-1 li-empty"></li>
-          <li class="col-md-1 li-empty"></li>
+          <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
+          <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
         <?php }?>
         <?php if ($prev == '') { ?>
-          <li class="col-md-1 li-empty"></li>
+          <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
         <?php } else { ?>
-          <a href="javascript:void(0);" onclick="get_notice_page('<?php echo $prev; ?>');"><li class="col-md-1"><?php echo $prev; ?></li></a>
+          <a href="javascript:void(0);" onclick="get_notice_page('<?php echo $prev; ?>');"><li class="col-md-1 col-sm-1 col-xs-1 "><?php echo $prev; ?></li></a>
         <?php }?>
-        <li class="col-md-1 active"><?php echo $page; ?></li>
+        <li class="col-md-1 col-sm-1 col-xs-1 active"><?php echo $page; ?></li>
         <?php if ($next == '') { ?>
-          <li class="col-md-1 li-empty"></li>
+          <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
         <?php } else { ?>
-          <a href="javascript:void(0);" onclick="get_notice_page('<?php echo $next; ?>');"><li class="col-md-1"><?php echo $next; ?></li></a>
+          <a href="javascript:void(0);" onclick="get_notice_page('<?php echo $next; ?>');"><li class="col-md-1 col-sm-1 col-xs-1 "><?php echo $next; ?></li></a>
         <?php }?>
         <?php if ($total - $page >= 2) { ?>
-          <a href="javascript:void(0);" onclick="get_notice_page('<?php echo $next + 1; ?>');"><li class="col-md-1"><span class="fa fa-angle-right"></span></li></a>
-          <a href="javascript:void(0);" onclick="get_notice_page('<?php echo $total; ?>');"><li class="col-md-1"><span class="fa fa-angle-double-right"></span></li></a>
+          <a href="javascript:void(0);" onclick="get_notice_page('<?php echo $next + 1; ?>');"><li class="col-md-1 col-sm-1 col-xs-1 "><span class="fa fa-angle-right"></span></li></a>
+          <a href="javascript:void(0);" onclick="get_notice_page('<?php echo $total; ?>');"><li class="col-md-1 col-sm-1 col-xs-1 "><span class="fa fa-angle-double-right"></span></li></a>
         <?php } else { ?>
-          <li class="col-md-1 li-empty"></li>
-          <li class="col-md-1 li-empty"></li>
+          <li class="col-md-1 col-sm-1 col-xs-1  li-empty"></li>
+          <li class="col-md-1 col-sm-1 col-xs-1  li-empty"></li>
         <?php }?>
-        <li class="col-md-1 li-empty"></li>
-        <li class="col-md-1 li-empty"></li>
-        <li class="col-md-1 li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
       </ul>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4 col-sm-4 col-xs-4">
     </div>
   </div>
 </div>
@@ -175,6 +175,8 @@
   
     // console.log(nid);
   
+    $('#loading_set').show();
+    
     $.ajax({
       url: '<?php echo base_url(); ?>shop/notice/detail?nid=' + nid,
       type: 'GET', // form submit method get/post
@@ -182,6 +184,7 @@
       contentType: 'application/json',
       processData: false,
       success: function (res) {
+        $("#loading_set").fadeOut(500);
         let notice = JSON.parse(res);
         // console.log(notice);
         $('#noticeModalTitle').text(notice.title);
@@ -197,13 +200,15 @@
   }
 
   function get_notice_page(page) {
-    console.log(query);
+    // console.log(query);
+    $('#loading_set').show();
     window.location.href = encodeURI("<?php echo base_url();?>shop/notice?page=" + page + "&q=" + query);
   }
 
   function search_notice_page() {
     let _query = $('#query').val();
-    console.log(_query);
+    // console.log(_query);
+    $('#loading_set').show();
     window.location.href = encodeURI("<?php echo base_url();?>shop/notice?page=" + page + "&q=" + _query);
   }
 </script>

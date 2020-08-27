@@ -42,12 +42,12 @@
   </div>
   <div class="order-content" id="page-content">
     <div class="row">
-      <div class="col-md-12">
-        <table class="col-md-12">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <table class="col-md-12 col-sm-12 col-xs-12">
           <tbody>
           <tr>
-            <th class="col-md-1">배송/클레임</th>
-            <td class="col-md-2">
+            <th class="col-md-1 col-sm-1 col-xs-1">배송/클레임</th>
+            <td class="col-md-2 col-sm-2 col-xs-2">
               <select id='shipping-status' class="form-control">
                 <optgroup label="배송관련">
 <!--                  <option --><?php //if ($ship_status == SHOP_SHIPPING_STATUS_WAIT) echo 'selected'; ?>
@@ -95,8 +95,8 @@
                 </optgroup>
               </select>
             </td>
-            <th class="col-md-1">검색정보</th>
-            <td class="col-md-2">
+            <th class="col-md-1 col-sm-1 col-xs-1">검색정보</th>
+            <td class="col-md-2 col-sm-2 col-xs-2">
               <select disabled id="qeury-opt" class="form-control">
                 <option value="1">주문번호</option>
                 <option value="2">주문자명</option>
@@ -107,22 +107,22 @@
                 <option value="7">수취인전화번호</option>
               </select>
             </td>
-            <td colspan="3" class="col-md-5">
+            <td colspan="3" class="col-md-5 col-sm-5 col-xs-5">
               <input disabled id="query" class="form-control" value="" type="text" name="order-search" alt="" maxlength="32" placeholder="검색정보를 입력하세요"/>
             </td>
-            <td class="col-md-1">
+            <td class="col-md-1 col-sm-1 col-xs-1">
               <button class="product-search btn-dark" onclick="search_order_page()">검색</button>
             </td>
           </tr>
           <tr>
-            <th class="col-md-1">브랜드</th>
-            <td class="col-md-2">
+            <th class="col-md-1 col-sm-1 col-xs-1">브랜드</th>
+            <td class="col-md-2 col-sm-2 col-xs-2">
               <select id="shop-brand" class="form-control">
                 <option value="1"><?php echo $shop_data->shop_name; ?></option>
               </select>
             </td>
-            <th class="col-md-1">결제/출고일</th>
-            <td class="col-md-2">
+            <th class="col-md-1 col-sm-1 col-xs-1">결제/출고일</th>
+            <td class="col-md-2 col-sm-2 col-xs-2">
               <div class='input-group date' id='datetimepicker1'>
                 <input value="<?php echo $start_date; ?>" id="start-date" type='text' class="form-control" name="start_date" placeholder="시작날짜"/>
                 <span class="input-group-addon">
@@ -130,10 +130,10 @@
                 </span>
               </div>
             </td>
-            <td class="col-md-1">
+            <td class="col-md-1 col-sm-1 col-xs-1">
               ~
             </td>
-            <td class="col-md-2">
+            <td class="col-md-2 col-sm-2 col-xs-2">
               <div class='input-group date' id='datetimepicker2'>
                 <input value="<?php echo $end_date; ?>" id="end-date" type='text' class="form-control" name="end_date" placeholder="종료날짜"/>
                 <span class="input-group-addon">
@@ -141,31 +141,31 @@
                 </span>
               </div>
             </td>
-            <td class="col-md-2">
+            <td class="col-md-2 col-sm-2 col-xs-2">
               <label style="text-align:left">
                 <input <?php if ($confirm_delay) echo 'checked'; ?> id="confirm-delay" class='form-checkbox' name="order-delay" type="checkbox" value="1"/>
                 <span style="padding-left: 10px;">주문확인지연</span>
               </label>
             </td>
-            <td class="col-md-1">
+            <td class="col-md-1 col-sm-1 col-xs-1">
             </td>
           </tr>
           </tbody>
         </table>
       </div>
-      <div class="col-md-12">
+      <div class="col-md-12 col-sm-12 col-xs-12">
         <hr style="width: 100%; border: 1px solid #EAEAEA">
       </div>
-      <div class="col-md-12 item-status">
-        <div class="col-md-12">
-          <div class="col-md-4">
+      <div class="col-md-12 col-sm-12 col-xs-12 item-status">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="col-md-4 col-sm-4 col-xs-4">
             <h5 style="padding-left: 15px">주문목록 [ 총 <?php echo $total_cnt; ?>건 ]</h5>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-4 col-sm-4 col-xs-4">
           </div>
-          <div class="col-md-2">
+          <div class="col-md-2 col-sm-2 col-xs-2">
           </div>
-          <div class="col-md-2">
+          <div class="col-md-2 col-sm-2 col-xs-2">
             <?php if ($ship_status == SHOP_SHIPPING_STATUS_ORDER_COMPLETED) { ?>
               <button class="order-change-status btn-dark" disabled id="order-status-change-btn" onclick="change_status();">
                 <<?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PREPARE); ?>>으로 변경
@@ -191,39 +191,39 @@
           </div>
         </div>
       </div>
-      <div class="col-md-12 order-list">
-        <table class="col-md-12">
+      <div class="col-md-12 col-sm-12 col-xs-12 order-list">
+        <table class="col-md-12 col-sm-12 col-xs-12">
           <?php if ($ship_status == SHOP_SHIPPING_STATUS_ORDER_COMPLETED) { ?>
             <thead>
             <tr>
-              <th class="col-md-1">
+              <th class="col-md-1 col-sm-1 col-xs-1">
                 <input class="form-control" id="item-list-all" type="checkbox" name="list_all" onchange="check_all()"/>
               </th>
-              <th class="col-md-2">구매날짜</th>
-              <th class="col-md-1">구매번호</th>
-              <th class="col-md-1">주문자</th>
-              <th class="col-md-2">상품명/옵션</th>
-              <th class="col-md-1">수량</th>
-              <th class="col-md-1">주문상태</th>
-              <th class="col-md-1">상품배송유형</th>
-              <th class="col-md-2">기타</th>
+              <th class="col-md-2 col-sm-2 col-xs-2">구매날짜</th>
+              <th class="col-md-1 col-sm-2 col-xs-2">구매번호</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">주문자</th>
+              <th class="col-md-2 col-sm-2 col-xs-2">상품명/옵션</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">수량</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">주문상태</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">상품배송유형</th>
+              <th class="col-md-2 col-sm-2 col-xs-2">기타</th>
             </tr>
             </thead>
             <tbody>
             <?php foreach ($order_data as $order) { ?>
               <tr>
-                <td class="col-md-1">
+                <td class="col-md-1 col-sm-1 col-xs-1">
                   <input class="form-control item-list-checkbox" data-id="<?php echo $order->purchase_product_id; ?>"
                          type="checkbox" name="list[]" onclick="check_change();" value="1"/>
                 </td>
-                <td class="col-md-2"><?php echo $order->purchase_at; ?></td>
-                <td class="col-md-1"><?php echo $order->purchase_code; ?></td>
-                <td class="col-md-1"><?php echo $order->email; ?></td>
-                <td class="col-md-2"><?php echo $order->item_name; ?></td>
-                <td class="col-md-1"><?php echo $order->total_purchase_cnt; ?></td>
-                <td class="col-md-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
-                <td class="col-md-1"><?php echo $this->crud_model->get_product_shipping_free_str($order->free_shipping); ?></td>
-                <td class="col-md-2" style="width: 100%; margin: auto">
+                <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $order->purchase_at; ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->purchase_code; ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->email; ?></td>
+                <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $order->item_name; ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->total_purchase_cnt; ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_product_shipping_free_str($order->free_shipping); ?></td>
+                <td class="col-md-2 col-sm-2 col-xs-2" style="width: 100%; margin: auto">
                   <button class="btn btn-info" onclick="get_info(<?php echo $order->purchase_product_id; ?>)"
                           style="font-size: 10px; width: auto; height: 30px; margin: auto">정보</button>
                   <button class="btn btn-danger" onclick="open_req_order_modal(<?php echo $order->purchase_product_id; ?>, <?php echo SHOP_ORDER_REQ_TYPE_CANCEL; ?>)"
@@ -235,36 +235,36 @@
           <?php } else if ($ship_status == SHOP_SHIPPING_STATUS_PREPARE) { ?>
             <thead>
             <tr>
-              <th class="col-md-1">
+              <th class="col-md-1 col-sm-1 col-xs-1">
                 <input class="form-control" id="item-list-all" type="checkbox" name="list_all" onchange="check_all()"/>
               </th>
-              <th class="col-md-1">구매번호/날짜</th>
-              <th class="col-md-1">주문자</th>
-              <th class="col-md-2">상품명/옵션</th>
-              <th class="col-md-1">수량</th>
-              <th class="col-md-1">주문상태</th>
-              <th class="col-md-1">상품배송유형</th>
-              <th class="col-md-1">배송사</th>
-              <th class="col-md-1">운송장번호</th>
-              <th class="col-md-1">기타</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">구매번호/날짜</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">주문자</th>
+              <th class="col-md-2 col-sm-2 col-xs-2">상품명/옵션</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">수량</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">주문상태</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">상품배송유형</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">배송사</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">운송장번호</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">기타</th>
             </tr>
             </thead>
             <tbody>
             <?php foreach ($order_data as $order) { ?>
               <tr>
-                <td class="col-md-1">
+                <td class="col-md-1 col-sm-1 col-xs-1">
                   <input class="form-control item-list-checkbox" data-id="<?php echo $order->purchase_product_id; ?>"
                          type="checkbox" name="list[]" onclick="check_change();" value="1"/>
                 </td>
-                <td class="col-md-1 purchase-code" data-code="<?php echo $order->purchase_code; ?>">
+                <td class="col-md-1 col-sm-1 col-xs-1 purchase-code" data-code="<?php echo $order->purchase_code; ?>">
                   <?php echo $order->purchase_code; ?> /<br><?php echo $order->purchase_at; ?>
                 </td>
-                <td class="col-md-1"><?php echo $order->email; ?></td>
-                <td class="col-md-2"><?php echo $order->item_name; ?></td>
-                <td class="col-md-1"><?php echo $order->total_purchase_cnt; ?></td>
-                <td class="col-md-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
-                <td class="col-md-1"><?php echo $this->crud_model->get_product_shipping_free_str($order->free_shipping); ?></td>
-                <td class="col-md-1">
+                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->email; ?></td>
+                <td class="col-md-2 col-sm-1 col-xs-1"><?php echo $order->item_name; ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->total_purchase_cnt; ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1 "><?php echo $this->crud_model->get_product_shipping_free_str($order->free_shipping); ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1">
                   <select class="form-control shipping-company">
                     <option value="0">배송사</option>
                     <?php foreach ($shop_shipping_company as $company) { ?>
@@ -272,10 +272,10 @@
                     <?php } ?>
                   </select>
                 </td>
-                <td class="col-md-1">
+                <td class="col-md-1 col-sm-1 col-xs-1">
                   <input class="form-control shipping-code" name="shipping-code" style="font-size: 10px; width: auto; height: 30px; border: none;" placeholder="운송장번호"/>
                 </td>
-                <td class="col-md-1" style="width: 100%; margin: auto">
+                <td class="col-md-1 col-sm-1 col-xs-1" style="width: 100%; margin: auto">
                   <button class="btn btn-info" onclick="get_info(<?php echo $order->purchase_product_id; ?>)"
                           style="font-size: 10px; width: auto; height: 30px; margin: auto">정보</button>
                   <button class="btn btn-danger" onclick="open_req_order_modal(<?php echo $order->purchase_product_id; ?>, <?php echo SHOP_ORDER_REQ_TYPE_CANCEL; ?>)"
@@ -287,18 +287,18 @@
           <?php } else if ($ship_status == SHOP_SHIPPING_STATUS_IN_PROGRESS) { ?>
           <thead>
           <tr>
-            <th class="col-md-1">
+            <th class="col-md-1 col-sm-1 col-xs-1">
               <input class="form-control" id="item-list-all" type="checkbox" name="list_all" onchange="check_all()"/>
             </th>
-            <th class="col-md-1">구매번호/날짜</th>
-            <th class="col-md-1">주문자</th>
-            <th class="col-md-2">상품명/옵션</th>
-            <th class="col-md-1">수량</th>
-            <th class="col-md-1">주문상태</th>
-            <th class="col-md-1">상품배송유형</th>
-            <th class="col-md-1">배송사</th>
-            <th class="col-md-1">운송장번호</th>
-            <th class="col-md-1">기타</th>
+            <th class="col-md-1 col-sm-1 col-xs-1">구매번호/날짜</th>
+            <th class="col-md-1 col-sm-1 col-xs-1">주문자</th>
+            <th class="col-md-2 col-sm-2 col-xs-2">상품명/옵션</th>
+            <th class="col-md-1 col-sm-1 col-xs-1">수량</th>
+            <th class="col-md-1 col-sm-1 col-xs-1">주문상태</th>
+            <th class="col-md-1 col-sm-1 col-xs-1">상품배송유형</th>
+            <th class="col-md-1 col-sm-1 col-xs-1">배송사</th>
+            <th class="col-md-1 col-sm-1 col-xs-1">운송장번호</th>
+            <th class="col-md-1 col-sm-1 col-xs-1">기타</th>
           </tr>
           </thead>
           <tbody>
@@ -306,19 +306,19 @@
             $order->shipping_data = json_decode($order->shipping_data);
             ?>
             <tr>
-              <td class="col-md-1">
+              <td class="col-md-1 col-sm-1 col-xs-1">
                 <input class="form-control item-list-checkbox" data-id="<?php echo $order->purchase_product_id; ?>"
                        type="checkbox" name="list[]" onclick="check_change();" value="1"/>
               </td>
-              <td class="col-md-1 purchase-code" data-code="<?php echo $order->purchase_code; ?>">
+              <td class="col-md-1 col-sm-1 col-xs-1 purchase-code" data-code="<?php echo $order->purchase_code; ?>">
                 <?php echo $order->purchase_code; ?> /<br><?php echo $order->purchase_at; ?>
               </td>
-              <td class="col-md-1"><?php echo $order->email; ?></td>
-              <td class="col-md-2"><?php echo $order->item_name; ?></td>
-              <td class="col-md-1"><?php echo $order->total_purchase_cnt; ?></td>
-              <td class="col-md-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
-              <td class="col-md-1"><?php echo $this->crud_model->get_product_shipping_free_str($order->free_shipping); ?></td>
-              <td class="col-md-1">
+              <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->email; ?></td>
+              <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $order->item_name; ?></td>
+              <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->total_purchase_cnt; ?></td>
+              <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
+              <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_product_shipping_free_str($order->free_shipping); ?></td>
+              <td class="col-md-1 col-sm-1 col-xs-1">
                 <select class="form-control shipping-company">
                   <option value="0">배송사</option>
                   <?php foreach ($shop_shipping_company as $company) { ?>
@@ -327,11 +327,11 @@
                   <?php } ?>
                 </select>
               </td>
-              <td class="col-md-1">
+              <td class="col-md-1 col-sm-1 col-xs-1">
                 <input class="form-control shipping-code" name="shipping-code" style="font-size: 10px; width: auto; height: 30px; border: none;" placeholder="운송장번호"
                 value="<?php echo $order->shipping_data->shipping_code; ?>"/>
               </td>
-              <td class="col-md-1" style="width: 100%; margin: auto">
+              <td class="col-md-1 col-sm-1 col-xs-1" style="width: 100%; margin: auto">
                 <button class="btn btn-info" onclick="get_info(<?php echo $order->purchase_product_id; ?>)"
                         style="font-size: 10px; width: auto; height: 30px; margin: auto">정보</button>
                 <button class="btn btn-mint" onclick="change_shipping_data(this)" data-id="<?php echo $order->purchase_product_id; ?>"
@@ -344,18 +344,18 @@
           <?php } else if ($ship_status == SHOP_SHIPPING_STATUS_COMPLETED) { ?>
             <thead>
             <tr>
-              <th class="col-md-1">
+              <th class="col-md-1 col-sm-1 col-xs-1">
                 <input class="form-control" id="item-list-all" type="checkbox" name="list_all" onchange="check_all()"/>
               </th>
-              <th class="col-md-1">구매번호/날짜</th>
-              <th class="col-md-1">주문자</th>
-              <th class="col-md-2">상품명/옵션</th>
-              <th class="col-md-1">수량</th>
-              <th class="col-md-1">주문상태</th>
-              <th class="col-md-1">상품배송유형</th>
-              <th class="col-md-1">배송사</th>
-              <th class="col-md-1">운송장번호</th>
-              <th class="col-md-1">기타</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">구매번호/날짜</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">주문자</th>
+              <th class="col-md-2 col-sm-2 col-xs-2">상품명/옵션</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">수량</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">주문상태</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">상품배송유형</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">배송사</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">운송장번호</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">기타</th>
             </tr>
             </thead>
             <tbody>
@@ -363,19 +363,19 @@
               $order->shipping_data = json_decode($order->shipping_data);
               ?>
               <tr>
-                <td class="col-md-1">
+                <td class="col-md-1 col-sm-1 col-xs-1">
                   <input class="form-control item-list-checkbox" data-id="<?php echo $order->purchase_product_id; ?>"
                          type="checkbox" name="list[]" onclick="check_change();" value="1"/>
                 </td>
-                <td class="col-md-1 purchase-code" data-code="<?php echo $order->purchase_code; ?>">
+                <td class="col-md-1 col-sm-1 col-xs-1 purchase-code" data-code="<?php echo $order->purchase_code; ?>">
                   <?php echo $order->purchase_code; ?> /<br><?php echo $order->purchase_at; ?>
                 </td>
-                <td class="col-md-1"><?php echo $order->email; ?></td>
-                <td class="col-md-2"><?php echo $order->item_name; ?></td>
-                <td class="col-md-1"><?php echo $order->total_purchase_cnt; ?></td>
-                <td class="col-md-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
-                <td class="col-md-1"><?php echo $this->crud_model->get_product_shipping_free_str($order->free_shipping); ?></td>
-                <td class="col-md-1">
+                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->email; ?></td>
+                <td class="col-md-2 col-sm-1 col-xs-1"><?php echo $order->item_name; ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->total_purchase_cnt; ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_product_shipping_free_str($order->free_shipping); ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1">
                   <select disabled class="form-control shipping-company">
                     <option value="0">배송사</option>
                     <?php foreach ($shop_shipping_company as $company) { ?>
@@ -384,11 +384,11 @@
                     <?php } ?>
                   </select>
                 </td>
-                <td class="col-md-1">
+                <td class="col-md-1 col-sm-1 col-xs-1">
                   <input readonly class="form-control shipping-code" name="shipping-code" style="font-size: 10px; width: auto; height: 30px; border: none;" placeholder="운송장번호"
                   value="<?php echo $order->shipping_data->shipping_code; ?>"/>
                 </td>
-                <td class="col-md-1" style="width: 100%; margin: auto">
+                <td class="col-md-1 col-sm-1 col-xs-1" style="width: 100%; margin: auto">
                   <button class="btn btn-info" onclick="get_info(<?php echo $order->purchase_product_id; ?>)"
                           style="font-size: 10px; width: auto; height: 30px; margin: auto">정보</button>
                   <button class="btn btn-mint" onclick="open_req_order_modal(<?php echo $order->purchase_product_id; ?>, <?php echo SHOP_ORDER_REQ_TYPE_CHANGE; ?>)"
@@ -414,17 +414,17 @@
             ?>
             <thead>
             <tr>
-              <th class="col-md-1">
+              <th class="col-md-1 col-sm-1 col-xs-1">
                 <input class="form-control" id="item-list-all" type="checkbox" name="list_all" onchange="check_all()"/>
               </th>
-              <th class="col-md-1">구매번호/날짜</th>
-              <th class="col-md-1">주문자</th>
-              <th class="col-md-2">상품명/옵션</th>
-              <th class="col-md-1">수량</th>
-              <th class="col-md-1">주문상태</th>
-              <th class="col-md-1"><?php echo $this->crud_model->get_order_req_type_str($req_type); ?> 일자</th>
-              <th class="col-md-2"><?php echo $this->crud_model->get_order_req_type_str($req_type); ?> 사유</th>
-              <th class="col-md-1">기타</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">구매번호/날짜</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">주문자</th>
+              <th class="col-md-2 col-sm-2 col-xs-2">상품명/옵션</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">수량</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">주문상태</th>
+              <th class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_order_req_type_str($req_type); ?> 일자</th>
+              <th class="col-md-2 col-sm-2 col-xs-2"><?php echo $this->crud_model->get_order_req_type_str($req_type); ?> 사유</th>
+              <th class="col-md-1 col-sm-1 col-xs-1">기타</th>
             </tr>
             </thead>
             <tbody>
@@ -432,24 +432,24 @@
               $order->shipping_data = json_decode($order->shipping_data);
               ?>
               <tr>
-                <td class="col-md-1">
+                <td class="col-md-1 col-sm-1 col-xs-1">
                   <input class="form-control item-list-checkbox" data-id="<?php echo $order->purchase_product_id; ?>"
                          type="checkbox" name="list[]" onclick="check_change();" value="1"/>
                 </td>
-                <td class="col-md-1 purchase-code" data-code="<?php echo $order->purchase_code; ?>">
+                <td class="col-md-1 col-sm-1 col-xs-1 purchase-code" data-code="<?php echo $order->purchase_code; ?>">
                   <?php echo $order->purchase_code; ?> /<br><?php echo $order->purchase_at; ?>
                 </td>
-                <td class="col-md-1"><?php echo $order->email; ?></td>
-                <td class="col-md-2"><?php echo $order->item_name; ?></td>
-                <td class="col-md-1"><?php echo $order->total_purchase_cnt; ?></td>
-                <td class="col-md-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
-                <td class="col-md-1">
+                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->email; ?></td>
+                <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $order->item_name; ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->total_purchase_cnt; ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1">
                   <?php echo $order->canceled_at; ?>
                 </td>
-                <td class="col-md-2">
+                <td class="col-md-2 col-sm-2 col-xs-2">
                   <?php echo $order->cancel_reason; ?>
                 </td>
-                <td class="col-md-1" style="width: 100%; margin: auto">
+                <td class="col-md-1 col-sm-1 col-xs-1" style="width: 100%; margin: auto">
                   <button class="btn btn-info" onclick="get_info(<?php echo $order->purchase_product_id; ?>)"
                           style="font-size: 10px; width: auto; height: 30px; margin: auto">정보</button>
               </tr>
@@ -460,45 +460,45 @@
       </div>
     </div>
   </div>
-  <div class="col-md-12 item-list-pagination">
-    <div class="col-md-4">
+  <div class="col-md-12 col-sm-12 col-xs-12 item-list-pagination">
+    <div class="col-md-4 col-sm-4 col-xs-4">
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4 col-sm-4 col-xs-4">
       <ul class="nav">
-        <li class="col-md-1 li-empty"></li>
-        <li class="col-md-1 li-empty"></li>
-        <li class="col-md-1 li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
         <?php if ($prev>= 2) { ?>
-          <a href="javascript:void(0);" onclick="get_order_page('1');"><li class="col-md-1"><span class="fa fa-angle-double-left"></span></li></a>
-          <a href="javascript:void(0);" onclick="get_order_page('<?php echo $prev - 1; ?>');"><li class="col-md-1"><span class="fa fa-angle-left"></span></li></a>
+          <a href="javascript:void(0);" onclick="get_order_page('1');"><li class="col-md-1 col-sm-1 col-xs-1"><span class="fa fa-angle-double-left"></span></li></a>
+          <a href="javascript:void(0);" onclick="get_order_page('<?php echo $prev - 1; ?>');"><li class="col-md-1 col-sm-1 col-xs-1"><span class="fa fa-angle-left"></span></li></a>
         <?php } else { ?>
-          <li class="col-md-1 li-empty"></li>
-          <li class="col-md-1 li-empty"></li>
+          <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
+          <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
         <?php }?>
         <?php if ($prev == '') { ?>
-          <li class="col-md-1 li-empty"></li>
+          <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
         <?php } else { ?>
-          <a href="javascript:void(0);" onclick="get_order_page('<?php echo $prev; ?>');"><li class="col-md-1"><?php echo $prev; ?></li></a>
+          <a href="javascript:void(0);" onclick="get_order_page('<?php echo $prev; ?>');"><li class="col-md-1 col-sm-1 col-xs-1 "><?php echo $prev; ?></li></a>
         <?php }?>
-        <li class="col-md-1 active"><?php echo $page; ?></li>
+        <li class="col-md-1 col-sm-1 col-xs-1 active"><?php echo $page; ?></li>
         <?php if ($next == '') { ?>
-          <li class="col-md-1 li-empty"></li>
+          <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
         <?php } else { ?>
-          <a href="javascript:void(0);" onclick="get_order_page('<?php echo $next; ?>');"><li class="col-md-1"><?php echo $next; ?></li></a>
+          <a href="javascript:void(0);" onclick="get_order_page('<?php echo $next; ?>');"><li class="col-md-1 col-sm-1 col-xs-1 "><?php echo $next; ?></li></a>
         <?php }?>
         <?php if ($total - $page >= 2) { ?>
-          <a href="javascript:void(0);" onclick="get_order_page('<?php echo $next + 1; ?>');"><li class="col-md-1"><span class="fa fa-angle-right"></span></li></a>
-          <a href="javascript:void(0);" onclick="get_order_page('<?php echo $total; ?>');"><li class="col-md-1"><span class="fa fa-angle-double-right"></span></li></a>
+          <a href="javascript:void(0);" onclick="get_order_page('<?php echo $next + 1; ?>');"><li class="col-md-1 col-sm-1 col-xs-1 "><span class="fa fa-angle-right"></span></li></a>
+          <a href="javascript:void(0);" onclick="get_order_page('<?php echo $total; ?>');"><li class="col-md-1 col-sm-1 col-xs-1 "><span class="fa fa-angle-double-right"></span></li></a>
         <?php } else { ?>
-          <li class="col-md-1 li-empty"></li>
-          <li class="col-md-1 li-empty"></li>
+          <li class="col-md-1 col-sm-1 col-xs-1  li-empty"></li>
+          <li class="col-md-1 col-sm-1 col-xs-1  li-empty"></li>
         <?php }?>
-        <li class="col-md-1 li-empty"></li>
-        <li class="col-md-1 li-empty"></li>
-        <li class="col-md-1 li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
       </ul>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4 col-sm-4 col-xs-4">
     </div>
   </div>
 </div>
@@ -596,7 +596,7 @@
     // console.log(start_date);
     // console.log(end_date);
     // console.log(confirm_delay);
-
+    $('#loading_set').show();
     window.location.href = encodeURI("<?php echo base_url();?>shop/order?page=" + page + "&ship_status=" + ship_status
     + "&start_date=" + start_date + "&end_date=" + end_date + "&confirm_delay=" + confirm_delay);
   }
@@ -611,7 +611,8 @@
     // console.log(_start_date);
     // console.log(_end_date);
     // console.log(_confirm_delay);
-
+  
+    $('#loading_set').show();
     window.location.href = encodeURI("<?php echo base_url();?>shop/order?page=1" + "&ship_status=" + _ship_status
       + "&start_date=" + _start_date + "&end_date=" + _end_date + "&confirm_delay=" + _confirm_delay);
   }
@@ -704,6 +705,8 @@
     // console.log(next_status);
     // console.log(shipping_infos);
     
+    $('#loading_set').show();
+    
     let formData = new FormData();
     formData.append('ship_status', ship_status);
     formData.append('next_status', next_status);
@@ -718,6 +721,7 @@
       contentType: false,
       processData: false,
       success: function (data) {
+        $('#loading_set').fadeOut(500);
         if (data === 'done' || data.search('done') !== -1) {
           $.notify({
             message: '저장되었습니다.',
@@ -781,6 +785,8 @@
     // console.log(req_id);
     // console.log(req_type);
     // console.log(req_reason);
+  
+    $('#loading_set').show();
     
     let formData = new FormData();
     formData.append('req_id', req_id);
@@ -796,7 +802,8 @@
       contentType: false,
       processData: false,
       success: function (data) {
-        console.log(data);
+        $("#loading_set").fadeOut(500);
+        // console.log(data);
         if (data === 'done' || data.search('done') !== -1) {
           $.notify({
             message: '신청되었습니다.',
@@ -855,6 +862,8 @@
   
     // console.log(purchase_product_id);
     // console.log(shipping_data);
+  
+    $('#loading_set').show();
     
     let formData = new FormData();
     formData.append('purchase_product_id', purchase_product_id);
@@ -869,6 +878,7 @@
       contentType: false,
       processData: false,
       success: function (data) {
+        $("#loading_set").fadeOut(500);
         if (data === 'done' || data.search('done') !== -1) {
           $.notify({
             message: '저장되었습니다.',

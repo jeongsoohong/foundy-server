@@ -89,38 +89,38 @@
   </div>
   <div id="page-content">
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="panel panel-bordered">
           <div class="panel-heading">
             <h3 class="panel-title">기본정보</h3>
           </div>
           <div class="panel-body">
             <div class="text-center">
-              <table border="1" bordercolor="#EAEAEA" class="col-md-12">
+              <table border="1" bordercolor="#EAEAEA" class="col-md-12 col-sm-12 col-xs-12">
                 <tbody>
                 <tr>
-                  <th class="col-md-1">이메일</th>
-                  <td class="col-md-2"><?php echo $shop_data->email; ?></td>
-                  <th class="col-md-1">브랜드명</th>
-                  <td class="col-md-2"><?php echo $shop_data->shop_name; ?></td>
-                  <th class="col-md-1">사업자번호</th>
-                  <td class="col-md-2"><?php echo $shop_data->business_license_num; ?></td>
-                  <th class="col-md-1">대표자명</th>
-                  <td class="col-md-2"><?php echo $shop_data->representative_name; ?></td>
+                  <th class="col-md-1 col-sm-1 col-xs-1">이메일</th>
+                  <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $shop_data->email; ?></td>
+                  <th class="col-md-1 col-sm-1 col-xs-1">브랜드명</th>
+                  <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $shop_data->shop_name; ?></td>
+                  <th class="col-md-1 col-sm-1 col-xs-1">사업자번호</th>
+                  <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $shop_data->business_license_num; ?></td>
+                  <th class="col-md-1 col-sm-1 col-xs-1">대표자명</th>
+                  <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $shop_data->representative_name; ?></td>
                 </tr>
                 <tr>
-                  <th class="col-md-1">업태</th>
-                  <td class="col-md-2"><?php echo $shop_data->business_conditions; ?></td>
-                  <th class="col-md-1">업종</th>
-                  <td class="col-md-2"><?php echo $shop_data->business_type; ?></td>
-                  <th class="col-md-1">수수료율</th>
-                  <td class="col-md-2"><?php echo $shop_data->commission_rate; ?>%</td>
-                  <th class="col-md-1">계약체결일</th>
-                  <td class="col-md-2"><?php echo $shop_data->contract_at; ?></td>
+                  <th class="col-md-1 col-sm-1 col-xs-1">업태</th>
+                  <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $shop_data->business_conditions; ?></td>
+                  <th class="col-md-1 col-sm-1 col-xs-1">업종</th>
+                  <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $shop_data->business_type; ?></td>
+                  <th class="col-md-1 col-sm-1 col-xs-1">수수료율</th>
+                  <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $shop_data->commission_rate; ?>%</td>
+                  <th class="col-md-1 col-sm-1 col-xs-1">계약체결일</th>
+                  <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $shop_data->contract_at; ?></td>
                 </tr>
                 <tr>
-                  <th class="col-md-1">주소</th>
-                  <td colspan="7" class="col-md-11"><?php echo '('.$shop_data->postcode.')'.' '.$shop_data->address_1.' '.$shop_data->address_2; ?></td>
+                  <th class="col-md-1 col-sm-1 col-xs-1">주소</th>
+                  <td colspan="7" class="col-md-11 col-sm-11 col-xs-11"><?php echo '('.$shop_data->postcode.')'.' '.$shop_data->address_1.' '.$shop_data->address_2; ?></td>
                 </tr>
                 </tbody>
               </table>
@@ -130,21 +130,21 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="panel panel-bordered">
           <div class="panel-heading">
             <h3 class="panel-title">계좌정보</h3>
           </div>
           <div class="panel-body">
-            <table border="1" bordercolor="#EAEAEA" class="col-md-12">
+            <table border="1" bordercolor="#EAEAEA" class="col-md-12 col-sm-12 col-xs-12">
               <tbody>
               <tr>
-                <th class="col-md-2">은행</th>
-                <td class="col-md-2"><?php echo $shop_data->bank_name; ?></td>
-                <th class="col-md-2">계좌번호</th>
-                <td class="col-md-2"><?php echo $shop_data->bank_account_num; ?></td>
-                <th class="col-md-2">예금주</th>
-                <td class="col-md-2"><?php echo $shop_data->bank_depositor; ?></td>
+                <th class="col-md-2 col-sm-2 col-xs-2">은행</th>
+                <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $shop_data->bank_name; ?></td>
+                <th class="col-md-2 col-sm-2 col-xs-2">계좌번호</th>
+                <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $shop_data->bank_account_num; ?></td>
+                <th class="col-md-2 col-sm-2 col-xs-2">예금주</th>
+                <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $shop_data->bank_depositor; ?></td>
               </tr>
               </tbody>
             </table>
@@ -153,7 +153,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="panel panel-bordered">
           <div class="panel-heading">
             <h3 class="panel-title">담당자 정보</h3>
@@ -165,12 +165,12 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="panel panel-bordered">
           <div class="panel-heading">
             <h3 class="panel-title">
               배송정보
-              <span class="col-md-1 pull-right">
+              <span class="col-md-1 col-sm-1 col-xs-1 pull-right">
                 <button class="shipping-info-save btn-info" onclick="save_send_info();" style="line-height:32px; width:100%; height:32px; font-size: 14px">저장</button>
               </span>
             </h3>
@@ -182,12 +182,12 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="panel panel-bordered">
           <div class="panel-heading">
             <h3 class="panel-title">
               반품정보
-              <span class="col-md-1 pull-right">
+              <span class="col-md-1 col-sm-1 col-xs-1 pull-right">
                 <button class="return-info-save btn-info" onclick="save_return_info();" style="line-height:32px; width:100%; height:32px; font-size: 14px">저장</button>
               </span>
             </h3>
@@ -199,12 +199,12 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="panel panel-bordered">
           <div class="panel-heading">
             <h3 class="panel-title">
               브랜드 추가설정
-              <span class="col-md-1 pull-right">
+              <span class="col-md-1 col-sm-1 col-xs-1 pull-right">
                 <button class="brand-info-save btn-info" onclick="save_brand_info()" style="line-height:32px; width:100%; height:32px; font-size: 14px">저장</button>
               </span>
             </h3>
@@ -235,7 +235,9 @@
       url = '<?php echo base_url(); ?>shop/account/worker/del';
       msg = '삭제되었습니다';
     }
-
+  
+    $('#loading_set').show();
+    
     var formData = new FormData();
     formData.append('worker_id', id);
     formData.append('worker_category', worker.find('.worker_category').val());
@@ -253,6 +255,7 @@
       contentType: false,
       processData: false,
       success: function (data) {
+        $("#loading_set").fadeOut(500);
         if (data == 'done' || data.search('done') !== -1) {
           $.notify({
             message: msg,
@@ -292,8 +295,6 @@
       }
     });
   }
-</script>
-<script>
   function move_shipping_company(from,to) {
     var elem  = $('.shipping-company-'+from).find('.selected');
     var code = elem.attr('data-id');
@@ -410,7 +411,9 @@
     } else {
       free_shipping = 0;
     }
-
+  
+    $('#loading_set').show();
+    
     var formData = new FormData();
     formData.append('send_info_postcode', send_info_postcode);
     formData.append('send_info_address_1', send_info_address_1);
@@ -420,7 +423,6 @@
     formData.append('free_shipping_total_price', free_shipping_total_price);
     formData.append('free_shipping_cond_price', free_shipping_cond_price);
     formData.append('shipping_company_count', shipping_company_list.length);
-
 
     $.each(shipping_company_list, function(index,item){
       formData.append('shipping_company_code_' + index, $(item).data('id'));
@@ -436,6 +438,7 @@
       contentType: false,
       processData: false,
       success: function (data) {
+        $("#loading_set").fadeOut(500);
         if (data === 'done' || data.search('done') !== -1) {
           $.notify({
             message: '저장되었습니다.',
@@ -506,6 +509,9 @@
       $('.return-price-info-header').addClass('header-required');
       return false;
     }
+    
+    $('#loading_set').show();
+    
     var formData = new FormData();
     formData.append('return_info_postcode', return_info_postcode);
     formData.append('return_info_address_1', return_info_address_1);
@@ -523,6 +529,7 @@
       contentType: false,
       processData: false,
       success: function (data) {
+        $("#loading_set").fadeOut(500);
         if (data === 'done' || data.search('done') !== -1) {
           $.notify({
             message: '저장되었습니다.',
@@ -560,16 +567,17 @@
       }
     });
   }
-</script>
-<script>
   function save_brand_info() {
-    var brand_text_base = $('#brand_text_base').val();
+    let brand_text_base = $('#brand_text_base').val();
     if (brand_text_base === '') {
       alert('브랜드 문구를 정확히 입력해주세요.')
       $('.brand-text-base-header').addClass('header-required');
       return false;
     }
-    var formData = new FormData();
+    
+    $('#loading_set').show();
+    
+    let formData = new FormData();
     formData.append('brand_text_base', brand_text_base);
     $.ajax({
       url: '<?php echo base_url(); ?>shop/account/brand/upd', // form action url
@@ -580,6 +588,7 @@
       contentType: false,
       processData: false,
       success: function (data) {
+        $("#loading_set").fadeOut(500);
         if (data === 'done' || data.search('done') !== -1) {
           $.notify({
             message: '저장되었습니다.',

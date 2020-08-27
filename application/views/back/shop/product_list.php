@@ -39,28 +39,28 @@
     height: 50px;
   }
 </style>
-<div class="col-md-12 product-meta">
-  <div class="col-md-12">
-    <table class="col-md-12">
+<div class="col-md-12 col-sm-12 com-xs-12 product-meta">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <table class="col-md-12 col-sm-12 col-xs-12">
       <tbody>
       <tr>
-        <th class="col-md-2">브랜드명</th>
-        <td class="col-md-3"><?php echo $shop_data->shop_name; ?></td>
-        <th class="col-md-2">상품명</th>
-        <td class="col-md-3">
+        <th class="col-md-2 col-sm-2 col-xs-2">브랜드명</th>
+        <td class="col-md-3 col-sm-3 col-xs-3"><?php echo $shop_data->shop_name; ?></td>
+        <th class="col-md-2 col-sm-2 col-xs-2">상품명</th>
+        <td class="col-md-3 col-sm-3 col-xs-3">
           <input disabled class="form-control" id="product-name" type="text" name="product_name" alt="" />
         </td>
-        <td class="col-md-2">
+        <td class="col-md-2 col-sm-2 col-xs-2">
           <button class="product-search btn-dark" onclick="search_page()">검색</button>
         </td>
       </tr>
       <tr>
-<!--        <th class="col-md-1">브랜드</th>-->
-<!--        <td class="col-md-4">-->
+<!--        <th class="col-md-1 col-sm-1 col-xs-1">브랜드</th>-->
+<!--        <td class="col-md-4 col-sm-4 col-xs-4">-->
 <!--          <input class="form-control brand_name" type="text" name="brand_name" alt="" />-->
 <!--        </td>-->
-        <th class="col-md-2">카테고리</th>
-        <td class="col-md-3">
+        <th class="col-md-2 col-sm-2 col-xs-2">카테고리</th>
+        <td class="col-md-3 col-sm-3 col-xs-3">
           <select class="form-control" id="product-category">
               <option value="all">ALL</option>
             <?php foreach ($shop_category as $cat) { ?>
@@ -69,8 +69,8 @@
             <?php } ?>
           </select>
         </td>
-        <th class="col-md-2">판매상태</th>
-        <td class="col-md-3">
+        <th class="col-md-2 col-sm-2 col-xs-2">판매상태</th>
+        <td class="col-md-3 col-sm-3 col-xs-3">
           <select class="form-control" id="product-status">
             <option <?php if ($status == SHOP_PRODUCT_STATUS_REQUEST) echo 'selected'; ?>
               value="<?php echo SHOP_PRODUCT_STATUS_REQUEST; ?>">
@@ -94,24 +94,24 @@
             </option>
           </select>
         </td>
-        <td class="col-md-2">
+        <td class="col-md-2 col-sm-2 col-xs-2">
         </td>
       </tr>
       </tbody>
     </table>
   </div>
 </div>
-<div class="col-md-12">
+<div class="col-md-12 col-sm-12 col-xs-12">
   <hr style="width: 100%; border: 1px solid #EAEAEA">
 </div>
-<div class="col-md-12 product-status">
-  <div class="col-md-12">
-    <div class="col-md-4">
+<div class="col-md-12 col-sm-12 col-xs-12 product-status">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="col-md-4 col-sm-4 col-xs-4">
       <h5 style="padding-left: 15px">상품목록 [ 총 <?php echo $total_cnt; ?>건 ]</h5>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4 col-sm-4 col-xs-4">
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2 col-sm-2 col-xs-2">
       <?php if ($status >= SHOP_PRODUCT_STATUS_ON_SALE) { ?>
         <select disabled class="form-control product-change-status" id="product-status-change">
           <option <?php if ($status == SHOP_PRODUCT_STATUS_ON_SALE) echo 'selected'; ?>
@@ -129,53 +129,53 @@
         </select>
       <?php } ?>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2 col-sm-2 col-xs-2">
       <?php if ($status >= SHOP_PRODUCT_STATUS_ON_SALE) { ?>
         <button class="product-change-status btn-dark" disabled id="product-status-change-btn" onclick="change_status();">판매상태변경</button>
       <?php } ?>
     </div>
   </div>
 </div>
-<div class="col-md-12 product-list">
-  <table class="col-md-12">
+<div class="col-md-12 col-sm-12 col-xs-12 product-list">
+  <table class="col-md-12 col-sm-12 col-xs-12">
     <thead>
     <tr>
-      <th class="col-md-1">
+      <th class="col-md-1 col-sm-1 col-xs-1">
         <input class="form-control" id="item-list-all" type="checkbox" name="list_all" onchange="check_all()"/>
       </th>
-      <th class="col-md-1">상품코드</th>
-      <th class="col-md-1">이미지</th>
-      <th class="col-md-2">상품명</th>
-      <th class="col-md-1">판매상태</th>
-      <th class="col-md-1">정상가</th>
-      <th class="col-md-1">할인가</th>
-      <th class="col-md-1">판매가</th>
-      <th class="col-md-1">공급원가</th>
-      <th class="col-md-2">거래구분</th>
+      <th class="col-md-1 col-sm-1 col-xs-1">상품코드</th>
+      <th class="col-md-1 col-sm-1 col-xs-1">이미지</th>
+      <th class="col-md-2 col-sm-2 col-xs-2">상품명</th>
+      <th class="col-md-1 col-sm-1 col-xs-1">판매상태</th>
+      <th class="col-md-1 col-sm-1 col-xs-1">정상가</th>
+      <th class="col-md-1 col-sm-1 col-xs-1">할인가</th>
+      <th class="col-md-1 col-sm-1 col-xs-1">판매가</th>
+      <th class="col-md-1 col-sm-1 col-xs-1">공급원가</th>
+      <th class="col-md-2 col-sm-2 col-xs-2">거래구분</th>
     </tr>
     </thead>
     <tbody>
     <?php foreach ($product_data as $product) { ?>
       <tr>
-        <td class="col-md-1">
+        <td class="col-md-1 col-sm-1 col-xs-1">
           <input class="form-control item-list-checkbox" data-id="<?php echo $product->product_id; ?>"
                  type="checkbox" name="list[]" onclick="check_change();" value="1"/>
         </td>
-        <td class="col-md-1"><?php echo $product->product_code; ?></td>
-        <td class="col-md-1">
+        <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $product->product_code; ?></td>
+        <td class="col-md-1 col-sm-1 col-xs-1">
           <img src="<?php echo $product->item_image_url_0; ?>">
         </td>
-        <td class="col-md-2">
+        <td class="col-md-2 col-sm-2 col-xs-2">
           <a href="javascript:void(0)" onclick="get_product(<?php echo $product->product_id; ?>)">
             <?php echo $product->item_name; ?>
           </a>
         </td>
-        <td class="col-md-1"><?php echo $this->crud_model->get_product_status_str($status); ?></td>
-        <td class="col-md-1"><?php echo $this->crud_model->get_price_str($product->item_general_price); ?></td>
-        <td class="col-md-1"><?php echo $this->crud_model->get_price_str($product->item_general_price - $product->item_sell_price); ?></td>
-        <td class="col-md-1"><?php echo $this->crud_model->get_price_str($product->item_sell_price); ?></td>
-        <td class="col-md-1"><?php echo $this->crud_model->get_price_str($product->item_supply_price); ?></td>
-        <td class="col-md-2"><?php echo $this->crud_model->get_product_shipping_free_str($product->item_shipping_free); ?></td>
+        <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_product_status_str($status); ?></td>
+        <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_price_str($product->item_general_price); ?></td>
+        <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_price_str($product->item_general_price - $product->item_sell_price); ?></td>
+        <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_price_str($product->item_sell_price); ?></td>
+        <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_price_str($product->item_supply_price); ?></td>
+        <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $this->crud_model->get_product_shipping_free_str($product->item_shipping_free); ?></td>
       </tr>
     <?php } ?>
     </tbody>
@@ -204,45 +204,45 @@
     color: #353535;
   }
 </style>
-<div class="col-md-12 item-list-pagination">
-  <div class="col-md-4">
+<div class="col-md-12 col-sm-12 col-xs-12 item-list-pagination">
+  <div class="col-md-4 col-sm-4 col-xs-4">
   </div>
-  <div class="col-md-4">
+  <div class="col-md-4 col-sm-4 col-xs-4">
     <ul class="nav">
-      <li class="col-md-1 li-empty"></li>
-      <li class="col-md-1 li-empty"></li>
-      <li class="col-md-1 li-empty"></li>
+      <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
+      <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
+      <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
       <?php if ($prev>= 2) { ?>
-        <a href="javascript:void(0);" onclick="get_page('1');"><li class="col-md-1"><span class="fa fa-angle-double-left"></span></li></a>
-        <a href="javascript:void(0);" onclick="get_page('<?php echo $prev - 1; ?>');"><li class="col-md-1"><span class="fa fa-angle-left"></span></li></a>
+        <a href="javascript:void(0);" onclick="get_page('1');"><li class="col-md-1 col-sm-1 col-xs-1"><span class="fa fa-angle-double-left"></span></li></a>
+        <a href="javascript:void(0);" onclick="get_page('<?php echo $prev - 1; ?>');"><li class="col-md-1 col-sm-1 col-xs-1"><span class="fa fa-angle-left"></span></li></a>
       <?php } else { ?>
-        <li class="col-md-1 li-empty"></li>
-        <li class="col-md-1 li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
       <?php }?>
       <?php if ($prev == '') { ?>
-        <li class="col-md-1 li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
       <?php } else { ?>
-        <a href="javascript:void(0);" onclick="get_page('<?php echo $prev; ?>');"><li class="col-md-1"><?php echo $prev; ?></li></a>
+        <a href="javascript:void(0);" onclick="get_page('<?php echo $prev; ?>');"><li class="col-md-1 col-sm-1 col-xs-1 "><?php echo $prev; ?></li></a>
       <?php }?>
-      <li class="col-md-1 active"><?php echo $page; ?></li>
+      <li class="col-md-1 col-sm-1 col-xs-1 active"><?php echo $page; ?></li>
       <?php if ($next == '') { ?>
-        <li class="col-md-1 li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
       <?php } else { ?>
-        <a href="javascript:void(0);" onclick="get_page('<?php echo $next; ?>');"><li class="col-md-1"><?php echo $next; ?></li></a>
+        <a href="javascript:void(0);" onclick="get_page('<?php echo $next; ?>');"><li class="col-md-1 col-sm-1 col-xs-1 "><?php echo $next; ?></li></a>
       <?php }?>
       <?php if ($total - $page >= 2) { ?>
-        <a href="javascript:void(0);" onclick="get_page('<?php echo $next + 1; ?>');"><li class="col-md-1"><span class="fa fa-angle-right"></span></li></a>
-        <a href="javascript:void(0);" onclick="get_page('<?php echo $total; ?>');"><li class="col-md-1"><span class="fa fa-angle-double-right"></span></li></a>
+        <a href="javascript:void(0);" onclick="get_page('<?php echo $next + 1; ?>');"><li class="col-md-1 col-sm-1 col-xs-1 "><span class="fa fa-angle-right"></span></li></a>
+        <a href="javascript:void(0);" onclick="get_page('<?php echo $total; ?>');"><li class="col-md-1 col-sm-1 col-xs-1 "><span class="fa fa-angle-double-right"></span></li></a>
       <?php } else { ?>
-        <li class="col-md-1 li-empty"></li>
-        <li class="col-md-1 li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1  li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1  li-empty"></li>
       <?php }?>
-      <li class="col-md-1 li-empty"></li>
-      <li class="col-md-1 li-empty"></li>
-      <li class="col-md-1 li-empty"></li>
+      <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
+      <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
+      <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
     </ul>
   </div>
-  <div class="col-md-4">
+  <div class="col-md-4 col-sm-4 col-xs-4">
   </div>
 </div>
 <div class="modal fade" id="productInfoModal" tabindex="-1" role="dialog"
@@ -374,6 +374,8 @@
 
     // console.log(product_ids);
     // console.log(change_status);
+    
+    $('#loading_set').show();
 
     let formData = new FormData();
     formData.append('product_ids', JSON.stringify(product_ids));
@@ -388,6 +390,7 @@
       contentType: false,
       processData: false,
       success: function (data) {
+        $("#loading_set").fadeOut(500);
         if (data === 'done' || data.search('done') !== -1) {
           $.notify({
             message: '저장되었습니다.',

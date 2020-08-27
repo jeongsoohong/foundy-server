@@ -32,15 +32,15 @@
     height: 40px;
   }
 </style>
-<div class="col-md-12 product-meta">
+<div class="col-md-12 col-sm-12 col-xs-12 product-meta">
 <!--  <div class="col-md-12" id="page-title">-->
 <!--    <h1 class="page-header text-overflow">상품관리 <span class="fa fa-angle-right"></span> 상품리뷰</h1>-->
 <!--  </div>-->
-  <div class="col-md-12">
-    <table class="col-md-12">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <table class="col-md-12 col-sm-12 col-xs-12">
       <tbody>
       <tr>
-        <td class="col-md-2">
+        <td class="col-md-2 col-sm-2 col-xs-2">
           <select class="form-control search-category">
             <option value="1">상품명</option>
 <!--            <option value="2">상품코드</option>-->
@@ -50,10 +50,10 @@
 <!--            <option value="6">브랜드명</option>-->
           </select>
         </td>
-        <td class="col-md-8">
+        <td class="col-md-8 col-sm-8 col-xs-8">
           <input value="<?php echo $item_name; ?>" id='item-name' class="form-control search_meta" type="text" name="search_meta" alt="" />
         </td>
-        <td class="col-md-2">
+        <td class="col-md-2 col-sm-2 col-xs-2">
           <a href="javascript:void(0);" onclick="search_review_page()">
             <button class="product-search btn-dark">검색</button>
           </a>
@@ -63,36 +63,36 @@
     </table>
   </div>
 </div>
-<div class="col-md-12">
+<div class="col-md-12 col-sm-12 col-xs-12">
   <hr style="width: 100%; border: 1px solid #EAEAEA">
 </div>
-<div class="col-md-12 review-list">
-  <table class="col-md-12">
+<div class="col-md-12 col-sm-12 col-xs-12 review-list">
+  <table class="col-md-12 col-sm-12 col-xs-12">
     <thead>
     <tr>
-      <th class="col-md-1">아이디</th>
-      <th class="col-md-1">주문번호</th>
-      <th class="col-md-2">상품명</th>
-      <th class="col-md-1">점수</th>
-      <th class="col-md-5">후기내용</th>
-      <th class="col-md-1">작성자ID</th>
-      <th class="col-md-1">등록일</th>
+      <th class="col-md-1 col-sm-1 col-xs-1">아이디</th>
+      <th class="col-md-1 col-sm-1 col-xs-1">주문번호</th>
+      <th class="col-md-2 col-sm-2 col-xs-2">상품명</th>
+      <th class="col-md-1 col-sm-1 col-xs-1">점수</th>
+      <th class="col-md-5 col-sm-5 col-xs-5">후기내용</th>
+      <th class="col-md-1 col-sm-1 col-xs-1">작성자ID</th>
+      <th class="col-md-1 col-sm-1 col-xs-1">등록일</th>
     </tr>
     </thead>
     <tbody>
     <?php $idx = 1; foreach ($review_data as $review) { ?>
       <tr>
-        <td class="col-md-1"><?php echo $review->review_id; ?></td>
-        <td class="col-md-1"><?php echo $review->purchase_code; ?></td>
-        <td class="col-md-2"><?php echo $review->item_name; ?></td>
-        <td class="col-md-1"><?php echo $review->review_score; ?></td>
-        <td class="col-md-5">
+        <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $review->review_id; ?></td>
+        <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $review->purchase_code; ?></td>
+        <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $review->item_name; ?></td>
+        <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $review->review_score; ?></td>
+        <td class="col-md-5 col-sm-5 col-xs-5">
           <a href="javascript:void(0)" onclick="get_review(<?php echo $review->review_id; ?>)">
             <?php echo (mb_strlen($review->review_body) > 25 ? mb_substr($review->review_body, 0, 25).'...' : $review->review_body); ?>
           </a>
         </td>
-        <td class="col-md-1"><?php echo $review->email; ?></td>
-        <td class="col-md-1"><?php echo $review->review_at; ?></td>
+        <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $review->email; ?></td>
+        <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $review->review_at; ?></td>
       </tr>
       <?php $idx++; }?>
     </tbody>
@@ -121,45 +121,45 @@
     color: #353535;
   }
 </style>
-<div class="col-md-12 item-list-pagination">
-  <div class="col-md-4">
+<div class="col-md-12 col-sm-12 col-xs-12 item-list-pagination">
+  <div class="col-md-4 col-sm-4 col-xs-4">
   </div>
-  <div class="col-md-4">
+  <div class="col-md-4 col-sm-4 col-xs-4">
     <ul class="nav">
-      <li class="col-md-1 li-empty"></li>
-      <li class="col-md-1 li-empty"></li>
-      <li class="col-md-1 li-empty"></li>
+      <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
+      <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
+      <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
       <?php if ($prev>= 2) { ?>
-        <a href="javascript:void(0);" onclick="get_review_page('1');"><li class="col-md-1"><span class="fa fa-angle-double-left"></span></li></a>
-        <a href="javascript:void(0);" onclick="get_review_page('<?php echo $prev - 1; ?>');"><li class="col-md-1"><span class="fa fa-angle-left"></span></li></a>
+        <a href="javascript:void(0);" onclick="get_review_page('1');"><li class="col-md-1 col-sm-1 col-xs-1"><span class="fa fa-angle-double-left"></span></li></a>
+        <a href="javascript:void(0);" onclick="get_review_page('<?php echo $prev - 1; ?>');"><li class="col-md-1 col-sm-1 col-xs-1"><span class="fa fa-angle-left"></span></li></a>
       <?php } else { ?>
-        <li class="col-md-1 li-empty"></li>
-        <li class="col-md-1 li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
       <?php }?>
       <?php if ($prev == '') { ?>
-        <li class="col-md-1 li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
       <?php } else { ?>
-        <a href="javascript:void(0);" onclick="get_review_page('<?php echo $prev; ?>');"><li class="col-md-1"><?php echo $prev; ?></li></a>
+        <a href="javascript:void(0);" onclick="get_review_page('<?php echo $prev; ?>');"><li class="col-md-1 col-sm-1 col-xs-1 "><?php echo $prev; ?></li></a>
       <?php }?>
-      <li class="col-md-1 active"><?php echo $page; ?></li>
+      <li class="col-md-1 col-sm-1 col-xs-1 active"><?php echo $page; ?></li>
       <?php if ($next == '') { ?>
-        <li class="col-md-1 li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
       <?php } else { ?>
-        <a href="javascript:void(0);" onclick="get_review_page('<?php echo $next; ?>');"><li class="col-md-1"><?php echo $next; ?></li></a>
+        <a href="javascript:void(0);" onclick="get_review_page('<?php echo $next; ?>');"><li class="col-md-1 col-sm-1 col-xs-1 "><?php echo $next; ?></li></a>
       <?php }?>
       <?php if ($total - $page >= 2) { ?>
-        <a href="javascript:void(0);" onclick="get_review_page('<?php echo $next + 1; ?>');"><li class="col-md-1"><span class="fa fa-angle-right"></span></li></a>
-        <a href="javascript:void(0);" onclick="get_review_page('<?php echo $total; ?>');"><li class="col-md-1"><span class="fa fa-angle-double-right"></span></li></a>
+        <a href="javascript:void(0);" onclick="get_review_page('<?php echo $next + 1; ?>');"><li class="col-md-1 col-sm-1 col-xs-1 "><span class="fa fa-angle-right"></span></li></a>
+        <a href="javascript:void(0);" onclick="get_review_page('<?php echo $total; ?>');"><li class="col-md-1 col-sm-1 col-xs-1 "><span class="fa fa-angle-double-right"></span></li></a>
       <?php } else { ?>
-        <li class="col-md-1 li-empty"></li>
-        <li class="col-md-1 li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1  li-empty"></li>
+        <li class="col-md-1 col-sm-1 col-xs-1  li-empty"></li>
       <?php }?>
-      <li class="col-md-1 li-empty"></li>
-      <li class="col-md-1 li-empty"></li>
-      <li class="col-md-1 li-empty"></li>
+      <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
+      <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
+      <li class="col-md-1 col-sm-1 col-xs-1 li-empty"></li>
     </ul>
   </div>
-  <div class="col-md-4">
+  <div class="col-md-4 col-sm-4 col-xs-4">
   </div>
 </div>
 <div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="padding-top: 50px;">
@@ -256,6 +256,8 @@
     let modal = $('#reviewModal');
   
     // console.log('rid: ' + rid);
+    
+    $('#loading_set').show();
   
     $.ajax({
       url: '<?php echo base_url(); ?>shop/product/review/get?rid=' + rid,
@@ -263,7 +265,8 @@
       cache: false,
       contentType: 'application/json',
       processData: false,
-       success: function (res) {
+      success: function (res) {
+         $("#loading_set").fadeOut(500);
          // console.log(res);
          let review = JSON.parse(res);
          // console.log(review);

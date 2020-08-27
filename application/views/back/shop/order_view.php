@@ -32,7 +32,7 @@ $status_str = $this->crud_model->get_shipping_status_str($purchase_product->ship
   </div>
   <hr>
   <div class="row">
-    <div class="col-sm-12">
+    <div class="col-md-12 col-sm-12 col-xs-12">
       <div class="panel-body">
         <table class="table table-striped" style="border-radius:3px;">
           <tbody>
@@ -53,10 +53,11 @@ $status_str = $this->crud_model->get_shipping_status_str($purchase_product->ship
           <tr>
             <th class="custom_td">주문정보</th>
             <td class="custom_td">
-              [가격] <?php echo $this->crud_model->get_price_str($purchase_product->total_balance).'원 = '; ?>
+              [가격] <?php echo $this->crud_model->get_price_str($purchase_product->total_balance - $purchase_product->discount).'원 = '; ?>
               <?php echo $this->crud_model->get_price_str($purchase_product->total_price); ?>원
               <?php echo '('.$this->crud_model->get_price_str($purchase_product->item_sell_price).'원*'.$purchase_product->total_purchase_cnt.'개) + '; ?>
-              <?php echo $this->crud_model->get_price_str($purchase_product->total_shipping_fee).'원(배송비)'; ?>
+              <?php echo $this->crud_model->get_price_str($purchase_product->total_shipping_fee).'원(배송비) -'; ?>
+              <?php echo $this->crud_model->get_price_str($purchase_product->discount).'원(할인)'; ?>
               <?php if ($purchase_product->total_additional_price > 0) echo ' + '.$this->crud_model->get_price_str($purchase_product->total_additional_price).'원(추가옵션)'; ?>
               <br>
               <?php if ($purchase_product->item_option_requires_cnt + $purchase_product->item_option_others_cnt > 0) {

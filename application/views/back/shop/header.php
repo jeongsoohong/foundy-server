@@ -1,37 +1,89 @@
 <style>
-  .navbar-header .navbar-brand {
-    width: 120px !important;
-    background-color: white;
-  }
   .brand-icon {
     width: 100px !important;
     margin: 0 10px;
   }
+  .navbar-header {
+    display: flex;
+  }
   .navbar-content {
-    margin-left: 120px !important;
+    margin-left: auto !important;
+    /*display: flex;*/
   }
   .navbar-content ul li {
     margin: 0 10px;
   }
   .navbar-content ul li a {
-    width: 100px !important;
+    /*width: 80px !important;*/
     text-align: center;
-    font-size: 14px;
+  }
+  .navbar-header {
+    background-color: white;
   }
 
+  @media(min-width: 800px) {
+    .navbar-header, .navbar-header:before {
+      height: 50px;
+    }
+    .navbar-header .navbar-brand {
+      background-color: white;
+      width: 120px !important;
+      height: 50px !important;
+    }
+    .navbar-brand img {
+      width: 100px !important;
+      height: 50px;
+    }
+    .navbar-content ul li a {
+      font-size: 14px;
+      padding: 0 12px;
+      height: 40px;
+    }
+    .mypage-header {
+      font-size: 14px;
+      padding: 0 12px;
+      height: 50px;
+      line-height: 50px;
+    }
+  }
+
+  @media(max-width: 800px) {
+    .navbar-header, .navbar-header:before {
+      height: 40px;
+    }
+    .navbar-header .navbar-brand {
+      background-color: white;
+      width: 96px;
+      height: 40px !important;
+    }
+    .navbar-brand img {
+      width: 80px !important;
+      height: 40px;
+    }
+    .navbar-content ul li a {
+      font-size: 12px;
+      padding: 0 6px;
+      height: 40px;
+    }
+    .mypage-header {
+      font-size: 12px;
+      padding: 0 12px;
+      height: 40px;
+      line-height: 40px;
+    }
+  }
   .mypage-header {
-    width: 200px !important;
+    /*width: 150px !important;*/
     text-align: center;
-    font-size: 14px;
-    height: 50px;
-    line-height: 50px;
-    padding: 0 12px;
+    background-color: white;
+    /*height: 50px;*/
+    /*line-height: 50px;*/
   }
   .mypage {
     display: none;
-    width: 200px;
-    z-index: 10; position:
-    absolute;
+    /*width: 150px;*/
+    z-index: 10;
+    position: absolute;
     top: 50px;
     right: 20px;
     background-color: white;
@@ -173,6 +225,8 @@
     // console.log(shop_id);
     // console.log(password1);
     // console.log(password2);
+  
+    $('#loading_set').show();
     
     let formData = new FormData();
     formData.append('password', password);
@@ -188,7 +242,8 @@
       contentType: false,
       processData: false,
       success : function(res) {
-        console.log(res);
+        $("#loading_set").fadeOut(500);
+        // console.log(res);
         res = JSON.parse(res);
         if (res.status === 'success') {
           console.log(res.message);
@@ -252,8 +307,10 @@
   }
   function change_shop() {
     let shop_id = $('#shop-selector').find('option:selected').val();
-    console.log(shop_id);
-
+    // console.log(shop_id);
+  
+    $('#loading_set').show();
+    
     $.ajax({
       url: '<?php echo base_url(); ?>shop/change?id=' + shop_id, // form action url
       type: 'GET', // form submit method get/post
@@ -262,6 +319,7 @@
       contentType: false,
       processData: false,
       success: function (data) {
+        $("#loading_set").fadeOut(500);
         if (data === 'done' || data.search('done') !== -1) {
           $.notify({
             message: '변경되었습니다.',

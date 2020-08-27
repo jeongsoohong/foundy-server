@@ -1100,7 +1100,7 @@ QUERY;
     if (empty($purchase_product) || empty($purchase_info)) {
       $this->crud_model->alert_exit('잘못된 접근입니다.');
     }
-    if ($purchase_product->user_id != $user_id) {
+    if ($user_cancel == 1 && $purchase_product->user_id != $user_id) {
       $this->crud_model->alert_exit('잘못된 접근입니다.');
     }
     if ($user_cancel == 1 && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_PREPARE && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_ORDER_COMPLETED) {

@@ -61,6 +61,7 @@
   <script src="//cdn.jsdelivr.net/npm/summernote@0.8.16/dist/lang/summernote-ko-KR.min.js"></script>
 
   <script>
+    var top = Number(200);
     var loading_set =
       '<div style="text-align:center;width:100%;height:'+(top*2)+'px; position:relative;top:'+top+'px;">' +
       '<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>' +
