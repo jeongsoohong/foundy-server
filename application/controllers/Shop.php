@@ -44,7 +44,37 @@ class Shop extends CI_Controller
     } else {
       // for login
       $page_data['control'] = "shop";
+      
+      $shop_id = $this->session->userdata('shop_id');
+      
+      $shipping_status_cnt = array();
+      for ($i = SHOP_SHIPPING_STATUS_ORDER_COMPLETED; $i <= SHOP_SHIPPING_STATUS_PURCHASE_CHANGING; $i++) {
+        $query = <<<QUERY
+select count(1) as cnt from shop_purchase_product where shop_id={$shop_id} and shipping_status={$i}
+QUERY;
+        $shipping_status_cnt[$i] = $this->db->query($query)->row()->cnt;
+      }
+      
+      $product_status_cnt = array();
+      for ($i = SHOP_PRODUCT_STATUS_REQUEST; $i <= SHOP_PRODUCT_STATUS_FINISH_SALE; $i++) {
+        $query = <<<QUERY
+select count(1) as cnt from shop_product_id where shop_id={$shop_id} and status={$i}
+QUERY;
+        $product_status_cnt[$i] = $this->db->query($query)->row()->cnt;
+      }
+      
+      $product_qna_cnt = array();
+      for ($i = 0; $i < 2; $i++) {
+        $query = <<<QUERY
+select count(1) as cnt from shop_product_qna where shop_id={$shop_id} and replied={$i}
+QUERY;
+        $product_qna_cnt[$i] = $this->db->query($query)->row()->cnt;
 
+      }
+
+      $page_data['shipping_status_cnt'] = $shipping_status_cnt;
+      $page_data['product_status_cnt'] = $product_status_cnt;
+      $page_data['product_qna_cnt'] = $product_qna_cnt;
       $page_data['page_name'] = "dashboard";
       $this->load->view('back/shop/index', $page_data);
     }
@@ -1071,11 +1101,11 @@ QUERY;
       $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
       $shop_shipping_compary = $this->db->get_where('shop_shipping_company', array('shop_id' => $shop_id))->result();
   
-      $select = "select a.shop_id,a.shop_name,b.email,c.item_name,d.*";
-      $from = "from shop a,user b,shop_product c, shop_purchase_product d";
+      $select = "select a.shop_id,a.shop_name,c.item_name,d.*";
+      $from = "from shop a, shop_product c, shop_purchase_product d";
       $order_by = "order by purchase_product_id desc";
       $limit = "limit {$offset},{$size}";
-      $where = "where a.shop_id=d.shop_id and b.user_id=d.user_id and c.product_id=d.product_id and d.shop_id={$shop_data->shop_id} and shipping_status={$ship_status}";
+      $where = "where a.shop_id=d.shop_id and c.product_id=d.product_id and d.shop_id={$shop_data->shop_id} and d.shipping_status={$ship_status}";
       if (($ship_status == SHOP_SHIPPING_STATUS_ORDER_COMPLETED || $ship_status == SHOP_SHIPPING_STATUS_PREPARE) && $confirm_delay == true) {
         $purchase_date = date('Y-m-d', strtotime('-1 days'));
 //      $this->crud_model->alert_exit($purchase_date);

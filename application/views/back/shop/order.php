@@ -218,7 +218,15 @@
                 </td>
                 <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $order->purchase_at; ?></td>
                 <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->purchase_code; ?></td>
-                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->email; ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1">
+                  <?php
+                  if ($order->user_id == 0) {
+                    echo '비회원주문';
+                  } else {
+                    echo $this->db->get_where('user', array('user_id' => $order->user_id))->row()->email;
+                  }
+                  ?>
+                </td>
                 <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $order->item_name; ?></td>
                 <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->total_purchase_cnt; ?></td>
                 <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
@@ -259,7 +267,15 @@
                 <td class="col-md-1 col-sm-1 col-xs-1 purchase-code" data-code="<?php echo $order->purchase_code; ?>">
                   <?php echo $order->purchase_code; ?> /<br><?php echo $order->purchase_at; ?>
                 </td>
-                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->email; ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1">
+                  <?php
+                  if ($order->user_id == 0) {
+                    echo '비회원주문';
+                  } else {
+                    echo $this->db->get_where('user', array('user_id' => $order->user_id))->row()->email;
+                  }
+                  ?>
+                </td>
                 <td class="col-md-2 col-sm-1 col-xs-1"><?php echo $order->item_name; ?></td>
                 <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->total_purchase_cnt; ?></td>
                 <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
@@ -313,7 +329,15 @@
               <td class="col-md-1 col-sm-1 col-xs-1 purchase-code" data-code="<?php echo $order->purchase_code; ?>">
                 <?php echo $order->purchase_code; ?> /<br><?php echo $order->purchase_at; ?>
               </td>
-              <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->email; ?></td>
+              <td class="col-md-1 col-sm-1 col-xs-1">
+                <?php
+                if ($order->user_id == 0) {
+                  echo '비회원주문';
+                } else {
+                  echo $this->db->get_where('user', array('user_id' => $order->user_id))->row()->email;
+                }
+                ?>
+              </td>
               <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $order->item_name; ?></td>
               <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->total_purchase_cnt; ?></td>
               <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
@@ -370,7 +394,15 @@
                 <td class="col-md-1 col-sm-1 col-xs-1 purchase-code" data-code="<?php echo $order->purchase_code; ?>">
                   <?php echo $order->purchase_code; ?> /<br><?php echo $order->purchase_at; ?>
                 </td>
-                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->email; ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1">
+                  <?php
+                  if ($order->user_id == 0) {
+                    echo '비회원주문';
+                  } else {
+                    echo $this->db->get_where('user', array('user_id' => $order->user_id))->row()->email;
+                  }
+                  ?>
+                </td>
                 <td class="col-md-2 col-sm-1 col-xs-1"><?php echo $order->item_name; ?></td>
                 <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->total_purchase_cnt; ?></td>
                 <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
@@ -439,7 +471,15 @@
                 <td class="col-md-1 col-sm-1 col-xs-1 purchase-code" data-code="<?php echo $order->purchase_code; ?>">
                   <?php echo $order->purchase_code; ?> /<br><?php echo $order->purchase_at; ?>
                 </td>
-                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->email; ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1">
+                  <?php
+                  if ($order->user_id == 0) {
+                    echo '비회원주문';
+                  } else {
+                    echo $this->db->get_where('user', array('user_id' => $order->user_id))->row()->email;
+                  }
+                  ?>
+                </td>
                 <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $order->item_name; ?></td>
                 <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->total_purchase_cnt; ?></td>
                 <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
