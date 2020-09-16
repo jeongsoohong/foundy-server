@@ -48,6 +48,7 @@ class Home extends CI_Controller
 //  echo 'live';
 //}
 
+    $user_data = new stdClass();
     if ($this->is_login() == true) {
       $user_id = $this->session->userdata('user_id');
       $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
@@ -60,12 +61,41 @@ class Home extends CI_Controller
         $this->session->set_userdata('user_data', json_encode($user_data));
       }
 //      echo json_encode($user_data);
+    } else {
+      $user_data->user_id = NULL;
+      $user_data->kakao_id = NULL;
+    }
+  
+    if (!$this->input->is_ajax_request()) {
+      $this->load->library('user_agent');
+      $ins = array(
+        'user_id' => $user_data->user_id,
+        'kakao_id' => $user_data->kakao_id,
+        'session_id' => $this->crud_model->get_session_id(),
+        'ip' => $this->crud_model->get_session_ip(),
+        'is_browser' => $this->agent->is_browser(),
+        'is_mobile' => $this->agent->is_mobile(),
+        'is_robot' => $this->agent->is_robot(),
+        'is_referral' => $this->agent->is_referral(),
+        'browser' => $this->agent->browser(),
+        'version' => $this->agent->version(),
+        'mobile' => $this->agent->mobile(),
+        'robot' => $this->agent->robot(),
+        'platform' => $this->agent->platform(),
+        'referrer' => $this->agent->referrer(),
+        'agent' => $this->agent->agent_string(),
+        'uri_1' => $this->uri->segment(2),
+        'uri_2' => $this->uri->segment(3),
+        'uri_3' => $this->uri->segment(4),
+      );
+      $this->db->set('active_at', 'NOW()', false);
+      $this->db->insert('user_active', $ins);
     }
 
 //    $this->session->sess_destroy();
     // $this->config->cache_query();
   }
-
+  
   public function index()
   {
     $bookmark_centers = array();
