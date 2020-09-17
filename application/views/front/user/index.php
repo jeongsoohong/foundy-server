@@ -313,6 +313,7 @@
     if (login_type === 'kakao') {
       $.getScript("https://developers.kakao.com/sdk/js/kakao.min.js", function() {
         Kakao.init('8ee901a556539927d58b30a6bf21a781');
+        // console.log(Kakao.Auth.getAccessToken());
         if (!Kakao.Auth.getAccessToken()) {
           $("#loading_set").fadeOut(500);
           // alert('Not logged in.');
@@ -320,7 +321,7 @@
         } else {
           $("#loading_set").fadeOut(500);
           Kakao.Auth.logout(function() {
-            //alert('logout: ' + Kakao.Auth.getAccessToken());
+            // alert('logout: ' + Kakao.Auth.getAccessToken());
             do_logout();
           });
         }
@@ -358,6 +359,7 @@
     $('#loading_set').show();
     $.getScript("https://developers.kakao.com/sdk/js/kakao.min.js", function() {
       Kakao.init('8ee901a556539927d58b30a6bf21a781');
+      // console.log(Kakao.Auth.getAccessToken());
       if (!Kakao.Auth.getAccessToken()) {
         $("#loading_set").fadeOut(500);
         alert('Not logged in.');

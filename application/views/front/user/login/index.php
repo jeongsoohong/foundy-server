@@ -61,10 +61,15 @@
             </div>
           </div>
           <hr style="margin-top: 10px; margin-bottom: 10px;">
-          <div class="col-sm-12">
-            <span class="btn btn-theme-sm btn-block btn-theme-transparent pull-center kakao-login btn-kakao-login">
-              카카오 로그인
-            </span>
+<!--          <div class="col-sm-12">-->
+<!--            <span class="btn btn-theme-sm btn-block btn-theme-transparent pull-center kakao-login btn-kakao-login">-->
+<!--              카카오 로그인-->
+<!--            </span>-->
+<!--          </div>-->
+          <div class="col-sm-12" style="text-align: center">
+            <a href="javascript:void(0);" onclick="loginWithKakaoRest();">
+              <img src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" width="222" />
+            </a>
           </div>
           <div class="col-sm-12 title" style="background-color: #ffffff; padding: 10px 20px 5px; text-transform: uppercase; font-size: 18px; line-height: 24px; font-weight: 700; color: #232323">
             <div class="option" style="text-align: center !important; margin: 0 auto 10px; text-transform: none; font-size: 10px; line-height: 14px; font-weight: 400; color: #757575">
@@ -245,7 +250,7 @@
     });
   }
   
-  function do_login() {
+  function do_login() { // with email
     let email = $('#user-email').val();
     let password = $('#user-password').val();
   
@@ -294,25 +299,18 @@
     });
   }
 
-  document.addEventListener("DOMContentLoaded", function() {
+  function loginWithKakao() { // with JDK
     Kakao.init('8ee901a556539927d58b30a6bf21a781');
-    // @breif 카카오 로그인 버튼을 생성합니다.
-    Kakao.Auth.createLoginButton({
-      container : ".btn-kakao-login",
-      size : 'medium',
-      lang : 'kr',
-      success : function( authObj ) {
-        //console.log( 'auth : ' + JSON.stringify(authObj) );
-        // UI code below
-        //console.log('token : ' + getToken())
-  
+    Kakao.Auth.login({
+      success: function(authObj) {
+        // alert(JSON.stringify(authObj))
         $('#loading_set').show();
         Kakao.API.request({
           url: "/v2/user/me",
           success: function(user_data) {
-            
-            var base_url = '<?php echo base_url(); ?>';
-            
+      
+            var base_url = '<?php //echo base_url(); ?>';
+      
             // console.log(user_data);
             $.ajax({
               url : base_url + '/home/login/kakao',
@@ -324,7 +322,7 @@
                 // console.log(res);
                 if (res.status === 'success') {
                   alert(res.message);
-                  window.location.href = '<?php echo base_url(); ?>';
+                  window.location.href = '<?php //echo base_url(); ?>';
                 } else {
                   $('#restoreModal .modal-body .text-center').text(res.message);
                   $('#restoreModal').modal('show');
@@ -338,7 +336,7 @@
                 // window.location.href = base_url + 'home/login';
               }
             });
-            
+      
             //console.log(Kakao.Auth.getAccessToken());
             //alert(JSON.stringify(res));
           },
@@ -347,10 +345,26 @@
           }
         });
       },
-      fail : function( error ) {
-        alert( 'login button fail : ' + JSON.stringify(error));
-      }
-    });
+      fail: function(err) {
+        alert(JSON.stringify(err))
+      },
+    })
+  }
+  
+  function loginWithKakaoRest() { // with REST API
+    let app_key = "c08aebc9e7ed5722a399bbc3962ca051";
+    let redirect_uri  ='<?php echo base_url().'home/login/kakao/rest'; ?>';
+  
+    location.href = "https://kauth.kakao.com/oauth/authorize?client_id=" +
+      app_key + "&redirect_uri=" + redirect_uri + "&response_type=code";
+  }
+  
+  let restore = <?php echo $restore ? 'true' : 'false'; ?>;
+  $(document).ready(function() {
+    if (restore === true) {
+      $('#restoreModal .modal-body .text-center').text(res.message);
+      $('#restoreModal').modal('show');
+    }
   });
 
 </script>

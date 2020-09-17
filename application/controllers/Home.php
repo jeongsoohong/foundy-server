@@ -67,7 +67,6 @@ class Home extends CI_Controller
     }
   
     if (!$this->input->is_ajax_request()) {
-      $this->load->library('user_agent');
       if (strcmp(substr($this->agent->agent_string(), 0, 3), "ELB") != 0) {
         $ins = array(
           'user_id' => $user_data->user_id,
@@ -157,13 +156,13 @@ class Home extends CI_Controller
     return false;
   }
 
-  public function login()
+  public function login($para1 = '', $para2 = '', $para3 = '')
   {
     if ($this->is_login() == true && $this->session->userdata('user_restore') != 'yes') {
       redirect('home', 'refresh');
     }
 
-    $login_type = $this->uri->segment(3);
+    $login_type = $para1;
   
     if ($login_type == 'forget_form') {
     
@@ -269,168 +268,90 @@ class Home extends CI_Controller
 
     } else if ($login_type == 'kakao') {
 
-      //header('Content-Type: application/json; charset=UTF-8');
-      $result = array();
+      if ($para2 == 'rest') { // kakao login with rest api
   
-      if (!isset($_POST) || !isset($_POST['id'])) {
-        $result['status'] = 'error';
-        $result['message'] = "오류가 발생했습니다. 다시 로그인해주세요(1).";
-      } else {
-    
-        $connected_at = $_POST['connected_at'];
-        $properties = $_POST['properties'];
-        $kakao_id = (int)$_POST['id'];
-        $kakao_account = $_POST['kakao_account'];
-        
-        $profile = $kakao_account['profile'];
-        $email = $kakao_account['email'];
-
-    
-        $user_data = $this->db->get_where('user', array('email' => $email))->row();
-    
-        if (empty($user_data)) {
-          $user_type = USER_TYPE_GENERAL;
-          $username = '';
-          $nickname = $profile['nickname'];
-          $gender = $kakao_account['gender'];
-          $kakao_thumbnail_image_url = $profile['thumbnail_image_url'];
-          $kakao_profile_image_url = $profile['profile_image_url'];
-          $profile_image_url = '';
-          $password = '';
-//          $create_at = $connected_at;
-      
-          if ($kakao_account['has_phone_number'] == true) {
-            $phone = $kakao_account['phone_number'];
-          } else {
-            $phone = '';
-          }
-      
-          $ins = array(
-            'kakao_id' => $kakao_id,
-            'user_type' => $user_type,
-            'username' => $username,
-            'nickname' => $nickname,
-            'gender' => $gender,
-            'email' => $email,
-            'phone' => $phone,
-            'kakao_thumbnail_image_url' => $kakao_thumbnail_image_url,
-            'kakao_profile_image_url' => $kakao_profile_image_url,
-            'profile_image_url' => $profile_image_url,
-            'password' => $password,
-            'unregister' => 0,
-//            'last_login_at' => date("Y-m-d H:i:s"),
-//            'create_at' => $create_at,
-          );
-      
-          $this->db->set('create_at', 'NOW()', false);
-          $this->db->set('last_login_at', 'NOW()', false);
-          $this->db->insert('user', $ins);
-      
-          $user_data = $this->db->get_where('user', array('kakao_id' => $kakao_id))->row();
-      
-          $ins = array(
-            'user_id' => $user_data->user_id,
-            'kakao_id' => $user_data->kakao_id,
-            'account' => json_encode($kakao_account),
-            'unregistered' => 0,
-          );
-          $this->db->set('register_at', 'NOW()', false);
-          $this->db->insert('user_register', $ins);
-      
-          $result['status'] = 'success';
-          $result['message'] = "첫 방문을 환영합니다.";
-      
-        } else {
-      
-          if ($user_data->unregister == 1) {
-            $ins = array(
-              'user_id' => $user_data->user_id,
-              'kakao_id' => $user_data->kakao_id,
-              'account' => json_encode($kakao_account),
-              'unregistered' => 1,
-            );
-            $this->db->set('register_at', 'NOW()', false);
-            $this->db->insert('user_register', $ins);
-        
-            $this->db->set('unregister', 0);
-        
-            $result['status'] = 'restore';
-            if ($user_data->user_type & USER_TYPE_TEACHER) {
-              $result['message'] = "기존에 강사 정보를 포함한 휴먼계정이 삭제되지 않았습니다. 복원 후 로그인하시겠습니까? 복원을 원하지 않으시면 삭제를 클릭해 주세요.";
-            } else {
-              $result['message'] = "기존에 휴먼계정이 삭제되지 않았습니다. 복원 후 로그인하시겠습니까? 복원을 원하지 않으시면 삭제를 클릭해 주세요.";
-            }
-            $this->session->set_userdata('user_restore', "yes");
-        
-          } else {
-            $result['status'] = 'success';
-            $result['message'] = "로그인해주셔서 감사합니다.";
-          }
-      
-          if ($kakao_account['has_phone_number'] == true) {
-            $phone = $kakao_account['phone_number'];
-            $this->db->set('phone', $phone);
-          }
-      
-          $this->db->set('last_login_at', 'NOW()', false);
-          $this->db->where('user_id', $user_data->user_id);
-          $this->db->update('user');
-      
+        if (!isset($_GET["code"])) {
+          $this->crud_model->alert_exit('오류가 발생했습니다. 다시 로그인해주세요.', base_url().'home/login');
         }
-    
-        $this->load->library('user_agent');
-
-//        $redirect_url .= 'home/login';
-//        $result['status'] = 'success';
-//        $result['message'] = $this->agent->referrer();
-//        $result['redirect_url'] = $redirect_url;
-//        echo json_encode($result);
-//        exit;
-    
-        $ins = array(
-          'user_id' => $user_data->user_id,
-          'kakao_id' => $user_data->kakao_id,
-          'account' => json_encode($kakao_account),
-          'session_id' => $this->crud_model->get_session_id(),
-          'ip' => $this->crud_model->get_session_ip(),
-          'is_browser' => $this->agent->is_browser(),
-          'is_mobile' => $this->agent->is_mobile(),
-          'is_robot' => $this->agent->is_robot(),
-          'is_referral' => $this->agent->is_referral(),
-          'browser' => $this->agent->browser(),
-          'version' => $this->agent->version(),
-          'mobile' => $this->agent->mobile(),
-          'robot' => $this->agent->robot(),
-          'platform' => $this->agent->platform(),
-          'referrer' => $this->agent->referrer(),
-          'agent' => $this->agent->agent_string(),
+  
+        $code = $_GET["code"];	//발급받은 code 값
+  
+        $app_key = "c08aebc9e7ed5722a399bbc3962ca051";
+        $redirect_uri = base_url()."home/login/kakao/rest";
+  
+        $api_url = "https://kauth.kakao.com/oauth/token";
+        $params = sprintf( 'grant_type=authorization_code&client_id=%s&redirect_uri=%s&code=%s',
+          $app_key, $redirect_uri, $code);
+  
+        $opts = array(
+          CURLOPT_URL => $api_url,
+          CURLOPT_SSL_VERIFYPEER => false,
+          CURLOPT_POST => true,
+          CURLOPT_POSTFIELDS => $params,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_HEADER => false
         );
-        $this->db->set('login_at', 'NOW()', false);
-        $this->db->insert('user_login', $ins);
-    
-        $user_id = $user_data->user_id;
-        $kakao_id = $user_data->kakao_id;
-        $email = $user_data->email;
-        $user_type = $user_data->user_type;
-        $nickname = $user_data->nickname;
-        $kakao_thumbnail_image_url = $user_data->kakao_thumbnail_image_url;
-        $profile_image_url = $user_data->profile_image_url;
-    
-        $this->session->set_userdata('user_login', 'yes');
-        $this->session->set_userdata('user_id', $user_id);
-        $this->session->set_userdata('kakao_id', $kakao_id);
-        $this->session->set_userdata('email', $email);
-        $this->session->set_userdata('user_type', $user_type);
-        $this->session->set_userdata('nickname', $nickname);
-        $this->session->set_userdata('kakao_thumbnail_image_url', $kakao_thumbnail_image_url);
-        $this->session->set_userdata('profile_image_url', $profile_image_url);
-        $this->session->set_userdata('login_type', $login_type);
-    
+  
+        $ch = curl_init();
+        curl_setopt_array($ch, $opts);
+        $result = json_decode(curl_exec($ch));
+  
+        if (isset($result->error)) {
+          $base_url = base_url();
+          $message = sprintf("오류가 발생했습니다. 다시 로그인해주세요. 오류 메세지 : %s'", $result->error_description);
+          echo ("<script>alert(\"$message\"); window.location.href='${base_url}home/login';</script>");
+          exit;
+        }
+  
+        $access_token = $result->access_token;
+//        $token_type = $result->token_type;
+//        $refresh_token = $result->refresh_token;
+//        $expires_in = $result->expires_in;
+//        $scope = $result->scope;
+//        $refresh_token_expires_in = $result->refresh_token_expires_in;
+  
+        $this->session->set_userdata('need_kakao_access_token', 'yes');
+        $this->session->set_userdata('kakao_auth', json_encode($result));
+        
+        $app_url= "https://kapi.kakao.com/v2/user/me";
+  
+        $opts = array(
+          CURLOPT_URL => $app_url,
+          CURLOPT_SSL_VERIFYPEER => false,
+          CURLOPT_POST => true,
+          CURLOPT_POSTFIELDS => false,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_HTTPHEADER => array( "Authorization: Bearer " . $access_token )
+        );
+  
+        $ch = curl_init();
+        curl_setopt_array($ch, $opts);
+        $result = json_decode(curl_exec($ch), true);
+        curl_close($ch);
+        
+        $result = $this->crud_model->do_kakao_login($result);
+
+        if ($result['status'] == 'success') {
+          $this->crud_model->alert_exit($result['message'], base_url());
+        } else if ($result['status'] == 'restore') { // relogin after unregister
+          $this->crud_model->alert_exit($result['message'], base_url().'home/login');
+        } else { // error
+          $this->crud_model->alert_exit($result['message'], base_url().'home/login');
+        }
+      } else { // kakao login with JDK
+  
+        if (!isset($_POST) || !isset($_POST['id'])) {
+          $result = array();
+          $result['status'] = 'error';
+          $result['message'] = "오류가 발생했습니다. 다시 로그인해주세요(1).";
+        } else {
+          $result = $this->crud_model->do_kakao_login($_POST);
+        }
+  
+        echo json_encode($result);
+        exit;
       }
-  
-      echo json_encode($result);
-      exit;
-  
+      
     } else if ($login_type == 'email') {
       
       //header('Content-Type: application/json; charset=UTF-8');
@@ -497,15 +418,6 @@ class Home extends CI_Controller
       
         }
     
-        $this->load->library('user_agent');
-
-//        $redirect_url .= 'home/login';
-//        $result['status'] = 'success';
-//        $result['message'] = $this->agent->referrer();
-//        $result['redirect_url'] = $redirect_url;
-//        echo json_encode($result);
-//        exit;
-    
         $ins = array(
           'user_id' => $user_data->user_id,
           'kakao_id' => $user_data->kakao_id,
@@ -549,75 +461,12 @@ class Home extends CI_Controller
         exit;
       }
     
-    } else if (!strncmp($login_type, "kakao/rest", 10)) { /* kakao rest api를 이용한 간편 로그인 방법 - 사용 안함 */
-
-//      redirect('home', 'refresh');
-//
-//      if (!isset($_GET["code"])) {
-//        $base_url = base_url();
-//        echo ("<script>alert('오류가 발생했습니다. 다시 로그인해주세요.'); window.location.href='${base_url}home/login';</script>");
-//      }
-//
-//      $code = $_GET["code"];	//발급받은 code 값
-//
-//      $app_key = "a7e336b59aed62d0e46dae8a8c55da21";
-//      $redirect_uri = "http://10.0.4.56/home/login/kakao";
-//
-//      $api_url = "https://kauth.kakao.com/oauth/token";
-//      $params = sprintf( 'grant_type=authorization_code&client_id=%s&redirect_uri=%s&code=%s', $app_key, $redirect_uri, $code);
-//
-//      $opts = array(
-//        CURLOPT_URL => $api_url,
-//        CURLOPT_SSL_VERIFYPEER => false,
-//        CURLOPT_POST => true,
-//        CURLOPT_POSTFIELDS => $params,
-//        CURLOPT_RETURNTRANSFER => true,
-//        CURLOPT_HEADER => false
-//      );
-//
-//      $ch = curl_init();
-//      curl_setopt_array($ch, $opts);
-//      $result = json_decode(curl_exec($ch));
-//
-//      if (isset($result->error)) {
-//        $base_url = base_url();
-//        $message = sprintf("오류가 발생했습니다. 다시 로그인해주세요. 오류 메세지 : %s'", $result->error_description);
-//        echo ("<script>alert(\"$message\"); window.location.href='${base_url}home/login';</script>");
-//        exit;
-//      }
-//
-//      $access_token = $result->access_token;
-//      $token_type = $result->token_type;
-//      $refresh_token = $result->refresh_token;
-//      $expires_in = $result->expires_in;
-//      $scope = $result->scope;
-//      $refresh_token_expires_in = $result->refresh_token_expires_in;
-//
-//      $app_url= "https://kapi.kakao.com/v2/user/me";
-//
-//      $opts = array(
-//        CURLOPT_URL => $app_url,
-//        CURLOPT_SSL_VERIFYPEER => false,
-//        CURLOPT_POST => true,
-//        CURLOPT_POSTFIELDS => false,
-//        CURLOPT_RETURNTRANSFER => true,
-//        CURLOPT_HTTPHEADER => array( "Authorization: Bearer " . $access_token )
-//      );
-//
-//      $ch = curl_init();
-//      curl_setopt_array($ch, $opts);
-//      $result = json_decode(curl_exec($ch));
-//
-//      curl_close($ch);
-//
-//      $this->session->set_userdata('user_login', 'yes');
-
-      //$base_url = base_url();
-      //echo ("<script>alert('로그인해 주셔서 감사합니다.'); window.location.href='${base_url}home';</script>");
     } else {
+      $restore = isset($_GET['r']);
       $page_data['page_name'] = "user/login";
       $page_data['asset_page'] = "login";
       $page_data['page_title'] = "login";
+      $page_data['restore'] = $restore;
       $this->load->view('front/index', $page_data);
     }
   }
@@ -743,8 +592,6 @@ class Home extends CI_Controller
       );
       $this->db->set('register_at', 'NOW()', false);
       $this->db->insert('user_register',$ins);
-  
-      $this->load->library('user_agent');
   
       $ins = array(
         'user_id' => $user_data->user_id,

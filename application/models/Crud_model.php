@@ -95,7 +95,157 @@ class Crud_model extends CI_Model
       return $this->db->get_where($type, array('type' => $type_name))->row()->$field;
     }
   }
+  
+  function do_kakao_login($post)
+  {
+    $result = array();
+    
+//    $connected_at = $post['connected_at'];
+//    $properties = $post['properties'];
+    $kakao_id = (int)$post['id'];
+    $kakao_account = $post['kakao_account'];
+  
+    $profile = $kakao_account['profile'];
+    $email = $kakao_account['email'];
+  
+  
+    $user_data = $this->db->get_where('user', array('email' => $email))->row();
+  
+    if (empty($user_data)) {
+      $user_type = USER_TYPE_GENERAL;
+      $username = '';
+      $nickname = $profile['nickname'];
+      $gender = $kakao_account['gender'];
+      $kakao_thumbnail_image_url = $profile['thumbnail_image_url'];
+      $kakao_profile_image_url = $profile['profile_image_url'];
+      $profile_image_url = '';
+      $password = '';
+//          $create_at = $connected_at;
+    
+      if ($kakao_account['has_phone_number'] == true) {
+        $phone = $kakao_account['phone_number'];
+      } else {
+        $phone = '';
+      }
+    
+      $ins = array(
+        'kakao_id' => $kakao_id,
+        'user_type' => $user_type,
+        'username' => $username,
+        'nickname' => $nickname,
+        'gender' => $gender,
+        'email' => $email,
+        'phone' => $phone,
+        'kakao_thumbnail_image_url' => $kakao_thumbnail_image_url,
+        'kakao_profile_image_url' => $kakao_profile_image_url,
+        'profile_image_url' => $profile_image_url,
+        'password' => $password,
+        'unregister' => 0,
+//            'last_login_at' => date("Y-m-d H:i:s"),
+//            'create_at' => $create_at,
+      );
+    
+      $this->db->set('create_at', 'NOW()', false);
+      $this->db->set('last_login_at', 'NOW()', false);
+      $this->db->insert('user', $ins);
+    
+      $user_data = $this->db->get_where('user', array('kakao_id' => $kakao_id))->row();
+    
+      $ins = array(
+        'user_id' => $user_data->user_id,
+        'kakao_id' => $user_data->kakao_id,
+        'account' => json_encode($kakao_account),
+        'unregistered' => 0,
+      );
+      $this->db->set('register_at', 'NOW()', false);
+      $this->db->insert('user_register', $ins);
+    
+      $result['status'] = 'success';
+      $result['message'] = "첫 방문을 환영합니다.";
+    
+    } else {
+    
+      if ($user_data->unregister == 1) {
+        $ins = array(
+          'user_id' => $user_data->user_id,
+          'kakao_id' => $user_data->kakao_id,
+          'account' => json_encode($kakao_account),
+          'unregistered' => 1,
+        );
+        $this->db->set('register_at', 'NOW()', false);
+        $this->db->insert('user_register', $ins);
+      
+        $this->db->set('unregister', 0);
+      
+        $result['status'] = 'restore';
+        if ($user_data->user_type & USER_TYPE_TEACHER) {
+          $result['message'] = "기존에 강사 정보를 포함한 휴먼계정이 삭제되지 않았습니다. 복원 후 로그인하시겠습니까? 복원을 원하지 않으시면 삭제를 클릭해 주세요.";
+        } else {
+          $result['message'] = "기존에 휴먼계정이 삭제되지 않았습니다. 복원 후 로그인하시겠습니까? 복원을 원하지 않으시면 삭제를 클릭해 주세요.";
+        }
+        $this->session->set_userdata('user_restore', "yes");
+      
+      } else {
+        $result['status'] = 'success';
+        $result['message'] = "로그인해주셔서 감사합니다.";
+      }
+    
+      if ($kakao_account['has_phone_number'] == true) {
+        $phone = $kakao_account['phone_number'];
+        $this->db->set('phone', $phone);
+      }
+    
+      $this->db->set('last_login_at', 'NOW()', false);
+      $this->db->where('user_id', $user_data->user_id);
+      $this->db->update('user');
+    
+    }
+  
+    $this->load->library('user_agent');
 
+    $ins = array(
+      'user_id' => $user_data->user_id,
+      'kakao_id' => $user_data->kakao_id,
+      'account' => json_encode($kakao_account),
+      'session_id' => $this->crud_model->get_session_id(),
+      'ip' => $this->crud_model->get_session_ip(),
+      'is_browser' => $this->agent->is_browser(),
+      'is_mobile' => $this->agent->is_mobile(),
+      'is_robot' => $this->agent->is_robot(),
+      'is_referral' => $this->agent->is_referral(),
+      'browser' => $this->agent->browser(),
+      'version' => $this->agent->version(),
+      'mobile' => $this->agent->mobile(),
+      'robot' => $this->agent->robot(),
+      'platform' => $this->agent->platform(),
+      'referrer' => $this->agent->referrer(),
+      'agent' => $this->agent->agent_string(),
+    );
+    $this->db->set('login_at', 'NOW()', false);
+    $this->db->insert('user_login', $ins);
+  
+    $user_id = $user_data->user_id;
+    $kakao_id = $user_data->kakao_id;
+    $email = $user_data->email;
+    $user_type = $user_data->user_type;
+    $nickname = $user_data->nickname;
+    $kakao_thumbnail_image_url = $user_data->kakao_thumbnail_image_url;
+    $profile_image_url = $user_data->profile_image_url;
+    $login_type = 'kakao';
+
+    $this->session->set_userdata('user_login', 'yes');
+    $this->session->set_userdata('user_id', $user_id);
+    $this->session->set_userdata('kakao_id', $kakao_id);
+    $this->session->set_userdata('email', $email);
+    $this->session->set_userdata('user_type', $user_type);
+    $this->session->set_userdata('nickname', $nickname);
+    $this->session->set_userdata('kakao_thumbnail_image_url', $kakao_thumbnail_image_url);
+    $this->session->set_userdata('profile_image_url', $profile_image_url);
+    $this->session->set_userdata('login_type', $login_type);
+ 
+    return $result;
+  }
+  
   /////////Filter One/////////////
   function filter_one($table, $type, $value)
   {
@@ -104,20 +254,20 @@ class Crud_model extends CI_Model
     $this->db->where($type, $value);
     return $this->db->get()->result_array();
   }
-
+  
   // FILE_UPLOAD
   function img_thumb($type, $id, $ext = '.jpg', $width = '400', $height = '300')
   {
     $this->load->library('image_lib');
     ini_set("memory_limit", "-1");
-
+    
     $config1['image_library'] = 'gd2';
     $config1['create_thumb'] = TRUE;
     $config1['maintain_ratio'] = false;
     $config1['width'] = $width;
     $config1['height'] = $height;
     $config1['source_image'] = 'uploads/' . $type . '_image/' . $type . '_' . $id . $ext;
-
+    
     $this->image_lib->initialize($config1);
     if ($this->image_lib->resize() == false) {
       echo $this->image_lib->display_errors();
