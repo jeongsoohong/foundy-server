@@ -1684,7 +1684,32 @@
     var pattern = new RegExp(/^(("[\w-+\s]+")|([\w-+]+(?:\.[\w-+]+)*)|("[\w-+\s]+")([\w-+]+(?:\.[\w-+]+)*))(@((?:[\w-+]+\.)*\w[\w-+]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][\d]\.|1[\d]{2}\.|[\d]{1,2}\.))((25[0-5]|2[0-4][\d]|1[\d]{2}|[\d]{1,2})\.){2}(25[0-5]|2[0-4][\d]|1[\d]{2}|[\d]{1,2})\]?$)/i);
     return pattern.test(emailAddress);
   }
+  
+  function isAndroidWebview() {
+    console.log('android : ' + navigator.userAgent.indexOf("no_smoking_android"));
+    return (navigator.userAgent.indexOf("no_smoking_android")) > 0;
+  }
 
+  function isIOSWebview() {
+    console.log('android : ' + navigator.userAgent.indexOf("no_smoking_ios"));
+    return (navigator.userAgent.indexOf("no_smoking_ios")) > 0;
+  }
+ 
+  function isApp() {
+    if (isAndroidWebview()) {
+      console.log('AndroidWebView');
+      alert('AndroidWebView');
+      return true;
+    } else if (isIOSWebview()) {
+      console.log('IOSWebView');
+      alert('IOSWebView');
+      return true;
+    }
+    alert('Browser');
+    console.log(navigator.userAgent);
+    return false;
+  }
+  
   $(document).ready(function() {
     $('body').on('click','.signup_btn',function(event, action = ''){
       event.preventDefault();
@@ -1747,6 +1772,10 @@
         }
       });
     });
+   
+   
+    isApp();
+    
   });
 </script>
 
