@@ -1698,14 +1698,14 @@
   function isApp() {
     if (isAndroidWebview()) {
       console.log('AndroidWebView');
-      alert('AndroidWebView');
+      // alert('AndroidWebView');
       return true;
     } else if (isIOSWebview()) {
-      console.log('IOSWebView');
+      // console.log('IOSWebView');
       alert('IOSWebView');
       return true;
     }
-    alert('Browser');
+    // alert('Browser');
     console.log(navigator.userAgent);
     return false;
   }
@@ -1774,7 +1774,7 @@
     });
    
    
-    isApp();
+    // isApp();
     
   });
 </script>
