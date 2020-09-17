@@ -68,28 +68,30 @@ class Home extends CI_Controller
   
     if (!$this->input->is_ajax_request()) {
       $this->load->library('user_agent');
-      $ins = array(
-        'user_id' => $user_data->user_id,
-        'kakao_id' => $user_data->kakao_id,
-        'session_id' => $this->crud_model->get_session_id(),
-        'ip' => $this->crud_model->get_session_ip(),
-        'is_browser' => $this->agent->is_browser(),
-        'is_mobile' => $this->agent->is_mobile(),
-        'is_robot' => $this->agent->is_robot(),
-        'is_referral' => $this->agent->is_referral(),
-        'browser' => $this->agent->browser(),
-        'version' => $this->agent->version(),
-        'mobile' => $this->agent->mobile(),
-        'robot' => $this->agent->robot(),
-        'platform' => $this->agent->platform(),
-        'referrer' => $this->agent->referrer(),
-        'agent' => $this->agent->agent_string(),
-        'uri_1' => $this->uri->segment(2),
-        'uri_2' => $this->uri->segment(3),
-        'uri_3' => $this->uri->segment(4),
-      );
-      $this->db->set('active_at', 'NOW()', false);
-      $this->db->insert('user_active', $ins);
+      if (strcmp(substr($this->agent->agent_string(), 0, 3), "ELB") != 0) {
+        $ins = array(
+          'user_id' => $user_data->user_id,
+          'kakao_id' => $user_data->kakao_id,
+          'session_id' => $this->crud_model->get_session_id(),
+          'ip' => $this->crud_model->get_session_ip(),
+          'is_browser' => $this->agent->is_browser(),
+          'is_mobile' => $this->agent->is_mobile(),
+          'is_robot' => $this->agent->is_robot(),
+          'is_referral' => $this->agent->is_referral(),
+          'browser' => $this->agent->browser(),
+          'version' => $this->agent->version(),
+          'mobile' => $this->agent->mobile(),
+          'robot' => $this->agent->robot(),
+          'platform' => $this->agent->platform(),
+          'referrer' => $this->agent->referrer(),
+          'agent' => $this->agent->agent_string(),
+          'uri_1' => $this->uri->segment(2),
+          'uri_2' => $this->uri->segment(3),
+          'uri_3' => $this->uri->segment(4),
+        );
+        $this->db->set('active_at', 'NOW()', false);
+        $this->db->insert('user_active', $ins);
+      }
     }
 
 //    $this->session->sess_destroy();
