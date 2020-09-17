@@ -4022,7 +4022,7 @@ QUERY;
           $user_info->address_2 = '';
         }
         
-        $coupons = null;
+        $coupons = array();
         $now = date('Y-m-d H:i:s');
         if ($this->is_login()) {
           $query = <<<QUERY
