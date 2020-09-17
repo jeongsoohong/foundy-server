@@ -1801,7 +1801,7 @@
     
     console.log(getCookie('DEVICE'));
     console.log(getCookie('DEVICE') === '' ? 'null string' : 'not null');
-    alert(getCookie('DEVICE'));
+    // alert(getCookie('DEVICE'));
     
   });
 </script>
