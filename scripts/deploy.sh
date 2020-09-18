@@ -11,7 +11,7 @@ git pull
 
 echo
 echo '----====---- application start ----====----'
-rsync -avz --delete --exclude="logs" $GIT_PATH/application $WEB_PATH
+rsync -avz --delete --exclude="logs" --exclude="cache" $GIT_PATH/application $WEB_PATH
 
 echo
 echo '----====---- system start ----====----'
