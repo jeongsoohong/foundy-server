@@ -19,35 +19,7 @@ class Home extends CI_Controller
     defined('IMG_WEB_PATH_BLOG')     OR define('IMG_WEB_PATH_BLOG', base_url().'uploads/blog_image/');
     defined('IMG_WEB_PATH_CENTER')   OR define('IMG_WEB_PATH_CENTER', base_url().'uploads/center_image/');
     defined('IMG_WEB_PATH_SHOP')   OR define('IMG_WEB_PATH_SHOP', base_url().'uploads/shop_image/');
-
-    if (!$this->input->is_ajax_request()) {
-      $this->output->set_header('HTTP/1.0 200 OK');
-      $this->output->set_header('HTTP/1.1 200 OK');
-      $this->output->set_header('Last-Modified: ' . gmdate('D, d M Y H:i:s', time()) . ' GMT');
-      $this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate');
-      $this->output->set_header('Cache-Control: post-check=0, pre-check=0');
-      $this->output->set_header('Pragma: no-cache');
-
-//      if ($this->router->fetch_method() == 'index' ||
-//        $this->router->fetch_method() == 'blog' ||
-//        $this->router->fetch_method() == 'blog_view') {
-//        $this->output->cache(60);
-//      }
-
-    }
-
-//if (ENVIRONMENT == 'production') {
-//    echo 'production';
-//} else {
-//  echo 'development';
-//}
-
-//if (DEV_SERVER == true) {
-//  echo 'dev';
-//} else {
-//  echo 'live';
-//}
-
+  
     $user_data = new stdClass();
     if ($this->is_login() == true) {
       $user_id = $this->session->userdata('user_id');
@@ -67,34 +39,67 @@ class Home extends CI_Controller
     }
   
     if (!$this->input->is_ajax_request()) {
-      if (strcmp(substr($this->agent->agent_string(), 0, 3), "ELB") != 0) {
-        $ins = array(
-          'user_id' => $user_data->user_id,
-          'kakao_id' => $user_data->kakao_id,
-          'session_id' => $this->crud_model->get_session_id(),
-          'ip' => $this->crud_model->get_session_ip(),
-          'is_browser' => $this->agent->is_browser(),
-          'is_mobile' => $this->agent->is_mobile(),
-          'is_robot' => $this->agent->is_robot(),
-          'is_referral' => $this->agent->is_referral(),
-          'browser' => $this->agent->browser(),
-          'version' => $this->agent->version(),
-          'mobile' => $this->agent->mobile(),
-          'robot' => $this->agent->robot(),
-          'platform' => $this->agent->platform(),
-          'referrer' => $this->agent->referrer(),
-          'agent' => $this->agent->agent_string(),
-          'uri_1' => $this->uri->segment(2),
-          'uri_2' => $this->uri->segment(3),
-          'uri_3' => $this->uri->segment(4),
-        );
-        $this->db->set('active_at', 'NOW()', false);
-        $this->db->insert('user_active', $ins);
-      }
-    }
+      $this->output->set_header('HTTP/1.0 200 OK');
+      $this->output->set_header('HTTP/1.1 200 OK');
+      $this->output->set_header('Last-Modified: ' . gmdate('D, d M Y H:i:s', time()) . ' GMT');
+      $this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate');
+      $this->output->set_header('Cache-Control: post-check=0, pre-check=0');
+      $this->output->set_header('Pragma: no-cache');
 
+      if ($this->router->fetch_method() == 'index' ||
+        $this->router->fetch_method() == 'blog' ||
+        $this->router->fetch_method() == 'blog_view' ||
+        $this->router->fetch_method() == 'center' ||
+        $this->router->fetch_method() == 'teacher' ||
+        $this->router->fetch_method() == 'user' ||
+        $this->router->fetch_method() == 'shop') {
+  
+        // caching
+        $this->output->cache(60);
+       
+        // active user
+        if ($this->router->fetch_method() != 'index') {
+          $ins = array(
+            'user_id' => $user_data->user_id,
+            'kakao_id' => $user_data->kakao_id,
+            'session_id' => $this->crud_model->get_session_id(),
+            'ip' => $this->crud_model->get_session_ip(),
+            'is_browser' => $this->agent->is_browser(),
+            'is_mobile' => $this->agent->is_mobile(),
+            'is_robot' => $this->agent->is_robot(),
+            'is_referral' => $this->agent->is_referral(),
+            'browser' => $this->agent->browser(),
+            'version' => $this->agent->version(),
+            'mobile' => $this->agent->mobile(),
+            'robot' => $this->agent->robot(),
+            'platform' => $this->agent->platform(),
+            'referrer' => $this->agent->referrer(),
+            'agent' => $this->agent->agent_string(),
+            'uri_1' => $this->uri->segment(2),
+            'uri_2' => $this->uri->segment(3),
+            'uri_3' => $this->uri->segment(4),
+          );
+          $this->db->set('active_at', 'NOW()', false);
+          $this->db->insert('user_active', $ins);
+        }
+      }
+
+    }
+  
+//    if (ENVIRONMENT == 'production') {
+//      echo 'production';
+//    } else {
+//      echo 'development';
+//    }
+//
+//    if (DEV_SERVER == true) {
+//      echo 'dev';
+//    } else {
+//      echo 'live';
+//    }
+//
 //    $this->session->sess_destroy();
-    // $this->config->cache_query();
+//    $this->config->cache_query();
   }
   
   public function index()
