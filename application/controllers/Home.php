@@ -55,7 +55,7 @@ class Home extends CI_Controller
         $this->router->fetch_method() == 'shop') {
   
         // caching
-        $this->output->cache(60);
+//        $this->output->cache(60);
        
         // active user
         if ($this->router->fetch_method() != 'index') {
