@@ -47,6 +47,7 @@ class Home extends CI_Controller
       $this->output->set_header('Pragma: no-cache');
 
       if ($this->router->fetch_method() == 'index' ||
+        $this->router->fetch_method() == 'find' ||
         $this->router->fetch_method() == 'blog' ||
         $this->router->fetch_method() == 'blog_view' ||
         $this->router->fetch_method() == 'center' ||
