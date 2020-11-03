@@ -59,7 +59,7 @@ $autoload['packages'] = array();
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
 
-$autoload['libraries'] = array('session', 'xmlrpc', 'cart', 'user_agent');
+$autoload['libraries'] = array('session', 'xmlrpc', 'cart', 'user_agent', 'push');
 
 /*
 | -------------------------------------------------------------------
@@ -90,7 +90,7 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array('url', 'file', 'form','language','cookie');
+$autoload['helper'] = array('url', 'file', 'form','language','cookie','push', 'seo');
 
 /*
 | -------------------------------------------------------------------
@@ -133,4 +133,5 @@ $autoload['language'] = array();
 |
 |	$autoload['model'] = array('first_model' => 'first');
 */
-$autoload['model'] = array('crud_model','email_model','html_model','wallet_model');
+$autoload['model'] = array(
+  'cookie_model', 'crud_model','email_model','html_model','apple_model', 'app_model', 'kakao_model');

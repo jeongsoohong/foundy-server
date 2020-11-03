@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <title>모바일 카테고리</title>
+        <link rel="stylesheet" href="./m_category.css">
+        <link href='https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css' rel='stylesheet' type='text/css'>
+        <link href='https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-jp.css' rel='stylesheet' type='text/css'>
+        <style type="text/css">
+            html, body {
+                height: 100%;
+            }
+            .gloomy {
+                color: #424242 !important;
+            }
+            .dark {
+                color: #616161 !important;
+            }
+        </style>
+        <style type="text/css">
+              @font-face{
+                font-family:"futura-pt";
+                src:url(./futura-pt/FuturaPTMedium.otf) format("woff");
+                /* 
+                // 경로에서 폰트가 참조 안되므로 주석처리함
+                url("https://dev.foundy.me/template/fonts/futura-pt/FuturaPTMedium.otf") format("woff"),
+                url("https://dev.foundy.me/template/fonts/futura-pt/FuturaPTMedium.otf") format("opentype"),
+                url("https://dev.foundy.me/template/fonts/futura-pt/FuturaPTMedium.otf") format("truetype");
+                */
+              }
+              *{
+                font-family: 'Spoqa Han Sans', 'Spoqa Han Sans JP', /*'Noto Sans KR',*/ 'Quicksand', 'Patua One', 'Roboto', FontAwesome, 'Helvetica Neue', Helvetica, Arial, 'Glyphicons Halflings', sans-serif !important;
+              }
+              .remove_one{
+                cursor:pointer;
+                padding-left:5px;
+              }
+              .page-section {
+                padding-top: 10px !important;
+                padding-bottom: 10px !important;
+              }
+              .content-area {
+                  min-height: calc(100vh - 98px) !important;
+              }
+              .font-futura {
+                font-family: futura-pt !important;
+                font-style: normal !important;
+                font-weight: 400 !important;
+              }
+              .footer1 {
+                margin: 0 !important;
+                padding-top: 0 !important;
+              }
+        </style> 
+    </head>
+    <body>
+        
+        <div id="whole">
+            <h1 class="whole_tit meaning">파운디</h1>
+            <article class="menu_box scroll-y" style="display: none;">
+                <h2 class="meaning">카테고리</h2>
+                <button class="btn_close menu_close">
+                    <img src="./imgs/icon_close.png" width="16" alt="닫기">
+                </button>
+                <div class="menu_main">
+                    <h3>
+                        <a href="#">MY PAGE</a>
+                    </h3>
+                    <h3>
+                        <a href="#">COUPON BOX</a>
+                    </h3>
+                    <article class="main_shop">
+                        <h3>SHOP</h3>
+                        <section class="shop_theme">
+                            <h4 class="highlight">
+                                <a href="#">main</a>
+                            </h4>
+                            <h4 class="highlight">
+                                <a href="#">new</a>
+                            </h4>
+                            <div class="sld_wrap">
+                                <h4 class="sld_tit highlight">yoga</h4>
+                                <div class="sld_li" style="display: none;">
+                                    <a href="#" class="li_theme li_focus">Yoga wear</a>
+                                    <div style="display: none;" class="li_cnt">
+                                        <a href="#">TOP</a>
+                                        <a href="#">BOTTOM</a>
+                                        <a href="#">OUTER</a>
+                                    </div>
+                                    <a href="#" class="li_theme li_focus">Yoga mat</a>
+                                    <div style="display: none;" class="li_cnt">
+                                        <a href="#">Mat</a>
+                                        <a href="#">Towel</a>
+                                    </div>
+                                    <a href="#" class="li_focus">Prop</a>
+                                    <a href="#" class="li_focus">Accessories</a>
+                                </div>
+                                <h4 class="sld_tit highlight">vegan</h4>
+                                <div class="sld_li" style="display: none;">
+                                    <a href="#" class="li_focus">Cosmetic</a>
+                                    <a href="#" class="li_focus">Fashion</a>
+                                    <a href="#" class="li_focus">Foods</a>
+                                </div>
+                                <h4 class="sld_tit highlight">healing</h4>
+                                <div class="sld_li" style="display: none;">
+                                    <a href="#" class="li_theme li_focus">Tea</a>
+                                    <div style="display: none;" class="li_cnt">
+                                        <a href="#">차</a>
+                                        <a href="#">다도용품</a>
+                                    </div>
+                                    <a href="#" class="li_theme li_focus">Fragrance</a>
+                                    <div style="display: none;" class="li_cnt">
+                                        <a href="#">향</a>
+                                        <a href="#">아로마</a>
+                                        <a href="#">향꽂이</a>
+                                    </div>
+                                    <a href="#" class="li_focus">Meditation</a>
+                                    <a href="#" class="li_focus">Book</a>
+                                </div>
+                            </div>
+                        </section>
+                    </article>
+                    <h3>
+                        <a href="#">FIND</a>
+                    </h3>
+                    <h3>
+                        <a href="#">LIFE</a>
+                    </h3>
+                </div>
+                <div class="menu_sub">
+                    <h3 class="sub_work work_set">
+                        <button>SETTINGS</button>
+                    </h3>
+                    <h3 class="sub_work">
+                        <a href="#">LOGOUT</a>
+                    </h3>
+                </div>
+            </article>
+            <article class="setting_wrap" style="display: none;">
+                <h2 class="meaning">설정</h2>
+                <header class="header">
+                    <nav class="header__nav">
+                        <h3 class="nav__tit">
+                            <a href="#" class="tit_home">
+                                <img src="./imgs/logo_foundy.png" height="30" width="auto" alt="홈">
+                            </a>
+                        </h3>
+                        <button class="btn_close set_close">
+                            <img src="./imgs/icon_close_black.png" width="16" alt="닫기">
+                        </button>
+                    </nav>
+                </header>
+                <section class="settings scroll-y">
+                    <h3 class="setting__tit">SETTINGS</h3>
+                    <div class="setting__agree">
+                        <div class="agree--push clearfix">
+                            <p class="push_txt">푸시알림 동의</p>
+                            <div class="agree_btn">
+                                <label class="switch">
+                                      <input type="checkbox">
+                                      <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="agree--local clearfix">
+                            <p class="local_txt">위치정보 제공 동의</p>
+                            <div class="agree_btn">
+                                <label class="switch">
+                                      <input type="checkbox">
+                                      <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setting__version clearfix">
+                        <p class="version_info keepall">버전 정보 000000
+                        </p>
+                        <p class="version_recent">최신 버전입니다.</p>
+                    </div>
+                </section>
+            </article>
+            <section class="main">
+                <h2 class="meaning">홈 헤더</h2>
+                <header class="header">
+                    <nav class="header__nav">
+                        <button class="nav__menu nav_btn">
+                            <img src="./imgs/icon_menu_black.png" width="20" alt="메뉴">
+                        </button>
+                        <h3 class="nav__tit">
+                            <a href="#" class="tit_home">
+                                <img src="./imgs/logo_foundy.png" height="30" width="auto" alt="홈">
+                            </a>
+                        </h3>
+                        <a href="#" class="nav__shop nav_btn">
+                            <img src="./imgs/icon_basket_black.png" width="22" class="shop_default" style="padding-bottom: 4px;" alt="장바구니">
+                            <img src="./imgs/basket_badge.png" width="15" class="shop_badge" style="display: none;" alt="뱃지">
+                        </a>
+                    </nav>
+                </header>
+            </section>
+        </div>
+
+        
+        
+        
+        <script src="./jquery.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                // menu_box 열고 닫기
+                $('.nav__menu').click(function(){
+                    $('body').css('overflow-y','hidden');
+                    $('.menu_box').show()
+                                  .css('left','-100%')
+                                  .animate({
+                                      left : '0%'
+                                  },400)
+                })
+                $('.menu_close').click(function(){
+                    $('body').css('overflow-y','auto');
+                    $('.menu_box').css('left','0%')
+                                  .animate({
+                                      left : '-100%'
+                                  },400)
+                })
+                
+                // setting_wrap 열고 닫기
+                $('.work_set').click(function(){
+                    $('body').css('overflow-y','hidden');
+                    $('.setting_wrap').show()
+                                      .css('left','100%')
+                                      .animate({
+                                          left : '0%'
+                                      },400)
+                })
+                $('.set_close').click(function(){
+                    $('body').css('overflow-y','auto');
+                    $('.setting_wrap').css('left','0%')
+                                      .animate({
+                                          left : '100%'
+                                      },400)
+                })
+                
+                
+                // sld_li 슬라이드 UP/DOWN
+                $('.sld_tit').click(function(){
+                    var index = $('.sld_tit').index(this);
+                    var display = $('.sld_li').eq(index).css('display');
+                    
+                    if(display == 'none') {
+                        $('.sld_li').slideUp();
+                        $('.sld_li').eq(index).slideDown();
+                    }
+                    else {
+                        $('.sld_li').slideUp();
+                    }
+                })
+                
+                // li_theme 슬라이드 UP/DOWN
+                $('.li_theme').click(function(){
+                    var index = $('.li_theme').index(this);
+                    var display = $('.li_cnt').eq(index).css('display');
+                    
+                    if(display == 'none') {
+                        $('.li_cnt').slideUp();
+                        $(this).next().slideDown();
+                    }
+                    else {
+                        $('.li_cnt').slideUp();
+                    }
+                    
+                })
+                
+                // shop_theme 클릭시 다른 Lv 폰트색상 연하게
+                $('.highlight').click(function(){
+                    var index = $('.highlight').index(this);
+                    // console.log(index);
+                    
+                    $('.highlight').addClass('gloomy');
+                    $('.highlight > a').addClass('gloomy');
+                    $(this).removeClass('gloomy');
+                    $(this).find('a').removeClass('gloomy');
+                })
+                
+                // li_cnt > a 클릭시 다른 Lv 폰트색상 연하게
+                $('.li_focus').click(function(){
+                    var index = $('.li_focus').index(this);
+                    
+                    $('.li_focus').addClass('dark');
+                    $(this).removeClass('dark');
+                })
+                
+            })
+        </script>
+        
+    </body>
+</html>

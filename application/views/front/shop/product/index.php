@@ -899,7 +899,7 @@
     </div>
   </div>
 </div>
-<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<!--<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>-->
 <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 <script type="text/javascript">
@@ -909,20 +909,45 @@
   window.onscroll = function() {
     var navbar = document.getElementById("navbar");
     var sticky = navbar.offsetTop;
+    var _pY = window.pageYOffset;
 
-    // console.log('sticky : ' + sticky + ', pageYOffset : ' + window.pageYOffset);
-    // console.log('item_sticky : ' + item_sticky + ', pageYOffset : ' + window.pageYOffset);
+    // let bottomPos = $(window).height() + _pY;
+    // let pageHeight = $(document).height();
+  
+    // console.log('scrollTop: ' + $(window).scrollTop());
+    // console.log('window height : ' + $(window).height());
+    // console.log('page height: ' + $(document).height());
+    // console.log('bottom position: ' + bottomPos);
+  
+    console.log('sticky : ' + sticky + ', pageYOffset : ' + window.pageYOffset);
+    console.log('item_sticky : ' + item_sticky + ', pageYOffset : ' + window.pageYOffset);
 
-    if (window.pageYOffset > sticky) {
+    if (_pY > sticky) {
       navbar.classList.add("navigation-sticky");
     } else {
       navbar.classList.remove("navigation-sticky");
     }
-    if (window.pageYOffset > item_sticky) {
+    if (_pY > item_sticky) {
       item_navbar.classList.add("sticky");
     } else {
       item_navbar.classList.remove("sticky");
     }
+  
+    <?php if ($this->app_model->is_app()) { ?>
+//    if (_pY >= 56 && bottomPos < pageHeight - 56 && pageY > pageY2 && _pY > pageY) { // scroll down
+//      toggleBottomBar('OFF');
+//      $('#navbar').hide();
+//      $('#item-nav-tab.sticky').hide();
+//      // } else if (_pY >= 56 && _pY < pageY) { // scroll up
+//      //   toggleBottomBar('ON');
+//    } else {
+//      toggleBottomBar('ON');
+//      $('#navbar').show();
+//      $('#item-nav-tab.sticky').show();
+//    }
+//    pageY2 = pageY;
+//    pageY = _pY;
+    <?php } ?>
   }
 
   function move(id) {

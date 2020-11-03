@@ -1,0 +1,403 @@
+/* CSS RESET */
+* {
+    padding: 0;
+    border: 0;
+    margin: 0;
+}
+a {text-decoration: none;}
+p {word-break: keep-all;}
+li {list-style: none;}
+img {vertical-align: middle;}
+button {
+    background: none;
+    outline: none;
+    cursor: pointer;
+}
+input {
+    background: none;
+    outline: none;
+    color: #616161;
+    
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+}
+input:focus {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+input[type="checkbox"], input[type="radio"] {
+    vertical-align: middle;
+}
+.bg_grey {background-color: #f5f5f5;}
+
+textarea {
+    display: block;
+    outline: none;
+    resize: none;
+}
+table {border-collapse: collapse;}
+select {
+    background: none;
+    outline: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    border-radius: 0;
+    cursor: pointer;
+}
+
+body {
+    font-family: 'Spoqa Han Sans', 'Spoqa Han Sans JP', 'Sans-serif';
+    height: 100%;
+}
+.clearfix::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+.scroll-hidden {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+.scroll-x_hidden {
+    overflow-x: hidden;
+}
+.scroll-x {
+    overflow-x: scroll;
+}
+.scroll-x_visible {
+    overflow-x: visible;
+}
+.scroll-y {
+    overflow-y: scroll;
+}
+.scroll-y_hidden {
+    overflow-y: hidden;
+}
+.nowrap {
+    white-space: nowrap;
+}
+.keepall {
+    word-break: keep-all;
+}
+.blurEffect {
+    filter: blur(5px);
+    -webkit-filter: blur(5px);
+    -moz-filter: blur(5px);
+    -ms-filter: blur(5px);
+    -o-filter: blur(5px);
+}
+.fixinner { 
+    position: fixed; 
+}
+.shadow_sm {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+}
+.shadow_md {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+.meaning {
+    overflow: hidden;
+    position: absolute;
+    width: 0;
+    height: 0;
+    line-height: 0;
+}
+
+#whole {
+    min-width: 320px;
+    width: 100%;
+    height: 100%;
+}
+
+
+h2, h3, h4, a {
+    font-family: futura-pt !important;
+    font-style: normal !important;
+    font-weight: bold;
+}
+
+#whole h4 > a {
+    font-weight: normal;
+}
+
+/* menu_box */
+.menu_main a, .menu_sub a {
+    display: block;
+}
+
+.menu_box {
+    padding: 24px 16px 40px;
+    background-color: #000;
+    box-sizing: border-box;
+    position: fixed;
+    z-index: 7;
+    width: 100%;
+    height: 100%;
+}
+.menu_box h3, .menu_box h4, .menu_box a,
+.menu_box button {
+    color: #fff;
+} 
+
+
+.menu_box h3 {
+    font-size: 30px;
+    margin-bottom: 12px;
+}
+.menu_box h3:nth-child(2) {
+    margin-bottom: 0;
+}
+
+.menu_box h4 {
+    color: #e0e0e0;
+    font-size: 24px;
+    font-weight: normal;
+    margin-bottom: 12px;
+    cursor: pointer;
+}
+
+.main_shop {
+    padding-top: 24px;
+    border-top: 1px solid #616161;
+    margin: 24px 0;
+}
+.main_shop h3 {
+    margin-bottom: 8px;
+    color: darkorange;
+}
+
+.menu_sub {
+/*
+    position: absolute;
+    bottom: 72px;
+    left: 16px;
+*/
+    margin-top: 60px;
+}
+.menu_box h4 > a {
+    color: #e0e0e0;
+}
+.btn_close {
+    position: absolute;
+    top: 6px;
+    right: 0;
+    width: 44px;
+    height: 44px;
+}
+
+.sub_work a, .sub_work button {
+    display: block;
+    font-size: 14px;
+}
+
+
+.sld_li > a {
+    color: #bdbdbd;
+    font-size: 18px;
+    font-weight: normal;
+    padding-bottom: 10px;
+    padding-left: 12px;
+}
+.sld_li > a:last-child {
+    margin-bottom: 24px;
+}
+
+.li_cnt > a {
+    color: #fff;
+    font-size: 16px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+}
+.li_cnt > a::before {
+    content: "";
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: 2px;
+    background-color: #fff;
+    margin: 4px 8px;
+}
+.li_cnt > a:last-child {
+    margin-bottom: 16px;
+}
+
+
+
+
+
+
+.header {
+    height: 56px;
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+}
+.header__nav {
+    position: relative;
+    width: 100%;
+}
+.nav__tit {
+    width: 100%;
+    text-align: center;
+    line-height: 56px;
+}
+.nav__menu {
+    position: absolute;
+    top: 4px;
+    left: 0;
+}
+.nav__shop {
+    position: absolute;
+    top: 4px;
+    right: 0;
+}
+.nav_btn {
+    display: block;
+    width: 44px;
+    height: 44px;
+    line-height: 44px;
+    text-align: center;
+}
+
+.shop_badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+}
+
+
+.header__tit {
+    line-height: 56px;
+}
+.header__tit a {
+    display: block;
+}
+
+/* setting_wrap */
+.setting_wrap {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: 8;
+    background-color: #fff;
+}
+.settings {
+    padding: 36px 16px;
+    height: calc(100% - 56px);
+}
+.setting__tit {
+    color: #000;
+    text-align: center;
+    padding-bottom: 32px;
+    font-size: 18px;
+    font-weight: normal;
+    letter-spacing: 0.15em;
+}
+.setting__agree {
+    padding-bottom: 28px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 28px;
+}
+
+.push_txt, .local_txt, .version_info {
+    float: left;
+    color: #333;
+    font-size: 14px;
+    font-weight: normal;
+}
+.push_txt, .local_txt {
+    line-height: 32px;
+    padding-bottom: 8px;
+}
+.local_txt {
+    padding: 0;
+}
+
+.agree_btn {
+    float: right;
+}
+
+.setting__version p {
+    line-height: 1.5;
+}
+.version_info {
+    width: 54px;
+}
+.version_recent {
+    float: right;
+    color: #333;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 44px;
+}
+
+/* agree_btn */
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 32px;
+  vertical-align:middle;
+}
+.message {
+    display: inline-block;
+    margin-left: 4px;
+    width: 32px;
+    text-align: left;
+}
+.message p {
+    line-height: 32px;
+    font-weight: bold;
+    color: #bdbdbd;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e0e0e0;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 24px;
+  width: 24px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(27px);
+  -ms-transform: translateX(27px);
+  transform: translateX(27px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 32px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+

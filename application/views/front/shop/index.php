@@ -112,6 +112,52 @@
   <div id="content-container">
     <div id="page-content">
       <div class="row">
+        <?php if ($category != 'all' && $category != 'ALL' && $category != 'wish' && $category != 'WISH') { ?>
+          <div class="col-md-12" style="text-align: center; font-size: 16px;height: 40px; line-height: 30px; padding-top: 10px">
+            <?php
+            $cnt = 0;
+            if ($cat_level > 1) {
+              foreach ($cats as $cat) {
+              ?>
+                <a class="font-futura"
+                  <?php if (!strcmp($cat->cat_code, $category)) { ?>
+                    style="color: darkorange"
+                  <?php } ?>
+                   href="<?php echo base_url(); ?>home/shop?col=product_id&order=desc&cat=<?php echo $cat->cat_code; ?>">
+                  <?php
+                  echo $cat->cat_name;
+                  $cnt++;
+                  ?>
+                </a>
+                <?php if ($cnt == 1) { ?>
+                  &nbsp;&nbsp;>&nbsp;&nbsp;
+                <?php } else if ($cnt < count($cats)) { ?>
+                  &nbsp;&nbsp;/&nbsp;&nbsp;
+                <?php }  ?>
+                <?php
+              }
+            } else { // 1 level
+            foreach ($cats as $cat) {
+              ?>
+              <a class="font-futura"
+                <?php if (!strcmp($cat->cat_code, $category)) { ?>
+                  style="color: coral"
+                <?php } ?>
+                 href="<?php echo base_url(); ?>home/shop?col=product_id&order=desc&cat=<?php echo $cat->cat_code; ?>">
+                <?php
+                echo $cat->cat_name;
+                $cnt++;
+                ?>
+              </a>
+              <?php if ($cnt < count($cats)) { ?>
+                &nbsp;&nbsp;/&nbsp;&nbsp;
+              <?php }  ?>
+              <?php
+            }
+            }
+            ?>
+          </div>
+        <?php } ?>
         <?php if (isset($best_items) && !empty($best_items)) { ?>
           <div class="col-md-12 shop-best shop-content">
             <div class="col-md-12 shop-header">
@@ -204,7 +250,7 @@
     </div>
   </div>
 </section>
-<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<!--<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>-->
 <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 <script>
@@ -283,7 +329,9 @@
       autoplay: false,
       arrows: false,
     });
-    active_menu_bar('<?php echo $this->crud_model->get_product_category_str($category); ?>');
+    active_menu_bar('<?php
+      echo $this->crud_model->get_product_category_str($category);
+      ?>');
     load_list();
   });
 </script>

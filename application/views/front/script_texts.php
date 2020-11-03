@@ -511,9 +511,9 @@
 
   function cart_on(on) {
     if (on === true) {
-      $('#cart-on').find('img').attr('src', '<?php echo base_url(); ?>uploads/shop/cart02.png');
+      $('#cart-on').find('img:last').show();
     } else {
-      $('#cart-on').find('img').attr('src', '<?php echo base_url(); ?>uploads/shop/cart01.png');
+      $('#cart-on').find('img:last').hide();
     }
   }
 
@@ -547,13 +547,13 @@
   }
   
   function isAndroidWebview() {
-    let device = getCookie('DEVICE');
+    let device = _getCookie('DEVICE');
     // console.log(device);
     return device === 'ANDROID';
   }
 
   function isIOSWebview() {
-    let device = getCookie('DEVICE');
+    let device = _getCookie('DEVICE');
     // console.log(device);
     return device === 'IOS';
   }
@@ -571,14 +571,14 @@
     return <?php echo ($this->agent->is_mobile() ? 'true' : 'false'); ?>;
   }
 
-  function setCookie(cname, cvalue, exdays) {
+  function _setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
     var expires = "expires="+ d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
   }
   
-  function getCookie(cname) {
+  function _getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
     var ca = decodedCookie.split(';');
@@ -670,5 +670,296 @@
     } ?>
     
   });
+
+  function sleep (delay) {
+    var start = new Date().getTime();
+    while (new Date().getTime() < start + delay);
+  }
+
+  function do_logout() {
+    $('#loading_set').show();
+    $.ajax({
+      url : '<?php echo base_url().'/home/logout'; ?>',
+      dataType : 'json', // 받을 데이터 방식
+      success : function(res) {
+        $("#loading_set").fadeOut(500);
+        if (res.status === 'success') {
+          alert(res.message);
+          // console.log(res.message);
+          window.location.href = res.redirect_url;
+        } else {
+          alert(res.message);
+          // console.log(res.message);
+          window.location.href = res.redirect_url;
+        }
+      },
+      error: function(xhr, status, error){
+        alert(error);
+        window.location.href = base_url + 'home/login';
+      }
+    });
+  }
+
+  let login_type = '<? echo $this->session->userdata('login_type'); ?>';
+  function user_logout() {
+    $('#loading_set').show();
+    // console.log(login_type);
+    if (login_type === 'kakao') {
+      $.getScript("https://developers.kakao.com/sdk/js/kakao.min.js", function() {
+        Kakao.init('8ee901a556539927d58b30a6bf21a781');
+        // console.log(Kakao.Auth.getAccessToken());
+        if (!Kakao.Auth.getAccessToken()) {
+          $("#loading_set").fadeOut(500);
+          // alert('Not logged in.');
+          do_logout();
+        } else {
+          $("#loading_set").fadeOut(500);
+          Kakao.Auth.logout(function() {
+            // alert('logout: ' + Kakao.Auth.getAccessToken());
+            do_logout();
+          });
+        }
+      });
+    } else {
+      do_logout();
+    }
+  }
+
+  function chatKakaoChannel() {
+    Kakao.Channel.chat({
+      channelPublicId: '_xnzxbxaxb',
+    });
+  }
+
+
 </script>
+
+<?php if ($this->app_model->is_app()) { ?>
+  <script> // Web <=> App interface
+    // 메뉴토글 ------------------------------------------------------------------------------------------------
+    // 송신부 web -> app
+    function categoryMenuToggle() {
+      if (menu_on) {
+        if (setting_on) {
+          close_setting_menu();
+          setTimeout(function() {close_menu()}, 300);
+        } else {
+          close_menu();
+        }
+      } else {
+        open_menu();
+      }
+    }
+    // 위치정보 ------------------------------------------------------------------------------------------------
+    // 송신부 web → app
+    function getCurrentLocation() {
+      if (_getCookie('DEVICE') === 'IOS') {
+        webkit.messageHandlers.HybridBridge.postMessage({'funcType': 'getCurrentLocation' });
+      } else if (_getCookie('DEVICE') === 'ANDROID') {
+        window.HybridBridge.getCurrentLocation();
+      }
+    }
+    // 수신부 app → web
+    // receiveLocation 함수명 변경하면 안됩니다.
+    function receiveLocation(lat, lng) {
+      // 이 부분은 원하는대로 변경
+      // $('#lat').val(lat);
+      // $('#lng').val(lng);
+      // alert('lat : ' + lat + ', lng : ' +lng);
+    }
+    // 버전정보 ------------------------------------------------------------------------------------------------
+    // 송신부 web → app
+    function getAppVersion() {
+      if (_getCookie('DEVICE') === 'IOS') {
+        webkit.messageHandlers.HybridBridge.postMessage({'funcType': 'getAppVersion' });
+      } else if (_getCookie('DEVICE') === 'ANDROID') {
+        window.HybridBridge.getAppVersion();
+      }
+    }
+    // 수신부 app → web
+    // receiveLocation 함수명 변경하면 안됩니다.
+    function receiveAppVersion(version) {
+      // 이 부분은 원하는대로 변경
+      // console.log(version);
+      $('#app_version').text(version);
+    }
+  
+    // 푸시설정 ------------------------------------------------------------------------------------------------
+    // 송신부 web → app
+    // <div class="form-group">
+    //   <h6>푸시알림 설정/변경</h6>
+    // <button type="button" class="btn btn-primary btn-block" onclick="javascript:setPushSetting();">푸시 알림 설정 변경</button>
+    // </div>
+    function setPushSetting() {
+      if (_getCookie('DEVICE') === 'IOS') {
+        webkit.messageHandlers.HybridBridge.postMessage({'funcType': 'setPushSetting' });
+      } else if (_getCookie('DEVICE') === 'ANDROID') {
+        window.HybridBridge.setPushSetting();
+      }
+    }
+    function getPushSetting() {
+      return _getCookie('PUSH-YN');
+    }
+    // function togglePushSetting() {
+    //   if (getPushSetting() === 'ON') {
+    //     $('#push_setting').prop('checked', true);
+    //     return true;
+    //   }
+    //   $('#push_setting').prop('checked', false);
+    //   return false;
+    // }
+    function togglePushSetting(status) {
+      if (status === 'ON') {
+        $('#push_setting').prop('checked', true);
+      } else {
+        $('#push_setting').prop('checked', false);
+      }
+    }
+    function setPush() {
+        if (getPushSetting() === 'ON') {
+          $('#push_setting').prop('checked', true);
+        } else {
+          $('#push_setting').prop('checked', false);
+        }
+        setPushSetting();
+    }
+    // GPS설정 ------------------------------------------------------------------------------------------------
+    // 송신부 web → app
+    // <div class="form-group">
+    //   <h6>위치 정보 제공 on/off</h6>
+    // <button type="button" class="btn btn-primary btn-block" onclick="javascript:setGPSSetting();">위치 정보 변경</button>
+    // </div>
+    function setGPSSetting() {
+      if (_getCookie('DEVICE') === 'IOS') {
+        webkit.messageHandlers.HybridBridge.postMessage({'funcType': 'setGPSSetting' });
+      } else if (_getCookie('DEVICE') === 'ANDROID') {
+        window.HybridBridge.setGPSSetting();
+      }
+    }
+    function getGPSSetting() {
+      return _getCookie('GPS-YN');
+    }
+    // function toggleGPSSetting() {
+    //   if (getGPSSetting() === 'ON') {
+    //     $('#gps_setting').prop('checked', true);
+    //     return true;
+    //   }
+    //   $('#gps_setting').prop('checked', false);
+    //   return false;
+    // }
+    function toggleGPSSetting(status) {
+      if (status === 'ON') {
+        $('#gps_setting').prop('checked', true);
+      } else {
+        $('#gps_setting').prop('checked', false);
+      }
+    }
+    function setGPS() {
+        if (getGPSSetting() === 'ON') {
+          $('#gps_setting').prop('checked', true);
+        } else {
+          $('#gps_setting').prop('checked', false);
+        }
+        setGPSSetting();
+    }
+  
+    // 하단메뉴 ------------------------------------------------------------------------------------------------
+    // 송신부 web → app
+    // <div class="form-group">
+    //   <h6>하단 메뉴 감추기</h6>
+    // <button type="button" class="btn btn-primary btn-block" onclick="toggleBottomBar('OFF');">하단 메뉴 감추기</button>
+    // </div>
+    function toggleBottomBar(show) { // ON / OFF
+      if (_getCookie('DEVICE') === 'IOS') {
+        webkit.messageHandlers.HybridBridge.postMessage({'funcType': 'toggleBottomBar', 'show': show });
+      }
+    }
+    
+    // 쿠키정보 ------------------------------------------------------------------------------------------------
+    function getCookieData() {
+      alert('ci_session : ' + _getCookie('ci_session'));
+      alert('MODE : ' + _getCookie('MODE'));
+      alert('DEVICE : ' + _getCookie('DEVICE'));
+      alert('FCM-TOKEN : ' + _getCookie('FCM-TOKEN'));
+      alert('PUSH-YN: ' + _getCookie('PUSH-YN'));
+      alert('GPS-YN: ' + _getCookie('GPS-YN'));
+      alert('SET-PUSH-NOTICE: ' + _getCookie('SET-PUSH-NOTICE'));
+      alert('SET-GPS-PERMISSION: ' + _getCookie('SET-GPS-PERMISSION'));
+      alert('VERSION : ' + _getCookie('VERSION'));
+      alert('BUILDNUMBER : ' + _getCookie('BUILDNUMBER'));
+    }
+  
+    // 공유하기 ------------------------------------------------------------------------------------------------
+    // 송신부 web → app
+    // <a href="javascript:shareText('공유하고 싶은 문구와 URL');">
+    //   이 페이지를 공유하기 <i class="fa fa-share fs-24 fw-400"> </i>
+    //   </a>
+    function shareText(text) {
+      if (_getCookie('DEVICE') === 'IOS') {
+        webkit.messageHandlers.HybridBridge.postMessage({'funcType': 'shareText', 'text': text });
+      } else if (_getCookie('DEVICE') === 'ANDROID') {
+        window.HybridBridge.shareText(text);
+      }
+    }
+    // 송신부 web → app
+    // <a href="javascript:shareURL('공유하고싶은URL만입력');">
+    //   이 페이지를 공유하기 <i class="fa fa-share fs-24 fw-400"> </i>
+    // </a>
+    function shareURL(url) {
+      if (_getCookie('DEVICE') === 'IOS') {
+        webkit.messageHandlers.HybridBridge.postMessage({'funcType': 'shareURL', 'url': text });
+      } else if (_getCookie('DEVICE') === 'ANDROID') {
+        window.HybridBridge.shareURL(url);
+      }
+    }
+  
+    // case 1: url방식으로 공유하기
+    // 현재 페이지의 오픈그래프 정보를 이용해서 url 공유하는 방식
+    // url 방식일 경우 이 함수는 페이지에 없어도 됨
+    // function getShareSetting() {
+    //   if (_getCookie('DEVICE') === 'IOS') {
+    //     return 'url';
+    //   } else if (_getCookie('DEVICE') === 'ANDROID') {
+    //     window.HybridBridge.shareSetting('url');
+    //   }
+    // }
+  
+    // case 2: 원하는 text를 앱에 전달하기
+    // 현재 페이지의 오픈그래프 정보와 URL을 무시하고
+    // 원하는 텍스트로 공유하고 싶은 페이지에서는 아래와 같이 공유를 원하는 문구를 작성해주세요.
+    // function getShareSetting() {
+    //   var shareText = '파운디가 소개하는 요가센터를 찾아보세요. https://www.foundy.me/home/find2';
+    //   if (_getCookie('DEVICE') == 'IOS') {
+    //     return shareText;
+    //   } else if (_getCookie('DEVICE') == 'ANDROID') {
+    //     window.HybridBridge.shareSetting(shareText);
+    //   }
+    // }
+   
+    var page_name = '<?php echo $page_name; ?>';
+    window.onpageshow = function(event) {
+      if (event.persisted || (window.performance && window.performance.navigation.type == 2)) {
+        if (page_name === 'shop/cart' || page_name === 'shop/purchase' || page_name === 'shop/product') {
+          toggleBottomBar('OFF');
+        } else {
+          toggleBottomBar('ON');
+        }
+      }
+    }
+  
+    $(function() {
+      getAppVersion();
+      <?php if ($this->app_model->is_ios_app()) { ?>
+      // getCredentialState('001068.4420f70249c345d484fc3281f19602de.1518');
+      <?php } ?>
+      // getCookieData();
+      <?php if ($page_name == 'shop/cart' || $page_name == 'shop/purchase' || $page_name == 'shop/product') { ?>
+      toggleBottomBar('OFF');
+      <?php } else { ?>
+      toggleBottomBar('ON');
+      <?php } ?>
+    });
+  </script>
+<?php } ?>
+
 

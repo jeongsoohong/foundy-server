@@ -77,7 +77,7 @@ jQuery(document).ready(function () {
     });
     // Smooth scrolling
     // ----------------------------------------------------------------------------------------
-    $('.sf-menu a, .scroll-to').click(function () {
+    $('/*.sf-menu a,*/ .scroll-to').click(function () {
 
         $('.sf-menu a').removeClass('active');
         $(this).addClass('active');

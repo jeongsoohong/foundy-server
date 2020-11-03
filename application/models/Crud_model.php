@@ -8,6 +8,7 @@ class Crud_model extends CI_Model
   function __construct()
   {
     parent::__construct();
+    
   }
 
   public function _generate_key($table_name, $column_name, $prefix)
@@ -42,32 +43,6 @@ class Crud_model extends CI_Model
   }
 
   //------------------------------------------------------------------------------------------------------------------
-  function set_cookie($name, $value, $day = false)
-  {
-    $day = is_numeric($day) && $day > 0 ? (int)$day : 60;
-
-    $cookie = array();
-    $cookie['name'] = $name;
-    $cookie['value'] = $value;
-    $cookie['expire'] = $day * 86400;
-    $cookie['path'] = '/';
-
-    $this->input->set_cookie($cookie);
-  }
-
-  function delete_cookie($name)
-  {
-    $cookie = array();
-    $cookie['name'] = $name;
-    $cookie['value'] = '';
-    $cookie['expire'] = '';
-    $cookie['path'] = '/';
-
-    //$this->input->set_cookie($cookie);
-    setcookie($name, "", time() - 86400, '/');
-  }
-
-  //------------------------------------------------------------------------------------------------------------------
 
   function clear_cache()
   {
@@ -94,6 +69,46 @@ class Crud_model extends CI_Model
     if ($type_name != '') {
       return $this->db->get_where($type, array('type' => $type_name))->row()->$field;
     }
+  }
+  
+  function do_register($email, $password, $account) {
+    $ins = array(
+      'user_type' => USER_TYPE_GENERAL,
+      'username' => '',
+      'nickname' => '',
+      'gender' => '',
+      'email' => $email,
+      'phone' => '',
+      'kakao_thumbnail_image_url' => '',
+      'kakao_profile_image_url' => '',
+      'profile_image_url' => '',
+      'password' => (empty($password) == true ? '' : sha1($password)),
+      'unregister' => 0,
+    );
+  
+    $this->db->set('create_at', 'NOW()', false);
+    $this->db->set('last_login_at', 'NOW()', false);
+    $this->db->insert('user', $ins);
+  
+    if ($this->db->affected_rows() <= 0) {
+      $result['status'] = 'fail';
+      $result['message'] = '관리자에게 문의 바랍니다(not inserted)';
+      echo json_encode($result);
+      exit;
+    }
+  
+    $user_id = $this->db->insert_id();
+    $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
+  
+    $ins = array(
+      'user_id' => $user_data->user_id,
+      'account' => $account,
+      'unregistered' => 0,
+    );
+    $this->db->set('register_at', 'NOW()', false);
+    $this->db->insert('user_register',$ins);
+
+    return $user_data;
   }
   
   function do_kakao_login($post)
@@ -234,6 +249,7 @@ class Crud_model extends CI_Model
     $login_type = 'kakao';
 
     $this->session->set_userdata('user_login', 'yes');
+//    $this->session->set_userdata('user_data', json_encode($user_data));
     $this->session->set_userdata('user_id', $user_id);
     $this->session->set_userdata('kakao_id', $kakao_id);
     $this->session->set_userdata('email', $email);
@@ -998,7 +1014,19 @@ QUERY;
   function get_price_str($price) {
     return number_format($price);
   }
-
+  
+  function get_product_category_level($category) {
+    $level = 0;
+    for ($i = 0; $i < 3; $i++) {
+      $c = substr($category, 2 * $i, 2);
+      if ($c == '00') {
+        break;
+      }
+      $level++;
+    }
+    return $level;
+  }
+  
   function get_product_category_str($category, $level = 0) {
     $prefix = $category;
     if ($prefix == 'main') {
@@ -1377,5 +1405,7 @@ QUERY;
     $this->db->set('sell', 'sell-1', false);
     $this->db->where('product_id', $purchase_product->product_id);
     $this->db->update('shop_product_id');
+    
+    return $purchase_info->purchase_code;
   }
 }

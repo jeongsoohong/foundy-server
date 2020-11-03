@@ -280,55 +280,9 @@
     $(".pleft_nav").find("li").removeClass("active");
     $(".pnav_info").find("li").addClass("active");
   });
-  
-  function do_logout() {
-    $('#loading_set').show();
-    $.ajax({
-      url : '<?php echo base_url().'/home/logout'; ?>',
-      dataType : 'json', // 받을 데이터 방식
-      success : function(res) {
-        $("#loading_set").fadeOut(500);
-        if (res.status === 'success') {
-          alert(res.message);
-          // console.log(res.message);
-          window.location.href = res.redirect_url;
-        } else {
-          alert(res.message);
-          // console.log(res.message);
-          window.location.href = res.redirect_url;
-        }
-      },
-      error: function(xhr, status, error){
-        alert(error);
-        window.location.href = base_url + 'home/login';
-      }
-    });
-  }
 
-  let login_type = '<? echo $this->session->userdata('login_type'); ?>';
-  
   $('.pnav_logout').click(function(e) {
-    $('#loading_set').show();
-    // console.log(login_type);
-    if (login_type === 'kakao') {
-      $.getScript("https://developers.kakao.com/sdk/js/kakao.min.js", function() {
-        Kakao.init('8ee901a556539927d58b30a6bf21a781');
-        // console.log(Kakao.Auth.getAccessToken());
-        if (!Kakao.Auth.getAccessToken()) {
-          $("#loading_set").fadeOut(500);
-          // alert('Not logged in.');
-          do_logout();
-        } else {
-          $("#loading_set").fadeOut(500);
-          Kakao.Auth.logout(function() {
-            // alert('logout: ' + Kakao.Auth.getAccessToken());
-            do_logout();
-          });
-        }
-      });
-    } else {
-      do_logout();
-    }
+    user_logout();
   });
   
   function do_user_unregister() {

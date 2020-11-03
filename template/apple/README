@@ -1,0 +1,2 @@
+// syntax : openssl pkcs8 -in AuthKey_KEY_ID.p8 -nocrypt -out AuthKey_KEY_ID.pem
+// openssl pkcs8 -in AuthKey_RBR42WP3D5.p8 -nocrypt -out AuthKey_RBR42WP3D5.pem

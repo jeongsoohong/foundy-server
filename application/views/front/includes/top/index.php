@@ -1,20 +1,87 @@
-
 <meta charset="UTF-8">
-<meta name="description" content="Find Health & Earth">
+<!--<meta name="description" content="Find Health & Earth">-->
 <meta name="keywords" content="Yoga & Pilates, Class & Shop">
 <meta name="author" content="Five N Dime">
 <meta name="revisit-after" content="2 days">
 <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
+<!--<meta name="appleid-signin-client-id" content="[CLIENT_ID]">-->
+<!--<meta name="appleid-signin-scope" content="[SCOPES]">-->
+<!--<meta name="appleid-signin-redirect-uri" content="[REDIRECT_URI]">-->
+<!--<meta name="appleid-signin-state" content="[STATE]">-->
+
+<?php
+$e = array(
+  'general' => true, //description
+  'og' => true,
+  'twitter'=> true,
+  'robot'=> true
+);
+$title = '';
+$desc = '';
+$imgurl = '';
+if ($page_name == 'center/profile') {
+  $title = $center_data->title;
+  $desc = $center_data->about;
+}
+if ($page_name == 'teacher/video/view') {
+  $title = $video_data->title;
+  $desc = $video_data->desc;
+  $imgurl = $video_data->thumbnail_image_url;
+}
+if ($page_name == 'blog/blog_view') {
+  $title = $blog->title;
+  $desc = $blog->summery;
+  $imgurl = $blog->main_image_url;
+}
+if ($page_name == 'shop/product') {
+  $title = $product->item_name;
+  $desc = $product->item_base_info;
+  $imgurl = $product->item_image_url_0;
+}
+$url = base_url();
+$para1 = $this->uri->segment(1);
+$para2 = $this->uri->segment(2);
+$para3 = $this->uri->segment(3);
+$para4 = $this->uri->segment(4);
+$para5 = $this->uri->segment(5);
+$para6 = $this->uri->segment(6);
+if (isset($para1) && !empty($para1)) {
+  $url .= $para1.'/';
+}
+if (isset($para2) && !empty($para2)) {
+  $url .= $para2.'/';
+}
+if (isset($para3) && !empty($para3)) {
+  $url .= $para3.'/';
+}
+if (isset($para4) && !empty($para4)) {
+  $url .= $para4.'/';
+}
+if (isset($para5) && !empty($para5)) {
+  $url .= $para5.'/';
+}
+if (isset($para6) && !empty($para6)) {
+  $url .= $para6.'/';
+}
+if (isset($_GET) && !empty($_GET)) {
+  $len = strlen($url);
+  if ($url[$len - 1] == '/') {
+    $url[$len - 1] = '?';
+  }
+  $url .= http_build_query($_GET);
+}
+meta_tags($e, $title, $desc, $imgurl, $url);
+?>
 
 <?php
 include 'meta/' . $asset_page . '.php';
 ?>
 
 <!-- Favicon -->
-<link rel="apple-touch-icon-precomposed" sizes="144x144" href="<?php echo base_url(); ?>template/front/ico/apple-touch-icon-144-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="167x167" href="<?php echo base_url(); ?>uploads/others/favicon.png">
 <link rel="shortcut icon" href="<?php echo base_url(); ?>uploads/others/favicon.png">
 
-<title><?php echo $page_title; ?></title>
+<!--<title>--><?php //echo $page_title; ?><!--</title>-->
 
 <!-- CSS Global -->
 <link href="<?php echo base_url(); ?>template/front/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -29,13 +96,9 @@ include 'meta/' . $asset_page . '.php';
 <!-- Theme CSS -->
 <link href="<?php echo base_url(); ?>template/front/css/theme.css" rel="stylesheet">
 <link href="<?php echo base_url(); ?>template/front/css/theme-ash-1.css" rel="stylesheet" id="theme-config-link">
-
 <link href="<?php echo base_url(); ?>template/front/plugins/smedia/custom-1.css" rel="stylesheet">
 
-<!-- Head Libs -->
-<script src="<?php echo base_url(); ?>template/front/plugins/jquery/jquery-1.11.1.js"></script>
 <!-- Font -->
-
 <!-- Menu Bar Font -->
 <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
 <!-- Banner Title Font -->
@@ -83,6 +146,11 @@ include 'meta/' . $asset_page . '.php';
     padding-top: 0 !important;
   }
 </style>
+
+<!-- jquery -->
+<script src="<?php echo base_url(); ?>template/front/plugins/jquery/jquery-1.11.1.js"></script>
+<!--<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.js"></script>-->
+<!--<script src="--><?php //echo base_url(); ?><!--template/front/plugins/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>-->
 
 <?php
 include $asset_page.'.php';

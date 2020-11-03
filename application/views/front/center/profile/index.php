@@ -177,7 +177,7 @@ if ($center_data->shower || $center_data->towel || $center_data->parking || $cen
                   <div class="widget " style="padding-bottom:0;">
                     <ul class="profile_ul" style="text-align: center;">
                       <li>
-                        <?php echo $center_data->about; ?>
+                        <pre style="background-color: inherit; border: none"><?php echo $center_data->about; ?></pre>
                       </li>
                     </ul>
                   </div>
@@ -485,7 +485,7 @@ if ($center_data->shower || $center_data->towel || $center_data->parking || $cen
   }
 </style>
 
-<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<!--<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>-->
 <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 

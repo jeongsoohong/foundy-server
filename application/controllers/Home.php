@@ -32,12 +32,11 @@ class Home extends CI_Controller
       } else {
         $this->session->set_userdata('user_data', json_encode($user_data));
       }
-//      echo json_encode($user_data);
     } else {
       $user_data->user_id = NULL;
       $user_data->kakao_id = NULL;
     }
-  
+    
     if (!$this->input->is_ajax_request()) {
       $this->output->set_header('HTTP/1.0 200 OK');
       $this->output->set_header('HTTP/1.1 200 OK');
@@ -45,7 +44,39 @@ class Home extends CI_Controller
       $this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate');
       $this->output->set_header('Cache-Control: post-check=0, pre-check=0');
       $this->output->set_header('Pragma: no-cache');
+      
+      if ($this->app_model->is_app()) {
+        $data = $this->app_model->get_app_data();
+  
+        $this->session->set_userdata('is_app', 'yes');
+        $this->session->set_userdata('app_data', json_encode($data));
 
+        if ($this->is_login()) {
+          
+          $where = array(
+            'user_id' => $user_data->user_id,
+            'device' => $this->app_model->get_device(),
+          );
+          $app_data = $this->db->get_where('user_app', $where)->row();
+  
+          $data['user_id'] = $user_data->user_id;
+          $data['push_setting'] = ($data['push_setting'] == 'ON');
+          $data['gps_setting'] = ($data['gps_setting'] == 'ON');
+          $this->db->set('last_updated_at', 'NOW()', false);
+          
+          if (isset($app_data) == false || empty($app_data) == true) {
+            $this->db->set('create_at', 'NOW()', false);
+            $this->db->insert('user_app', $data);
+          } else {
+            $this->db->update('user_app', $data, $where);
+          }
+        }
+  
+        $this->app_model->set_app_data();
+      } else {
+        $this->session->set_userdata('is_app', 'no');
+      }
+  
       if ($this->router->fetch_method() == 'index' ||
         $this->router->fetch_method() == 'find' ||
         $this->router->fetch_method() == 'blog' ||
@@ -84,9 +115,9 @@ class Home extends CI_Controller
           $this->db->insert('user_active', $ins);
         }
       }
-
     }
-  
+
+//$this->crud_model->alert_exit($this->crud_model->get_fcm_token());
 //    if (ENVIRONMENT == 'production') {
 //      echo 'production';
 //    } else {
@@ -164,7 +195,8 @@ class Home extends CI_Controller
 
   public function login($para1 = '', $para2 = '', $para3 = '')
   {
-    if ($this->is_login() == true && $this->session->userdata('user_restore') != 'yes') {
+    if ($this->is_login() == true && $this->session->userdata('user_restore') != 'yes' &&
+      $this->session->userdata('need_agreement') != 'yes') {
       redirect('home', 'refresh');
     }
 
@@ -247,30 +279,248 @@ class Home extends CI_Controller
       }
   
     } else if ($login_type == 'restore') {
-
+  
       $restore = ($_GET['r'] == 'ok');
-
+  
       $user_id = $this->session->userdata('user_id');
       $user_data = json_decode($this->session->userdata('user_data'));
-
+  
       if ($restore) {
-
+    
         if ($user_data->teacher_id > 0) {
           $teacher_id = $user_data->teacher_id;
           $this->crud_model->do_teacher_activate($teacher_id, $user_id, 1);
         }
-
+    
       } else {
-
+    
         if ($user_data->teacher_id > 0) {
           $this->crud_model->delete_teacher_data($user_data);
         }
-
+    
       }
-
+  
       $this->session->set_userdata('user_restore', "no");
-
+  
       echo 'done';
+  
+    } else if ($login_type == 'apple') {
+      
+      // 애플에서 유저가 "이메일 변경, 앱 서비스 해지, 애플 계정 탈퇴"를 했을 경우, 유저 정보와 이벤트에 대한 PAYLOAD 데이터를 전송
+      if ($para2 == 'notify') {
+  
+        log_message('debug', '[apple_login] notify : '.json_encode($_POST));
+      
+      } else { // rest api login
+       
+        // get apple authenrization code / id_token ...
+        $result = array();
+        if (!isset($_POST) || !isset($_POST['id_token'])) {
+          $result['status'] = 'error';
+          $result['message'] = "오류가 발생했습니다. 다시 로그인해주세요(error : invalid post).".json_encode($_POST);
+          echo json_encode($result);
+          exit;
+        }
+  
+        log_message('debug', '[apple_login] post : '.json_encode($_POST));
+  
+        $code = $_POST['code'];
+        $id_token = $_POST['id_token'];
+        $state = $_POST['state'];
+        $email = '';
+        $apple_user_name = '';
+        $register = false;
+        if (isset($_POST['user'])) {
+          $user = $_POST['user'];
+          $register = true;
+          $email = $user->email;
+          $apple_user_name = $user->firstName;
+          if (isset($user->middleName) && empty($user->middleName) == false) {
+            $apple_user_name .= ' '.$user->middleName;
+          }
+          $apple_user_name .= ' '.$user->lastName;
+          $user_data = $this->db->get_where('user', array('email' => $email))->row();
+          if (empty($user_data) == false) {
+            $result['status'] = 'error';
+            $result['message'] = "이미 가입된 이메일입니다. 다시 로그인해주세요(error : invalid email).";
+            echo json_encode($result);
+            exit;
+          }
+        }
+        
+        if ($state != 'apple_login') {
+          $result['status'] = 'error';
+          $result['message'] = "오류가 발생했습니다. 다시 로그인해주세요(error : invalid state).";
+          echo json_encode($result);
+          exit;
+        }
+        
+        // parse JWT(decode id_token)
+        list($header, $payload, $signature) = explode(".", $id_token);
+       
+        $header = base64_decode($header);
+        $payload = base64_decode($payload);
+  
+        log_message('debug', '[apple_login] header : '.$header.', payload : '.$payload.', signature : '.$signature);
+ 
+        $header = json_decode($header);
+        $payload = json_decode($payload);
+        if ($payload->nonce_supported == false || $this->session->userdata('token') != $payload->nonce) {
+          $result['status'] = 'error';
+          $result['message'] = "오류가 발생했습니다. 다시 로그인해주세요(error : invalid nonce).";
+          echo json_encode($result);
+          exit;
+        }
+  
+        $login_data['header'] = $header;
+        $login_data['payload'] = $payload;
+        $login_data['signature'] = $signature;
+  
+        // check expiration time
+        
+        // generate client_secret
+        $client_id = (DEV_SERVER ? 'me.foundy.dev.services' : 'me.foundy.services');
+        
+        $kid = 'RBR42WP3D5'; // apple private key
+        $iss = 'SS5VZWK6ND'; // apple App ID(Team ID)
+        $sub = $client_id;
+        $jwt_client_secret = $this->apple_model->generateJWT($kid, $iss, $sub);
+       
+        log_message('debug', '[apple_login] jwt_client_secret : '.$jwt_client_secret);
+        
+        // verify user
+        $req = [
+          'client_id' => $client_id,
+          'client_secret' => $jwt_client_secret,
+          'code' => $code,
+          'grant_type' => 'authorization_code'
+          //,'redirect_uri' => 'https://example-app.com/redirect'
+        ];
+        
+        log_message('debug', '[apple_login] (verify user) request : '.json_encode($req));
+  
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, 'https://appleid.apple.com/auth/token');
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($req));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+  
+        log_message('debug', '[apple_login] (verify user) response : '.$response);
+        
+        $response = json_decode($response);
+        $access_token = $response->access_token;
+        $token_type = $response->token_type;
+        $expires_in = $response->expires_in;
+        $refresh_token = $response->refresh_token;
+        $id_token = $response->id_token;
+        
+        log_message('debug', '[apple_login] (verify user) access_token : '.$access_token.', token_type : '.$token_type.
+        ', expires_in : '.$expires_in.', refresh_token : '.$refresh_token.', id_token : '.$id_token);
+ 
+        curl_close($ch);
+  
+        $login_data['verify_user'] = array('req' => $req, 'res' => $response);
+        $account = json_encode($login_data);
+        
+        if (empty($email)) {
+          $email = $payload->email;
+        }
+        if ($register) {
+          $password = '';
+          $user_data = $this->crud_model->do_register($email, $password, $account);
+          $result['status'] = 'success';
+          $result['message'] = "첫 방문을 환영합니다.";
+        } else {
+          $user_data = $this->db->get_where('user', array('email' => $email))->row();
+          if (empty($user_data) == true) {
+            $password = '';
+            $account = json_encode($login_data);
+            $user_data = $this->crud_model->do_register($email, $password, $account);
+            $result['message'] = "첫 방문을 환영합니다.";
+          } else {
+            if ($user_data->unregister == 1) {
+              $ins = array(
+                'user_id' => $user_data->user_id,
+                'account' => json_encode($account),
+                'unregistered' => 1,
+              );
+              $this->db->set('register_at', 'NOW()', false);
+              $this->db->insert('user_register', $ins);
+    
+              $this->db->set('unregister', 0);
+  
+              $this->session->set_userdata('user_restore', "yes");
+              $result['status'] = 'restore';
+              $result['message'] = "기존에 휴먼계정이 삭제되지 않았습니다. 복원 후 로그인하시겠습니까? 복원을 원하지 않으시면 삭제를 클릭해 주세요.";
+  
+            } else {
+              $result['status'] = 'success';
+              $result['message'] = "로그인해주셔서 감사합니다.";
+            }
+            $this->db->set('last_login_at', 'NOW()', false);
+            $this->db->where('user_id', $user_data->user_id);
+            $this->db->update('user');
+          }
+        }
+  
+        $ins = array(
+          'user_id' => $user_data->user_id,
+          'account' => $account,
+          'session_id' => $this->crud_model->get_session_id(),
+          'ip' => $this->crud_model->get_session_ip(),
+          'is_browser' => $this->agent->is_browser(),
+          'is_mobile' => $this->agent->is_mobile(),
+          'is_robot' => $this->agent->is_robot(),
+          'is_referral' => $this->agent->is_referral(),
+          'browser' => $this->agent->browser(),
+          'version' => $this->agent->version(),
+          'mobile' => $this->agent->mobile(),
+          'robot' => $this->agent->robot(),
+          'platform' => $this->agent->platform(),
+          'referrer' => $this->agent->referrer(),
+          'agent' => $this->agent->agent_string(),
+          'login_type' => 'apple',
+        );
+        $this->db->set('login_at', 'NOW()', false);
+        $this->db->insert('user_login',$ins);
+  
+        $user_id = $user_data->user_id;
+        $kakao_id = $user_data->kakao_id;
+        $email = $user_data->email;
+        $user_type = $user_data->user_type;
+        $nickname = $user_data->nickname;
+        $kakao_thumbnail_image_url = $user_data->kakao_thumbnail_image_url;
+        $profile_image_url = $user_data->profile_image_url;
+  
+        $this->session->set_userdata('user_login', 'yes');
+        $this->session->set_userdata('user_id', $user_id);
+        $this->session->set_userdata('kakao_id', $kakao_id);
+        $this->session->set_userdata('email', $email);
+        $this->session->set_userdata('user_type', $user_type);
+        $this->session->set_userdata('nickname', $nickname);
+        $this->session->set_userdata('kakao_thumbnail_image_url', $kakao_thumbnail_image_url);
+        $this->session->set_userdata('profile_image_url', $profile_image_url);
+        $this->session->set_userdata('login_type', 'apple');
+
+        $data = array(
+          'sub' => $payload->sub,
+          'access_token' => $access_token,
+          'refresh_token' => $refresh_token,
+          'issued_at' => $payload->iat + 32400,
+          'expired_at' => $payload->iat + $expires_in + 32400,
+        );
+        $this->db->set('last_updated_at', 'NOW()', false);
+        $this->db->update('user_apple', $data, array('user_id' => $user_id));
+        if ($this->db->affected_rows() == 0) {
+          $data['user_id'] = $user_id;
+          $this->db->set('create_at', 'NOW()', false);
+          $this->db->insert('user_apple', $data);
+        }
+        echo json_encode($result);
+      }
 
     } else if ($login_type == 'kakao') {
 
@@ -279,16 +529,17 @@ class Home extends CI_Controller
         if (!isset($_GET["code"])) {
           $this->crud_model->alert_exit('오류가 발생했습니다. 다시 로그인해주세요.', base_url().'home/login');
         }
-  
         $code = $_GET["code"];	//발급받은 code 값
   
+        log_message('debug', '[kakao login] GET code : '.json_encode($_GET));
+
         $app_key = "c08aebc9e7ed5722a399bbc3962ca051";
         $redirect_uri = base_url()."home/login/kakao/rest";
   
         $api_url = "https://kauth.kakao.com/oauth/token";
         $params = sprintf( 'grant_type=authorization_code&client_id=%s&redirect_uri=%s&code=%s',
           $app_key, $redirect_uri, $code);
-  
+
         $opts = array(
           CURLOPT_URL => $api_url,
           CURLOPT_SSL_VERIFYPEER => false,
@@ -300,21 +551,25 @@ class Home extends CI_Controller
   
         $ch = curl_init();
         curl_setopt_array($ch, $opts);
-        $result = json_decode(curl_exec($ch));
+        $result = curl_exec($ch);
   
+        log_message('debug', '[kakao login] req : '.$params.', res : '.$result);
+  
+        $result = json_decode($result);
         if (isset($result->error)) {
           $base_url = base_url();
           $message = sprintf("오류가 발생했습니다. 다시 로그인해주세요. 오류 메세지 : %s'", $result->error_description);
           echo ("<script>alert(\"$message\"); window.location.href='${base_url}home/login';</script>");
           exit;
         }
-  
-        $access_token = $result->access_token;
-//        $token_type = $result->token_type;
-//        $refresh_token = $result->refresh_token;
-//        $expires_in = $result->expires_in;
-//        $scope = $result->scope;
-//        $refresh_token_expires_in = $result->refresh_token_expires_in;
+        
+        $access_token = $result->access_token; // 6시간 유효, refresh_token은 60일 유효
+        $token_type = $result->token_type;
+        $refresh_token = $result->refresh_token;
+        $expires_in = $result->expires_in;
+        $scope = $result->scope;
+        $refresh_token_expires_in = $result->refresh_token_expires_in;
+        
   
         $this->session->set_userdata('need_kakao_access_token', 'yes');
         $this->session->set_userdata('kakao_auth', json_encode($result));
@@ -338,6 +593,26 @@ class Home extends CI_Controller
         $result = $this->crud_model->do_kakao_login($result);
 
         if ($result['status'] == 'success') {
+          $user_id = $this->session->userdata('user_id');
+          $kakao_id = $this->session->userdata('kakao_id');
+          $this->kakao_model->set_user_kakao($user_id, $kakao_id, $scope, $access_token, $refresh_token, $expires_in,
+            $refresh_token_expires_in);
+          
+//          $res = $this->kakao_model->send_message($access_token);
+//          if (isset($res) && isset($res->code) && $res->code == -402) {
+//            $this->session->sess_destroy();
+//            redirect('home/login?a=');
+//            exit;
+//          }
+//
+//          $user_kakao = $this->db->get_where('user_kakao', array('user_id' => $user_id))->row();
+//          if (isset($user_kakao) == true || empty($user_kakao) == false) {
+//            if (!$this->kakao_model->has_talk_message_agreement($user_kakao)) {
+//              $this->session->set_userdata('need_agreement', 'yes');
+//              redirect('home/login?a=');
+//            }
+//          }
+          
           $this->crud_model->alert_exit($result['message'], base_url());
         } else if ($result['status'] == 'restore') { // relogin after unregister
           $this->crud_model->alert_exit($result['message'], base_url().'home/login');
@@ -351,7 +626,13 @@ class Home extends CI_Controller
           $result['status'] = 'error';
           $result['message'] = "오류가 발생했습니다. 다시 로그인해주세요(1).";
         } else {
+//          $access_token = $_GET['access_token'];
           $result = $this->crud_model->do_kakao_login($_POST);
+//          $res = $this->kakao_model->send_message($access_token);
+//          if (isset($res) && isset($res->code) && $res->code == -402) { // insufficient scopes, 우리 필요 동의 항목 talk_agreement
+//            $this->session->sess_destroy();
+//            $result['status'] = 'reauthorized';
+//          }
         }
   
         echo json_encode($result);
@@ -441,6 +722,7 @@ class Home extends CI_Controller
           'platform' => $this->agent->platform(),
           'referrer' => $this->agent->referrer(),
           'agent' => $this->agent->agent_string(),
+          'login_type' => 'kakao',
         );
         $this->db->set('login_at', 'NOW()', false);
         $this->db->insert('user_login', $ins);
@@ -469,10 +751,15 @@ class Home extends CI_Controller
     
     } else {
       $restore = isset($_GET['r']);
+      $need_kakao_agreement = isset($_GET['a']);
+      if ($need_kakao_agreement) {
+        $this->session->set_userdata('need_agreement', 'no');
+      }
       $page_data['page_name'] = "user/login";
       $page_data['asset_page'] = "login";
       $page_data['page_title'] = "login";
       $page_data['restore'] = $restore;
+      $page_data['need_kakao_agreement'] = $need_kakao_agreement;
       $this->load->view('front/index', $page_data);
     }
   }
@@ -562,7 +849,10 @@ class Home extends CI_Controller
         echo json_encode($result);
         exit;
       }
-  
+
+      $account = '';
+      $user_data = $this->crud_model->do_register($email, $password1, $account);
+      /*
       $ins = array(
         'user_type' => USER_TYPE_GENERAL,
         'username' => '',
@@ -598,6 +888,7 @@ class Home extends CI_Controller
       );
       $this->db->set('register_at', 'NOW()', false);
       $this->db->insert('user_register',$ins);
+      */
   
       $ins = array(
         'user_id' => $user_data->user_id,
@@ -615,6 +906,7 @@ class Home extends CI_Controller
         'platform' => $this->agent->platform(),
         'referrer' => $this->agent->referrer(),
         'agent' => $this->agent->agent_string(),
+        'login_type' => 'email',
       );
       $this->db->set('login_at', 'NOW()', false);
       $this->db->insert('user_login',$ins);
@@ -1729,6 +2021,7 @@ QUERY;
 
         echo "done";
       }
+    
     } else if ($para1 == 'teacher') {
 
       $action = $para2;
@@ -3638,6 +3931,19 @@ QUERY;
           $this->db->where('user_coupon_id', $purchase_info->user_coupon_id);
           $this->db->update('user_coupon');
         }
+  
+//        $app_data = json_decode($this->session->userdata('app_data'));
+//        if ($this->session->userdata('is_app') == 'yes' && $app_data->push_setting == 'ON') {
+////          log_message('debug', '[push notification] '.json_encode($this->app_model->get_app_data()));
+//          $title = '구매성공';
+//          $body = '상품을 주문해주셔서 감사합니다. 주문내역을 확인해주세요.';
+//          $url = base_url().'home/shop/order/detail?c='.$purchase_code;
+//          send_notification($title, $body, ['url' => $url], $app_data->fcm_token);
+//        }
+        $title = '구매성공';
+        $body = '상품을 주문해주셔서 감사합니다. 주문내역을 확인해주세요.';
+        $url = base_url().'home/shop/order/detail?c='.$purchase_code;
+        $this->push->send_push_private($this->session, $title, $body, $url);
 
         redirect(base_url() . "home/shop/order/complete?c={$purchase_code}", 'refresh');
 
@@ -3763,7 +4069,12 @@ QUERY;
         $purchase_product_id = $this->input->post('id');
         $cancel_reason = $this->input->post('reason');
         
-        $this->crud_model->cancel_payment($purchase_product_id, $cancel_reason, SHOP_SHIPPING_STATUS_ORDER_CANCELED, 1);
+        $purchase_code = $this->crud_model->cancel_payment($purchase_product_id, $cancel_reason, SHOP_SHIPPING_STATUS_ORDER_CANCELED, 1);
+  
+        $title = '구매취소';
+        $body = '주문하신 상품을 취소하였습니다. 주문내역을 확인해주세요.';
+        $url = base_url().'home/shop/order/detail?c='.$purchase_code;
+        $this->push->send_push_private($this->session, $title, $body, $url);
         
         echo 'done';
         
@@ -4517,7 +4828,8 @@ QUERY;
       }
 
       if ($category != 'all' && $category != 'ALL' && $category != 'wish' && $category != 'WISH') {
-        $best_items = $this->crud_model->get_product_list(0, SHOP_PRODUCT_STATUS_ON_SALE, '', $category, 0,
+        $best_cat = sprintf('%s%s', substr($category, 0, 2), '0000');
+        $best_items = $this->crud_model->get_product_list(0, SHOP_PRODUCT_STATUS_ON_SALE, '', $best_cat, 0,
           SHOP_PRODUCT_BEST_LIST_PAGE_SIZE, 'asc', $best_order_col);
         foreach ($best_items as $item) {
           $item->like = false;
@@ -4528,8 +4840,27 @@ QUERY;
           }
         }
         $page_data['best_items'] = $best_items;
+        
+        // category text
+        $cat_level = $this->crud_model->get_product_category_level($category);
+        if ($cat_level > 1) {
+          $where_cat = sprintf('%s%%', substr($category, 0, 4));
+          $query = <<<QUERY
+select * from shop_product_category where cat_code like '{$where_cat}' order by cat_code asc
+QUERY;
+        } else {
+          $where_cat = sprintf('%s%%', substr($category, 0, 2));
+          $query = <<<QUERY
+select * from shop_product_category where cat_code like '{$where_cat}' and cat_level=2 order by cat_code asc
+QUERY;
+        }
+        $cats = $this->db->query($query)->result();
+        
+        $page_data['cats'] = $cats;
+        $page_data['cat_level'] = $cat_level;
+//        $this->crud_model->alert_exit(json_encode($cats));
       }
-
+      
       $page_data['category'] = $category;
       $page_data['order'] = $order;
       $page_data['col'] = $order_col;
