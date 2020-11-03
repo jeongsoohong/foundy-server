@@ -907,7 +907,7 @@
     // </a>
     function shareURL(url) {
       if (_getCookie('DEVICE') === 'IOS') {
-        webkit.messageHandlers.HybridBridge.postMessage({'funcType': 'shareURL', 'url': text });
+        webkit.messageHandlers.HybridBridge.postMessage({'funcType': 'shareURL', 'url': url});
       } else if (_getCookie('DEVICE') === 'ANDROID') {
         window.HybridBridge.shareURL(url);
       }

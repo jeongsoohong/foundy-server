@@ -425,6 +425,13 @@
               <span class="pull-right item-like">
                 <?php echo $this->crud_model->sns_func_html('like', 'product', $liked, $product->product_id, 20, 20); ?>
               </span>
+              <?php if ($this->app_model->is_app()) { ?>
+                <span class="pull-right item-share">
+                  <a href="javascript:shareURL('<?php echo $url; ?>')">
+                    <img src='<?php echo base_url(); ?>uploads/icon_0504/icon10_share.png' alt='share' style='width:15px !important; height: 15px !important;'>
+                  </a>
+                </span>
+              <?php } ?>
             </div>
             <div class="col-md-12 item-price">
             </div>

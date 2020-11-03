@@ -4,6 +4,8 @@ if (!defined('BASEPATH'))
 
 class Home extends CI_Controller
 {
+  private $page_data = null;
+  
   function __construct()
   {
     parent::__construct();
@@ -19,7 +21,9 @@ class Home extends CI_Controller
     defined('IMG_WEB_PATH_BLOG')     OR define('IMG_WEB_PATH_BLOG', base_url().'uploads/blog_image/');
     defined('IMG_WEB_PATH_CENTER')   OR define('IMG_WEB_PATH_CENTER', base_url().'uploads/center_image/');
     defined('IMG_WEB_PATH_SHOP')   OR define('IMG_WEB_PATH_SHOP', base_url().'uploads/shop_image/');
-  
+ 
+    $this->page_data['url'] = build_url($this->uri, $_GET);
+    
     $user_data = new stdClass();
     if ($this->is_login() == true) {
       $user_id = $this->session->userdata('user_id');
@@ -170,14 +174,14 @@ class Home extends CI_Controller
 //    $blog_category = $this->db->get_where('category_blog', array('name' => 'shop'))->row();
     $blogs = $this->db->get_where('blog', array('main_view' => 1, 'activate' => 1))->result();
 
-    $page_data['sliders'] = $sliders;
-    $page_data['bookmark_centers'] = $bookmark_centers;
-    $page_data['bookmark_teachers'] = $bookmark_teachers;
-    $page_data['blogs'] = $blogs;
-    $page_data['page_name'] = "home";
-    $page_data['asset_page'] = "home";
-    $page_data['page_title'] = "home";
-    $this->load->view('front/index', $page_data);
+    $this->page_data['sliders'] = $sliders;
+    $this->page_data['bookmark_centers'] = $bookmark_centers;
+    $this->page_data['bookmark_teachers'] = $bookmark_teachers;
+    $this->page_data['blogs'] = $blogs;
+    $this->page_data['page_name'] = "home";
+    $this->page_data['asset_page'] = "home";
+    $this->page_data['page_title'] = "home";
+    $this->load->view('front/index', $this->page_data);
   }
 
   function error()
@@ -755,12 +759,12 @@ class Home extends CI_Controller
       if ($need_kakao_agreement) {
         $this->session->set_userdata('need_agreement', 'no');
       }
-      $page_data['page_name'] = "user/login";
-      $page_data['asset_page'] = "login";
-      $page_data['page_title'] = "login";
-      $page_data['restore'] = $restore;
-      $page_data['need_kakao_agreement'] = $need_kakao_agreement;
-      $this->load->view('front/index', $page_data);
+      $this->page_data['page_name'] = "user/login";
+      $this->page_data['asset_page'] = "login";
+      $this->page_data['page_title'] = "login";
+      $this->page_data['restore'] = $restore;
+      $this->page_data['need_kakao_agreement'] = $need_kakao_agreement;
+      $this->load->view('front/index', $this->page_data);
     }
   }
 
@@ -935,10 +939,10 @@ class Home extends CI_Controller
       exit;
       
     } else {
-      $page_data['page_name'] = "user/register";
-      $page_data['asset_page'] = "login";
-      $page_data['page_title'] = "login";
-      $this->load->view('front/index', $page_data);
+      $this->page_data['page_name'] = "user/register";
+      $this->page_data['asset_page'] = "login";
+      $this->page_data['page_title'] = "login";
+      $this->load->view('front/index', $this->page_data);
     }
   }
   
@@ -1041,8 +1045,8 @@ class Home extends CI_Controller
       }
       $blogs = $this->db->order_by('blog_id', 'desc')->get_where('blog', $where, $limit, $offset)->result();
 
-      $page_data['blogs'] = $blogs;
-      $this->load->view('front/blog/ajax_list', $page_data);
+      $this->page_data['blogs'] = $blogs;
+      $this->load->view('front/blog/ajax_list', $this->page_data);
 
     } else if ($type == 'view') {
 
@@ -1070,12 +1074,12 @@ update blog set number_of_view=number_of_view+1 where blog_id={$blog_id}
 QUERY;
       $this->db->query($query);
 
-      $page_data['blog'] = $blog;
-      $page_data['category'] =  $category;
-      $page_data['page_name'] = 'blog/blog_view';
-      $page_data['asset_page'] = 'blog_view';
-      $page_data['page_title'] = $blog->title;
-      $this->load->view('front/index.php', $page_data);
+      $this->page_data['blog'] = $blog;
+      $this->page_data['category'] =  $category;
+      $this->page_data['page_name'] = 'blog/blog_view';
+      $this->page_data['asset_page'] = 'blog_view';
+      $this->page_data['page_title'] = $blog->title;
+      $this->load->view('front/index.php', $this->page_data);
 
     } else {
 
@@ -1099,12 +1103,12 @@ QUERY;
         exit;
       }
 
-      $page_data['category'] = $category;
-      $page_data['categories'] = $categories;
-      $page_data['page_name'] = 'blog';
-      $page_data['asset_page'] = 'blog';
-      $page_data['page_title'] = 'blog';
-      $this->load->view('front/index', $page_data);
+      $this->page_data['category'] = $category;
+      $this->page_data['categories'] = $categories;
+      $this->page_data['page_name'] = 'blog';
+      $this->page_data['asset_page'] = 'blog';
+      $this->page_data['page_title'] = 'blog';
+      $this->load->view('front/index', $this->page_data);
 
     }
   }
@@ -1112,8 +1116,8 @@ QUERY;
   /* FUNCTION: Loads Contact Page */
   function blog_by_cat($para1 = "")
   {
-    $page_data['category'] = $para1;
-    $this->load->view('front/blog/blog_list', $page_data);
+    $this->page_data['category'] = $para1;
+    $this->load->view('front/blog/blog_list', $this->page_data);
   }
 
   function ajax_blog_list($para1 = "")
@@ -1169,16 +1173,16 @@ QUERY;
       $this->db->where('blog_category', $category_id);
     }
 
-    $page_data['blogs'] = $this->db->get('blog', $config['per_page'], $para1)->result_array();
+    $this->page_data['blogs'] = $this->db->get('blog', $config['per_page'], $para1)->result_array();
     if ($category_id !== '' && $category_id !== 'all') {
       $category = $this->crud_model->get_type_name_by_id('blog_category', $category_id, 'name');
     } else {
       $category = ('all_blogs');
     }
-    $page_data['category_name'] = $category;
-    $page_data['count'] = $config['total_rows'];
+    $this->page_data['category_name'] = $category;
+    $this->page_data['count'] = $config['total_rows'];
 
-    $this->load->view('front/blog/ajax_list', $page_data);
+    $this->load->view('front/blog/ajax_list', $this->page_data);
   }
 
   /* FUNCTION: Loads Contact Page */
@@ -1204,27 +1208,27 @@ QUERY;
       $user_id = $this->session->userdata('user_id');
 //      $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
       $user_data = json_decode($this->session->userdata('user_data'));
-      $page_data['user_id'] = $user_id;
-      $page_data['email'] = $user_data->email;
-      $page_data['user_type'] = $user_data->user_type;
-      $page_data['nickname'] = $user_data->nickname;
-      $page_data['profile_image_url'] = $user_data->profile_image_url;
-      $page_data['thumbnail_image_url'] = $user_data->kakao_thumbnail_image_url;
+      $this->page_data['user_id'] = $user_id;
+      $this->page_data['email'] = $user_data->email;
+      $this->page_data['user_type'] = $user_data->user_type;
+      $this->page_data['nickname'] = $user_data->nickname;
+      $this->page_data['profile_image_url'] = $user_data->profile_image_url;
+      $this->page_data['thumbnail_image_url'] = $user_data->kakao_thumbnail_image_url;
 
-      $page_data['center_activate'] = false;
+      $this->page_data['center_activate'] = false;
       if ($user_data->user_type & USER_TYPE_CENTER) {
-        $page_data['center_activate'] = 1;
+        $this->page_data['center_activate'] = 1;
 
         $my_centers = $this->db->get_where('center', array('user_id' => $user_id, 'activate' => 1))->result();
-        $page_data['my_centers'] = $my_centers;
+        $this->page_data['my_centers'] = $my_centers;
       }
 
-      $page_data['teacher_activate'] = false;
+      $this->page_data['teacher_activate'] = false;
       if ($user_data->user_type & USER_TYPE_TEACHER) {
-        $page_data['teacher_activate'] = 1;
+        $this->page_data['teacher_activate'] = 1;
 
         $my_teacher = $this->db->get_where('teacher', array('user_id' => $user_id, 'activate' => 1))->row();
-        $page_data['my_teacher'] = $my_teacher;
+        $this->page_data['my_teacher'] = $my_teacher;
       }
 
       $bookmark_centers = $this->db->get_where('bookmark_center', array('user_id' => $user_id))->result();
@@ -1259,18 +1263,18 @@ QUERY;
 //        $bookmark_classes = $this->db->get('teacher_video')->result();
 //      }
 
-      $page_data['bookmark_centers'] = $bookmark_centers;
-      $page_data['bookmark_teachers'] = $bookmark_teachers;
-//      $page_data['bookmark_classes'] = $bookmark_classes;
-      $this->load->view('front/user/profile', $page_data);
+      $this->page_data['bookmark_centers'] = $bookmark_centers;
+      $this->page_data['bookmark_teachers'] = $bookmark_teachers;
+//      $this->page_data['bookmark_classes'] = $bookmark_classes;
+      $this->load->view('front/user/profile', $this->page_data);
 
     } else if ($view_type == 'edit_profile') {
 
       $user_id = $this->session->userdata('user_id');
 //      $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
       $user_data = json_decode($this->session->userdata('user_data'));
-      $page_data['user_data'] = $user_data;
-      $this->load->view('front/user/update_profile', $page_data);
+      $this->page_data['user_data'] = $user_data;
+      $this->load->view('front/user/update_profile', $this->page_data);
 
     } else if ($view_type == 'update_profile') {
 
@@ -1672,19 +1676,19 @@ QUERY;
       $this->load->view('front/user/personal_policy');
     } else {
       if ($view_type == 'center') {
-        $page_data['part'] = 'center_register';
+        $this->page_data['part'] = 'center_register';
       } else if ($view_type == 'teacher') {
-        $page_data['part'] = 'teacher_register';
+        $this->page_data['part'] = 'teacher_register';
       } else {
-        $page_data['part'] = 'info';
+        $this->page_data['part'] = 'info';
       }
       
       $user_data = json_decode($this->session->userdata('user_data'));
-      $page_data['user_data'] = $user_data;
-      $page_data['page_name'] = "user";
-      $page_data['asset_page'] = "user_profile";
-      $page_data['page_title'] = "my_profile";
-      $this->load->view('front/index', $page_data);
+      $this->page_data['user_data'] = $user_data;
+      $this->page_data['page_name'] = "user";
+      $this->page_data['asset_page'] = "user_profile";
+      $this->page_data['page_title'] = "my_profile";
+      $this->load->view('front/index', $this->page_data);
     }
 
   }
@@ -1754,20 +1758,20 @@ QUERY;
         $bookmarked = $this->crud_model->get_sns_mark('center', 'bookmark', $session_user_id, $center_data->center_id);
       }
 
-      $page_data['page_name'] = "center/profile";
-      $page_data['asset_page'] = "center_profile";
-      $page_data['page_title'] = "center_profile";
-      $page_data['user_data'] = $user_data;
-      $page_data['center_data'] = $center_data;
-      $page_data['teacher_data'] = $teacher_data;
-      $page_data['start_date'] = $start_date;
-      $page_data['end_date'] = $end_date;
-      $page_data['schedule_data'] = $schedule_data;
-      $page_data['iam_this_center'] = $iam_this_center;
-      $page_data['liked'] = $liked;
-      $page_data['bookmarked'] = $bookmarked;
-      $page_data['nav'] = $nav;
-      $this->load->view('front/index', $page_data);
+      $this->page_data['page_name'] = "center/profile";
+      $this->page_data['asset_page'] = "center_profile";
+      $this->page_data['page_title'] = "center_profile";
+      $this->page_data['user_data'] = $user_data;
+      $this->page_data['center_data'] = $center_data;
+      $this->page_data['teacher_data'] = $teacher_data;
+      $this->page_data['start_date'] = $start_date;
+      $this->page_data['end_date'] = $end_date;
+      $this->page_data['schedule_data'] = $schedule_data;
+      $this->page_data['iam_this_center'] = $iam_this_center;
+      $this->page_data['liked'] = $liked;
+      $this->page_data['bookmarked'] = $bookmarked;
+      $this->page_data['nav'] = $nav;
+      $this->load->view('front/index', $this->page_data);
 
     } else if ($para1 == 'edit_profile') {
 
@@ -1826,16 +1830,16 @@ QUERY;
         $category_pilates_etc .= $c.' ';
       }
 
-      $page_data['page_name'] = "center/profile/edit";
-      $page_data['asset_page'] = "center_profile_edit";
-      $page_data['page_title'] = "center_profile_edit";
-      $page_data['user_data'] = $user_data;
-      $page_data['center_data'] = $center_data;
-      $page_data['category_yoga_data'] = $category_yoga_data;
-      $page_data['category_yoga_etc'] = $category_yoga_etc;
-      $page_data['category_pilates_data'] = $category_pilates_data;
-      $page_data['category_pilates_etc'] = $category_pilates_etc;
-      $this->load->view('front/index', $page_data);
+      $this->page_data['page_name'] = "center/profile/edit";
+      $this->page_data['asset_page'] = "center_profile_edit";
+      $this->page_data['page_title'] = "center_profile_edit";
+      $this->page_data['user_data'] = $user_data;
+      $this->page_data['center_data'] = $center_data;
+      $this->page_data['category_yoga_data'] = $category_yoga_data;
+      $this->page_data['category_yoga_etc'] = $category_yoga_etc;
+      $this->page_data['category_pilates_data'] = $category_pilates_data;
+      $this->page_data['category_pilates_etc'] = $category_pilates_etc;
+      $this->load->view('front/index', $this->page_data);
 
     } else if ($para1 == 'do_edit_profile') {
 
@@ -2158,13 +2162,13 @@ QUERY;
           $teacher_data = null;
         }
 
-        $page_data['page_name'] = "center/teacher";
-        $page_data['asset_page'] = "center_teacher_info";
-        $page_data['page_title'] = "center_teacher_info";
-        $page_data['user_data'] = $user_data;
-        $page_data['center_data'] = $center_data;
-        $page_data['teacher_data'] = $teacher_data;
-        $this->load->view('front/index', $page_data);
+        $this->page_data['page_name'] = "center/teacher";
+        $this->page_data['asset_page'] = "center_teacher_info";
+        $this->page_data['page_title'] = "center_teacher_info";
+        $this->page_data['user_data'] = $user_data;
+        $this->page_data['center_data'] = $center_data;
+        $this->page_data['teacher_data'] = $teacher_data;
+        $this->load->view('front/index', $this->page_data);
 
       }
 
@@ -2224,14 +2228,14 @@ QUERY;
           $teacher_data[] = $this->db->get_where('teacher', array('teacher_id' => $teacher->teacher_id))->row();
         }
 
-        $page_data['page_name'] = "center/schedule/mod";
-        $page_data['asset_page'] = "center_schedule_mod";
-        $page_data['page_title'] = "center_schedule_mod";
-        $page_data['user_data'] = $user_data;
-        $page_data['center_data'] = $center_data;
-        $page_data['schedule_data'] = $schedule_data;
-        $page_data['teacher_data'] = $teacher_data;
-        $this->load->view('front/index', $page_data);
+        $this->page_data['page_name'] = "center/schedule/mod";
+        $this->page_data['asset_page'] = "center_schedule_mod";
+        $this->page_data['page_title'] = "center_schedule_mod";
+        $this->page_data['user_data'] = $user_data;
+        $this->page_data['center_data'] = $center_data;
+        $this->page_data['schedule_data'] = $schedule_data;
+        $this->page_data['teacher_data'] = $teacher_data;
+        $this->load->view('front/index', $this->page_data);
 
       } else if ($type == 'do_mod') {
 
@@ -2407,11 +2411,11 @@ QUERY;
           }
         }
 
-        $page_data['user_data'] = $user_data;
-        $page_data['schedule_data'] = $schedule_data;
-        $page_data['center_data'] = $center_data;
-        $page_data['iam_this_center'] = $iam_this_center;
-        $this->load->view('front/center/schedule/info/index', $page_data);
+        $this->page_data['user_data'] = $user_data;
+        $this->page_data['schedule_data'] = $schedule_data;
+        $this->page_data['center_data'] = $center_data;
+        $this->page_data['iam_this_center'] = $iam_this_center;
+        $this->load->view('front/center/schedule/info/index', $this->page_data);
 
       } else { // unreachable
       }
@@ -2482,12 +2486,12 @@ QUERY;
           exit;
         }
 
-        $page_data['page_name'] = "center/info";
-        $page_data['asset_page'] = "center_info";
-        $page_data['page_title'] = "center_info";
-        $page_data['user_data'] = $user_data;
-        $page_data['center_data'] = $center_data;
-        $this->load->view('front/index', $page_data);
+        $this->page_data['page_name'] = "center/info";
+        $this->page_data['asset_page'] = "center_info";
+        $this->page_data['page_title'] = "center_info";
+        $this->page_data['user_data'] = $user_data;
+        $this->page_data['center_data'] = $center_data;
+        $this->load->view('front/index', $this->page_data);
       }
 
     } else { // unreachable
@@ -2535,16 +2539,16 @@ QUERY;
 
       $video_data = $this->db->order_by('video_id', 'desc')->get_where('teacher_video', $where)->result();
 
-      $page_data['page_name'] = "teacher/profile";
-      $page_data['asset_page'] = "teacher_profile";
-      $page_data['page_title'] = "teacher_profile";
-      $page_data['user_data'] = $user_data;
-      $page_data['teacher_data'] = $teacher_data;
-      $page_data['video_data'] = $video_data;
-      $page_data['iam_this_teacher'] = $iam_this_teacher;
-      $page_data['liked'] = $liked;
-      $page_data['bookmarked'] = $bookmarked;
-      $this->load->view('front/index', $page_data);
+      $this->page_data['page_name'] = "teacher/profile";
+      $this->page_data['asset_page'] = "teacher_profile";
+      $this->page_data['page_title'] = "teacher_profile";
+      $this->page_data['user_data'] = $user_data;
+      $this->page_data['teacher_data'] = $teacher_data;
+      $this->page_data['video_data'] = $video_data;
+      $this->page_data['iam_this_teacher'] = $iam_this_teacher;
+      $this->page_data['liked'] = $liked;
+      $this->page_data['bookmarked'] = $bookmarked;
+      $this->load->view('front/index', $this->page_data);
 
     } else if ($para1 == 'edit_profile') {
 
@@ -2590,14 +2594,14 @@ QUERY;
         $category_etc .= $c.' ';
       }
 
-      $page_data['page_name'] = "teacher/profile/edit";
-      $page_data['asset_page'] = "teacher_profile_edit";
-      $page_data['page_title'] = "teacher_profile_edit";
-      $page_data['user_data'] = $user_data;
-      $page_data['teacher_data'] = $teacher_data;
-      $page_data['category_data'] = $category_data;
-      $page_data['category_etc'] = $category_etc;
-      $this->load->view('front/index', $page_data);
+      $this->page_data['page_name'] = "teacher/profile/edit";
+      $this->page_data['asset_page'] = "teacher_profile_edit";
+      $this->page_data['page_title'] = "teacher_profile_edit";
+      $this->page_data['user_data'] = $user_data;
+      $this->page_data['teacher_data'] = $teacher_data;
+      $this->page_data['category_data'] = $category_data;
+      $this->page_data['category_etc'] = $category_etc;
+      $this->load->view('front/index', $this->page_data);
 
     } else if ($para1 == 'do_edit_profile') {
 
@@ -2712,12 +2716,12 @@ QUERY;
           exit;
         }
 
-        $page_data['page_name'] = "teacher/video/" . $action;
-        $page_data['asset_page'] = "teacher_video_" . $action;
-        $page_data['page_title'] = "teacher_video_" . $action;
-        $page_data['user_data'] = $user_data;
-        $page_data['teacher_data'] = $teacher_data;
-        $this->load->view('front/index', $page_data);
+        $this->page_data['page_name'] = "teacher/video/" . $action;
+        $this->page_data['asset_page'] = "teacher_video_" . $action;
+        $this->page_data['page_title'] = "teacher_video_" . $action;
+        $this->page_data['user_data'] = $user_data;
+        $this->page_data['teacher_data'] = $teacher_data;
+        $this->load->view('front/index', $this->page_data);
 
       } else {
         $video_id = $para3;
@@ -2756,15 +2760,15 @@ QUERY;
 
         $video_data->view += 1;
 
-        $page_data['page_name'] = "teacher/video/" . $action;
-        $page_data['asset_page'] = "teacher_video_" . $action;
-        $page_data['page_title'] = "teacher_video_" . $action;
-        $page_data['video_data'] = $video_data;
-        $page_data['teacher_data'] = $teacher_data;
-        $page_data['user_data'] = $user_data;
-        $page_data['liked'] = $liked;
-        $page_data['iam_this_video'] = $iam_this_video;
-        $this->load->view('front/index', $page_data);
+        $this->page_data['page_name'] = "teacher/video/" . $action;
+        $this->page_data['asset_page'] = "teacher_video_" . $action;
+        $this->page_data['page_title'] = "teacher_video_" . $action;
+        $this->page_data['video_data'] = $video_data;
+        $this->page_data['teacher_data'] = $teacher_data;
+        $this->page_data['user_data'] = $user_data;
+        $this->page_data['liked'] = $liked;
+        $this->page_data['iam_this_video'] = $iam_this_video;
+        $this->load->view('front/index', $this->page_data);
       }
 
     } elseif ($para1 == 'video_edit') {
@@ -2813,15 +2817,15 @@ QUERY;
           $category_etc .= $c.' ';
       }
 
-      $page_data['page_name'] = "teacher/video/edit";
-      $page_data['asset_page'] = "teacher_video_edit";
-      $page_data['page_title'] = "teacher_video_edit";
-      $page_data['video_data'] = $video_data;
-      $page_data['user_data'] = $user_data;
-      $page_data['teacher_data'] = $teacher_data;
-      $page_data['category_data'] = $category_data;
-      $page_data['category_etc'] = $category_etc;
-      $this->load->view('front/index', $page_data);
+      $this->page_data['page_name'] = "teacher/video/edit";
+      $this->page_data['asset_page'] = "teacher_video_edit";
+      $this->page_data['page_title'] = "teacher_video_edit";
+      $this->page_data['video_data'] = $video_data;
+      $this->page_data['user_data'] = $user_data;
+      $this->page_data['teacher_data'] = $teacher_data;
+      $this->page_data['category_data'] = $category_data;
+      $this->page_data['category_etc'] = $category_etc;
+      $this->load->view('front/index', $this->page_data);
 
     } elseif ($para1 == 'do_edit_video') {
 
@@ -3104,8 +3108,8 @@ QUERU;
 //          }
         }
 
-        $page_data['video_data'] = $video_data;
-        $this->load->view('front/find/class/list', $page_data);
+        $this->page_data['video_data'] = $video_data;
+        $this->load->view('front/find/class/list', $this->page_data);
 
       } else {
 
@@ -3126,12 +3130,12 @@ QUERU;
 
         $video_data = $this->db->order_by('video_id', 'desc')->get('teacher_video', 10, 0)->result();
 
-        $page_data['video_data'] = $video_data;
-        $page_data['bookmarks'] = $bookmarks;
-        $page_data['page_name'] = "find/class";
-        $page_data['asset_page'] = "class";
-        $page_data['page_title'] = "class";
-        $this->load->view('front/index', $page_data);
+        $this->page_data['video_data'] = $video_data;
+        $this->page_data['bookmarks'] = $bookmarks;
+        $this->page_data['page_name'] = "find/class";
+        $this->page_data['asset_page'] = "class";
+        $this->page_data['page_title'] = "class";
+        $this->load->view('front/index', $this->page_data);
 
       }
 
@@ -3188,8 +3192,8 @@ QUERY;
 
         $center_data = $this->get_center_data($center_list);
 
-        $page_data['center_data'] = $center_data;
-        $this->load->view('front/find/center/list', $page_data);
+        $this->page_data['center_data'] = $center_data;
+        $this->load->view('front/find/center/list', $this->page_data);
 
       } else {
 
@@ -3230,14 +3234,14 @@ QUERY;
         $where = array('type' => $center_type, 'activate' => 1);
         $categories = $this->db->order_by('category_id', 'asc')->get_where('category_center', $where)->result();
 
-        $page_data['page_name'] = "find/center";
-        $page_data['asset_page'] = "center";
-        $page_data['page_title'] = $center_type == CENTER_TYPE_YOGA ? "YOGA" : "PILATES";
-//        $page_data['center_data'] = $center_data;
-        $page_data['categories'] = $categories;
-        $page_data['center_type'] = $center_type;
-        $page_data['bookmarks'] = $bookmarks;
-        $this->load->view('front/index', $page_data);
+        $this->page_data['page_name'] = "find/center";
+        $this->page_data['asset_page'] = "center";
+        $this->page_data['page_title'] = $center_type == CENTER_TYPE_YOGA ? "YOGA" : "PILATES";
+//        $this->page_data['center_data'] = $center_data;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['center_type'] = $center_type;
+        $this->page_data['bookmarks'] = $bookmarks;
+        $this->load->view('front/index', $this->page_data);
 
       }
 
@@ -3309,7 +3313,7 @@ QUERY;
             }
           }
 
-          $page_data['center_data'] = $center_data;
+          $this->page_data['center_data'] = $center_data;
 
         } else if ($type == FIND_TYPE_TEACHER) {
 
@@ -3326,7 +3330,7 @@ QUERY;
             }
           }
 
-          $page_data['teacher_data'] = $teacher_data;
+          $this->page_data['teacher_data'] = $teacher_data;
 
         } else {
           $base_url = base_url();
@@ -3334,8 +3338,8 @@ QUERY;
           exit;
         }
 
-        $page_data['type'] = $type;
-        $this->load->view('front/find/search/list', $page_data);
+        $this->page_data['type'] = $type;
+        $this->load->view('front/find/search/list', $this->page_data);
 
       } else {
 
@@ -3357,21 +3361,21 @@ select count(*) as cnt from teacher where name like '%{$q}%'
 QUERY;
         $teacher_cnt = $this->db->query($query)->row()->cnt;
 
-        $page_data['page_name'] = "find/search";
-        $page_data['asset_page'] = "find";
-        $page_data['page_title'] = "find";
-        $page_data['q'] = $q;
-        $page_data['center_cnt'] = $center_cnt;
-        $page_data['teacher_cnt'] = $teacher_cnt;
-        $this->load->view('front/index', $page_data);
+        $this->page_data['page_name'] = "find/search";
+        $this->page_data['asset_page'] = "find";
+        $this->page_data['page_title'] = "find";
+        $this->page_data['q'] = $q;
+        $this->page_data['center_cnt'] = $center_cnt;
+        $this->page_data['teacher_cnt'] = $teacher_cnt;
+        $this->load->view('front/index', $this->page_data);
       }
 
     } else {
 
-      $page_data['page_name'] = "find";
-      $page_data['asset_page'] = "find";
-      $page_data['page_title'] = "find";
-      $this->load->view('front/index', $page_data);
+      $this->page_data['page_name'] = "find";
+      $this->page_data['asset_page'] = "find";
+      $this->page_data['page_title'] = "find";
+      $this->load->view('front/index', $this->page_data);
 
     }
   }
@@ -3517,18 +3521,18 @@ select review_img_url_1 as url from shop_product_review where product_id={$produ
 QUERY;
       $review_images = $this->db->query($query)->result();
 
-      $page_data['product'] = $product;
-      $page_data['shop_shipping'] = $shop_shipping;
-      $page_data['brand_info'] = $brand_info;
-      $page_data['liked'] = $liked;
-      $page_data['review_score_i'] = $review_score_i;
-      $page_data['review_score_f'] = $review_score_f;
-      $page_data['review_images'] = $review_images;
-      $page_data['purchase_product_id'] = $purchase_product_id;
-      $page_data['page_name'] = "shop/product";
-      $page_data['asset_page'] = "shop";
-      $page_data['page_title'] = "shop";
-      $this->load->view('front/index', $page_data);
+      $this->page_data['product'] = $product;
+      $this->page_data['shop_shipping'] = $shop_shipping;
+      $this->page_data['brand_info'] = $brand_info;
+      $this->page_data['liked'] = $liked;
+      $this->page_data['review_score_i'] = $review_score_i;
+      $this->page_data['review_score_f'] = $review_score_f;
+      $this->page_data['review_images'] = $review_images;
+      $this->page_data['purchase_product_id'] = $purchase_product_id;
+      $this->page_data['page_name'] = "shop/product";
+      $this->page_data['asset_page'] = "shop";
+      $this->page_data['page_title'] = "shop";
+      $this->load->view('front/index', $this->page_data);
 
     } else if ($view == 'cart') {
 
@@ -3728,16 +3732,16 @@ QUERY;
 
         $total_balance = $total_price + $total_shipping_fee + $total_additional_price;
 
-        $page_data['total_purchase_cnt'] = $total_purchase_cnt;
-        $page_data['total_price'] = $total_price;
-        $page_data['total_shipping_fee'] = $total_shipping_fee;
-        $page_data['total_additional_price'] = $total_additional_price;
-        $page_data['total_balance'] = $total_balance;
-        $page_data['cart_items'] = $cart_items;
-        $page_data['page_name'] = "shop/cart";
-        $page_data['asset_page'] = "shop";
-        $page_data['page_title'] = "shop";
-        $this->load->view('front/index', $page_data);
+        $this->page_data['total_purchase_cnt'] = $total_purchase_cnt;
+        $this->page_data['total_price'] = $total_price;
+        $this->page_data['total_shipping_fee'] = $total_shipping_fee;
+        $this->page_data['total_additional_price'] = $total_additional_price;
+        $this->page_data['total_balance'] = $total_balance;
+        $this->page_data['cart_items'] = $cart_items;
+        $this->page_data['page_name'] = "shop/cart";
+        $this->page_data['asset_page'] = "shop";
+        $this->page_data['page_title'] = "shop";
+        $this->load->view('front/index', $this->page_data);
       }
 
     } elseif ($view == 'order') {
@@ -3765,15 +3769,15 @@ QUERY;
           $item->shipping_data = json_decode($item->shipping_data);
         }
 
-        $page_data['page_type'] = $type;
-        $page_data['purchase_code'] = $purchase_code;
-        $page_data['purchase_info'] = $purchase_info;
-        $page_data['payment_info'] = $payment_info;
-        $page_data['purchase_items'] = $purchase_items;
-        $page_data['page_name'] = "shop/order/detail";
-        $page_data['asset_page'] = "shop";
-        $page_data['page_title'] = "shop";
-        $this->load->view('front/index', $page_data);
+        $this->page_data['page_type'] = $type;
+        $this->page_data['purchase_code'] = $purchase_code;
+        $this->page_data['purchase_info'] = $purchase_info;
+        $this->page_data['payment_info'] = $payment_info;
+        $this->page_data['purchase_items'] = $purchase_items;
+        $this->page_data['page_name'] = "shop/order/detail";
+        $this->page_data['asset_page'] = "shop";
+        $this->page_data['page_title'] = "shop";
+        $this->load->view('front/index', $this->page_data);
 
       } elseif ($type == 'list') {
 
@@ -3800,14 +3804,14 @@ QUERY;
           $info->payment_info = json_decode($info->bootpay_done_data);
         }
 
-        $page_data['purchase_infos'] = $purchase_infos;
-        $this->load->view('front/shop/order/list', $page_data);
+        $this->page_data['purchase_infos'] = $purchase_infos;
+        $this->load->view('front/shop/order/list', $this->page_data);
       } else {
 
-        $page_data['page_name'] = "shop/order";
-        $page_data['asset_page'] = "shop";
-        $page_data['page_title'] = "shop";
-        $this->load->view('front/index', $page_data);
+        $this->page_data['page_name'] = "shop/order";
+        $this->page_data['asset_page'] = "shop";
+        $this->page_data['page_title'] = "shop";
+        $this->load->view('front/index', $this->page_data);
 
       }
 
@@ -4348,21 +4352,21 @@ QUERY;
           $coupons = $this->db->query($query)->result();
         }
 
-        $page_data['coupons'] = $coupons;
-        $page_data['user_info'] = $user_info;
-        $page_data['purchase_info'] = $purchase_info;
-        $page_data['total_purchase_cnt'] = $total_purchase_cnt;
-        $page_data['total_price'] = $total_price;
-        $page_data['total_shipping_fee'] = $total_shipping_fee;
-        $page_data['total_additional_price'] = $total_additional_price;
-        $page_data['total_balance'] = $total_balance;
-        $page_data['cart_items'] = $cart_items;
-        $page_data['shipping_info'] = $shipping_info;
-        $page_data['shipping_info_cnt'] = count($shipping_info);
-        $page_data['page_name'] = "shop/purchase";
-        $page_data['asset_page'] = "shop";
-        $page_data['page_title'] = "shop";
-        $this->load->view('front/index', $page_data);
+        $this->page_data['coupons'] = $coupons;
+        $this->page_data['user_info'] = $user_info;
+        $this->page_data['purchase_info'] = $purchase_info;
+        $this->page_data['total_purchase_cnt'] = $total_purchase_cnt;
+        $this->page_data['total_price'] = $total_price;
+        $this->page_data['total_shipping_fee'] = $total_shipping_fee;
+        $this->page_data['total_additional_price'] = $total_additional_price;
+        $this->page_data['total_balance'] = $total_balance;
+        $this->page_data['cart_items'] = $cart_items;
+        $this->page_data['shipping_info'] = $shipping_info;
+        $this->page_data['shipping_info_cnt'] = count($shipping_info);
+        $this->page_data['page_name'] = "shop/purchase";
+        $this->page_data['asset_page'] = "shop";
+        $this->page_data['page_title'] = "shop";
+        $this->load->view('front/index', $this->page_data);
       }
 
     } elseif ($view == 'shipping') {
@@ -4475,8 +4479,8 @@ QUERY;
         
         curl_close($ch);
         
-        $page_data['shipping_data'] = $shipping_data;
-        $this->load->view('front/shop/shipping/search', $page_data);
+        $this->page_data['shipping_data'] = $shipping_data;
+        $this->load->view('front/shop/shipping/search', $this->page_data);
         
       } else {
 
@@ -4488,9 +4492,9 @@ QUERY;
           $shipping_info = $this->db->get_where('shop_shipping_address', array('session_id' => $session_id))->result();
         }
 
-        $page_data['shipping_info'] = $shipping_info;
-        $page_data['shipping_info_cnt'] = count($shipping_info);
-        $this->load->view('front/shop/purchase/shipping_address', $page_data);
+        $this->page_data['shipping_info'] = $shipping_info;
+        $this->page_data['shipping_info_cnt'] = count($shipping_info);
+        $this->load->view('front/shop/purchase/shipping_address', $this->page_data);
 
       }
 
@@ -4589,8 +4593,8 @@ QUERY;
             }
           }
 
-          $page_data['qna'] = $qna;
-          $this->load->view('front/shop/qna/reply', $page_data);
+          $this->page_data['qna'] = $qna;
+          $this->load->view('front/shop/qna/reply', $this->page_data);
 
         }
 
@@ -4607,8 +4611,8 @@ QUERY;
           $qna->user = $this->db->get_where('user', array('user_id' => $qna->user_id))->row();
         }
 
-        $page_data['qna_data'] = $qna_data;
-        $this->load->view('front/shop/qna/list', $page_data);
+        $this->page_data['qna_data'] = $qna_data;
+        $this->load->view('front/shop/qna/list', $this->page_data);
 
       }
 
@@ -4705,8 +4709,8 @@ QUERY;
         $review_id = $_GET['id'];
         $review = $this->db->get_where('shop_product_review', array('review_id' => $review_id))->row();
 
-        $page_data['review'] = $review;
-        $this->load->view('front/shop/review/body', $page_data);
+        $this->page_data['review'] = $review;
+        $this->load->view('front/shop/review/body', $this->page_data);
 
       } else { // list
 
@@ -4722,8 +4726,8 @@ QUERY;
           $review->user = $this->db->get_where('user', array('user_id' => $review->user_id))->row();
         }
 
-        $page_data['review_data'] = $review_data;
-        $this->load->view('front/shop/review/list', $page_data);
+        $this->page_data['review_data'] = $review_data;
+        $this->load->view('front/shop/review/list', $this->page_data);
       }
   
     } else if ($view == 'main') {
@@ -4769,15 +4773,15 @@ QUERY;
       $sliders = $this->db->get_where('main_slider', array('activate' => 1, 'type' => MAIN_SLIDER_TYPE_SHOP))->result();
       $blogs = $this->db->get_where('blog', array('shop_view' => 1, 'activate' => 1))->result();
   
-      $page_data['best_items'] = $best_items;
-      $page_data['new_items'] = $new_items;
-      $page_data['recommend_items'] = $recommend_items;
-      $page_data['sliders'] = $sliders;
-      $page_data['blogs'] = $blogs;
-      $page_data['page_name'] = "shop/main";
-      $page_data['asset_page'] = "shop";
-      $page_data['page_title'] = "shop";
-      $this->load->view('front/index', $page_data);
+      $this->page_data['best_items'] = $best_items;
+      $this->page_data['new_items'] = $new_items;
+      $this->page_data['recommend_items'] = $recommend_items;
+      $this->page_data['sliders'] = $sliders;
+      $this->page_data['blogs'] = $blogs;
+      $this->page_data['page_name'] = "shop/main";
+      $this->page_data['asset_page'] = "shop";
+      $this->page_data['page_title'] = "shop";
+      $this->load->view('front/index', $this->page_data);
   
     } else if ($view == 'list') {
 
@@ -4812,8 +4816,8 @@ QUERY;
         }
       }
 
-      $page_data['shop_items'] = $shop_items;
-      $this->load->view('front/shop/product_list', $page_data);
+      $this->page_data['shop_items'] = $shop_items;
+      $this->load->view('front/shop/product_list', $this->page_data);
 
     } else { // shop list index
 
@@ -4839,7 +4843,7 @@ QUERY;
 
           }
         }
-        $page_data['best_items'] = $best_items;
+        $this->page_data['best_items'] = $best_items;
         
         // category text
         $cat_level = $this->crud_model->get_product_category_level($category);
@@ -4856,18 +4860,18 @@ QUERY;
         }
         $cats = $this->db->query($query)->result();
         
-        $page_data['cats'] = $cats;
-        $page_data['cat_level'] = $cat_level;
+        $this->page_data['cats'] = $cats;
+        $this->page_data['cat_level'] = $cat_level;
 //        $this->crud_model->alert_exit(json_encode($cats));
       }
       
-      $page_data['category'] = $category;
-      $page_data['order'] = $order;
-      $page_data['col'] = $order_col;
-      $page_data['page_name'] = "shop";
-      $page_data['asset_page'] = "shop";
-      $page_data['page_title'] = "shop";
-      $this->load->view('front/index', $page_data);
+      $this->page_data['category'] = $category;
+      $this->page_data['order'] = $order;
+      $this->page_data['col'] = $order_col;
+      $this->page_data['page_name'] = "shop";
+      $this->page_data['asset_page'] = "shop";
+      $this->page_data['page_title'] = "shop";
+      $this->load->view('front/index', $this->page_data);
 
     }
   }
@@ -4914,16 +4918,16 @@ QUERY;
       $this->db->order_by('modified_at', 'desc');
       $notice_infos = $this->db->get_where('blog', array('activate' => 1))->result();
 
-      $page_data['notice_infos'] = $notice_infos;
-      $this->load->view('front/notice/list', $page_data);
+      $this->page_data['notice_infos'] = $notice_infos;
+      $this->load->view('front/notice/list', $this->page_data);
 
     } elseif ($para1 == 'detail') {
 
       $notice_id = $_GET['id'];
 
       $notice = $this->db->get_where('blog', array('blog_id' => $notice_id))->row();
-      $page_data['notice'] = $notice;
-      $this->load->view('front/notice/detail', $page_data);
+      $this->page_data['notice'] = $notice;
+      $this->load->view('front/notice/detail', $this->page_data);
 
     } else {
 
@@ -4944,12 +4948,12 @@ QUERY;
         $title = '브랜드 공지사항';
       }
 
-      $page_data['title'] = $title;
-      $page_data['type'] = $type;
-      $page_data['page_name'] = "notice";
-      $page_data['asset_page'] = "notice";
-      $page_data['page_title'] = "notice";
-      $this->load->view('front/index', $page_data);
+      $this->page_data['title'] = $title;
+      $this->page_data['type'] = $type;
+      $this->page_data['page_name'] = "notice";
+      $this->page_data['asset_page'] = "notice";
+      $this->page_data['page_title'] = "notice";
+      $this->load->view('front/index', $this->page_data);
 
     }
   }
@@ -4971,8 +4975,8 @@ QUERY;
 select * from user_coupon where user_id={$user_id} order by user_coupon_id desc limit {$offset},{$limit}
 QUERY;
         $coupons = $this->db->query($query)->result();
-        $page_data['coupons'] = $coupons;
-        $this->load->view('front/coupon/my_coupon_list', $page_data);
+        $this->page_data['coupons'] = $coupons;
+        $this->load->view('front/coupon/my_coupon_list', $this->page_data);
       } else {
         $page = $_GET['page'];
         $limit = COUPON_LIST_PAGE_SIZE;
@@ -4981,9 +4985,9 @@ QUERY;
 select * from server_coupon where activate=1 and start_at < NOW() and NOW() < end_at order by coupon_id desc limit {$offset},{$limit}
 QUERY;
         $coupons = $this->db->query($query)->result();
-        $page_data['coupons'] = $coupons;
-        $page_data['user_id'] = $user_id;
-        $this->load->view('front/coupon/coupon_list', $page_data);
+        $this->page_data['coupons'] = $coupons;
+        $this->page_data['user_id'] = $user_id;
+        $this->load->view('front/coupon/coupon_list', $this->page_data);
       }
   
     } else if ($para1 == 'receive') {
@@ -5081,10 +5085,10 @@ QUERY;
       echo json_encode($result);
       
     } else {
-      $page_data['page_name'] = "coupon";
-      $page_data['asset_page'] = "user_profile";
-      $page_data['page_title'] = "coupon";
-      $this->load->view('front/index', $page_data);
+      $this->page_data['page_name'] = "coupon";
+      $this->page_data['asset_page'] = "user_profile";
+      $this->page_data['page_title'] = "coupon";
+      $this->load->view('front/index', $this->page_data);
     }
   }
   

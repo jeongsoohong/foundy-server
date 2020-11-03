@@ -38,38 +38,39 @@ if ($page_name == 'shop/product') {
   $desc = $product->item_base_info;
   $imgurl = $product->item_image_url_0;
 }
-$url = base_url();
-$para1 = $this->uri->segment(1);
-$para2 = $this->uri->segment(2);
-$para3 = $this->uri->segment(3);
-$para4 = $this->uri->segment(4);
-$para5 = $this->uri->segment(5);
-$para6 = $this->uri->segment(6);
-if (isset($para1) && !empty($para1)) {
-  $url .= $para1.'/';
-}
-if (isset($para2) && !empty($para2)) {
-  $url .= $para2.'/';
-}
-if (isset($para3) && !empty($para3)) {
-  $url .= $para3.'/';
-}
-if (isset($para4) && !empty($para4)) {
-  $url .= $para4.'/';
-}
-if (isset($para5) && !empty($para5)) {
-  $url .= $para5.'/';
-}
-if (isset($para6) && !empty($para6)) {
-  $url .= $para6.'/';
-}
-if (isset($_GET) && !empty($_GET)) {
-  $len = strlen($url);
-  if ($url[$len - 1] == '/') {
-    $url[$len - 1] = '?';
-  }
-  $url .= http_build_query($_GET);
-}
+//$url = base_url();
+//$para1 = $this->uri->segment(1);
+//$para2 = $this->uri->segment(2);
+//$para3 = $this->uri->segment(3);
+//$para4 = $this->uri->segment(4);
+//$para5 = $this->uri->segment(5);
+//$para6 = $this->uri->segment(6);
+//if (isset($para1) && !empty($para1)) {
+//  $url .= $para1.'/';
+//}
+//if (isset($para2) && !empty($para2)) {
+//  $url .= $para2.'/';
+//}
+//if (isset($para3) && !empty($para3)) {
+//  $url .= $para3.'/';
+//}
+//if (isset($para4) && !empty($para4)) {
+//  $url .= $para4.'/';
+//}
+//if (isset($para5) && !empty($para5)) {
+//  $url .= $para5.'/';
+//}
+//if (isset($para6) && !empty($para6)) {
+//  $url .= $para6.'/';
+//}
+//if (isset($_GET) && !empty($_GET)) {
+//  $len = strlen($url);
+//  if ($url[$len - 1] == '/') {
+//    $url[$len - 1] = '?';
+//  }
+//  $url .= http_build_query($_GET);
+//}
+//$url = build_url($this->uri, $_GET);
 meta_tags($e, $title, $desc, $imgurl, $url);
 ?>
 

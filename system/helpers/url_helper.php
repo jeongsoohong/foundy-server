@@ -567,3 +567,47 @@ if ( ! function_exists('redirect'))
 		exit;
 	}
 }
+
+if ( ! function_exists('build_url'))
+{
+  function build_url($uri, $get)
+  {
+    $url = base_url();
+    $para1 = $uri->segment(1);
+    $para2 = $uri->segment(2);
+    $para3 = $uri->segment(3);
+    $para4 = $uri->segment(4);
+    $para5 = $uri->segment(5);
+    $para6 = $uri->segment(6);
+    
+    if (isset($para1) && !empty($para1)) {
+      $url .= $para1.'/';
+    }
+    if (isset($para2) && !empty($para2)) {
+      $url .= $para2.'/';
+    }
+    if (isset($para3) && !empty($para3)) {
+      $url .= $para3.'/';
+    }
+    if (isset($para4) && !empty($para4)) {
+      $url .= $para4.'/';
+    }
+    if (isset($para5) && !empty($para5)) {
+      $url .= $para5.'/';
+    }
+    if (isset($para6) && !empty($para6)) {
+      $url .= $para6.'/';
+    }
+   
+    if (isset($get) && !empty($get)) {
+      $len = strlen($url);
+      if ($url[$len - 1] == '/') {
+        $url[$len - 1] = '?';
+      }
+      $url .= http_build_query($get);
+    }
+    
+    return $url;
+  }
+
+}
