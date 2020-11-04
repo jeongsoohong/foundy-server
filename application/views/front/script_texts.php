@@ -872,6 +872,8 @@
     function toggleBottomBar(show) { // ON / OFF
       if (_getCookie('DEVICE') === 'IOS') {
         webkit.messageHandlers.HybridBridge.postMessage({'funcType': 'toggleBottomBar', 'show': show });
+      } else {
+        window.HybridBridge.toggleBottomBar(show);
       }
     }
     

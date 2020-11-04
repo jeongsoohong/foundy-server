@@ -73,17 +73,13 @@ if ($page_name == 'shop/product') {
 //$url = build_url($this->uri, $_GET);
 meta_tags($e, $title, $desc, $imgurl, $url);
 ?>
-
 <?php
 include 'meta/' . $asset_page . '.php';
 ?>
-
 <!-- Favicon -->
 <link rel="apple-touch-icon-precomposed" sizes="167x167" href="<?php echo base_url(); ?>uploads/others/favicon.png">
 <link rel="shortcut icon" href="<?php echo base_url(); ?>uploads/others/favicon.png">
-
 <!--<title>--><?php //echo $page_title; ?><!--</title>-->
-
 <!-- CSS Global -->
 <link href="<?php echo base_url(); ?>template/front/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link href="<?php echo base_url(); ?>template/front/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet">
