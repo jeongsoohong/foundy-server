@@ -522,11 +522,11 @@ if ($this->session->userdata('user_login') == "yes") {
 <!--          --><?php //if (!strncasecmp($page_name,'shop',4)) { ?>
             <a id="go-cart" href="<?php echo base_url().'home/shop/cart';?>" style="display: flex">
               <?php if ($this->crud_model->cart_on()) {?>
-                <img src="<?php echo base_url(); ?>template/front/header/imgs/icon_basket_black.png" alt="cart" style="height:22px; width:22px; margin-top:10px"/>
-                <img src="<?php echo base_url(); ?>template/front/header/imgs/basket_badge.png" alt="cart" style="height:10px; width:10px; margin-top:10px"/>
+                <img src="<?php echo base_url(); ?>template/front/header/imgs/icon_basket_black.png" alt="cart" style="height:26px;width:24px;margin-top:6px"/>
+                <img src="<?php echo base_url(); ?>template/front/header/imgs/basket_badge.png" alt="cart" style="height:10px;width:10px;margin-top:6px;margin-left:-2px;"/>
               <?php } else { ?>
-                <img src="<?php echo base_url(); ?>template/front/header/imgs/icon_basket_black.png" alt="cart" style="height:22px; width:22px; margin-top:10px"/>
-                <img src="<?php echo base_url(); ?>template/front/header/imgs/basket_badge.png" alt="cart" style="display: none; height:10px; width:10px; margin-top:10px"/>
+                <img src="<?php echo base_url(); ?>template/front/header/imgs/icon_basket_black.png" alt="cart" style="height:26px;width:24px;margin-top:6px"/>
+                <img src="<?php echo base_url(); ?>template/front/header/imgs/basket_badge.png" alt="cart" style="display:none;height:10px;width:10px;margin-top:6px;margin-left:-2px;"/>
               <?php } ?>
             </a>
 <!--          --><?php //} else { ?>
