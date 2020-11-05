@@ -3485,7 +3485,18 @@ where a.product_id=b.product_id and a.product_id={$product_id}
 QUERY;
 
       $product = $this->db->query($query)->row();
-//      $product = $this->db->get_where('shop_product', array('product_id' => $product_id))->row();
+      if ($product->item_noti_info_need) {
+        $product_notice = $this->db->get_where('shop_product_notice', array('product_id' => $product_id))->result();
+        if (!empty($product_notice)) {
+          $product->item_noti_info = '';
+          foreach ($product_notice as $notice) {
+            if ($product->item_noti_info != '') {
+              $product->item_noti_info .= '<br>';
+            }
+            $product->item_noti_info .= '- ' . $notice->field_name . '<br>' . $notice->field_value;
+          }
+        }
+      }
 
       $shop_id = $product->shop_id;
       $shop_shipping = $this->db->get_where('shop_shipping', array('shop_id' => $shop_id))->row();
