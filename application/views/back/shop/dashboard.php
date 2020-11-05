@@ -164,146 +164,55 @@
         </div>
       </div>
     </div>
-<!--    <div class="row">-->
-<!--      <div class="col-md-8 col-sm-8 col-xs-8">-->
-<!--        <div class="panel panel-bordered panel-dark">-->
-<!--          <div class="panel-heading">-->
-<!--            <h3 class="panel-title">상품 Q&A</h3>-->
-<!--          </div>-->
-<!--          <div class="panel-body">-->
-<!--            <div class="text-center">-->
-<!--              <table class="col-md-12 col-sm-12 col-xs-12" border="1" bordercolor="grey">-->
-<!--                <thead>-->
-<!--                <tr style="font-size: 12px">-->
-<!--                  <th class="col-md-1 col-sm-1 col-xs-1">번호</th>-->
-<!--                  <th class="col-md-2 col-sm-2 col-xs-2">브랜드</th>-->
-<!--                  <th class="col-md-2 col-sm-2 col-xs-2">상품명</th>-->
-<!--                  <th class="col-md-2 col-sm-2 col-xs-2">고객명</th>-->
-<!--                  <th class="col-md-4 col-sm-4 col-xs-4">문의내용</th>-->
-<!--                  <th class="col-md-1 col-sm-1 col-xs-1">답변</th>-->
-<!--                </tr>-->
-<!--                </thead>-->
-<!--                <tbody>-->
-<!--                <tr style="font-size: 12px">-->
-<!--                  <td class="col-md-1 col-sm-1 col-xs-1">1</td>-->
-<!--                  <td class="col-md-2 col-sm-2 col-xs-2">파운디</td>-->
-<!--                  <td class="col-md-2 col-sm-2 col-xs-2">YOGA 매트</td>-->
-<!--                  <td class="col-md-2 col-sm-2 col-xs-2">정수</td>-->
-<!--                  <td class="col-md-4 col-sm-4 col-xs-4">매트 사이즈가 어떻게 되나요?</td>-->
-<!--                  <td class="col-md-1 col-sm-1 col-xs-1">Y</td>-->
-<!--                </tr>-->
-<!--                <tr style="font-size: 12px">-->
-<!--                  <td class="col-md-1 col-sm-1 col-xs-1">1</td>-->
-<!--                  <td class="col-md-2 col-sm-2 col-xs-2">파운디</td>-->
-<!--                  <td class="col-md-2 col-sm-2 col-xs-2">YOGA 매트</td>-->
-<!--                  <td class="col-md-2 col-sm-2 col-xs-2">정수</td>-->
-<!--                  <td class="col-md-4 col-sm-4 col-xs-4">매트 사이즈가 어떻게 되나요?</td>-->
-<!--                  <td class="col-md-1 col-sm-1 col-xs-1">Y</td>-->
-<!--                </tr>-->
-<!--                <tr style="font-size: 12px">-->
-<!--                  <td class="col-md-1 col-sm-1 col-xs-1">1</td>-->
-<!--                  <td class="col-md-2 col-sm-2 col-xs-2">파운디</td>-->
-<!--                  <td class="col-md-2 col-sm-2 col-xs-2">YOGA 매트</td>-->
-<!--                  <td class="col-md-2 col-sm-2 col-xs-2">정수</td>-->
-<!--                  <td class="col-md-4 col-sm-4 col-xs-4">매트 사이즈가 어떻게 되나요?</td>-->
-<!--                  <td class="col-md-1 col-sm-1 col-xs-1">Y</td>-->
-<!--                </tr>-->
-<!--                </tbody>-->
-<!--              </table>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--      <div class="col-md-4 col-sm-4 col-xs-4">-->
-<!--        <div class="panel panel-bordered panel-dark">-->
-<!--          <div class="panel-heading">-->
-<!--            <h3 class="panel-title">정산</h3>-->
-<!--          </div>-->
-<!--          <div class="panel-body">-->
-<!--            <div class="text-center">-->
-<!--              <table class="col-md-12 col-sm-12 col-xs-12">-->
-<!--                <thead>-->
-<!--                <tr>-->
-<!--                  <th class="col-md-12 col-sm-12 col-xs-12">6월 정산 확정금액</th>-->
-<!--                </tr>-->
-<!--                </thead>-->
-<!--                <tbody>-->
-<!--                <tr>-->
-<!--                  <td class="col-md-12 col-sm-12 col-xs-12">000,000원</td>-->
-<!--                </tr>-->
-<!--                </tbody>-->
-<!--              </table>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <div class="row">-->
-<!--      <div class="col-md-8 col-sm-8 col-xs-8">-->
-<!--        <div class="panel panel-bordered panel-dark">-->
-<!--          <div class="panel-heading">-->
-<!--            <h3 class="panel-title">CS 문의/요청</h3>-->
-<!--          </div>-->
-<!--          <div class="panel-body">-->
-<!--            <div class="text-center">-->
-<!--              <table class="col-md-12 col-sm-12 col-xs-12" border="1" bordercolor="grey">-->
-<!--                <thead>-->
-<!--                <tr style="font-size: 12px">-->
-<!--                  <th class="col-md-1">번호</th>-->
-<!--                  <th class="col-md-2">브랜드</th>-->
-<!--                  <th class="col-md-2">상품명</th>-->
-<!--                  <th class="col-md-2">고객명</th>-->
-<!--                  <th class="col-md-4">문의내용</th>-->
-<!--                  <th class="col-md-1">답변</th>-->
-<!--                </tr>-->
-<!--                </thead>-->
-<!--                <tbody>-->
-<!--                <tr style="font-size: 12px">-->
-<!--                  <td class="col-md-1">1</td>-->
-<!--                  <td class="col-md-2">파운디</td>-->
-<!--                  <td class="col-md-2">YOGA 매트</td>-->
-<!--                  <td class="col-md-2">정수</td>-->
-<!--                  <td class="col-md-4">매트 사이즈가 어떻게 되나요?</td>-->
-<!--                  <td class="col-md-1">Y</td>-->
-<!--                </tr>-->
-<!--                <tr style="font-size: 12px">-->
-<!--                  <td class="col-md-1">1</td>-->
-<!--                  <td class="col-md-2">파운디</td>-->
-<!--                  <td class="col-md-2">YOGA 매트</td>-->
-<!--                  <td class="col-md-2">정수</td>-->
-<!--                  <td class="col-md-4">매트 사이즈가 어떻게 되나요?</td>-->
-<!--                  <td class="col-md-1">Y</td>-->
-<!--                </tr>-->
-<!--                <tr style="font-size: 12px">-->
-<!--                  <td class="col-md-1">1</td>-->
-<!--                  <td class="col-md-2">파운디</td>-->
-<!--                  <td class="col-md-2">YOGA 매트</td>-->
-<!--                  <td class="col-md-2">정수</td>-->
-<!--                  <td class="col-md-4">매트 사이즈가 어떻게 되나요?</td>-->
-<!--                  <td class="col-md-1">Y</td>-->
-<!--                </tr>-->
-<!--                </tbody>-->
-<!--              </table>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--      <div class="col-md-4">-->
-<!--        <div class="panel panel-bordered panel-dark">-->
-<!--          <div class="panel-heading">-->
-<!--            <h3 class="panel-title">공지사항</h3>-->
-<!--          </div>-->
-<!--          <div class="panel-body">-->
-<!--            <div class="text-center">-->
-<!--              <h1>-->
-<!--                공지사항게시판-->
-<!--              </h1>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
   </div>
 </div>
+<div class="modal fade" id="popupModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-dialog-centered" role="document" style="width: 50%">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="width: 5%">
+          <span class="pull-right" aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel"></h4>
+      </div>
+      <div class="modal-body">
+        <h4>** 상품 고시정보 등록 탭 변경에 따른 고시정보 수정 협조요청 (필수) **</h4>
+        <div style="line-height: 30px;">
+          안녕하세요 파운디 입니다.<br>
+          상품 고시정보 등록 탭이 개별 텍스트 박스로 수정되어,<br>
+          번거로우시겠지만 등록해주신 상품의 고시정보를 모두 해당 항목에 맞게 재 업로드 부탁 드립니다.<br>
+          온라인 상품 판매시 법에 접촉되는 부분이 있으니 가급적 빠르게 상품 수정을 완료해주시면 감사하겠습니다!
+<!--          <span style="color:red">승인요청 / 판매중 / 판매중지 / 판매종료 등 반려된 상품을 제외한 모든 제품을 확인해주세요!!</span>-->
+        </div>
+        <div style="margin: 30px 0">
+          <img width="100%" height="auto" src="<?php echo base_url(); ?>uploads/others/shop_admin_popup_for_product_notice.png" alt="popup">
+        </div>
+      </div>
+      <div class="modal-footer" style="display: block;">
+        <button type="button" class="btn btn-theme btn-theme-sm" style="text-transform: none; background-color: black; color:white; width:20%; font-weight: 400;"
+        onclick="close_popup();">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function open_popup() {
+    let modal = $('#popupModal');
+    modal.modal('show');
+  }
+  function close_popup() {
+    let modal = $('#popupModal');
+    modal.modal('hide');
+  }
+  function go_product() {
+    window.location.href = '<?php echo base_url(); ?>shop/product';
+  }
+  
+  $(function() {
+    <?php //if ($need_popup) { ?>
+    open_popup();
+    <?php //} ?>
+  });
+</script>
 
 

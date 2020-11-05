@@ -151,7 +151,8 @@
       <th class="col-md-1 col-sm-1 col-xs-1">할인가</th>
       <th class="col-md-1 col-sm-1 col-xs-1">판매가</th>
       <th class="col-md-1 col-sm-1 col-xs-1">공급원가</th>
-      <th class="col-md-2 col-sm-2 col-xs-2">거래구분</th>
+      <th class="col-md-1 col-sm-1 col-xs-1">거래구분</th>
+      <th class="col-md-1 col-sm-1 col-xs-1">기타</th>
     </tr>
     </thead>
     <tbody>
@@ -175,7 +176,12 @@
         <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_price_str($product->item_general_price - $product->item_sell_price); ?></td>
         <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_price_str($product->item_sell_price); ?></td>
         <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_price_str($product->item_supply_price); ?></td>
-        <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $this->crud_model->get_product_shipping_free_str($product->item_shipping_free); ?></td>
+        <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_product_shipping_free_str($product->item_shipping_free); ?></td>
+        <td class="col-md-1 col-sm-1 col-xs-1">
+          <?php if ($product->need_edit) { ?>
+            <span style="color: red">수정필요</span>
+          <?php } ?>
+        </td>
       </tr>
     <?php } ?>
     </tbody>

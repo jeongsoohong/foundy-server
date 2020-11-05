@@ -345,15 +345,15 @@
               <tbody>
               <tr>
                 <th class="col-md-2 col-sm-2 col-xs-2 item-noti-info-header">상품고시정보<span class="required">*</span></th>
-                <td colspan="4" class="col-md-10 col-sm-10 col-xs-10">
+                <td colspan="4" class="col-md-10 col-sm-10 col-xs-10" id="item-noti-info">
                   <?php if ($edit == true) { ?>
                     <?php if ($product_data->item_noti_info_need) { ?>
-                      <textarea id="item-noti-info" rows="20" class="form-control" data-height="500"><?php echo str_replace("<br />", "\n", $product_data->item_noti_info); ?></textarea>
+<!--                      <textarea id="item-noti-info" rows="20" class="form-control" data-height="500">--><?php //echo str_replace("<br />", "\n", $product_data->item_noti_info); ?><!--</textarea>-->
                     <?php } else { ?>
-                      <textarea disabled id="item-noti-info" rows="20" class="form-control" data-height="500"></textarea>
+<!--                      <textarea disabled id="item-noti-info" rows="20" class="form-control" data-height="500"></textarea>-->
                     <?php } ?>
                   <?php } else { ?>
-                    <textarea disabled id="item-noti-info" rows="20" class="form-control" data-height="500"></textarea>
+<!--                    <textarea disabled id="item-noti-info" rows="20" class="form-control" data-height="500"></textarea>-->
                   <?php } ?>
                 </td>
               </tr>
@@ -1142,6 +1142,7 @@
     // console.log(cat_level);
 
     if (cat_code === '0') {
+      $('#item-noti-info').html('');
       return false;
     }
 
@@ -1154,12 +1155,17 @@
     if (cat_level === 2) {
       $('.shop-category-3').html('<select class="form-control" onchange="get_product_category($(this));" data-id="3"><option value="0">소분류</option></select>');
     }
-
+    
     if (elem.data('id') === 3) { // 소분류 선택시
+     
       // console.log(elem.data('id'));
+      <?php if (!$edit) { ?>
+      $('#item-noti-info').load('<?php echo base_url(); ?>shop/product/noti_info?cat_code=' + cat_code);
+      <?php } ?>
+      
       $('#loading_set').show();
       $.ajax({
-        url: "<?php echo base_url() . 'shop/product/noti_info?cat_code='?>" + cat_code,
+        url: "<?php echo base_url() . 'shop/product/kc_cert_info?cat_code='?>" + cat_code,
         type: 'GET',
         cache: false,
         contentType: false,
@@ -1168,12 +1174,12 @@
           $("#loading_set").fadeOut(500);
           var obj = JSON.parse(data);
           // console.log(obj);
-          if (obj.need_noti === true) {
-            $('#item-noti-info').attr('disabled', false);
-            $('#item-noti-info').val(obj.noti_info);
-          } else {
-            $('#item-noti-info').attr('disabled', true);
-          }
+          // if (obj.need_noti === true) {
+          //   $('#item-noti-info').attr('disabled', false);
+          //   $('#item-noti-info').val(obj.noti_info);
+          // } else {
+          //   $('#item-noti-info').attr('disabled', true);
+          // }
           // console.log($('#item-noti-info').is(':disabled'));
           if (obj.need_kc_cert === true) {
             $('#item-kc-cert-number').attr('disabled', false);
@@ -1203,7 +1209,7 @@
       $('#item-model-name').value = '';
       $('#item-manufacturer-name').value = '';
       $('#item-importer-name').value = '';
-      $('#item-noti-info').attr('disabled', true);
+      // $('#item-noti-info').attr('disabled', true);
       $('#item-kc-cert-number').attr('disabled', true);
       $('#item-cert-name').attr('disabled', true);
       $('#item-model-name').attr('disabled', true);
@@ -1286,8 +1292,6 @@
     var order_attention_point = $('#order-attention-point').val();
     var shipping_attention_point_select = $('#shipping-attention-point-select').find('option:selected').val();
     var shipping_attention_point = $('#shipping-attention-point').val();
-    var item_noti_info_disabled = $('#item-noti-info').is(':disabled');
-    var item_noti_info = $('#item-noti-info').val().replace(/\r\n|\r|\n/g,"<br />");
     var item_cert_disabled = $('#item-kc-cert-number').is(':disabled');
     var item_kc_cert_number = $('#item-kc-cert-number').val();
     var item_cert_name = $('#item-cert-name').val();
@@ -1376,11 +1380,46 @@
       $('.shipping-attention-point-header').addClass('header-required');
       return false;
     }
-    if (item_noti_info_disabled === false && item_noti_info === '') {
-      alert('상품고시정보를 정확히 입력해주세요.');
-      $('.item-noti-info-header').addClass('header-required');
+  
+    var item_noti_info_need = false;
+    // var item_noti_info = $('#item-noti-info').val().replace(/\r\n|\r|\n/g,"<br />");
+    var item_noti_info = [];
+    var ret = true;
+  
+    $.each($('#item-noti-info').find('.noti-info'), function(index,item) {
+      var field = $(item).find('#noti-field-' + index);
+      var info = $(item).find('#noti-info-' + index);
+      var noti_field_id = field.data('id');
+      var noti_field = trim(field.text());
+      var noti_info = trim(info.val());
+    
+      if (noti_info === '') {
+        alert('상품고시정보를 정확히 입력해주세요.');
+        $('.item-noti-info-header').addClass('header-required');
+        ret = false;
+        return false;
+      }
+      
+      item_noti_info[index] = Object();
+      item_noti_info[index].noti_field_id = noti_field_id;
+      item_noti_info[index].noti_field = noti_field;
+      item_noti_info[index].noti_info = noti_info;
+  
+      // console.log(index);
+      // console.log(item);
+      // console.log(noti_field_id);
+      // console.log(noti_field);
+      // console.log(noti_info);
+      // console.log(item_noti_info);
+      
+      ret = true;
+      item_noti_info_need = true;
+    });
+    
+    if (ret === false) {
       return false;
     }
+  
     if (item_cert_disabled === false && (item_kc_cert_number === '' || item_cert_name === '' || item_model_name === '' || (item_manufacturer_name === '' && item_importer_name === ''))) {
       alert('인증정보를 정확히 입력해주세요.');
       $('.item-cert-header').addClass('header-required');
@@ -1421,13 +1460,13 @@
       $('.item-option-header').addClass('header-required');
       return false;
     }
-
+  
     var item_option_requires = Array();
     var item_option_others = Array();
     var item_option_requires_cnt = 0;
     var item_option_others_cnt = 0;
-    var ret = true;
-
+    
+    ret = true;
     if (item_option_checked === true) {
       $.each($('#item-option-row').find('tbody').find('tr'), function(index,item) {
         if ($(item).find('.item-option-name').val() === '') {
@@ -1539,19 +1578,19 @@
     formData.append('order_attention_point', order_attention_point);
     formData.append('shipping_attention_point_select', shipping_attention_point_select);
     formData.append('shipping_attention_point', shipping_attention_point);
-    formData.append('item_noti_info_disabled', item_noti_info_disabled === true ? '0' : '1');
-    formData.append('item_noti_info', item_noti_info);
+    formData.append('item_noti_info_need', item_noti_info_need === true ? '1' : '0');
+    formData.append('item_noti_info', JSON.stringify(item_noti_info));
     formData.append('item_cert_disabled', item_cert_disabled === true ? '0' : '1');
     formData.append('item_kc_cert_number', item_kc_cert_number);
     formData.append('item_cert_name', item_cert_name);
     formData.append('item_model_name', item_model_name);
     formData.append('item_manufacturer_name', item_manufacturer_name);
     formData.append('item_importer_name', item_importer_name);
-    formData.append('item_general_price', item_general_price);
-    formData.append('item_sell_price', item_sell_price);
+    formData.append('item_general_price', item_general_price.toString());
+    formData.append('item_sell_price', item_sell_price.toString());
     formData.append('item_discount_rate', item_discount_rate);
     formData.append('item_margin', item_margin.substring(0,item_margin.length-1));
-    formData.append('item_supply_price', item_supply_price);
+    formData.append('item_supply_price', item_supply_price.toString());
     formData.append('item_option_requires_cnt', item_option_requires_cnt);
     formData.append('item_option_requires', JSON.stringify(item_option_requires));
     formData.append('item_option_others_cnt', item_option_others_cnt);
@@ -1620,5 +1659,8 @@
     } else {
       $('#item-option-row').hide();
     }
+    <?php if ($edit) { ?>
+    $('#item-noti-info').load('<?php echo base_url()."shop/product/noti_info?edit=&cat_code={$product_data->item_cat}&id={$product_data->product_id}"; ?>');
+    <?php } ?>
   });
 </script>

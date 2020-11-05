@@ -118,12 +118,12 @@
       </ul>
       <div class="mypage-header pull-right" style="position: static;">
         <div style="text-align: right">
-          <a href="javascript:void(0)" onclick="open_mypage()">
+          <a href="javascript:void(0)" id="mypage-body" onclick="open_mypage()">
             <?php echo $shop->shop_name; ?>
             <span class="fa fa-angle-down" id="mypage-angle" style="margin-left: 10px"></span>
           </a>
         </div>
-        <div class="mypage" style="">
+        <div class="mypage" id="mypage" style="">
           <div><a href="javascript:void(0);" onclick="open_change_shop()">브랜드 변경</a></div>
           <div><a href="javascript:void(0);" onclick="open_password()">비밀번호 변경</a></div>
           <div><a href="<?php echo base_url();?>shop/logout">로그아웃</a></div>

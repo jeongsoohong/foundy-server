@@ -3,7 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
-  <title>Admin | Foundy</title>
+  <title>Admin | FOUNDY</title>
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="<?php echo base_url(); ?>uploads/others/favicon.png">
   <!--STYLESHEET-->
   <!--=================================================-->
   <!--Roboto Font [ OPTIONAL ]-->

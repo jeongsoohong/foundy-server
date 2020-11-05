@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
-  <title>Shop | Foundy</title>
+  <title>Shop | FOUNDY</title>
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="<?php echo base_url(); ?>uploads/others/favicon.png">
   <!--STYLESHEET-->
   <link href="//stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css">
-
   <!--Font Awesome [ OPTIONAL ]-->
   <link href="<?php echo base_url(); ?>template/back/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="<?php echo base_url(); ?>template/back/css/activeit.min.css" rel="stylesheet">
-
   <!-- font -->
   <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap" rel="stylesheet">

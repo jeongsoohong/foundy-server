@@ -69,12 +69,23 @@ QUERY;
 select count(1) as cnt from shop_product_qna where shop_id={$shop_id} and replied={$i}
 QUERY;
         $product_qna_cnt[$i] = $this->db->query($query)->row()->cnt;
-
       }
+     
+//      $status1 = SHOP_PRODUCT_STATUS_INIT;
+//      $status2 = SHOP_PRODUCT_STATUS_REJECT;
+//      $query = <<<QUERY
+//select count(distinct a.product_id) as cnt
+//from (select product_id from shop_product_id where shop_id={$shop_id} and status!={$status1} and status!={$status2}) a
+//left join (select distinct product_id from shop_product_notice) b on a.product_id=b.product_id where b.product_id is null;
+//QUERY;
+//      $need_popup = $this->db->query($query)->row()->cnt;
+  
+//      $this->crud_model->alert_exit($need_popup);
 
       $page_data['shipping_status_cnt'] = $shipping_status_cnt;
       $page_data['product_status_cnt'] = $product_status_cnt;
       $page_data['product_qna_cnt'] = $product_qna_cnt;
+//      $page_data['need_popup'] = $need_popup;
       $page_data['page_name'] = "dashboard";
       $this->load->view('back/shop/index', $page_data);
     }
@@ -345,6 +356,13 @@ QUERY;
         $total_cnt = 0;
       }
 
+      foreach ($product_data as $product) {
+        $query = <<<QUERY
+select count(*) as cnt from shop_product_notice where product_id={$product->product_id}
+QUERY;
+        $product->need_edit = ($this->db->query($query)->row()->cnt == 0);
+      }
+
       $total = (int)($total_cnt / $size ) + ($total_cnt % $size > 0 ? 1 : 0);
       $prev = $page > 1 ? $page - 1 : '';
       $next = $total > $page ? $page + 1 : '';
@@ -371,7 +389,22 @@ select a.shop_name,b.status,b.register_at,b.approval_at,c.*
 from shop a, shop_product_id b, shop_product c 
 where a.shop_id=b.shop_id and b.product_id=c.product_id and c.product_id={$product_id}
 QUERY;
-      $page_data['product'] = $this->db->query($query)->row();
+      $product = $this->db->query($query)->row();
+      
+      if ($product->item_noti_info_need) {
+        $product_notice = $this->db->get_where('shop_product_notice', array('product_id' => $product_id))->result();
+        if (!empty($product_notice)) {
+          $product->item_noti_info = '';
+          foreach ($product_notice as $notice) {
+            if ($product->item_noti_info != '') {
+              $product->item_noti_info .= '<br>';
+            }
+            $product->item_noti_info .= '- ' . $notice->field_name . '<br>' . $notice->field_value;
+          }
+        }
+      }
+      
+      $page_data['product'] = $product;
       $this->load->view('back/shop/product_view', $page_data);
 
     } else if ($para1 == 'status') {
@@ -646,7 +679,7 @@ QUERY;
       $this->form_validation->set_rules('order_attention_point', 'order_attention_point', 'trim|max_length[64]');
       $this->form_validation->set_rules('shipping_attention_point_select', 'shipping_attention_point_select', 'trim|is_natural|less_than_equal_to[1]');
       $this->form_validation->set_rules('shipping_attention_point', 'shipping_attention_point', 'trim|max_length[64]');
-      $this->form_validation->set_rules('item_noti_info_disabled', 'item_noti_info_disabled', 'trim|required|is_natural|less_than_equal_to[1]');
+      $this->form_validation->set_rules('item_noti_info_need', 'item_noti_info_need', 'trim|required|is_natural|less_than_equal_to[1]');
       $this->form_validation->set_rules('item_noti_info', 'item_noti_info', 'trim|max_length[65536]');
       $this->form_validation->set_rules('item_cert_disabled', 'item_cert_disabled', 'trim|required|is_natural|less_than_equal_to[1]');
       $this->form_validation->set_rules('item_kc_cert_number', 'item_kc_cert_number', 'trim|max_length[64]');
@@ -687,7 +720,7 @@ QUERY;
         $order_attention_point = $this->input->post('order_attention_point');
         $shipping_attention_point_select = (boolean)$this->input->post('shipping_attention_point_select');
         $shipping_attention_point = $this->input->post('shipping_attention_point');
-        $item_noti_info_need = (boolean)$this->input->post('item_noti_info_disabled');
+        $item_noti_info_need = (boolean)$this->input->post('item_noti_info_need');
         $item_noti_info = $this->input->post('item_noti_info');
         $item_cert_need = (boolean)$this->input->post('item_cert_disabled');
         $item_kc_cert_number = $this->input->post('item_kc_cert_number');
@@ -709,15 +742,34 @@ QUERY;
         $purchase_max_cnt = (int)$this->input->post('purchase_max_cnt');
         $bundle_shipping_cnt = $this->input->post('bundle_shipping_cnt');
 
-        $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
+        $noti_id = $this->db->get_where('shop_product_category', array('cat_code' => $item_cat))->row()->noti_id;
+        $noti_field_data = array();
+        if ($item_noti_info_need) {
 
+          $noti_field_data = $this->db->order_by('field_id', 'asc')->get_where('shop_product_noti_field', array('noti_id' => $noti_id))->result();
+          if (empty($noti_field_data) == true || isset($noti_field_data) == false) {
+            log_message('error', "[product register] empty notice field, notice_id[%d] item_cat[%s]", $noti_id, $item_cat);
+            $this->crud_model->alert_exit('문제가 발생했습니다. 관리자에게 문의 바랍니다(100)');
+          }
+          
+          $item_notice_data = json_decode($item_noti_info);
+          if (count($noti_field_data) != count($item_notice_data)) {
+            log_message('error', "[product register] notice field count is different, notice_id[%d] item_cat[%s] origin_count[%d] client_count[%d]",
+              $noti_id, $item_cat, count($noti_field_data), count($item_notice_data));
+            $this->crud_model->alert_exit('문제가 발생했습니다. 관리자에게 문의 바랍니다(101)');
+          }
+          
+        }
+  
+        $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
+  
         $product_code = sprintf('%s%010d', $item_cat, (int)$product_id);
 
 //        $data['product_code'] = $product_code;
 //        $data['item_cat'] = $item_cat;
 //        $data['product_id'] = $product_id;
 //        $this->echo_exit(json_encode($data));
-
+  
         if ($item_attention_point_select == false) {
           $item_attention_point = '';
         }
@@ -830,6 +882,36 @@ QUERY;
           array('item_sell_price' => $item_sell_price, 'item_name' => $item_name),
           array('product_id' => $product_id)
         );
+        
+        if ($item_noti_info_need) {
+          for ($i = 0; $i < count($item_notice_data); $i++) {
+            $info['field_value'] = $item_notice_data[$i]->noti_info;
+            $this->db->set('updated_at', 'NOW()', false);
+            if ($edit) {
+              $where = array(
+                'product_id' => $product_id,
+                'field_id' => $noti_field_data[$i]->field_id,
+              );
+              $notice_data = $this->db->get_where('shop_product_notice', $where)->row();
+              if (empty($notice_data)) {
+                $info['product_id'] = $product_id;
+                $info['field_id'] = $noti_field_data[$i]->field_id;
+                $info['field_name'] = $noti_field_data[$i]->field_name;
+                $this->db->insert('shop_product_notice', $info);
+              } else {
+                if (!strcmp($notice_data->field_name, $noti_field_data[$i]->field_name)) {
+                  $info['field_name'] = $noti_field_data[$i]->field_name;
+                }
+                $this->db->update('shop_product_notice', $info, $where);
+              }
+            } else {
+              $info['product_id'] = $product_id;
+              $info['field_id'] = $noti_field_data[$i]->field_id;
+              $info['field_name'] = $noti_field_data[$i]->field_name;
+              $this->db->insert('shop_product_notice', $info);
+            }
+          }
+        }
   
         echo 'done';
       }
@@ -864,9 +946,57 @@ QUERY;
     } else if ($para1 == 'noti_info') {
 
       $cat_code = $_GET['cat_code'];
+      $edit = isset($_GET['edit']);
+  
+      $noti_id = $this->db->get_where('shop_product_category', array('cat_code' => $cat_code))->row()->noti_id;
+      $noti_field_data = $this->db->order_by('field_id', 'asc')->get_where('shop_product_noti_field', array('noti_id' => $noti_id))->result();
+  
+      if ($edit) {
+        $product_id = $_GET['id'];
+        $product_notice = $this->db->order_by('field_id', 'asc')->get_where('shop_product_notice', array('product_id' => $product_id))->result();
+       
+//        $this->crud_model->alert_exit(json_encode($product_id));
+//        $this->crud_model->alert_exit(json_encode($product_notice));
+       
+        $old = false;
+        if (empty($product_notice)) {
+          $product_data = $this->db->get_where('shop_product', array('product_id' => $product_id))->row();
+          $old = true;
+          $page_data['product_data'] = $product_data;
+        }
+        
+        $page_data['old'] = $old;
+  
+        for ($i = 0; $i < count($noti_field_data); $i++) {
+          if ($i < count($product_notice)) {
+            $noti_field_data[$i]->field_value = $product_notice[$i]->field_value;
+          } else {
+            $noti_field_data[$i]->field_value = '';
+          }
+        }
+        
+//        $noti_field_data = array();
+//        for ($i = 0; $i < count($noti_info); $i++) {
+//          $index = (int)($i / 2);
+//          $noti_field_data[$index] = new stdClass();
+//          if ($i % 2 == 0) {
+//            $noti_field_data[$index]->field_name = str_replace('- ', '', $noti_info[$i]);
+//          } else {
+//            $noti_field_data[$index]->value = $noti_info[$i];
+//          }
+//        }
+      }
+
+      $page_data['edit'] = $edit;
+      $page_data['noti_field_data'] = $noti_field_data;
+      $this->load->view('back/shop/product_noti_info', $page_data);
+    
+    } else if ($para1 == 'kc_cert_info') {
+  
+      $cat_code = $_GET['cat_code'];
       $noti_id = $this->db->get_where('shop_product_category', array('cat_code' => $cat_code))->row()->noti_id;
       $noti_data = $this->db->get_where('shop_product_noti_info', array('noti_id' => $noti_id))->row();
-
+  
       echo json_encode(array(
         'noti_info' => $noti_data->noti_info,
         'need_noti' => (boolean)$noti_data->need_noti,

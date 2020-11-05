@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title><?php echo $page_title; ?></title>
+    <title><?php echo strtoupper($page_title); ?> | FOUNDY</title>
     <?php
     include 'includes/top/index.php';
     ?>

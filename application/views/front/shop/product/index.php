@@ -496,7 +496,7 @@
           </div>
           <div class="col-md-12 item-content-noti">
             <?php if ($product->item_noti_info_need || $product->item_cert_need) { ?>
-              <table border="1" bordercolor="#EAEAEA">
+              <table border="1" bordercolor="#EAEAEA" style="width: 100%">
                 <tbody>
                 <?php if ($product->item_noti_info_need) { ?>
                   <tr>
@@ -926,8 +926,8 @@
     // console.log('page height: ' + $(document).height());
     // console.log('bottom position: ' + bottomPos);
   
-    console.log('sticky : ' + sticky + ', pageYOffset : ' + window.pageYOffset);
-    console.log('item_sticky : ' + item_sticky + ', pageYOffset : ' + window.pageYOffset);
+    // console.log('sticky : ' + sticky + ', pageYOffset : ' + window.pageYOffset);
+    // console.log('item_sticky : ' + item_sticky + ', pageYOffset : ' + window.pageYOffset);
 
     if (_pY > sticky) {
       navbar.classList.add("navigation-sticky");

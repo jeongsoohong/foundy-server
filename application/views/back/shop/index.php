@@ -23,6 +23,7 @@ $system_title	 =  "Foundy Shop";
 <div id="loading_set"style="display:none;text-align:center;width:100%;height:100%;position:fixed;top:0;left:0;z-index:5000;background-color:rgba(20,20,20,0.5)">
   <i class="fa fa-refresh fa-spin fa-5x fa-fw" style="position:relative;top:50%"></i>
 </div>
+<?php include 'javascript.php'; ?>
 </body>
 </html>
 

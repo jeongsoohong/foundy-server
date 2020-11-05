@@ -84,7 +84,11 @@
       <tr>
         <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $review->review_id; ?></td>
         <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $review->purchase_code; ?></td>
-        <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $review->item_name; ?></td>
+        <td class="col-md-2 col-sm-2 col-xs-2">
+          <a href="javascript:void(0)" onclick="get_product(<?php echo $review->product_id; ?>)">
+            <?php echo $review->item_name; ?>
+          </a>
+        </td>
         <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $review->review_score; ?></td>
         <td class="col-md-5 col-sm-5 col-xs-5">
           <a href="javascript:void(0)" onclick="get_review(<?php echo $review->review_id; ?>)">
@@ -229,8 +233,41 @@
     </div>
   </div>
 </div>
+<div class="modal fade" id="productInfoModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" style="padding-top: 50px;">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="width: 5%">
+          <span class="pull-right" aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">상품정보</h4>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer" style="display: block;">
+        <button type="button" class="btn btn-danger btn-theme-sm" data-dismiss="modal"
+                onclick="open_product_edit()" style="width:20%">수정</button>
+        <button type="button" class="btn btn-theme btn-theme-sm" onclick="close_product()"
+                style="text-transform: none; width: 20%; font-weight: 400; color: #fff; background-color: black">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
-
+  
+  function get_product(id) {
+    let modal = $('#productInfoModal');
+    let info = $('#productInfoModal .modal-body');
+    
+    pid = id;
+    
+    modal.modal('show');
+    modal.appendTo('body');
+    info.html(loading_set);
+    info.load("<?php echo base_url()?>shop/product/view/" + id);
+  };
+  
   let page = <?php echo $page; ?>;
   let item_name = '<?php echo $item_name; ?>';
 
@@ -251,7 +288,7 @@
       $('#review-score-'+i).append("<img src='<?php echo base_url().'uploads/icon/icon12_star.png'; ?>'/>");
     }
   }
-  
+
   function get_review(rid) {
     let modal = $('#reviewModal');
   
