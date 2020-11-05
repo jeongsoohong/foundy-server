@@ -53,8 +53,12 @@
  *
  * NOTE: If you change these, also change the error_reporting() code below
  */
-define('DEV_SERVER', strstr($_SERVER['SERVER_NAME'], 'dev') != NULL ? true: false);
-define('ENVIRONMENT', DEV_SERVER == false ? 'production' : 'development');
+if (isset($_SERVER['SERVER_NAME'])) {
+  define('DEV_SERVER', strstr($_SERVER['SERVER_NAME'], 'dev') != NULL ? true: false);
+  define('ENVIRONMENT', DEV_SERVER == false ? 'production' : 'development');
+} else { // crontab
+  define('ENVIRONMENT', 'cron');
+}
 //define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
 
 /*
@@ -67,7 +71,8 @@ define('ENVIRONMENT', DEV_SERVER == false ? 'production' : 'development');
  */
 switch (ENVIRONMENT)
 {
-	case 'development':
+	case 'cron':
+  case 'development':
 		error_reporting(-1);
 		ini_set('display_errors', 1);
 	break;
