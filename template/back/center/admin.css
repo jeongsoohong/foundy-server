@@ -1,0 +1,1773 @@
+/* CSS RESET */
+* {
+    padding: 0;
+    border: 0;
+    margin: 0;
+}
+a {text-decoration: none;}
+p {word-break: keep-all; margin: 0;}
+li {list-style: none;}
+img {vertical-align: middle;}
+button {
+    background: none;
+    outline: none;
+    cursor: pointer;
+}
+input {
+    background: none;
+    outline: none;
+    color: #616161;
+    
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+}
+input:focus {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+input[type="checkbox"], input[type="radio"] {
+    vertical-align: middle;
+    margin: 0;
+}
+.bg_grey {background-color: #f5f5f5;}
+
+textarea {
+    display: block;
+    outline: none;
+    resize: none;
+}
+table {border-collapse: collapse;}
+select {
+    background: none;
+    outline: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    border-radius: 0;
+    cursor: pointer;
+}
+
+body {
+    font-family: 'Spoqa Han Sans', 'Spoqa Han Sans JP', 'Sans-serif';
+    height: 100%;
+}
+.clearfix::before {
+    content: none;
+}
+.clearfix::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+.scroll-hidden {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+.scroll-x_hidden {
+    overflow-x: hidden;
+}
+.scroll-x {
+    overflow-x: scroll;
+}
+.scroll-x_visible {
+    overflow-x: visible;
+}
+.scroll-y {
+    overflow-y: scroll;
+}
+.scroll-y_hidden {
+    overflow-y: hidden;
+}
+.nowrap {
+    white-space: nowrap;
+}
+.keepall {
+    word-break: keep-all;
+}
+.blurEffect {
+    filter: blur(5px);
+    -webkit-filter: blur(5px);
+    -moz-filter: blur(5px);
+    -ms-filter: blur(5px);
+    -o-filter: blur(5px);
+}
+.fixinner { 
+    position: fixed; 
+}
+.shadow_sm {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+}
+.shadow_md {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+.meaning {
+    overflow: hidden;
+    position: absolute;
+    width: 0;
+    height: 0;
+    line-height: 0;
+}
+
+[class*="col_"] {
+    float: left;
+    box-sizing: border-box;
+    padding: 0 0.4%;
+}
+
+/* 1등분, 2등분, 3등분, 4등분, 5등분, 8등분, 9등분 */
+.col_100 {width: 100%;}
+.col_50 {width: 50%;}
+.col_33 {width: 33.33%;}
+.col_25 {width: 25%;}
+.col_20 {width: 20%;}
+.col_md {width: 14%;}
+.col_12 {width: 12.5%;}
+.col_11 {width: 11.11%;}
+
+/* .chkbox_line .form-chk 너비값 */
+
+.col_sp {width: 100px;}
+.chk_write {
+    width: 140px;
+    height: 32px;
+    padding: 0 10px;
+}
+.chkbox_line .col_sp {
+    width: 100px;
+}
+
+.selected {
+    color: #da6547 !important;
+    font-weight: 700;
+}
+.write_padding {
+    display: inline-block;
+    padding-left: 12px;
+}
+.centerArea_pilates .chkbox_line label:last-child {width: 240px;}
+
+@media(min-width: 1025px){
+    .chkbox_line .col_sp {width: 110px;}
+    .chkbox_line label:last-child {width: 220px;}
+}
+
+#whole {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding-bottom: 60px;
+}
+
+.header {
+    position: fixed;
+    width: 100%;
+    min-width: 768px;
+    height: 60px;
+    background-color: #fff;
+    border-bottom: 1px solid #f3efee;
+    z-index: 5;
+}
+.header a {
+    display: block;
+}
+.header h1 {
+    margin: 0 16px 0 0;
+    width: 128px;
+}
+.logo_home img {
+    padding: 4px 0 0 20px;
+}
+.menu_wrap {
+    height: 60px;
+}
+.menu_wrap a {
+    display: block;
+    float: left;
+    margin-right: 16px;
+}
+.menu_wrap a:last-child {
+    margin-right: 0;
+}
+.nav--logo, .nav--menu {
+    float: left;
+}
+
+.nav--menu {
+    width: 70%;
+}
+.nav--menu a {
+    display: block;
+    line-height: 60px;
+    height: 60px;
+    text-align: center;
+    font-size: 12px;
+    color: #616161;
+}
+.nav--menu a:hover {
+    color: #222;
+    font-weight: bold;
+}
+
+@media(min-width:1180px){
+    .nav--menu a {
+        font-size: 16px;
+    }
+}
+
+.nav--id {
+    width: 20%;
+    height: 60px;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 6;
+}
+.id_current, .id_list {
+    width: 100%;
+    height: 60px;
+    position: absolute;
+    right: 0;
+    background-color: #fff;
+    text-align: left;
+}
+.id_list {
+    border-top: 1px solid #e0e0e0;
+    top: 60px;
+    height: 180px;
+}
+.current_accessed {
+    line-height: 60px;
+    text-align: left;
+    font-size: 12px;
+    color: #616161;
+    padding-left: 12px;
+}
+.current_arrow {
+    width: 24px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    right: 8px;
+}
+
+.list_child {
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    line-height: 60px;
+    text-align: left;
+    padding-left: 12px;
+    font-size: 12px;
+    color: #616161;
+}
+
+@media(min-width:888px){
+    .nav--id {
+        width: 172px;
+    }
+}
+
+@media(min-width:972px){
+    /* 헤더 메뉴 */
+    .menu_wrap a {
+        margin-right: 28px;
+    }
+}
+
+
+.box-sm {
+    box-sizing: border-box;
+    padding: 0 16px;
+}
+.boxwrap {
+    width: 100%;
+    padding-top: 60px;
+}
+
+
+/* 타이틀 속성 */
+.tit-lg {
+    color: #000;
+    font-size: 21px;
+}
+.tit-md {
+    color: #333;
+    font-size: 18px;
+}
+.tit-sm {
+    color: #333;
+    font-size: 16px;
+}
+.tit-xs {
+    color: #333;
+    font-size: 14px;
+}
+.tit-normal {
+    font-weight: normal;
+}
+.tit-bold {
+    font-weight: bold;
+}
+
+table {
+    width: 100%;
+}
+.table_head tr, .table_body tr {
+    text-align: center;
+}
+
+
+/* ========== 02.수강권 관리 ========== */
+
+.boxwrap, .boxwrap__info {
+    height: 100%;
+    min-width: 768px;
+}
+.boxwrap__info {
+    width: 100%;
+    position: relative;
+}
+.reverse_color {
+    background-color: #9b7f7a !important;
+    color: #fff !important;
+    font-weight: bold !important;
+}
+
+.info--contents {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding-left: 128px;
+    background-color: #f3efee;
+}
+.info--contents section {
+    height: 100%;
+}
+.info--tit {
+    position: absolute;
+    width: 128px;
+    height: 100%;
+    background-color: #fff;
+}
+.tit_theme {
+    display: block;
+    width: 100%;
+    height: 80px;
+    text-align: center;
+    line-height: 80px;
+    border-bottom: 1px solid #eee;
+    background-color: inherit;
+    color: #2c2a26;
+    font-size: 14px;
+}
+.tit_theme img {
+    vertical-align: baseline;
+    margin-left: 8px;
+}
+.theme_arrow {
+    display: inline-block;
+}
+
+.contents_admin, .contents_enroll, .contents_modify {
+    padding: 28px;
+    box-sizing: border-box;
+}
+
+/* 수강권 관리 */
+.admin_detailbox {
+    height: auto;
+}
+.admin_plus {
+    width: 100%;
+    cursor: pointer;
+    position: relative;
+    background-color: transparent;
+    border: 2px dotted #9b7f7a;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.plus_btn {
+    width: 48px;
+    height: 48px;
+    background-color: #9b7f7a;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -24px;
+    margin-left: -24px;
+    text-align: center;
+}
+.plus_btn img {
+    height: auto;
+}
+.plus_icon {
+    padding: 16px 0;
+}
+.admin_wrap li {
+    width: 100%;
+    margin-bottom: 20px;
+}
+.admin_plus {
+    height: 200px;
+}
+.progress_card, .stop_card {
+    width: 49%;
+    height: 228px;
+    float: left;
+    box-sizing: border-box;
+    border-radius: 4px;
+    margin-bottom: 12px;
+}
+.progress_card {
+    cursor: pointer;
+    border-top: 13px solid #ffdc02;
+}
+
+.progress_card:nth-child(odd), .stop_card:nth-child(odd) {
+    margin-right: 2%;
+}
+.progress_card:last-child {
+    position: relative;
+    border: 2px dotted #9b7f7a;
+}
+.card_contents, .card_ticket {
+    padding: 16px;
+}
+.card_contents {
+    border-left: 1px solid #e0e0e0;
+    border-right: 1px solid #e0e0e0;
+    padding-top: 20px;
+}
+.card_ticket {
+    background-color: #f5f5f5;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border: 1px solid #e0e0e0;
+    border-top: none;
+}
+.contents_info {
+    background-color: #fff;
+}
+
+.bg_disabled {
+    background-color: #f5f5f5;
+}
+.contents_tit {
+    color: #0091ea;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 12px;
+}
+
+.info_ration {
+    margin-bottom: 2px;
+}
+.info_ration:last-child {
+    margin-bottom: 0;
+}
+.info_tit, .info_data {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 400;
+}
+.info_tit {
+    width: 84px;
+    color: #816661;
+}
+.info_data {
+    color: #616161;
+}
+.ticket_price {
+    float: left;
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+}
+.ticket_expired {
+    float: right;
+    color: #424242;
+    font-size: 12px;
+    font-weight: normal;
+}
+.expired_amount {
+    display: inline-block;
+    color: #da6547;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 0 4px;
+}
+.stop_card {
+    border-top: 13px solid #f5f5f5;
+}
+.stop_card p, .stop_card span {
+    color: #9e9e9e;
+}
+
+@media(min-width:972px){
+    .progress_card, .stop_card {
+        width: 32%;
+        margin-right: 2%;
+    }
+    .progress_card:nth-child(odd), .stop_card:nth-child(odd) {
+        margin-right: 2%;
+    }
+    .progress_card:nth-child(3n), .stop_card:nth-child(3n) {
+        margin-right: 0;
+    }
+}
+
+@media(min-width:1310px){
+    .progress_card, .stop_card {
+        width: 24%;
+        margin-right: 1.33%;
+    }
+    .progress_card:nth-child(odd), .stop_card:nth-child(odd) {
+        margin-right: 1.33%;
+    }
+    .progress_card:nth-child(3n), .stop_card:nth-child(3n) {
+        margin-right: 1.33%;
+    }
+    .progress_card:nth-child(4n), .stop_card:nth-child(4n) {
+        margin-right: 0;
+    }
+}
+
+
+
+
+/* 수강권 등록 */
+.admin_detailbox, .enroll_detailbox {
+    background-color: #fff;
+    padding: 28px 20px 28px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    position: relative;
+}
+.enroll_detail, .name_detail {
+    width: 100%;
+    height: auto;
+}
+.enroll_detail input, .name_detail input {
+    text-align: left;
+    font-size: 12px;
+    font-weight: normal;
+    padding: 0 10px;
+}
+
+.chk_no, .chk_date,
+.time_count, .time_period, .form_price,
+.form_count, .form_people {
+    height: 32px;
+/*    width: 72px;*/
+}
+
+.chk_no, .chk_date {
+    width: 29%;
+}
+.time_count, .time_period, .form_price,
+.form_count, .form_people {
+    width: 67%;
+}
+.enroll_detail .form_person {
+    width: 95%;
+}
+
+.right_lg {
+    margin-right: 50%;
+}
+.enroll_detail dt, .enroll_detail dd,
+.name_detail dt, .name_detail dd {
+    float: left;
+    margin-bottom: 16px;
+    font-size: 13px;
+    line-height: 32px;
+    word-break: keep-all;
+}
+.enroll_detail dt, .name_detail dt {
+    width: 88px;
+    margin-right: 20px;
+    color: #816661;
+    font-weight: normal;
+    height: 32px;
+}
+.enroll_detail dd, .name_detail dd {
+    width: 79%;
+    color: #757575;
+    font-weight: normal;
+}
+.enroll_tit {
+    padding-bottom: 20px;
+}
+
+.form_chk:first-child {
+    margin-right: 24px;
+}
+.form_chk {
+    margin-bottom: 28px;
+}
+
+.detail_tip p:first-child {
+    margin-right: 2%;
+}
+.detail_tip p {
+    display: inline-block;
+    width: 48%;
+}
+.detail_price input {
+    width: 95%;
+}
+.detail_type label {
+    display: block;
+    width: 100%;
+}
+.detail_type .form_chk {
+    margin-bottom: 12px;
+}
+.detail_name .name_space {
+    width: 100%;
+}
+
+
+.count_limit {
+    float: left;
+}
+.count_cancel {
+    display: block;
+    float: right;
+}
+
+.cancel_option {
+    margin: 16px 0;
+}
+.cancel_option p {
+    display: inline-block;
+    width: 48%;
+}
+.cancel_option p > input {
+    margin-left: 12px;
+}
+
+.option_term {
+    width: 50%;
+}
+.option_oneday {
+    width: 60%;
+    margin-right: 2%;
+}
+.count_oneday {
+    width: 49%;
+}
+.count_term {
+    width: 36%;
+}
+
+
+
+
+
+
+/* 수강권 수정 */
+.modify_detailbox {
+    box-sizing: border-box;
+}
+.ticket_name, .ticket_current {
+    background-color: #fff; 
+    border-radius: 4px;
+}
+.ticket_name {
+    padding: 28px 20px 16px;
+    margin-bottom: 28px;
+}
+.name_wrap {
+    position: relative;
+}
+.name_tit {
+    padding-bottom: 20px;
+}
+.tool_ticket {
+    float: left;
+    width: 100%;
+    height: 32px;
+    position: relative;
+}
+.ticket_type {
+    width: 100%;
+    height: inherit;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+
+.name_btns {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 0;
+}
+.name_btns button {
+    width: 82px;
+}
+.name_btns button:first-child {
+    margin-right: 8px;
+} 
+
+
+
+/* 저장 버튼 */
+.btn_val {
+    color: #fff;
+    font-size: 12px;
+    background-color: #424242;
+    vertical-align: bottom;
+    border-radius: 4px;
+}
+.btn_sm {
+    height: 32px;
+}
+.btn_rg {
+    height: 36px;
+}
+.btn_md {
+    height: 40px;
+}
+.btn_lg {
+    height: 44px;
+}
+.btn_save {
+    width: 100px;
+    position: absolute;
+}
+.enroll_detailbox .btn_save {
+    top: 28px;
+    right: 20px;
+}
+.name_tool {
+    padding-bottom: 16px;
+}
+
+
+/* 수강권 수정 테이블 */
+.table_tit {
+    padding: 28px 20px 24px;
+    box-sizing: border-box;
+}
+.ticket_current .table_tit {
+    padding: 0;
+    margin-bottom: 32px;
+}
+.ticket_current {
+     padding: 28px 20px 24px; 
+     box-sizing: border-box;
+}
+
+
+.type_btn {
+    font-size: 0;
+    float: right;
+}
+.type_btn button {
+    width: 52px;
+    margin-right: 8px;
+}
+.type_btn button:last-child {
+    margin-right: 0;
+}
+.btn_remove {
+    background-color: #da6547;
+}
+
+.type_name {
+    padding-bottom: 20px;
+}
+.type_join {
+    float: left;
+    width: 48%;
+    height: 36px;
+    position: relative;
+}
+.type_join input {
+    width: 100%;
+    height: inherit;
+    box-sizing: border-box;
+    padding: 0 10px;
+    border-radius: 4px;
+}
+.type_join button {
+    width: 36px;
+    height: 36px;
+    background-color: #eee;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 0 4px 4px 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.tr-data {
+    color: #616161;
+    font-size: 14px;
+    font-weight: 400;
+    padding-bottom: 12px;
+}
+.table_nav_btns {
+    width: 100%;
+    margin: 32px 0;
+    text-align: center;
+    height: 32px;
+    font-size: 14px;
+}
+.table_nav_btns > div {
+    display: inline-flex;
+}
+.table_nav_btns > div > button {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.table_nav_btns > div > button > img {
+    padding-bottom: 4px;
+}
+.btns_no {
+    margin: 0 20px;
+}
+.prev_first, .next_after {
+    border-right: 0 !important;
+}
+.no-indicator {
+    color: #616161;
+    border-right: 0 !important;
+}
+.no-indicator:last-child {
+    border-right: 1px solid #ccc !important;
+}
+.btn_click {
+    border: 0 !important;
+    background-color: #000;
+    color: #fff;
+}
+.btn_empty {
+    border: 0 !important;
+    background-color: #000;
+    color: grey;
+}
+.btn_hover {
+    border: 1px solid #ccc !important;
+    background-color: #eee;
+    color: #616161;
+}
+
+.popup-box {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 9;
+    top: 0;
+    left: 0;
+    background-color: rgba(0,0,0,0.3);
+}
+.popup_layout:first-child {
+    top: 20%;
+    left: 50%;
+    margin-top: -70px;
+    margin-left: -200px;
+}
+.popup_layout {
+    position: absolute;
+    width: 650px;
+    top: 50%;
+    left: 50%;
+    margin-top: -124px;
+    margin-left: -232px;
+    background-color: #fff;
+    border-radius: 4px;
+    z-index: 10;
+    
+    padding: 32px 32px 16px;
+    text-align: left;
+}
+.member--guide {
+    padding-bottom: 16px;
+}
+.member--guide p {
+    display: inline-block;
+    color: #000;
+    font-size: 21px;
+}
+.member--guide .guide_id {
+    color: #0091ea;
+}
+.guide_txt {
+    color: #9e9e9e;
+    font-size: 14px;
+}
+.guide_txt {
+    display: inline-block;
+}
+.member--how {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    font-size: 0;
+}
+.member--how button {
+    width: 72px;
+}
+.how_no {
+    margin-right: 8px;
+}
+.how_no:hover {
+    background-color: #da6547;
+}
+.how_ok:hover {
+    background-color: #4caf50;
+}
+
+
+.member-party {
+    text-align: center;
+    margin-bottom: 40px;
+}
+.member--guide .guide_id {
+    font-size: 27px;
+}
+.member--join button {
+    width: 49%;
+    float: left;
+}
+.join_no {
+    margin-right: 2%;
+}
+.join_no:hover {
+    background-color: #da6547;
+}
+.join_ok:hover {
+    background-color: #4caf50;
+}
+
+
+.data-box dt, .data-box dd {
+    float: left;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 14px;
+    font-weight: normal;
+    height: 36px;
+    line-height: 36px;
+}
+.data-box dt {
+    width: 60px;
+    margin-right: 4px;
+}
+.data-box dd {
+    width: 84%;
+}
+.data-box dd input {
+    width: 100%;
+    height: inherit;
+    box-sizing: border-box;
+    padding: 0 16px;
+    background-color: #f5f5f5;
+    border: 1px solid #eee;
+}
+.data-save {
+    width: 100%;
+    color: #333;
+    font-size: 14px;
+    background-color: #eee;
+}
+.data-save:hover {
+    background-color: #0091ea;
+    color: #fff;
+}
+
+.data_period .container,
+.data_period .form-group, 
+.data_period .input-group {
+    width: 100%;
+    height: inherit;
+}
+.data_period .container {
+    width: 45.7%;
+    padding: 0;
+    display: inline-block;
+    vertical-align: top;
+}
+.period_hypen {
+    display: inline-block;
+    margin: 0 8px;
+}
+
+
+
+
+
+
+
+/* alert */
+.popup__alert {
+    height: 140px;
+}
+
+/* extend */
+.popup__extend, .popup__stop {
+    height: 200px;
+}
+.member--dates {
+    width: 100%;
+    height: 36px;
+}
+.member--dates input {
+    width: 90%;
+    height: inherit;
+    color: #616161;
+    padding: 0 10px;
+    margin-right: 8px;
+}
+.member--dates span {
+    display: inline-block;
+}
+
+
+
+
+
+
+
+.table_head tr th {
+/*    border-bottom: 1px solid #e0e0e0;*/
+    background-color: #ddd3d1;
+    color: #000;
+    font-weight: bold;
+    height: 48px;
+}
+.table_body tr td {
+    height: 48px;
+    color: #757575;
+    font-weight: normal;
+}
+.table_head tr th, .table_body tr td {
+    font-size: 12px;
+}
+.table_body {
+    height: auto;
+    border-bottom: 1px solid #ccc;
+}
+
+@media(min-width:1180px){
+    .table_head tr th, .table_body tr td {
+        font-size: 14px;
+        text-align: center;
+    }
+}
+
+
+/* ========== 01.센터정보 ========== */
+
+/* 기본정보 */
+.center_detailbox .name_center {
+    color: #9e9e9e;
+    background-color: #f5f5f5;
+}
+.detail_name span {
+    display: block;
+}
+.contents_center .center_detailbox  {
+    border-radius: 4px;
+    background-color: #fff;
+}
+.center_detailbox {
+    box-sizing: border-box;
+} 
+.detail_phone p {
+    display: inline-block;
+    width: 3%;
+    padding: 0 1%;
+    box-sizing: border-box;
+}
+.detail_phone input {
+    width: 30.4%;
+}
+.centerName, .centerArea, .centerUsing {
+    padding: 28px 20px 32px;
+    border-bottom: 1px solid #ccc;
+}
+.centerUsing {
+    border: 0;
+}
+.centerName {
+    position: relative;
+}
+.centerName .btn_save {
+    top: 28px;
+    right: 20px;
+}
+.address_box {
+    width: 100%;
+    height: 32px;
+    position: relative;
+}
+.address_input {
+    width: 100%;
+    height: inherit;
+}
+.address_search {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
+    background-color: #eee;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+}
+
+.centerArea_yoga {
+    margin-bottom: 16px;
+}
+.chkbox_line {
+    height: 32px;
+    line-height: 32px;
+    padding-bottom: 8px;
+}
+.chkbox_line label {
+    color: #616161;
+    font-size: 12px;
+    font-weight: normal;
+    margin: 0;
+}
+
+.chkbox_wrap {
+    width: 100%;
+}
+
+.centerArea_tit_lg {
+    padding-bottom: 28px;
+}
+.centerArea_tit_sm {
+    color: #816661;
+    font-size: 13px;
+    font-weight: normal;
+    padding-bottom: 12px;
+}
+
+@media(min-width:1070px){
+    .centerName dd {
+        width: 87.8%;
+    }
+    
+}
+
+
+/* 추가정보 */
+.about_wrap {
+    position: relative;
+}
+.about_wrap .btn_save {
+    top: 0;
+    right: 0;
+}
+.addinfo_textbox {
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.remain_textarea {
+    padding: 12px 16px;
+    background-color: #fbfafe;;
+    border-bottom: 1px solid #ccc;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+.remain_textarea p {
+    color: #9e9e9e;
+    font-size: 12px;
+    font-weight: normal;
+}
+.remain_text {
+    display: inline-block;
+    color: #616161;
+    font-weight: bold;
+}
+.remain_val {
+    color: #0091ea;
+    font-size: 21px;
+    margin: 0 4px 0 8px;
+}
+.about_textarea {
+    width: 100%;
+    height: 240px;
+    padding: 16px;
+    color: #616161;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 1.5;
+    word-break: keep-all;
+    box-sizing: border-box;
+    border-radius: inherit;
+}
+.addinfo_about {
+    height: auto;
+/*    max-height: 464px;*/
+    padding-bottom: 28px;
+}
+.addinfo_editor {
+    height: auto;
+    padding-bottom: 28px;
+}
+.editor_wrap {
+    position: relative;
+}
+.editor_wrap .btn_save {
+    top: 0;
+    right: 0;
+}
+.editor_box {
+    width: 600px;
+    height: auto;
+    box-sizing: border-box;
+    /*border: 1px solid #ccc;*/
+    border-radius: 4px;
+}
+
+
+/* ========== 01.강사 / 스케줄 ========== */
+
+/* 강사 관리 */
+.teacher_register, .teacher_data {
+    background-color: #fff;
+    padding: 28px 20px 32px;
+    border-radius: 4px;
+    margin-bottom: 28px;
+}
+.teacher_data {
+    padding: 0;
+}
+.teacher_data table tr th {
+    text-align: center;
+}
+.teacher_tit {
+    padding-bottom: 20px;
+}
+.register_tit {
+    padding-bottom: 20px;
+}
+.register_confirm {
+    width: 100%;
+    height: 32px;
+    position: relative;
+    margin-bottom: 20px;
+}
+.confirm_name {
+    width: 50%;
+    height: inherit;
+    padding: 0 10px;
+}
+.confirm_search {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+    font-weight: normal;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    right: 50%;
+}
+
+.register_reading {
+    width: 50%;
+    height: 32px;
+    line-height: 32px;
+    color: #0091ea;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.id_remove {
+    width: 60px;
+    height: 32px;
+    line-height: 32px;
+    background-color: #333;
+    border-radius: 4px;
+    color: #fff;
+    position: absolute;
+    top: 28px;
+    right: 20px;
+}
+
+/* onoff일 */
+.onoff {
+    width: 52px;
+    height: 24px;
+    background-color: #bdbdbd; /* 비활성화: #bdbdbd / 활성화: #0091ea */
+    border-radius: 16px;
+    position: relative;
+}
+.onoff_on {
+    background-color: #0091ea; /* 비활성화: #bdbdbd / 활성화: #0091ea */
+}
+
+.onoff_point {
+    display: block;
+    width: 16px;
+    height: 16px;
+    border-radius: 10px;
+    background-color: #fff;
+    position: absolute;
+    top: 4px;
+    left: 32px; /* on : 4px, off : 32px */
+}
+
+.onoff_point_on {
+    left: 4px; /* on : 4px, off : 32px */
+}
+
+/* 스케줄 관리 */
+.datepicker th, .datepicker td {
+    height: 32px !important;
+}
+.schedule_register, .schefule_status {
+    height: auto;
+    padding-bottom: 28px;
+}
+.area_tit, .area_data {
+    float: left;
+    margin-bottom: 16px;
+}
+.area_tit {
+    width: 60px;
+    color: #816661;
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 34px;
+}
+.area_data {
+    width: 88.8%;
+}
+.data_hyphen {
+    display: inline-block;
+    color: #616161;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 34px;
+    padding: 0 2%;
+    box-sizing: border-box;
+    width: 6%;
+    text-align: center;
+}
+.data_function {
+    width: 47%;
+    display: inline-block;
+    vertical-align: middle;
+}
+.data_function > .container, .data_function .row {
+    width: 100% !important;
+    padding: 0;
+    margin: 0;
+}
+.data_function .col-sm-6 {
+    width: 100%;
+    padding: 0;
+}
+.data_function .form-group {
+    margin-bottom: 0;
+}
+.area_data .col_sp {
+    width: 14%;
+}
+.data_function, .data_hyphen {
+    float: left;
+}
+
+.teacher_select {
+    margin-bottom: 24px;
+}
+.teacher_select #selboxDirect {
+    width: 100%;
+    height: 32px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+.teacher_select, .teacher_book {
+    width: 100%;
+}
+
+.selbox-wrap, .selbox-name {
+    float: left;
+}
+.selbox-wrap {
+    position: relative;
+    width: 36%;
+    height: 32px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    margin-right: 6%;
+}
+.selbox-name {
+    width: 58%;
+    font-size: 0;
+}
+#selbox {
+    width: 100%;
+    padding: 0 10px;
+    color: #616161;
+    font-size: 14px;
+    line-height: 32px;
+    font-weight: normal;
+    position: relative;
+    z-index: 1;
+}
+.selbox-arrow {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+}
+.selbox-arrow img {
+    padding-bottom: 8px;
+}
+
+.selbox-name p {
+    display: inline-block;
+    color: #616161;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 32px;
+    margin-right: 12px;
+}
+.name_form {
+    width: 80.7%;
+    height: 32px;
+    line-height: 32px;
+    padding: 0 10px;
+    color: #616161;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.book-chk, .book-function {
+    float: left;
+}
+.book-chk {
+    width: 36%;
+    margin-right: 6%;
+    vertical-align: top;
+    color: #da6547;
+    font-size: 14px;
+}
+.book-function {
+    width: 58%;
+}
+
+.book-select {
+    display: inline-block;
+    position: relative;
+    width: 61%;
+    height: 32px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+}
+.book-ticket select {
+    width: 100%;
+    color: #616161;
+    font-size: 14px;
+    font-weight: normal;
+}
+.book-select select {
+    position: relative;
+    z-index: 1;
+    height: inherit;
+    line-height: 32px;
+    padding: 0 10px;
+}
+.select-arrow {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 0;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+}
+.select-arrow img {
+    padding-bottom: 4px;
+}
+
+.book-function > div {
+    margin-bottom: 16px;
+    font-size: 0;
+}
+.book-function > div > p {
+    display: inline-block;
+    color: #616161;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 32px;
+    margin-right: 12px;
+    vertical-align: top;
+}
+.book-function > div > input {
+    width: 42%;
+    height: 32px;
+    line-height: 32px;
+    padding: 0 10px;
+    font-size: 14px;
+    font-weight: normal;
+}
+.book-start p:last-child {
+    margin-right: 0;
+    margin-left: 12px;
+}
+.limit_count {
+    margin-left: 12px;
+}
+
+
+/* 스케줄 현황 테이블 */
+.schedule_table tr {
+    vertical-align: top;
+}
+.schedule_date {
+    position: relative;
+    margin-bottom: 16px;
+}
+.date_month {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 32px;
+}
+.month_no {
+    display: inline-block;
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 32px;
+    margin-right: 12px;
+}
+.month_btns {
+    vertical-align: top;
+    display: inline-block;
+    height: inherit;
+    font-size: 0;
+}
+.btn_prev, .btn_next {
+    width: 32px;
+    height: inherit;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.btn_prev img, .btn_next img {
+    padding-bottom: 4px;
+}
+.btn_prev:hover, .btn_next:hover {
+    background-color: #eee;
+}
+
+.date_today {
+    color: #816661;
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 32px;
+    text-align: center;
+}
+
+
+.table_weeks .sun, 
+.days-wrap .sun, .days-wrap .holiday {
+    color: #f00;
+}
+.days-wrap .sun {
+    float: left;
+}
+.days-wrap .holiday {
+    float: right;
+}
+
+.table_days td:hover {
+    background-color: #ffdc02;
+}
+.table_days tr {
+    height: 120px;
+}
+.table_days .case-time {
+    position: relative;
+    padding: 8px;
+    color: #616161;
+    font-size: 10px;
+    cursor: pointer;
+}
+
+.table_weeks th, .table_days td {
+    box-sizing: border-box;
+    font-size: 12px;
+    font-weight: normal;
+}
+.table_weeks th {
+    color: #616161;
+    padding: 8px;
+    text-align: left;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    background-color: #fcfafa;
+}
+.table_days td {
+    border-bottom: 1px solid #e0e0e0;
+    border-right: 1px solid #e0e0e0;
+    position: relative;
+}
+.table_days .sat {
+    border-right: 0;
+}
+.days-wrap {
+    position: relative;
+    box-sizing: border-box;
+    padding: 8px;
+}
+.days-wrap p {
+    color: #333;
+}
+
+.schedule_detail {
+    margin-bottom: 28px;
+}
+.detail_status {
+    box-sizing: border-box;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+}
+.detail_status:last-child {
+    margin-bottom: 0;
+}
+
+.status_course {
+    float: left;
+}
+.status_book {
+    float: right;
+}
+.status_course p {
+    display: inline-block;
+    color: #0091ea;
+    font-size: 16px;
+    font-weight: bold;
+}
+.course_time {
+    margin-right: 12px;
+}
+.book_proceed {
+    display: inline-block;
+    color: #000;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 12px;
+    vertical-align: top;
+}
+.book_modify, .book_remove {
+    width: 60px;
+    height: 32px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: normal;
+    background-color: #333;
+}
+.book_procced, .book_btn {
+    display: inline-block;
+}
+
+
+
+
+
+
+
+/* input 너비값 조정 */
+@media(min-width:1025px){
+    /* 헤더 메뉴 폰트 크기 */
+    .nav--menu a {
+        font-size: 13px;
+    }
+    .current_accessed, .list_child {
+        font-size: 13px;
+    }
+    /* 센터정보,수강권관리 */
+    .ticket_type {
+        width: 65.5%;
+    }
+    .enroll_detail dt, .name_detail dt {
+        width: 11%;
+        margin-right: 2%;
+    }
+    .enroll_detail dd, .name_detail dd {
+        width: 87%;
+    }
+    .detail_name .name_space {
+        width: 60%;
+    }
+    .chk_no, .chk_date {
+        width: 20%;
+    }
+    .detail_tip p {
+        width: 30%;
+    }
+    .detail_price input {
+        width: 60%;
+    }
+    .count_wrap {
+        width: 62%;
+    }
+    .enroll_detail .form_person {
+        width: 60%;
+    }
+    .detail_phone input {
+        width: 17.4%;
+    }
+    .address_box {
+        width: 59.7%;
+    }
+    .cancel_option p {
+        width: 30%;
+    }
+    
+    /* 스케줄관리 */
+    .data_box {
+        width: 62.5%;
+    }
+    .area_tit {
+        width: 7.6%;
+    }
+    .area_data {
+        width: 92.4%;
+    }
+    .area_data .chkbox_line label:last-child {
+        width: 14.28%;
+    }
+    .area_data .col_sp {
+        width: 14.28%;
+    }
+    .name_form {
+        width: 80.8%;
+    }
+    .book-select {
+        width: 60%;
+    }
+    .book-function > div > input {
+        width: 40%;
+    }
+}
