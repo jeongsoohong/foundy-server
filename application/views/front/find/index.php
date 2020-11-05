@@ -93,17 +93,17 @@
         </div>
       </div>
     </div>
-    <div class="col-md-6 col-sm-6 col-xs-6 find-right">
-      <div class="thumbnail my-2 no-scale no-border no-padding thumbnail-banner">
-        <div class="media">
-          <a class="media-link" href="javascript:void(0);" onclick="open_find_modal('내 주변 스튜디오 찾기')">
-            <div class="col-md-6 img-bg image_delay" data-src="<?php echo base_url(); ?>uploads/icon_0604/nearby.png"
-                 style="background-image: url('<?php echo base_url(); ?>uploads/icon_0604/nearby.png');">
-            </div>
-          </a>
-        </div>
-      </div>
-    </div>
+<!--    <div class="col-md-6 col-sm-6 col-xs-6 find-right">-->
+<!--      <div class="thumbnail my-2 no-scale no-border no-padding thumbnail-banner">-->
+<!--        <div class="media">-->
+<!--          <a class="media-link" href="javascript:void(0);" onclick="open_find_modal('내 주변 스튜디오 찾기')">-->
+<!--            <div class="col-md-6 img-bg image_delay" data-src="--><?php //echo base_url(); ?><!--uploads/icon_0604/nearby.png"-->
+<!--                 style="background-image: url('--><?php //echo base_url(); ?><!--uploads/icon_0604/nearby.png');">-->
+<!--            </div>-->
+<!--          </a>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
     <div class="col-md-12 col-sm-12 col-xs-12">
       <div class="thumbnail my-2 no-scale no-border no-padding thumbnail-banner">
         <div class="media">
