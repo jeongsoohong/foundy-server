@@ -443,6 +443,7 @@ class Home extends CI_Controller
             $password = '';
             $account = json_encode($login_data);
             $user_data = $this->crud_model->do_register($email, $password, $account);
+            $result['status'] = 'success';
             $result['message'] = "첫 방문을 환영합니다.";
           } else {
             if ($user_data->unregister == 1) {
