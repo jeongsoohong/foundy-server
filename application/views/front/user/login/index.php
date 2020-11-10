@@ -72,7 +72,7 @@
             </a>
           </div>
           <!-- 애플 로그인 -->
-<!--          --><?php //if ($this->crud_model->is_ios_app()) { ?>
+          <?php if ($this->crud_model->is_ios_app()) { ?>
           <style>
             #appleid-signin {
               width: 210px;
@@ -141,7 +141,7 @@
               alert('로그인에 실패했습니다. ' + JSON.stringify(error.detail));
             });
           </script>
-<!--          --><?php //} ?>
+          <?php } ?>
           <!-- 애플 로그인 완료 -->
           <div class="col-sm-12 title" style="background-color: #ffffff; padding: 10px 20px 5px; text-transform: uppercase; font-size: 18px; line-height: 24px; font-weight: 700; color: #232323">
             <div class="option" style="text-align: center !important; margin: 0 auto 10px; text-transform: none; font-size: 10px; line-height: 14px; font-weight: 400; color: #757575">
