@@ -72,7 +72,7 @@
             </a>
           </div>
           <!-- 애플 로그인 -->
-          <?php if ($this->crud_model->is_ios_app()) { ?>
+          <?php if ($this->app_model->is_ios_app()) { ?>
           <style>
             #appleid-signin {
               width: 210px;
