@@ -172,6 +172,7 @@ class Home extends CI_Controller
     $sliders = $this->db->get_where('main_slider', array('activate' => 1, 'type' => MAIN_SLIDER_TYPE_HOME))->result();
 
 //    $blog_category = $this->db->get_where('category_blog', array('name' => 'shop'))->row();
+    $this->db->order_by('blog_id', 'desc');
     $blogs = $this->db->get_where('blog', array('main_view' => 1, 'activate' => 1))->result();
 
     $this->page_data['sliders'] = $sliders;
