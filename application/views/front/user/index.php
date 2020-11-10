@@ -26,7 +26,7 @@
             <a class="pnav_introduce" href="#"><li>파운디 소개</li></a>
             <a class="pnav_faq" href="#"><li>자주하는 질문</li></a>
             <a class="pnav_customer_center" href="http://pf.kakao.com/_xnzxbxaxb/chat"><li>고객센터</li></a>
-            <a class="pnav_user_question" href="#"><li>1:1 문의하기</li></a>
+<!--            <a class="pnav_user_question" href="#"><li>1:1 문의하기</li></a>-->
 <!--            <a class="pnav_service" href="#profile_content"><li>서비스 이용 약관</li></a>-->
 <!--            <a class="pnav_privacy" href="#profile_content"><li>개인정보 보호정책</li></a>-->
           </ul>
