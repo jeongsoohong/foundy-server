@@ -596,15 +596,11 @@ QUERY;
       if ($activate == 1) {
         $user_id = $this->db->get_where('center', array('center_id' => $center_id))->row()->user_id;
         $email = $this->db->get_where('user', array('user_id' => $user_id))->row()->email;
-        $email_data = $this->email_model->get_center_approval_data();
-        $email_data->to = $email;
-        $this->email_model->sendmail($email_data);
+        $this->email_model->get_center_approval_data($email);
       } else if($activate == 2) {
         $user_id = $this->db->get_where('center', array('center_id' => $center_id))->row()->user_id;
         $email = $this->db->get_where('user', array('user_id' => $user_id))->row()->email;
-        $email_data = $this->email_model->get_center_reject_data();
-        $email_data->to = $email;
-        $this->email_model->sendmail($email_data);
+        $this->email_model->get_center_reject_data($email);
       }
 
       echo 'done';
@@ -688,15 +684,11 @@ QUERY;
       if ($activate == 1) {
         $user_id = $this->db->get_where('teacher', array('teacher_id' => $teacher_id))->row()->user_id;
         $email = $this->db->get_where('user', array('user_id' => $user_id))->row()->email;
-        $email_data = $this->email_model->get_teacher_approval_data();
-        $email_data->to = $email;
-        $this->email_model->sendmail($email_data);
+        $this->email_model->get_teacher_approval_data($email);
       } else if($activate == 2) {
         $user_id = $this->db->get_where('teacher', array('teacher_id' => $teacher_id))->row()->user_id;
         $email = $this->db->get_where('user', array('user_id' => $user_id))->row()->email;
-        $email_data = $this->email_model->get_teacher_reject_data();
-        $email_data->to = $email;
-        $this->email_model->sendmail($email_data);
+        $this->email_model->get_teacher_reject_data($email);
       }
 
       echo 'done';
@@ -1021,9 +1013,7 @@ QUERY;
         $this->db->query($query);
  
         if ($data['activate'] == 1) {
-          $email_data = $this->email_model->get_shop_approval_data($shop_data->shop_name, $shop_data->email);
-          $email_data->to = $shop_data->email;
-          $this->email_model->sendmail($email_data);
+          $this->email_model->get_shop_approval_data($shop_data->shop_name, $shop_data->email);
         }
         
         echo 'done';

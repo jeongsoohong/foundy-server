@@ -225,10 +225,7 @@ class Home extends CI_Controller
       
           $code = rand(111111, 999999);
       
-          $email_data = $this->email_model->get_user_approval_data($code);
-          $email_data->to = $email;
-      
-          if ($this->email_model->sendmail($email_data)) {
+          if ($this->email_model->get_user_approval_data($code, $email)) {
         
             $this->session->set_userdata('user_approval_email', $email);
             $this->session->set_userdata('user_approval_code', $code);
@@ -270,10 +267,7 @@ class Home extends CI_Controller
           $this->db->where('email', $email);
           $this->db->update('user', $data);
       
-          $email_data = $this->email_model->get_reset_pw_data($email, $password);
-          $email_data->to = $email;
-      
-          if ($this->email_model->sendmail($email_data)) {
+          if ($this->email_model->get_reset_pw_data($email, $password)) {
             echo 'done';
           } else {
             echo '이메일 전송에 실패하였습니다.';
@@ -3935,10 +3929,11 @@ QUERY;
           $title = '상품을 주문해주셔서 감사합니다. 주문내역을 확인해주세요.';
           $product_info = $this->db->get_where('shop_product', array('product_id' => $item->product_id))->row();
           $shop_info = $this->db->get_where('shop', array('shop_id' => $product_info->shop_id))->row();
-          $this->email_model->get_shop_shipping_status_data($title, $purchase_info->purchase_code,
-            $product_info->item_image_url_0, $shop_info->shop_name, $product_info->item_name, $item->total_balance,
-            $item->total_shipping_fee, $item->total_purchase_cnt,
-            $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_COMPLETED), $purchase_info->sender_email);
+          $this->email_model->get_user_shipping_status_data(
+            $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_COMPLETED),
+            $purchase_info->purchase_code, $shop_info->shop_name, $product_info->item_name, $purchase_info->sender_email);
+          $this->email_model->get_shop_shipping_status_data('신규', $purchase_code, $shop_info->shop_name,
+            $product_info->item_name, $shop_info->email);
   
         } // end of cart to shop_purchase_product
 
@@ -4099,8 +4094,10 @@ QUERY;
         $purchase_product_id = $this->input->post('id');
         $cancel_reason = $this->input->post('reason');
         
+        $this->crud_model->cancel_payment($purchase_product_id, $cancel_reason, SHOP_SHIPPING_STATUS_ORDER_CANCELED, 1);
+ 
+        /*
         $purchase_code = $this->crud_model->cancel_payment($purchase_product_id, $cancel_reason, SHOP_SHIPPING_STATUS_ORDER_CANCELED, 1);
-  
         $title = '구매취소';
         $body = '주문하신 상품을 취소하였습니다. 주문내역을 확인해주세요.';
         $url = base_url().'home/shop/order/detail?c='.$purchase_code;
@@ -4112,11 +4109,12 @@ QUERY;
         $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $purchase_product_id))->row();
         $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
         $shop_info = $this->db->get_where('shop', array('shop_id' => $product_info->shop_id))->row();
-        $this->email_model->get_shop_shipping_status_data($title, $purchase_code,
-          $product_info->item_image_url_0, $shop_info->shop_name, $product_info->item_name, $purchase_product->total_balance,
-          $purchase_product->total_shipping_fee, $purchase_product->total_purchase_cnt,
-          $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_CANCELED), $purchase_info->sender_email);
-        
+        $this->email_model->get_user_shipping_status_data(
+          $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_CANCELED),
+          $purchase_code, $shop_info->shop_name, $product_info->item_name, $purchase_info->sender_email);
+        $this->email_model->get_shop_shipping_status_data('구매취소', $purchase_code, $shop_info->shop_name,
+          $product_info->item_name, $shop_info->email);
+        */
         echo 'done';
   
       } elseif ($type == 'paying') {

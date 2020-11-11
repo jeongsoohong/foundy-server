@@ -117,10 +117,7 @@ QUERY;
     
           $code = rand(111111,999999);
           
-          $email_data = $this->email_model->get_user_approval_data($code);
-          $email_data->to = $email;
-    
-          if ($this->email_model->sendmail($email_data)) {
+          if ($this->email_model->get_user_approval_data($code, $email)) {
            
             $this->session->set_userdata('shop_approval_email', $email);
             $this->session->set_userdata('shop_approval_code', $code);
@@ -162,10 +159,7 @@ QUERY;
           $this->db->where('email', $email);
           $this->db->update('shop', $data);
           
-          $email_data = $this->email_model->get_reset_pw_data($email, $password);
-          $email_data->to = $email;
-
-          if ($this->email_model->sendmail($email_data)) {
+          if ($this->email_model->get_reset_pw_data($email, $password)) {
             echo 'email_sent';
           } else {
             echo 'email_not_sent';

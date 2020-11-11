@@ -1405,7 +1405,35 @@ QUERY;
     $this->db->set('sell', 'sell-1', false);
     $this->db->where('product_id', $purchase_product->product_id);
     $this->db->update('shop_product_id');
-    
+   
+    // send push
+    $title = '구매취소';
+    $url = base_url().'home/shop/order/detail?c='.$purchase_info->purchase_code;
+    if ($user_cancel) {
+      $body = '주문하신 상품을 취소하였습니다. 주문내역을 확인해주세요.';
+      $this->push->send_push_private($this->session, $title, $body, $url, null);
+    } else {
+      $title = '구매취소';
+      $body = '주문하신 상품이 취소되었습니다. 주문내역을 확인해주세요.';
+      $app_data = $this->db->get_where('user_app', array('user_id' => $purchase_info->user_id))->row();
+  
+//      log_message('debug', '[push notification] req { title: '.$title.', body: '.$body.', user_id : '.$purchase_info->uesr_id.
+//        ', app_data : '.json_encode($app_data));
+      
+      $this->push->send_push_private(null, $title, $body, $url, $app_data);
+    }
+  
+    // send email
+    $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
+    $shop_info = $this->db->get_where('shop', array('shop_id' => $product_info->shop_id))->row();
+    $this->email_model->get_user_shipping_status_data(
+      $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_CANCELED),
+      $purchase_info->purchase_code, $shop_info->shop_name, $product_info->item_name, $purchase_info->sender_email);
+    if ($user_cancel) {
+      $this->email_model->get_shop_shipping_status_data('구매취소', $purchase_info->purchase_code, $shop_info->shop_name,
+        $product_info->item_name, $shop_info->email);
+    }
+  
     return $purchase_info->purchase_code;
   }
 }
