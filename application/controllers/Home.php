@@ -3930,8 +3930,17 @@ QUERY;
             $purchase_product_ids[] = $this->db->insert_id();
             $this->db->delete('shop_cart', array('cart_id' => $id));
           }
-
-        }
+  
+          // send email
+          $title = '상품을 주문해주셔서 감사합니다. 주문내역을 확인해주세요.';
+          $product_info = $this->db->get_where('shop_product', array('product_id' => $item->product_id))->row();
+          $shop_info = $this->db->get_where('shop', array('shop_id' => $product_info->shop_id))->row();
+          $this->email_model->get_shop_shipping_status_data($title, $purchase_info->purchase_code,
+            $product_info->item_image_url_0, $shop_info->shop_name, $product_info->item_name, $item->total_balance,
+            $item->total_shipping_fee, $item->total_purchase_cnt,
+            $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_COMPLETED), $purchase_info->sender_email);
+  
+        } // end of cart to shop_purchase_product
 
         $upd = array(
           'status' => SHOP_PURCHASE_STATUS_COMPLETED,
@@ -3957,12 +3966,16 @@ QUERY;
 //          $url = base_url().'home/shop/order/detail?c='.$purchase_code;
 //          send_notification($title, $body, ['url' => $url], $app_data->fcm_token);
 //        }
+        
+        // send push
         $title = '구매성공';
         $body = '상품을 주문해주셔서 감사합니다. 주문내역을 확인해주세요.';
         $url = base_url().'home/shop/order/detail?c='.$purchase_code;
-        $this->push->send_push_private($this->session, $title, $body, $url);
-
-        redirect(base_url() . "home/shop/order/complete?c={$purchase_code}", 'refresh');
+        $this->push->send_push_private($this->session, $title, $body, $url, null);
+        
+        // send kakao alim talk
+ 
+          redirect(base_url() . "home/shop/order/complete?c={$purchase_code}", 'refresh');
 
 //        $this->crud_model->alert_exit('구매가 성공하였습니다.', base_url().'home/shop/main');
 
@@ -4091,10 +4104,21 @@ QUERY;
         $title = '구매취소';
         $body = '주문하신 상품을 취소하였습니다. 주문내역을 확인해주세요.';
         $url = base_url().'home/shop/order/detail?c='.$purchase_code;
-        $this->push->send_push_private($this->session, $title, $body, $url);
+        $this->push->send_push_private($this->session, $title, $body, $url, null);
+  
+        // send email
+        $title = '주문하신 상품을 취소하였습니다. 주문내역을 확인해주세요.';
+        $purchase_info = $this->db->get_where('shop_purchase', array('purchase_code' => $purchase_code))->row();
+        $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $purchase_product_id))->row();
+        $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
+        $shop_info = $this->db->get_where('shop', array('shop_id' => $product_info->shop_id))->row();
+        $this->email_model->get_shop_shipping_status_data($title, $purchase_code,
+          $product_info->item_image_url_0, $shop_info->shop_name, $product_info->item_name, $purchase_product->total_balance,
+          $purchase_product->total_shipping_fee, $purchase_product->total_purchase_cnt,
+          $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_CANCELED), $purchase_info->sender_email);
         
         echo 'done';
-        
+  
       } elseif ($type == 'paying') {
 
         $purchase_code = $this->input->post('purchase_code');

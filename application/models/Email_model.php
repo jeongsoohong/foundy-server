@@ -67,6 +67,28 @@ class Email_model extends CI_Model
     $data->email_body = str_replace('{{REPLY}}',$reply, $data->email_body);
     return $data;
   }
+  function get_shop_shipping_status_data($title, $purchase_code, $item_img_url, $brand_name, $item_name, $item_price,
+                                         $shipping_price, $item_count, $item_status, $email)
+  {
+    $data = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_USER_SHOP_SHIPPING_STATUS, 'activate' => 1))->row();
+    if (isset($data) == false || empty($data) == true) {
+      return false;
+    }
+    $data->subject = str_replace('{{TITLE}}',$title, $data->subject);
+    $data->email_body = str_replace('{{PURCHASE_CODE}}',$purchase_code, $data->email_body);
+    $data->email_body = str_replace('{{ITEM_IMG_URL}}',$item_img_url, $data->email_body);
+    $data->email_body = str_replace('{{BRAND_NAME}}',$brand_name, $data->email_body);
+    $data->email_body = str_replace('{{ITEM_NAME}}',$item_name, $data->email_body);
+    $data->email_body = str_replace('{{ITEM_PRICE}}',$item_price, $data->email_body);
+    $data->email_body = str_replace('{{SHIPPING_PRICE}}',$shipping_price, $data->email_body);
+    $data->email_body = str_replace('{{ITEM_COUNT}}',$item_count, $data->email_body);
+    $data->email_body = str_replace('{{ITEM_STATUS}}',$item_status, $data->email_body);
+   
+    $data->to = $email;
+    $this->sendmail($data);
+    
+    return true;
+  }
   
   function sendmail($email_data)
   {
