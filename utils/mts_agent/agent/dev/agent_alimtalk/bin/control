@@ -1,0 +1,237 @@
+#!/bin/bash
+
+export MAGENT_HOME=../agent_alimtalk
+
+JAVA_HOME=/usr/java/
+
+SERVER_NAME=mts-atalk-agent
+
+MAGENT_HEAP_MIN=56M
+MAGENT_HEAP_MAX=512M
+
+JAVA_CP="$MAGENT_HOME/lib/mAgent.jar"
+JAVA_CP="$JAVA_CP:$MAGENT_HOME/lib/log4j-1.2.15.jar"
+JAVA_CP="$JAVA_CP:$MAGENT_HOME/lib/wrapper.jar"
+JAVA_CP="$JAVA_CP:$MAGENT_HOME/lib/commons-dbcp-1.2.1.jar"
+JAVA_CP="$JAVA_CP:$MAGENT_HOME/lib/commons-pool-1.3.jar"
+JAVA_CP="$JAVA_CP:$MAGENT_HOME/lib/fscontext.jar"
+JAVA_CP="$JAVA_CP:$MAGENT_HOME/lib/msbase.jar"
+JAVA_CP="$JAVA_CP:$MAGENT_HOME/lib/mssqlserver.jar"
+JAVA_CP="$JAVA_CP:$MAGENT_HOME/lib/msutil.jar"
+JAVA_CP="$JAVA_CP:$MAGENT_HOME/lib/ojdbc14.jar"
+JAVA_CP="$JAVA_CP:$MAGENT_HOME/lib/providerutil.jar"
+JAVA_CP="$JAVA_CP:$MAGENT_HOME/lib/commons-codec-1.7.jar"
+JAVA_CP="$JAVA_CP:$MAGENT_HOME/lib/mysql-connector-java-5.1.6-bin.jar"
+
+JAVA_OPT="-Dname=$SERVER_NAME -server -Dverbose=true -Dfile.encoding=KSC5601"
+JAVA_OPT="$JAVA_OPT -Xms$MAGENT_HEAP_MIN"
+JAVA_OPT="$JAVA_OPT -Xmx$MAGENT_HEAP_MAX"
+JAVA_OPT="$JAVA_OPT -classpath $JAVA_CP"
+
+ACTIVATE_CLASS=com.mts.magent.Main
+COMMAND_CLASS=com.mts.magent.InternalCommand
+
+log() {
+	CURR_DATE=`date`
+	echo "$CURR_DATE $1"
+}
+
+getPID() {
+	PID=`ps -ef |grep $SERVER_NAME |grep -v grep |head -1 |awk '{print $2}'`
+}
+
+checkStartProcess() {
+	getPID
+	if [ "$PID" = "" ]
+	then
+		for innerloop in 1 2 3 4 5
+		do
+			sleep 3
+			getPID
+			log "$SERVER_NAME is current running on [$PID]"
+			if [ "$PID" != "" ]
+			then
+				break
+			fi
+		done
+	fi
+}
+
+checkStopProcess() {
+	getPID
+	if [ "$PID" != "" ]
+	then
+		for innerloop in 1 2 3 4 5
+		do
+			sleep 3
+			getPID
+			log "$SERVER_NAME is current running on [$PID]"
+			if [ "$PID" = "" ]
+			then
+				break
+			fi
+		done
+	fi
+}
+
+statusProcess(){
+	getPID
+	if [ "$PID" != "" ]
+	then
+		log "Starting $SERVER_NAME"
+		$JAVA_HOME/bin/java $JAVA_OPT $COMMAND_CLASS status
+	else
+		log "$SERVER_NAME is not Running"
+	fi
+}
+
+taskProcess(){
+	getPID
+	if [ "$PID" != "" ]
+	then
+		log "Starting $SERVER_NAME"
+		$JAVA_HOME/bin/java $JAVA_OPT $COMMAND_CLASS tasks
+	else
+		log "$SERVER_NAME is not Running"
+	fi
+}
+
+shutdownProcess(){
+	getPID
+	if [ "$PID" != "" ]
+	then
+		log "Starting $SERVER_NAME"
+		$JAVA_HOME/bin/java $JAVA_OPT $COMMAND_CLASS kill
+	else
+		log "$SERVER_NAME is not Running"
+	fi
+}
+
+startProcess() {
+	checkStopProcess
+	if [ "$PID" = "" ]
+	then
+		log "Starting $SERVER_NAME"
+
+		JAVA_OPT="$JAVA_OPT -XX:+HeapDumpOnOutOfMemoryError"
+		JAVA_OPT="$JAVA_OPT -XX:HeapDumpPath=$MAGENT_HOME/logs"
+
+		#JAVA_OPT="$JAVA_OPT -Dcom.sun.management.jmxremote.port=5551"
+		#JAVA_OPT="$JAVA_OPT -Dcom.sun.management.jmxremote.ssl=false"
+		#JAVA_OPT="$JAVA_OPT -Dcom.sun.management.jmxremote.authenticate=false"
+
+		$JAVA_HOME/bin/java $JAVA_OPT $ACTIVATE_CLASS start > /dev/null 2>&1 &
+		
+		checkStartProcess
+		
+		if [ "$PID" = "" ]
+		then
+			log "Start $SERVER_NAME Fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+		else
+			log "$SERVER_NAME start on [$PID]"
+		fi
+	else
+		log "Already $SERVER_NAME Running on [$PID]"
+	fi
+}
+
+killProcess() {
+	for innerloop in 1 2 3 4 5
+	do
+		getPID
+		if [ "$PID" != "" ]
+		then
+			log "Killing $SERVER_NAME on [$PID]"
+			kill -9 $PID
+			sleep 1
+		else
+			log "Killing $SERVER_NAME success"
+			break
+		fi
+	done
+	
+	if [ "$PID" != "" ]
+	then
+		log "Killing $SERVER_NAME fail"
+	fi
+}
+
+restartProcess() {
+	log "restart phase-1 stop $SERVER_NAME"
+	killProcess
+	if [ "$PID" = "" ]
+	then
+		log "restart phase-2 start $SERVER_NAME"
+		startProcess
+	else
+		log "restart $SERVER_NAME Fail when stop process"
+	fi
+	
+	checkStartProcess
+	if [ "$PID" != "" ]
+	then
+		log "restart $SERVER_NAME Success"
+	fi
+}
+
+getPID
+
+if [ "$PID" = "" ]
+then
+	log "$SERVER_NAME is current not running"
+else
+	log "$SERVER_NAME is current running on [$PID]"
+fi
+
+case "$1" in
+	create)
+		log "create foreground script of $SERVER_NAME"
+		log "$JAVA_HOME/bin/java $JAVA_OPT $ACTIVATE_CLASS start" > run.sh
+	;;
+
+	mem)
+		if [ "$PID" = "" ]
+		then
+			log "there is no running $SERVER_NAME"
+		else
+			log "heap dump for $SERVER_NAME Running on [$PID]"
+			$JAVA_HOME/bin/jmap -dump:format=b,file=/tmp/$PID.dump $PID
+			$JAVA_HOME/bin/jhat /tmp/$PID.dump
+		fi
+	;;
+
+	run)
+		checkStopProcess
+		if [ "$PID" = "" ]
+		then
+			log "Run foreground $SERVER_NAME"
+			echo $JAVA_HOME/bin/java $JAVA_OPT $ACTIVATE_CLASS
+			$JAVA_HOME/bin/java $JAVA_OPT $ACTIVATE_CLASS start
+		else
+			log "$SERVER_NAME is current running on [$PID]"
+		fi
+	;;
+	
+	start)
+		startProcess
+	;;
+	stop)
+		killProcess
+	;;
+	status)
+		statusProcess
+	;;
+	tasks)
+		taskProcess
+	;;
+	shutdown)
+		shutdownProcess
+	;;
+	restart)
+		restartProcess
+	;;
+	*)
+		echo "Usage: $0 {start|stop|kill|status|tasks|restart}"
+esac
+
+exit 0
