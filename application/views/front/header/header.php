@@ -360,86 +360,86 @@ if ($this->session->userdata('user_login') == "yes") {
   }
 </style>
 <div id="cat_menu">
-  <article class="menu_box scroll-y" style="display: none;">
+  <article class="menu_box scroll-y" style="display: none; background-color: #F1EEE8">
     <h2 class="meaning">카테고리</h2>
     <button class="btn_close menu_close" onclick="close_menu()">
-      <img src="<?php echo base_url(); ?>template/front/header/imgs/icon_close.png" width="16" alt="닫기">
+      <img src="<?php echo base_url(); ?>template/front/header/imgs/icon_close_black.png" width="16" height="16" alt="닫기">
     </button>
     <div class="menu_main">
       <h3>
-        <a href="<?php echo base_url(); ?>home/user">MY PAGE</a>
+        <a href="<?php echo base_url(); ?>home/user" style="color: #A5A3A0; font-size: 21px">MY PAGE</a>
       </h3>
       <h3>
-        <a href="<?php echo base_url(); ?>home/coupon">COUPON BOX</a>
+        <a href="<?php echo base_url(); ?>home/coupon" style="color: #A5A3A0; font-size: 21px">COUPON BOX</a>
       </h3>
       <article class="main_shop">
-        <h3>SHOP</h3>
+        <h3 style="color: #845B4C; font-size: 21px">SHOP</h3>
         <section class="shop_theme">
-          <h4 class="highlight">
-            <a href="<?php echo base_url(); ?>home/shop/main">main</a>
+          <h4>
+            <a href="<?php echo base_url(); ?>home/shop/main" style="color: #A5A3A0; font-size: 18px;">main</a>
           </h4>
-          <h4 class="highlight">
-            <a href="<?php echo base_url().'home/shop?cat=all&col=product_id&order=desc'; ?>">new</a>
+          <h4>
+            <a href="<?php echo base_url().'home/shop?cat=all&col=product_id&order=desc'; ?>" style="color: #A5A3A0; font-size: 18px;">new</a>
           </h4>
           <div class="sld_wrap">
-            <h4 class="sld_tit highlight">yoga</h4>
+            <h4 class="sld_tit highlight" style="color: #A5A3A0; font-size: 18px;">yoga</h4>
             <div class="sld_li" style="display: none;">
-              <a href="#" class="li_theme li_focus">Yoga wear</a>
+              <a href="#" class="li_theme li_focus" style="color: #939393; font-size: 18px">Yoga wear</a>
               <div style="display: none;" class="li_cnt">
-                <a href="<?php echo base_url().'home/shop?cat=010101&col=product_id&order=desc'; ?>" >TOP</a>
-                <a href="<?php echo base_url().'home/shop?cat=010102&col=product_id&order=desc'; ?>" >BOTTOM</a>
-                <a href="<?php echo base_url().'home/shop?cat=010103&col=product_id&order=desc'; ?>" >OUTER</a>
+                <a href="<?php echo base_url().'home/shop?cat=010101&col=product_id&order=desc'; ?>" style="color:#111111; font-size: 18px;">TOP</a>
+                <a href="<?php echo base_url().'home/shop?cat=010102&col=product_id&order=desc'; ?>" style="color:#111111; font-size: 18px;">BOTTOM</a>
+                <a href="<?php echo base_url().'home/shop?cat=010103&col=product_id&order=desc'; ?>" style="color:#111111; font-size: 18px;">OUTER</a>
               </div>
-              <a href="#" class="li_theme li_focus">Yoga mat</a>
+              <a href="#" class="li_theme li_focus" style="color: #939393; font-size: 18px">Yoga mat</a>
               <div style="display: none;" class="li_cnt">
-                <a href="<?php echo base_url().'home/shop?cat=010201&col=product_id&order=desc'; ?>" >Mat</a>
-                <a href="<?php echo base_url().'home/shop?cat=010202&col=product_id&order=desc'; ?>" >Towel</a>
+                <a href="<?php echo base_url().'home/shop?cat=010201&col=product_id&order=desc'; ?>" style="color:#111111; font-size: 18px;">Mat</a>
+                <a href="<?php echo base_url().'home/shop?cat=010202&col=product_id&order=desc'; ?>" style="color:#111111; font-size: 18px;">Towel</a>
               </div>
-              <a href="<?php echo base_url().'home/shop?cat=010203&col=product_id&order=desc'; ?>" class="li_focus">Prop</a>
-              <a href="<?php echo base_url().'home/shop?cat=010301&col=product_id&order=desc'; ?>" class="li_focus">Accessories</a>
+              <a href="<?php echo base_url().'home/shop?cat=010203&col=product_id&order=desc'; ?>" class="li_focus" style="color: #939393; font-size: 18px">Prop</a>
+              <a href="<?php echo base_url().'home/shop?cat=010301&col=product_id&order=desc'; ?>" class="li_focus" style="color: #939393; font-size: 18px">Accessories</a>
             </div>
-            <h4 class="sld_tit highlight">vegan</h4>
+            <h4 class="sld_tit highlight" style="color: #A5A3A0; font-size: 18px;">vegan</h4>
             <div class="sld_li" style="display: none;">
-              <a href="<?php echo base_url().'home/shop?cat=020100&col=product_id&order=desc'; ?>" class="li_focus">Cosmetic</a>
-              <a href="<?php echo base_url().'home/shop?cat=020200&col=product_id&order=desc'; ?>" class="li_focus">Foods</a>
+              <a href="<?php echo base_url().'home/shop?cat=020100&col=product_id&order=desc'; ?>" class="li_focus" style="color: #939393; font-size: 18px">Cosmetic</a>
+              <a href="<?php echo base_url().'home/shop?cat=020200&col=product_id&order=desc'; ?>" class="li_focus" style="color: #939393; font-size: 18px">Foods</a>
             </div>
-            <h4 class="sld_tit highlight">healing</h4>
+            <h4 class="sld_tit highlight" style="color: #A5A3A0; font-size: 18px;">healing</h4>
             <div class="sld_li" style="display: none;">
-              <a href="#" class="li_theme li_focus">Tea</a>
+              <a href="#" class="li_theme li_focus" style="color: #939393; font-size: 18px">Tea</a>
               <div style="display: none;" class="li_cnt">
-                <a href="<?php echo base_url().'home/shop?cat=030101&col=product_id&order=desc'; ?>">차</a>
-                <a href="<?php echo base_url().'home/shop?cat=030102&col=product_id&order=desc'; ?>">다도용품</a>
+                <a href="<?php echo base_url().'home/shop?cat=030101&col=product_id&order=desc'; ?>" style="color:#111111; font-size: 18px;">차</a>
+                <a href="<?php echo base_url().'home/shop?cat=030102&col=product_id&order=desc'; ?>" style="color:#111111; font-size: 18px;">다도용품</a>
               </div>
-              <a href="#" class="li_theme li_focus">Fragrance</a>
+              <a href="#" class="li_theme li_focus" style="color: #939393; font-size: 18px">Fragrance</a>
               <div style="display: none;" class="li_cnt">
-                <a href="<?php echo base_url().'home/shop?cat=030201&col=product_id&order=desc'; ?>">향</a>
-                <a href="<?php echo base_url().'home/shop?cat=030202&col=product_id&order=desc'; ?>">아로마</a>
-                <a href="<?php echo base_url().'home/shop?cat=030203&col=product_id&order=desc'; ?>">향꽂이</a>
+                <a href="<?php echo base_url().'home/shop?cat=030201&col=product_id&order=desc'; ?>" style="color:#111111; font-size: 18px;">향</a>
+                <a href="<?php echo base_url().'home/shop?cat=030202&col=product_id&order=desc'; ?>" style="color:#111111; font-size: 18px;">아로마</a>
+                <a href="<?php echo base_url().'home/shop?cat=030203&col=product_id&order=desc'; ?>" style="color:#111111; font-size: 18px;">향꽂이</a>
               </div>
-              <a href="<?php echo base_url().'home/shop?cat=030301&col=product_id&order=desc'; ?>" class="li_focus">Meditation</a>
-              <a href="<?php echo base_url().'home/shop?cat=030302&col=product_id&order=desc'; ?>" class="li_focus">Book</a>
+              <a href="<?php echo base_url().'home/shop?cat=030301&col=product_id&order=desc'; ?>" class="li_focus" style="color: #939393; font-size: 18px">Meditation</a>
+              <a href="<?php echo base_url().'home/shop?cat=030302&col=product_id&order=desc'; ?>" class="li_focus" style="color: #939393; font-size: 18px">Book</a>
             </div>
           </div>
         </section>
       </article>
-      <h3>
-        <a href="<?php echo base_url(); ?>home/find">FIND</a>
+      <h3 >
+        <a href="<?php echo base_url(); ?>home/find" style="color: #845B4C; font-size: 21px">FIND</a>
       </h3>
       <h3>
-        <a href="<?php echo base_url(); ?>home/blog">LIFE</a>
+        <a href="<?php echo base_url(); ?>home/blog" style="color: #845B4C; font-size: 21px">LIFE</a>
       </h3>
     </div>
     <div class="menu_sub">
       <?php if ($this->app_model->is_app()) { ?>
         <h3 class="sub_work work_set">
-          <button onclick="open_setting_menu()">SETTINGS</button>
+          <button onclick="open_setting_menu()" style="color: #845B4C;">SETTINGS</button>
         </h3>
       <?php } ?>
       <h3 class="sub_work">
         <?php if ($this->session->userdata('user_login') == 'yes') { ?>
-          <a href="javascript:void(0)" onclick="_logout();">LOGOUT</a>
+          <a href="javascript:void(0)" onclick="_logout();" style="color: #845B4C;">LOGOUT</a>
         <?php } else { ?>
-          <a href="<?php echo base_url(); ?>home/login">LOGIN</a>
+          <a href="<?php echo base_url(); ?>home/login" style="color: #845B4C;">LOGIN</a>
         <?php } ?>
       </h3>
     </div>
@@ -709,21 +709,28 @@ if ($this->session->userdata('user_login') == "yes") {
   
     // shop_theme 클릭시 다른 Lv 폰트색상 연하게
     $('.highlight').click(function(){
-      var index = $('.highlight').index(this);
+      // var index = $('.highlight').index(this);
       // console.log(index);
     
-      $('.highlight').addClass('gloomy');
-      $('.highlight > a').addClass('gloomy');
-      $(this).removeClass('gloomy');
-      $(this).find('a').removeClass('gloomy');
+      // $('.highlight').addClass('gloomy');
+      // $('.highlight > a').addClass('gloomy');
+      // $(this).removeClass('gloomy');
+      // $(this).find('a').removeClass('gloomy');
+      
+      $('.highlight').css('color', '#A5A3A0');
+      // $('.highlight > a').css('color', '#A5A3A0');
+      $(this).css('color', '#8C8A86');
+      // $(this).find('a').css('color', '#8C9A86');
     })
   
     // li_cnt > a 클릭시 다른 Lv 폰트색상 연하게
     $('.li_focus').click(function(){
-      var index = $('.li_focus').index(this);
+      // var index = $('.li_focus').index(this);
     
-      $('.li_focus').addClass('dark');
-      $(this).removeClass('dark');
+      // $('.li_focus').addClass('dark');
+      // $(this).removeClass('dark');
+      $('.li_focus').css('color', '#939393');
+      $(this).css('color', '#757575');
     })
   });
 </script>
