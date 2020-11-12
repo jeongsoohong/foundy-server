@@ -610,6 +610,14 @@
     return true;
   }
 
+  <?php
+  // SHOP_PURCHASE_STATUS_ transition
+  //    PAYING => CONFIRM => DONE => COMPLETE
+  //    (before pay popup) => (in progress) => (in progress) => (complete)
+  //    카드 수기결제일 경우 CONFIRM 과정이 나오지 않는데 테스트 필요
+  //    현재 PAYING 상태에서만 결제 상태 유효성 검사
+  //    CONFIRM 과정이 안나올 수 있어서 테스트 필요
+  ?>
   function make_payment() {
 
     let user_name = $('#user-name').val();
