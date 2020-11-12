@@ -1095,7 +1095,8 @@ QUERY;
             if ($purchase_product->shipping_status != $ship_status) {
               continue;
             }
-            $this->crud_model->cancel_payment($purchase_product->purchase_product_id, $purchase_product->cancel_reason, SHOP_SHIPPING_STATUS_PURCHASE_CANCELED, 0);
+            $this->crud_model->cancel_payment($purchase_product->purchase_product_id, $purchase_product->cancel_reason,
+              SHOP_SHIPPING_STATUS_PURCHASE_CANCELED, false, null);
           }
         } else {
           $purchase_product_ids = array();
@@ -1168,7 +1169,8 @@ QUERY;
       }
       
       if ($req_type == SHOP_ORDER_REQ_TYPE_CANCEL) { // 결제 취소가 필요한 부분
-        $this->crud_model->cancel_payment($purchase_product->purchase_product_id, $req_reason, SHOP_SHIPPING_STATUS_ORDER_CANCELED, 0);
+        $this->crud_model->cancel_payment($purchase_product->purchase_product_id, $req_reason,
+          SHOP_SHIPPING_STATUS_ORDER_CANCELED, false, null);
       } else {
         $ins = array(
           'purchase_product_id' => $purchase_product_id,

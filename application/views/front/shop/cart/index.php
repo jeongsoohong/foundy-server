@@ -429,7 +429,6 @@
   
   $(document).ready(function() {
     change_balance();
-    toggleBottomBar('OFF');
   });
 
 </script>

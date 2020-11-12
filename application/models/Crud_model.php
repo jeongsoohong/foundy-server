@@ -1269,29 +1269,47 @@ QUERY;
     return '';
   }
   
-  function cancel_payment($purchase_product_id, $cancel_reason, $shipping_status, $user_cancel)
+  function cancel_payment($purchase_product_id, $cancel_reason, $shipping_status, $user_cancel, $auth_code)
   {
     $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $purchase_product_id))->row();
     $purchase_info = $this->db->get_where('shop_purchase', array('purchase_id' => $purchase_product->purchase_id))->row();
-    $user_id = $this->session->userdata('user_id');
   
     if (empty($purchase_product) || empty($purchase_info)) {
-      $this->crud_model->alert_exit('잘못된 접근입니다.');
+      $this->crud_model->alert_exit('잘못된 접근입니다.', base_url());
     }
-    if ($user_cancel == 1 && $purchase_product->user_id != $user_id) {
-      $this->crud_model->alert_exit('잘못된 접근입니다.');
+    
+    // confirm user_id & session_id
+    if ($purchase_info->user_id > 0) {
+      if ($this->session->userdata('user_login') != 'yes') {
+        $this->crud_model->alert_exit('잘못된 접근입니다.', base_url());
+      }
+      $user_id = $this->session->userdata('user_id');
+      if ($purchase_info->user_id != $user_id) {
+        $this->crud_model->alert_exit('잘못된 접근입니다.', base_url());
+      }
+    } else if ($purchase_info->session_id > 0) {
+      if ($purchase_info->session_id != $auth_code) {
+        $this->crud_model->alert_exit('잘못된 접근입니다.', base_url());
+      }
+    } else {
+        $this->crud_model->alert_exit('잘못된 접근입니다.', base_url());
     }
-    if ($user_cancel == 1 && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_PREPARE && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_ORDER_COMPLETED) {
+
+    // confirm shipping_status
+    if ($user_cancel == true && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_PREPARE && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_ORDER_COMPLETED) {
       $status = $this->crud_model->get_shipping_status_str($purchase_product->shipping_status);
-      $this->crud_model->alert_exit('주문취소가 불가능한 상태입니다. 관리자에게 문의해주세요.(주문상태:'.$status.')');
+      $this->crud_model->alert_exit('주문취소가 불가능한 상태입니다. 관리자에게 문의해주세요.(주문상태:'.$status.')',
+        base_url()."home/shop/order/detail?c={$purchase_info->purchase_code}&a={$auth_code}");
     }
-    if ($user_cancel == 0 && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_PREPARE && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_ORDER_COMPLETED && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_PURCHASE_CANCELING) {
+    if ($user_cancel == false && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_PREPARE && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_ORDER_COMPLETED && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_PURCHASE_CANCELING) {
       $status = $this->crud_model->get_shipping_status_str($purchase_product->shipping_status);
-      $this->crud_model->alert_exit('주문취소가 불가능한 상태입니다. 관리자에게 문의해주세요.(주문상태:'.$status.')');
+      $this->crud_model->alert_exit('주문취소가 불가능한 상태입니다. 관리자에게 문의해주세요.(주문상태:'.$status.')',
+        base_url()."home/shop/order/detail?c={$purchase_info->purchase_code}&a={$auth_code}");
     }
     if ($purchase_info->status == SHOP_PURCHASE_STATUS_ALL_CANCELED) {
       $status = $this->crud_model->get_purchase_status_str($purchase_info->status);
-      $this->crud_model->alert_exit('주문취소가 불가능한 상태입니다. 관리자에게 문의해주세요.(결제상태:'.$status.')');
+      $this->crud_model->alert_exit('주문취소가 불가능한 상태입니다. 관리자에게 문의해주세요.(결제상태:'.$status.')',
+        base_url()."home/shop/order/detail?c={$purchase_info->purchase_code}&a={$auth_code}");
     }
   
     $url = 'https://api.bootpay.co.kr/request/token';
@@ -1424,11 +1442,16 @@ QUERY;
     }
   
     // send email
+    if ($purchase_info->user_id > 0) {
+      $redirect_url = base_url() . "home/shop/order/detail?c={$purchase_info->purchase_code}";
+    } else {
+      $redirect_url = base_url() . "home/shop/order/detail?c={$purchase_info->purchase_code}&a={$purchase_info->session_id}";
+    }
     $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
     $shop_info = $this->db->get_where('shop', array('shop_id' => $product_info->shop_id))->row();
     $this->email_model->get_user_shipping_status_data(
-      $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_CANCELED),
-      $purchase_info->purchase_code, $shop_info->shop_name, $product_info->item_name, $purchase_info->sender_email);
+      $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_CANCELED), $purchase_info->purchase_code,
+      $shop_info->shop_name, $product_info->item_name, $purchase_info->sender_email, $redirect_url);
     if ($user_cancel) {
       $this->email_model->get_shop_shipping_status_data('구매취소', $purchase_info->purchase_code, $shop_info->shop_name,
         $product_info->item_name, $shop_info->email);

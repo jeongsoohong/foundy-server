@@ -619,7 +619,7 @@ if ($this->session->userdata('user_login') == "yes") {
     // console.log('page height: ' + $(document).height());
     // console.log('bottom position: ' + bottomPos);
   
-    console.log('sticky : ' + sticky + ', pageYOffset : ' + _pY);
+    // console.log('sticky : ' + sticky + ', pageYOffset : ' + _pY);
     
     if (_pY > sticky) {
       navbar.classList.add("navigation-sticky");

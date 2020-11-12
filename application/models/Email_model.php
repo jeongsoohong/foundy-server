@@ -154,15 +154,16 @@ class Email_model extends CI_Model
   
     return true;
   }
-  function get_user_shipping_status_data($item_status, $purchase_code, $brand_name, $item_name, $email)
+  function get_user_shipping_status_data($item_status, $purchase_code, $brand_name, $item_name, $email, $redirect_url)
   {
     $data = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_USER_SHIPPING_STATUS, 'activate' => 1))->row();
     if (isset($data) == false || empty($data) == true) {
       return false;
     }
+    $purchase_code_link = "<a href=\"{$redirect_url}\">{$purchase_code}</a>";
     $data->subject = str_replace('{{ITEM_STATUS}}',$item_status, $data->subject);
     $data->email_body = str_replace('{{ITEM_STATUS}}',$item_status, $data->email_body);
-    $data->email_body = str_replace('{{PURCHASE_CODE}}',$purchase_code, $data->email_body);
+    $data->email_body = str_replace('{{PURCHASE_CODE}}',$purchase_code_link, $data->email_body);
     $data->email_body = str_replace('{{BRAND_NAME}}',$brand_name, $data->email_body);
     $data->email_body = str_replace('{{ITEM_NAME}}',$item_name, $data->email_body);
    

@@ -299,7 +299,7 @@
   }
   function purchase_product_cancel(id) {
     let cancel_reason = $('#cancel-reason').val();
-    
+    let auth_code = '<?php echo $auth_code; ?>';
     // console.log(id);
     // console.log(cancel_reason);
     
@@ -313,6 +313,7 @@
     let formData = new FormData();
     formData.append('id', cancel_id);
     formData.append('reason', cancel_reason);
+    formData.append('auth_code', auth_code);
     $.ajax({
       url: '<?php echo base_url(); ?>home/shop/purchase/cancel', // form action url
       type: 'POST', // form submit method get/post

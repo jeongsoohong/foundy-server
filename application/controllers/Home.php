@@ -48,7 +48,7 @@ class Home extends CI_Controller
       $this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate');
       $this->output->set_header('Cache-Control: post-check=0, pre-check=0');
       $this->output->set_header('Pragma: no-cache');
-      
+     
       if ($this->app_model->is_app()) {
         $data = $this->app_model->get_app_data();
   
@@ -196,6 +196,10 @@ class Home extends CI_Controller
       return true;
     }
     return false;
+  }
+  
+  function redirect_login() {
+    redirect(base_url().'home/login?l='.build_url($this->uri, $_GET), 'refresh');
   }
 
   public function login($para1 = '', $para2 = '', $para3 = '')
@@ -612,8 +616,11 @@ class Home extends CI_Controller
 //              redirect('home/login?a=');
 //            }
 //          }
-          
-          $this->crud_model->alert_exit($result['message'], base_url());
+          $relocation = $this->cookie_model->get_cookie('relocation');
+          if (isset($relocation) == false || empty($relocation)) {
+            $relocation = base_url();
+          }
+          $this->crud_model->alert_exit($result['message'], $relocation);
         } else if ($result['status'] == 'restore') { // relogin after unregister
           $this->crud_model->alert_exit($result['message'], base_url().'home/login');
         } else { // error
@@ -751,6 +758,10 @@ class Home extends CI_Controller
     
     } else {
       $restore = isset($_GET['r']);
+      $relocation = base_url();
+      if (isset($_GET['l'])) {
+        $relocation = $_GET['l'];
+      }
       $need_kakao_agreement = isset($_GET['a']);
       if ($need_kakao_agreement) {
         $this->session->set_userdata('need_agreement', 'no');
@@ -759,6 +770,7 @@ class Home extends CI_Controller
       $this->page_data['asset_page'] = "login";
       $this->page_data['page_title'] = "login";
       $this->page_data['restore'] = $restore;
+      $this->page_data['relocation'] = $relocation;
       $this->page_data['need_kakao_agreement'] = $need_kakao_agreement;
       $this->load->view('front/index', $this->page_data);
     }
@@ -3753,14 +3765,33 @@ QUERY;
 
     } elseif ($view == 'order') {
 
-      if ($type === 'complete' || $type == 'detail') {
+      if ($type == 'detail') {
 
         // 구매 완료 페이지
 
         $purchase_code = $this->input->get('c');
+        $auth_code = $this->input->get('a');
         $purchase_info = $this->db->get_where('shop_purchase', array('purchase_code' => $purchase_code))->row();
+        if (isset($purchase_info) == false || empty($purchase_info) == true) {
+          $this->crud_model->alert_exit('구매 상품이 존재하지 않습니다.', base_url() . 'home/shop/main');
+        }
+        if ($purchase_info->user_id > 0) {
+          if ($this->is_login() == false) {
+//            $this->crud_model->alert_exit('로그인이 필요합니다.', base_url() . 'home/login');
+            $this->redirect_login();
+          } else {
+            $user_id = $this->session->userdata('user_id');
+            if ($user_id != $purchase_info->user_id) {
+              $this->crud_model->alert_exit('잘못된 접근입니다.', base_url() . 'home/user');
+            }
+          }
+        } else {
+          if ($auth_code != $purchase_info->session_id) {
+            $this->crud_model->alert_exit('잘못된 접근입니다.', base_url() . 'home/shop/main');
+          }
+        }
+        
         $purchase_items = $this->db->get_where('shop_purchase_product', array('purchase_code' => $purchase_code))->result();
-
         if (count($purchase_items) == 0) {
           $this->crud_model->alert_exit('구매 상품이 존재하지 않습니다.', base_url() . 'home/shop/main');
         }
@@ -3777,6 +3808,7 @@ QUERY;
         }
 
         $this->page_data['page_type'] = $type;
+        $this->page_data['auth_code'] = $auth_code;
         $this->page_data['purchase_code'] = $purchase_code;
         $this->page_data['purchase_info'] = $purchase_info;
         $this->page_data['payment_info'] = $payment_info;
@@ -3835,10 +3867,12 @@ QUERY;
         $session_id = 0;
         if ($this->is_login() == true) {
           $user_id = $this->session->userdata('user_id');
-          $user_key = array('user_id' => $user_id);
+          $redirect_url = base_url() . "home/shop/order/detail?c={$purchase_code}";
+//          $user_key = array('user_id' => $user_id);
         } else {
           $session_id = $this->crud_model->get_session_id();
-          $user_key = array('session_id' => $session_id);
+          $redirect_url = base_url() . "home/shop/order/detail?c={$purchase_code}&a={$session_id}";
+//          $user_key = array('session_id' => $session_id);
         }
 
         $purchase_product_ids = array();
@@ -3930,8 +3964,8 @@ QUERY;
           $product_info = $this->db->get_where('shop_product', array('product_id' => $item->product_id))->row();
           $shop_info = $this->db->get_where('shop', array('shop_id' => $product_info->shop_id))->row();
           $this->email_model->get_user_shipping_status_data(
-            $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_COMPLETED),
-            $purchase_info->purchase_code, $shop_info->shop_name, $product_info->item_name, $purchase_info->sender_email);
+            $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_COMPLETED), $purchase_info->purchase_code,
+            $shop_info->shop_name, $product_info->item_name, $purchase_info->sender_email, $redirect_url);
           $this->email_model->get_shop_shipping_status_data('신규', $purchase_code, $shop_info->shop_name,
             $product_info->item_name, $shop_info->email);
   
@@ -3969,10 +4003,11 @@ QUERY;
         $this->push->send_push_private($this->session, $title, $body, $url, null);
         
         // send kakao alim talk
- 
-          redirect(base_url() . "home/shop/order/complete?c={$purchase_code}", 'refresh');
 
-//        $this->crud_model->alert_exit('구매가 성공하였습니다.', base_url().'home/shop/main');
+      
+        //$this->crud_model->alert_exit('구매가 성공하였습니다.', base_url().'home/shop/main');
+        redirect($redirect_url, 'refresh');
+
 
       } elseif ($type == 'done') {
 
@@ -4093,28 +4128,11 @@ QUERY;
         
         $purchase_product_id = $this->input->post('id');
         $cancel_reason = $this->input->post('reason');
+        $auth_code = $this->input->post('auth_code');
         
-        $this->crud_model->cancel_payment($purchase_product_id, $cancel_reason, SHOP_SHIPPING_STATUS_ORDER_CANCELED, 1);
+        $this->crud_model->cancel_payment($purchase_product_id, $cancel_reason, SHOP_SHIPPING_STATUS_ORDER_CANCELED,
+          true, $auth_code);
  
-        /*
-        $purchase_code = $this->crud_model->cancel_payment($purchase_product_id, $cancel_reason, SHOP_SHIPPING_STATUS_ORDER_CANCELED, 1);
-        $title = '구매취소';
-        $body = '주문하신 상품을 취소하였습니다. 주문내역을 확인해주세요.';
-        $url = base_url().'home/shop/order/detail?c='.$purchase_code;
-        $this->push->send_push_private($this->session, $title, $body, $url, null);
-  
-        // send email
-        $title = '주문하신 상품을 취소하였습니다. 주문내역을 확인해주세요.';
-        $purchase_info = $this->db->get_where('shop_purchase', array('purchase_code' => $purchase_code))->row();
-        $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $purchase_product_id))->row();
-        $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
-        $shop_info = $this->db->get_where('shop', array('shop_id' => $product_info->shop_id))->row();
-        $this->email_model->get_user_shipping_status_data(
-          $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_CANCELED),
-          $purchase_code, $shop_info->shop_name, $product_info->item_name, $purchase_info->sender_email);
-        $this->email_model->get_shop_shipping_status_data('구매취소', $purchase_code, $shop_info->shop_name,
-          $product_info->item_name, $shop_info->email);
-        */
         echo 'done';
   
       } elseif ($type == 'paying') {

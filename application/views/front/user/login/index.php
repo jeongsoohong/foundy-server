@@ -120,7 +120,7 @@
                   if (res.status === 'success') {
                     // console.log(res.message);
                     alert(res.message);
-                    window.location.href = '<?php echo base_url(); ?>';
+                    window.location.href = '<?php echo $relocation; ?>';
                   } else if (res.status === 'error') {
                     alert(res.message);
                   } else {
@@ -306,7 +306,7 @@
         if(data == 'done' || data.search('done') !== -1){
           var text = '<div>성공하셨습니다.</div>';
           notify(text,'success','bottom','right');
-          setTimeout(function(){location.href='<?php echo base_url(); ?>';}, 1000);
+          setTimeout(function(){location.href='<?php echo $relocation; ?>';}, 1000);
         } else {
           var text = '<div>실패하셨습니다.</div>';
           notify(text,'warning','bottom','right');
@@ -349,7 +349,7 @@
         res = JSON.parse(res);
         if (res.status === 'success') {
           alert(res.message);
-          window.location.href = '<?php echo base_url(); ?>';
+          window.location.href = '<?php echo $relocation; ?>';
         } else if (res.status === 'fail') {
           let text = '<strong>실패하였습니다</strong><br>' + res.message;
           notify(text,'warning','bottom','right');
@@ -397,7 +397,7 @@
                 console.log(res);
                 if (res.status === 'success') {
                   alert(res.message);
-                  window.location.href = '<?php echo base_url(); ?>';
+                  window.location.href = '<?php echo $relocation; ?>';
                 } else if (res.status === 'reauthorized') {
                   Kakao.Auth.authorize({
                     redirectUri: '<?php echo base_url(); ?>home/login/kakao/rest',
@@ -440,8 +440,10 @@
 
   function loginWithKakaoRest() { // with REST API
     let app_key = "c08aebc9e7ed5722a399bbc3962ca051";
-    let redirect_uri  ='<?php echo base_url().'home/login/kakao/rest'; ?>';
-  
+    let redirect_uri  ='<?php echo base_url()."home/login/kakao/rest"; ?>';
+    
+    _setCookie('relocation', '<?php echo $relocation; ?>');
+    
     location.href = "https://kauth.kakao.com/oauth/authorize?client_id=" +
       app_key + "&redirect_uri=" + redirect_uri + "&response_type=code";
   }
