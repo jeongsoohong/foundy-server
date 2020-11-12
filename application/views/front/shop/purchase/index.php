@@ -274,6 +274,11 @@
           구매자 정보
         </div>
         <div class="user-info" id="user-info">
+          <p style="color: saddlebrown; text-align: center;">
+            <span style="color:red;">*</span>
+            <span style="font-size: 10px"> 구매 취소 / 배송 조회 / 알림 등을 위해서 정확히 입력바랍니다.</span>
+            <span style="color:red;">*</span>
+          </p>
           <?php include 'purchase_user_info.php'; ?>
         </div>
         <div class="shipping-info-header">
@@ -719,6 +724,7 @@
     formData.append('discount', discount);
     formData.append('user_coupon_id', user_coupon_id);
 
+    let ret = true;
     $.ajax({
       url: '<?php echo base_url(); ?>home/shop/purchase/paying', // form action url
       type: 'POST', // form submit method get/post
@@ -732,7 +738,10 @@
         if (msg === 'done' || msg.search('done') !== -1) {
           console.log(msg);
         } else {
-          console.log(msg);
+          $("#loading_set").fadeOut(500);
+          alert(msg);
+          window.location.href = '<?php echo base_url();?>home/shop/cart';
+          return false;
         }
       },
       error: function (e) {

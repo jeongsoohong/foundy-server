@@ -3786,7 +3786,7 @@ QUERY;
             }
           }
         } else {
-          if ($auth_code != $purchase_info->session_id) {
+          if ($auth_code != $purchase_info->sessin_id) {
             $this->crud_model->alert_exit('잘못된 접근입니다.', base_url() . 'home/shop/main');
           }
         }
@@ -4018,7 +4018,7 @@ QUERY;
         $data = json_decode($bootpay_done_json_data);
 
         $purchase_info = $this->db->get_where('shop_purchase', array('purchase_code' => $purchase_code))->row();
-
+  
         $receiver_info = $this->db->get_where('shop_shipping_address',
           array('address_id' => $data->params->receiver_info->address_id))->row();
 
@@ -4060,7 +4060,7 @@ QUERY;
         $data = json_decode($bootpay_confirmed_json_data);
 
         $purchase_info = $this->db->get_where('shop_purchase', array('purchase_code' => $purchase_code))->row();
-
+  
         if ($data->params->purchase_info->purchase_code == $purchase_info->purchase_code) { // success
 
           if ($data->params->purchase_info->total_balance == $purchase_info->total_balance &&
@@ -4147,6 +4147,12 @@ QUERY;
         $user_save = $this->input->post('user_save') == '1';
         $discount = $this->input->post('discount');
         $user_coupon_id = $this->input->post('user_coupon_id');
+        
+        $purchase_info = $this->db->get_where('shop_purchase', array('purchase_code' => $purchase_code))->row();
+        if ($purchase_info->status != SHOP_PURCHASE_STATUS_PURCHASING) {
+          echo ('invalid purchasing status');
+          exit;
+        }
 
         $upd = array(
           'status' => SHOP_PURCHASE_STATUS_PAYING,
