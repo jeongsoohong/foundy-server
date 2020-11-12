@@ -173,7 +173,7 @@ if ($this->session->userdata('user_login') == "yes") {
   }
   #cat_menu .main_shop {
     padding-top: 24px;
-    border-top: 1px solid #616161;
+    border-top: 1px solid #bdbdbd;
     margin: 24px 0;
   }
   #cat_menu .main_shop h3 {
@@ -224,7 +224,7 @@ if ($this->session->userdata('user_login') == "yes") {
     width: 4px;
     height: 4px;
     border-radius: 2px;
-    background-color: #fff;
+    background-color: #111111;
     margin: 4px 8px;
   }
   #cat_menu .li_cnt > a:last-child {
