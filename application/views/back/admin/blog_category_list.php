@@ -38,7 +38,7 @@
              data-original-title="Delete" data-container="body">
             <?php echo ('delete');?>
           </a>
-            <a class="btn <?php if ($row['activate']) {echo 'btn-warning';}else{echo 'btn-success';}?> btn-xs btn-labeled fa fa-check" data-toggle="tooltip"
+            <a class="btn <?php if ($row['activate']) {echo 'btn-warning';}else{echo 'btn-info';}?> btn-xs btn-labeled fa fa-check" data-toggle="tooltip"
                onclick="confirmActivate(<?php echo $row['category_id'];?>,<?php echo $row['activate'];?>)" data-original-title="View" data-container="body">
               <?php if($row['activate']){echo 'inactivate';}else{echo 'activate';} ?>
             </a>
