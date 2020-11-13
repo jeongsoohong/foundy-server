@@ -279,7 +279,23 @@ QUERY;
     } elseif ($para1 == 'add') {
 
       $this->load->view('back/admin/blog_category_add');
-
+  
+    } else if ($para1 == 'activate_set') {
+  
+      $cateogry_id = $para2;
+      $req = $_GET['req'];
+      if ($req == 'ok') {
+        $activate= 1;
+      } else {
+        $activate = 0;
+      }
+  
+      $query = <<<QUERY
+UPDATE category_blog set activate={$activate} where category_id={$cateogry_id}
+QUERY;
+      $this->db->query($query);
+      echo 'done';
+  
     } else {
 
       $page_data['page_name'] = "blog_category";
