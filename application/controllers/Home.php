@@ -3821,7 +3821,7 @@ QUERY;
             }
           }
         } else {
-          if ($auth_code != $purchase_info->sessin_id) {
+          if ($auth_code != $purchase_info->session_id) {
             $this->crud_model->alert_exit('잘못된 접근입니다.', base_url() . 'home/shop/main');
           }
         }
