@@ -1425,13 +1425,17 @@ QUERY;
     $this->db->update('shop_product_id');
    
     // send push
+    if ($purchase_info->user_id > 0) {
+      $redirect_url = base_url() . "home/shop/order/detail?c={$purchase_info->purchase_code}";
+    } else {
+      $redirect_url = base_url() . "home/shop/order/detail?c={$purchase_info->purchase_code}&a={$purchase_info->session_id}";
+    }
+    
     $title = '구매취소';
-    $url = base_url().'home/shop/order/detail?c='.$purchase_info->purchase_code;
     if ($user_cancel) {
       $body = '주문하신 상품을 취소하였습니다. 주문내역을 확인해주세요.';
-      $this->push->send_push_private($this->session, $title, $body, $url, null);
+      $this->push->send_push_private($this->session, $title, $body, $redirect_url, null);
     } else {
-      $title = '구매취소';
       $body = '주문하신 상품이 취소되었습니다. 주문내역을 확인해주세요.';
       $app_data = $this->db->get_where('user_app', array('user_id' => $purchase_info->user_id))->row();
   
@@ -1442,11 +1446,6 @@ QUERY;
     }
   
     // send email
-    if ($purchase_info->user_id > 0) {
-      $redirect_url = base_url() . "home/shop/order/detail?c={$purchase_info->purchase_code}";
-    } else {
-      $redirect_url = base_url() . "home/shop/order/detail?c={$purchase_info->purchase_code}&a={$purchase_info->session_id}";
-    }
     $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
     $shop_info = $this->db->get_where('shop', array('shop_id' => $product_info->shop_id))->row();
     $this->email_model->get_user_shipping_status_data(

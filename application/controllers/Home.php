@@ -4035,8 +4035,7 @@ QUERY;
         // send push
         $title = '구매성공';
         $body = '상품을 주문해주셔서 감사합니다. 주문내역을 확인해주세요.';
-        $url = base_url().'home/shop/order/detail?c='.$purchase_code;
-        $this->push->send_push_private($this->session, $title, $body, $url, null);
+        $this->push->send_push_private($this->session, $title, $body, $redirect_url, null);
         
         // send kakao alim talk
 
