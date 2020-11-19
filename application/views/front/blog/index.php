@@ -116,7 +116,7 @@
         $('.blog_ul').append(data);
         // console.log($(".center_ul a li").length % 10);
         let listCnt = $(".blog_ul li").length;
-        if ( listCnt === 0 || listCnt % 2 !== 0 || prevCnt === listCnt) {
+        if ( listCnt === 0 || listCnt % <?php echo BLOG_LIST_PAGE_SIZE; ?> !== 0 || prevCnt === listCnt) {
           $('#view_more').hide();
         } else {
           $('#view_more').show();

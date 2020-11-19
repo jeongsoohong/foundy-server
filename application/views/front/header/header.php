@@ -641,8 +641,12 @@ if ($this->session->userdata('user_login') == "yes") {
     // pageY = _pY;
     <?php } ?>
   }
-  
+
+  function go_back() {
+    document.referrer&&-1!==document.referrer.indexOf("<?php echo base_url(); ?>")?history.back():location.href="<?php echo base_url(); ?>";
+  }
   function go_prev_page() {
+    // go_back();
     history.back();
   }
 

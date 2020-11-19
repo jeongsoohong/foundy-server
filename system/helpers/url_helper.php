@@ -611,3 +611,63 @@ if ( ! function_exists('build_url'))
   }
 
 }
+if ( ! function_exists('get_back_url'))
+{
+  function get_back_url($page_name, $is_login)
+  {
+    if (
+      $page_name == 'center/profile' ||
+      $page_name == 'teacher/profile' ||
+      $page_name == 'teacher/video/view' ||
+      $page_name == 'shop/product' ||
+      $page_name == 'blog/blog_view'
+    )
+    {
+      $back_url = ''; // 뒤로가기 허용
+    } else if (
+      $page_name == 'find/search' ||
+      $page_name == 'find/center' ||
+      $page_name == 'find/class'
+    ) {
+      $back_url = base_url().'home/find';
+    } else if (
+      $page_name == 'shop/cart'
+    ) {
+      $back_url = base_url().'home/shop/main';
+    } else if (
+      $page_name == 'shop/purchase'
+    ) {
+      $back_url = base_url().'home/shop/cart';
+    } else if (
+      $page_name == 'shop/order'
+    ) {
+      if ($is_login) {
+        $back_url = base_url().'home/user';
+      } else {
+        $back_url = base_url().'home/shop/main';
+      }
+    } else if (
+      $page_name == 'shop/order/detail'
+    ) {
+      if ($is_login) {
+        $back_url = base_url().'home/shop/order';
+      } else {
+        $back_url = base_url().'home/shop/main';
+      }
+    } else if (
+      $page_name == 'notice' ||
+      $page_name == 'coupon'
+    ) {
+      if ($is_login) {
+        $back_url = base_url().'home/user';
+      } else {
+        $back_url = base_url();
+      }
+    } else { // find, blog, shop, shop/main, user, login
+      $back_url = base_url();
+    }
+    
+    return $back_url;
+  }
+  
+}

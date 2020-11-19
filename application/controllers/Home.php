@@ -185,12 +185,12 @@ class Home extends CI_Controller
     $this->load->view('front/index', $this->page_data);
   }
 
-  function error()
+  public function error()
   {
     $this->load->view('front/others/404_error');
   }
 
-  function is_login()
+  private function is_login()
   {
     if ($this->session->userdata('user_login') == "yes") {
       return true;
@@ -198,7 +198,7 @@ class Home extends CI_Controller
     return false;
   }
   
-  function redirect_login() {
+  private function redirect_login() {
     redirect(base_url().'home/login?l='.build_url($this->uri, $_GET), 'refresh');
   }
 
@@ -777,7 +777,7 @@ class Home extends CI_Controller
   }
 
   /* FUNCTION: Logout set */
-  function logout()
+  public function logout()
   {
     $redirect_url = base_url();
     $result['status'] = 'success';
@@ -803,7 +803,7 @@ class Home extends CI_Controller
     exit;
   }
   
-  function register($para1 = '')
+  public function register($para1 = '')
   {
     if ($this->is_login() == true) {
       $this->crud_moel->alert_exit('로그인 중입니다.', base_url());
@@ -955,7 +955,7 @@ class Home extends CI_Controller
   }
   
   /* FUNCTION: Unregister set */
-  function unregister($para1 = '')
+  public function unregister($para1 = '')
   {
     if ($this->session->userdata('user_login') != "yes") {
       $this->session->set_flashdata('alert', "login first!");
@@ -1029,7 +1029,7 @@ class Home extends CI_Controller
   }
 
   /* FUNCTION: Loads Contact Page */
-  function blog($para1 = '', $para2 = '', $para3 = '')
+  public function blog($para1 = '', $para2 = '', $para3 = '')
   {
     $type = $para1;
 
@@ -1128,77 +1128,72 @@ QUERY;
     $this->load->view('front/blog/blog_list', $this->page_data);
   }
 
-  function ajax_blog_list($para1 = "")
-  {
-    $this->load->library('Ajax_pagination');
+//  function ajax_blog_list($para1 = "")
+//  {
+//    $this->load->library('Ajax_pagination');
+//
+//    $category_id = $this->input->post('blog_category');
+//    if ($category_id !== '' && $category_id !== 'all') {
+//      $this->db->where('blog_category', $category_id);
+//    }
+//
+//    // pagination
+//    $config['total_rows'] = $this->db->count_all_results('blog');
+//    $config['base_url'] = base_url() . 'index.php?home/listed/';
+//    $config['per_page'] = 3;
+//    $config['uri_segment'] = 5;
+//    $config['cur_page_giv'] = $para1;
+//
+//    $function = "filter_blog('0')";
+//    $config['first_link'] = '&laquo;';
+//    $config['first_tag_open'] = '<li><a onClick="' . $function . '">';
+//    $config['first_tag_close'] = '</a></li>';
+//
+//    $rr = ($config['total_rows'] - 1) / $config['per_page'];
+//    $last_start = floor($rr) * $config['per_page'];
+//    $function = "filter_blog('" . $last_start . "')";
+//    $config['last_link'] = '&raquo;';
+//    $config['last_tag_open'] = '<li><a onClick="' . $function . '">';
+//    $config['last_tag_close'] = '</a></li>';
+//
+//    $function = "filter_blog('" . ($para1 - $config['per_page']) . "')";
+//    $config['prev_tag_open'] = '<li><a onClick="' . $function . '">';
+//    $config['prev_tag_close'] = '</a></li>';
+//
+//    $function = "filter_blog('" . ($para1 + $config['per_page']) . "')";
+//    $config['next_link'] = '&rsaquo;';
+//    $config['next_tag_open'] = '<li><a onClick="' . $function . '">';
+//    $config['next_tag_close'] = '</a></li>';
+//
+//    $config['full_tag_open'] = '<ul class="pagination">';
+//    $config['full_tag_close'] = '</ul>';
+//
+//    $config['cur_tag_open'] = '<li class="active"><a>';
+//    $config['cur_tag_close'] = '<span class="sr-only">(current)</span></a></li>';
+//
+//    $function = "filter_blog(((this.innerHTML-1)*" . $config['per_page'] . "))";
+//    $config['num_tag_open'] = '<li><a onClick="' . $function . '">';
+//    $config['num_tag_close'] = '</a></li>';
+//    $this->ajax_pagination->initialize($config);
+//
+//    $this->db->order_by('blog_id', 'desc');
+//    if ($category_id !== '' && $category_id !== 'all') {
+//      $this->db->where('blog_category', $category_id);
+//    }
+//
+//    $this->page_data['blogs'] = $this->db->get('blog', $config['per_page'], $para1)->result_array();
+//    if ($category_id !== '' && $category_id !== 'all') {
+//      $category = $this->crud_model->get_type_name_by_id('blog_category', $category_id, 'name');
+//    } else {
+//      $category = ('all_blogs');
+//    }
+//    $this->page_data['category_name'] = $category;
+//    $this->page_data['count'] = $config['total_rows'];
+//
+//    $this->load->view('front/blog/ajax_list', $this->page_data);
+//  }
 
-    $category_id = $this->input->post('blog_category');
-    if ($category_id !== '' && $category_id !== 'all') {
-      $this->db->where('blog_category', $category_id);
-    }
-
-    // pagination
-    $config['total_rows'] = $this->db->count_all_results('blog');
-    $config['base_url'] = base_url() . 'index.php?home/listed/';
-    $config['per_page'] = 3;
-    $config['uri_segment'] = 5;
-    $config['cur_page_giv'] = $para1;
-
-    $function = "filter_blog('0')";
-    $config['first_link'] = '&laquo;';
-    $config['first_tag_open'] = '<li><a onClick="' . $function . '">';
-    $config['first_tag_close'] = '</a></li>';
-
-    $rr = ($config['total_rows'] - 1) / $config['per_page'];
-    $last_start = floor($rr) * $config['per_page'];
-    $function = "filter_blog('" . $last_start . "')";
-    $config['last_link'] = '&raquo;';
-    $config['last_tag_open'] = '<li><a onClick="' . $function . '">';
-    $config['last_tag_close'] = '</a></li>';
-
-    $function = "filter_blog('" . ($para1 - $config['per_page']) . "')";
-    $config['prev_tag_open'] = '<li><a onClick="' . $function . '">';
-    $config['prev_tag_close'] = '</a></li>';
-
-    $function = "filter_blog('" . ($para1 + $config['per_page']) . "')";
-    $config['next_link'] = '&rsaquo;';
-    $config['next_tag_open'] = '<li><a onClick="' . $function . '">';
-    $config['next_tag_close'] = '</a></li>';
-
-    $config['full_tag_open'] = '<ul class="pagination">';
-    $config['full_tag_close'] = '</ul>';
-
-    $config['cur_tag_open'] = '<li class="active"><a>';
-    $config['cur_tag_close'] = '<span class="sr-only">(current)</span></a></li>';
-
-    $function = "filter_blog(((this.innerHTML-1)*" . $config['per_page'] . "))";
-    $config['num_tag_open'] = '<li><a onClick="' . $function . '">';
-    $config['num_tag_close'] = '</a></li>';
-    $this->ajax_pagination->initialize($config);
-
-    $this->db->order_by('blog_id', 'desc');
-    if ($category_id !== '' && $category_id !== 'all') {
-      $this->db->where('blog_category', $category_id);
-    }
-
-    $this->page_data['blogs'] = $this->db->get('blog', $config['per_page'], $para1)->result_array();
-    if ($category_id !== '' && $category_id !== 'all') {
-      $category = $this->crud_model->get_type_name_by_id('blog_category', $category_id, 'name');
-    } else {
-      $category = ('all_blogs');
-    }
-    $this->page_data['category_name'] = $category;
-    $this->page_data['count'] = $config['total_rows'];
-
-    $this->load->view('front/blog/ajax_list', $this->page_data);
-  }
-
-  /* FUNCTION: Loads Contact Page */
-  function blog_view($para1 = "")
-  {
-  }
-
-  function user()
+  public function user()
   {
     $base_url = base_url();
     $view_type = $this->uri->segment(3);
@@ -1208,6 +1203,24 @@ QUERY;
         $redirect = base_url()."home/login";
         echo "<script>alert('로그인해주세요');location.href='{$redirect}'</script>";
         exit;
+      }
+    }
+  
+    if (!$this->input->is_ajax_request()) {
+      if ($view_type != 'service' &&
+        $view_type != 'privacy' &&
+        $view_type != 'center' &&
+        $view_type != 'teacher' &&
+        $view_type != 'edit' &&
+        $view_type != 'notify' &&
+        $view_type != 'introduce' &&
+        $view_type != 'faq' &&
+        $view_type != 'customer' &&
+        $view_type != 'wish' &&
+        $view_type != 'order' &&
+        $view_type != 'coupon' &&
+        $view_type != '') {
+        $this->crud_model->alert_exit('잘못된 접근입니다.', base_url());
       }
     }
 
@@ -1687,6 +1700,22 @@ QUERY;
         $this->page_data['part'] = 'center_register';
       } else if ($view_type == 'teacher') {
         $this->page_data['part'] = 'teacher_register';
+      } else if ($view_type == 'edit') {
+        $this->page_data['part'] = 'edit_profile';
+      } else if ($view_type == 'notify') {
+        $this->page_data['part'] = 'notification';
+      } else if ($view_type == 'introduce') {
+        $this->page_data['part'] = 'introduce';
+      } else if ($view_type == 'faq') {
+        $this->page_data['part'] = 'faq';
+      } else if ($view_type == 'customer') {
+        $this->page_data['part'] = 'customer_center';
+      } else if ($view_type == 'wish') {
+        $this->page_data['part'] = 'shop_wishlist';
+      } else if ($view_type == 'order') {
+        $this->page_data['part'] = 'shop_orderlist';
+      } else if ($view_type == 'coupon') {
+        $this->page_data['part'] = 'coupon_box';
       } else {
         $this->page_data['part'] = 'info';
       }
@@ -1700,8 +1729,329 @@ QUERY;
     }
 
   }
+  
+  public function find($para1 = '', $para2 = '', $para3 = '')
+  {
+    $view = $para1;
+    
+    if ($view == 'class') {
+      
+      $type = $para2;
+      
+      if ($type == 'list') {
+        
+        if (!isset($_GET['page']) || !isset($_GET['filter'])) {
+          echo "<script>alert('잘못된 접근입니다')</script>";
+          exit;
+        }
+        
+        $page = $_GET['page'];
+        $filter = $_GET['filter'];
+        $limit = 10;
+        $offset = 10 * ($page - 1);
 
-  function center($para1 = "", $para2 = "", $para3 = "")
+//        echo "<script>alert('{$page}, {$limit}, {$offset}')</script>";
+        
+        if ($filter == 'ALL') {
+          $this->db->where('activate', 1);
+          $video_data = $this->db->order_by('video_id', 'desc')->get('teacher_video', $limit, $offset)->result();
+        } else {
+          $query = <<<QUERU
+select a.* from teacher_video a, teacher_video_category b
+where a.video_id=b.video_id and a.activate=1 and b.category='{$filter}'
+order by video_id desc limit {$offset},{$limit}
+QUERU;
+          $video_data = $this->db->query($query)->result();
+
+//          $this->db->order_by('video_id', 'desc');
+//          $video_list = $this->db->get_where('teacher_video_category', array('category' => $filter), $limit, $offset)->result();
+
+//          $video_data = array();
+//          if (!empty($video_list) && count($video_list) > 0) {
+//            $video_id_list = array();
+//            foreach ($video_list as $video) {
+//              $video_id_list[] = $video->video_id;
+//            }
+//            $this->db->where_in('video_id', $video_id_list);
+//            $video_data = $this->db->order_by('video_id', 'desc')->get('teacher_video')->result();
+//          }
+        }
+        
+        $this->page_data['video_data'] = $video_data;
+        $this->load->view('front/find/class/list', $this->page_data);
+        
+      } else {
+        
+        $bookmarks = array();
+        if ($this->is_login()) {
+          $user_id = $this->session->userdata('user_id');
+          $bookmarks = $this->db->get_where('bookmark_teacher', array('user_id' => $user_id))->result();
+          if (!empty($bookmarks) && count($bookmarks) > 0) {
+            $teacher_ids = array();
+            foreach ($bookmarks as $t) {
+              $teacher_ids[] = $t->teacher_id;
+            }
+            $this->db->where('activate', 1);
+            $this->db->where_in('teacher_id', $teacher_ids);
+            $bookmarks = $this->db->get('teacher')->result();
+          }
+        }
+        
+        $video_data = $this->db->order_by('video_id', 'desc')->get('teacher_video', 10, 0)->result();
+        
+        $this->page_data['video_data'] = $video_data;
+        $this->page_data['bookmarks'] = $bookmarks;
+        $this->page_data['page_name'] = "find/class";
+        $this->page_data['asset_page'] = "class";
+        $this->page_data['page_title'] = "class";
+        $this->load->view('front/index', $this->page_data);
+        
+      }
+      
+    } else if ($view == 'center') {
+  
+      $type = $para2;
+      if ($type == 'list') {
+        
+        $center_type = $para3;
+  
+        if (!isset($_GET['page']) || !isset($_GET['filter'])) {
+          echo "<script>alert('잘못된 접근입니다')</script>";
+          exit;
+        }
+        
+        $page = $_GET['page'];
+        $filter = $_GET['filter'];
+        $limit = 10;
+        $offset = 10 * ($page - 1);
+        
+        $bookmark_ids = array(0);
+        if ($this->is_login()) {
+          $user_id = $this->session->userdata('user_id');
+          $bookmarks = $this->db->get_where('bookmark_center', array('user_id' => $user_id))->result();
+          if (!empty($bookmarks) && count($bookmarks) > 0) {
+            foreach ($bookmarks as $b) {
+              $bookmark_ids[] = $b->center_id;
+            }
+          }
+        }
+        
+        $bookmark_ids = implode(',', $bookmark_ids);
+        if ($filter == 'ALL') {
+          $query = <<<QUERY
+select distinct(center_id) from center_category where type={$center_type} and activate=1
+and center_id not in ({$bookmark_ids})
+order by center_id desc limit {$offset},{$limit}
+QUERY;
+          $center_list = $this->db->query($query)->result();
+          
+        } else {
+//          $this->db->order_by('center_id', 'desc');
+//          $center_list = $this->db->get_where('center_category', array('type' => $center_type, 'category' => $filter), $limit, $offset)->result();
+          $query = <<<QUERY
+select distinct(center_id) from center_category where type={$center_type} and activate=1 and category='{$filter}'
+and center_id not in ({$bookmark_ids})
+order by center_id desc limit {$offset},{$limit}
+QUERY;
+          $center_list = $this->db->query($query)->result();
+        }
+
+//        echo "<li>{$query}</li>";
+//        exit;
+        
+        $center_data = $this->get_center_data($center_list);
+        
+        $this->page_data['center_data'] = $center_data;
+        $this->load->view('front/find/center/list', $this->page_data);
+        
+      } else {
+  
+        $center_type = $para2;
+        
+        $limit = 10;
+        $offset = 0;
+
+//        $this->db->distinct('center_id');
+//        $this->db->order_by('center_id', 'desc');
+//        $center_list = $this->db->get_where('center_category', array('type' => $center_type), $limit, $offset)->result();
+        
+        $bookmarks = array();
+//        $bookmark_ids = array(0);
+        if ($this->is_login()) {
+          $user_id = $this->session->userdata('user_id');
+          $bookmarks = $this->db->get_where('bookmark_center', array('user_id' => $user_id))->result();
+          if (!empty($bookmarks) && count($bookmarks) > 0) {
+            $center_ids = array();
+            foreach ($bookmarks as $b) {
+              $center_ids[] = $b->center_id;
+            }
+            $this->db->where('activate', 1);
+            $this->db->where_in('center_id', $center_ids);
+            $bookmarks = $this->db->get('center')->result();
+//            $bookmark_ids = $center_ids;
+          }
+        }
+
+//        $bookmark_ids = implode(',', $bookmark_ids);
+//        $query = <<<QUERY
+//select distinct(center_id) from center_category where type={$center_type} and activate=1
+//and center_id not in ({$bookmark_ids})
+//order by center_id desc limit {$offset},{$limit}
+//QUERY;
+//
+//        $center_list = $this->db->query($query)->result();
+//        $center_data = $this->get_center_data($center_list);
+        
+        $where = array('type' => $center_type, 'activate' => 1);
+        $categories = $this->db->order_by('category_id', 'asc')->get_where('category_center', $where)->result();
+        
+        $this->page_data['page_name'] = "find/center";
+        $this->page_data['asset_page'] = "center";
+        $this->page_data['page_title'] = $center_type == CENTER_TYPE_YOGA ? "YOGA" : "PILATES";
+//        $this->page_data['center_data'] = $center_data;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['center_type'] = $center_type;
+        $this->page_data['bookmarks'] = $bookmarks;
+        $this->load->view('front/index', $this->page_data);
+        
+      }
+      
+    } else if ($view == 'search') {
+      
+      $type = $para2;
+      
+      if ($type == 'list') {
+        
+        if (!isset($_GET['q'])) {
+          $base_url = base_url();
+          echo "<script>alert('잘못된 접근입니다');location.href='{$base_url}'</script>";
+          exit;
+        }
+        
+        $q = $_GET['q'];
+        
+        $page = $_GET['page'];
+        $type = $_GET['type'];
+        $limit = 10;
+        $offset = 10 * ($page - 1);
+        
+        $ids = array();
+        if ($this->is_login()) {
+          $user_id = $this->session->userdata('user_id');
+          if ($type == FIND_TYPE_CENTER) {
+            
+            $query = <<<QUERY
+select center_id from bookmark_center where user_id={$user_id}
+QUERY;
+            
+            $bookmarks = $this->db->query($query)->result();
+            foreach ($bookmarks as $c) {
+              $ids[] = $c->center_id;
+            }
+            
+          } else if ($type == FIND_TYPE_TEACHER) {
+            
+            $query = <<<QUERY
+select teacher_id from bookmark_teacher where user_id={$user_id}
+QUERY;
+            
+            $bookmarks = $this->db->query($query)->result();
+            foreach ($bookmarks as $t) {
+              $ids[] = $t->teacher_id;
+            }
+            
+          } else {
+            $base_url = base_url();
+            echo "<script>alert('잘못된 접근입니다');location.href='{$base_url}'</script>";
+            exit;
+          }
+          
+          
+        }
+        
+        if ($type == FIND_TYPE_CENTER) {
+          
+          $query = <<<QUERY
+select * from center where title like '%{$q}%' order by center_id desc limit {$offset},{$limit}
+QUERY;
+          
+          $center_data = $this->db->query($query)->result();
+          foreach ($center_data as $center) {
+            if (in_array($center->center_id, $ids)) {
+              $center->bookmark = true;
+            } else {
+              $center->bookmark = false;
+            }
+          }
+          
+          $this->page_data['center_data'] = $center_data;
+          
+        } else if ($type == FIND_TYPE_TEACHER) {
+          
+          $query = <<<QUERY
+select * from teacher where name like '%{$q}%' order by teacher_id desc limit {$offset},{$limit}
+QUERY;
+          
+          $teacher_data = $this->db->query($query)->result();
+          foreach ($teacher_data as $teacher) {
+            if (in_array($teacher->teacher_id, $ids)) {
+              $teacher->bookmark = true;
+            } else {
+              $teacher->bookmark = false;
+            }
+          }
+          
+          $this->page_data['teacher_data'] = $teacher_data;
+          
+        } else {
+          $base_url = base_url();
+          echo "<script>alert('잘못된 접근입니다');location.href='{$base_url}'</script>";
+          exit;
+        }
+        
+        $this->page_data['type'] = $type;
+        $this->load->view('front/find/search/list', $this->page_data);
+        
+      } else {
+        
+        if (!isset($_GET['q'])) {
+          $base_url = base_url();
+          echo "<script>alert('잘못된 접근입니다');location.href='{$base_url}'</script>";
+          exit;
+        }
+        
+        $q = $_GET['q'];
+        
+        $query = <<<QUERY
+select count(*) as cnt from center where title like '%{$q}%'
+QUERY;
+        $center_cnt = $this->db->query($query)->row()->cnt;
+        
+        $query = <<<QUERY
+select count(*) as cnt from teacher where name like '%{$q}%'
+QUERY;
+        $teacher_cnt = $this->db->query($query)->row()->cnt;
+        
+        $this->page_data['page_name'] = "find/search";
+        $this->page_data['asset_page'] = "find";
+        $this->page_data['page_title'] = "find";
+        $this->page_data['q'] = $q;
+        $this->page_data['center_cnt'] = $center_cnt;
+        $this->page_data['teacher_cnt'] = $teacher_cnt;
+        $this->load->view('front/index', $this->page_data);
+      }
+      
+    } else {
+      
+      $this->page_data['page_name'] = "find";
+      $this->page_data['asset_page'] = "find";
+      $this->page_data['page_title'] = "find";
+      $this->load->view('front/index', $this->page_data);
+      
+    }
+  }
+  
+  public function center($para1 = "", $para2 = "", $para3 = "")
   {
     $base_url = base_url();
 
@@ -2506,7 +2856,7 @@ QUERY;
     }
   }
 
-  function teacher($para1 = "", $para2 = "", $para3 = "")
+  public function teacher($para1 = "", $para2 = "", $para3 = "")
   {
     $base_url = base_url();
 
@@ -3069,326 +3419,7 @@ QUERY;
     }
   }
 
-  function find($para1 = '', $para2 = '', $para3 = '')
-  {
-    $view = $para1;
-
-    if ($view == 'class') {
-
-      $type = $para2;
-
-      if ($type == 'list') {
-
-        if (!isset($_GET['page']) || !isset($_GET['filter'])) {
-          echo "<script>alert('잘못된 접근입니다')</script>";
-          exit;
-        }
-
-        $page = $_GET['page'];
-        $filter = $_GET['filter'];
-        $limit = 10;
-        $offset = 10 * ($page - 1);
-
-//        echo "<script>alert('{$page}, {$limit}, {$offset}')</script>";
-
-        if ($filter == 'ALL') {
-          $this->db->where('activate', 1);
-          $video_data = $this->db->order_by('video_id', 'desc')->get('teacher_video', $limit, $offset)->result();
-        } else {
-          $query = <<<QUERU
-select a.* from teacher_video a, teacher_video_category b 
-where a.video_id=b.video_id and a.activate=1 and b.category='{$filter}'
-order by video_id desc limit {$offset},{$limit}
-QUERU;
-          $video_data = $this->db->query($query)->result();
-
-//          $this->db->order_by('video_id', 'desc');
-//          $video_list = $this->db->get_where('teacher_video_category', array('category' => $filter), $limit, $offset)->result();
-
-//          $video_data = array();
-//          if (!empty($video_list) && count($video_list) > 0) {
-//            $video_id_list = array();
-//            foreach ($video_list as $video) {
-//              $video_id_list[] = $video->video_id;
-//            }
-//            $this->db->where_in('video_id', $video_id_list);
-//            $video_data = $this->db->order_by('video_id', 'desc')->get('teacher_video')->result();
-//          }
-        }
-
-        $this->page_data['video_data'] = $video_data;
-        $this->load->view('front/find/class/list', $this->page_data);
-
-      } else {
-
-        $bookmarks = array();
-        if ($this->is_login()) {
-          $user_id = $this->session->userdata('user_id');
-          $bookmarks = $this->db->get_where('bookmark_teacher', array('user_id' => $user_id))->result();
-          if (!empty($bookmarks) && count($bookmarks) > 0) {
-            $teacher_ids = array();
-            foreach ($bookmarks as $t) {
-              $teacher_ids[] = $t->teacher_id;
-            }
-            $this->db->where('activate', 1);
-            $this->db->where_in('teacher_id', $teacher_ids);
-            $bookmarks = $this->db->get('teacher')->result();
-          }
-        }
-
-        $video_data = $this->db->order_by('video_id', 'desc')->get('teacher_video', 10, 0)->result();
-
-        $this->page_data['video_data'] = $video_data;
-        $this->page_data['bookmarks'] = $bookmarks;
-        $this->page_data['page_name'] = "find/class";
-        $this->page_data['asset_page'] = "class";
-        $this->page_data['page_title'] = "class";
-        $this->load->view('front/index', $this->page_data);
-
-      }
-
-    } else if ($view == 'center') {
-
-      $type = $para2;
-      $center_type = $para3;
-
-      if ($type == 'list') {
-
-        if (!isset($_GET['page']) || !isset($_GET['filter'])) {
-          echo "<script>alert('잘못된 접근입니다')</script>";
-          exit;
-        }
-
-        $page = $_GET['page'];
-        $filter = $_GET['filter'];
-        $limit = 10;
-        $offset = 10 * ($page - 1);
-
-        $bookmark_ids = array(0);
-        if ($this->is_login()) {
-          $user_id = $this->session->userdata('user_id');
-          $bookmarks = $this->db->get_where('bookmark_center', array('user_id' => $user_id))->result();
-          if (!empty($bookmarks) && count($bookmarks) > 0) {
-            foreach ($bookmarks as $b) {
-              $bookmark_ids[] = $b->center_id;
-            }
-          }
-        }
-
-        $bookmark_ids = implode(',', $bookmark_ids);
-        if ($filter == 'ALL') {
-          $query = <<<QUERY
-select distinct(center_id) from center_category where type={$center_type} and activate=1 
-and center_id not in ({$bookmark_ids})
-order by center_id desc limit {$offset},{$limit}
-QUERY;
-          $center_list = $this->db->query($query)->result();
-
-        } else {
-//          $this->db->order_by('center_id', 'desc');
-//          $center_list = $this->db->get_where('center_category', array('type' => $center_type, 'category' => $filter), $limit, $offset)->result();
-          $query = <<<QUERY
-select distinct(center_id) from center_category where type={$center_type} and activate=1 and category='{$filter}'
-and center_id not in ({$bookmark_ids})
-order by center_id desc limit {$offset},{$limit}
-QUERY;
-          $center_list = $this->db->query($query)->result();
-        }
-
-//        echo "<li>{$query}</li>";
-//        exit;
-
-        $center_data = $this->get_center_data($center_list);
-
-        $this->page_data['center_data'] = $center_data;
-        $this->load->view('front/find/center/list', $this->page_data);
-
-      } else {
-
-        $limit = 10;
-        $offset = 0;
-
-//        $this->db->distinct('center_id');
-//        $this->db->order_by('center_id', 'desc');
-//        $center_list = $this->db->get_where('center_category', array('type' => $center_type), $limit, $offset)->result();
-
-        $bookmarks = array();
-//        $bookmark_ids = array(0);
-        if ($this->is_login()) {
-          $user_id = $this->session->userdata('user_id');
-          $bookmarks = $this->db->get_where('bookmark_center', array('user_id' => $user_id))->result();
-          if (!empty($bookmarks) && count($bookmarks) > 0) {
-            $center_ids = array();
-            foreach ($bookmarks as $b) {
-              $center_ids[] = $b->center_id;
-            }
-            $this->db->where('activate', 1);
-            $this->db->where_in('center_id', $center_ids);
-            $bookmarks = $this->db->get('center')->result();
-//            $bookmark_ids = $center_ids;
-          }
-        }
-
-//        $bookmark_ids = implode(',', $bookmark_ids);
-//        $query = <<<QUERY
-//select distinct(center_id) from center_category where type={$center_type} and activate=1
-//and center_id not in ({$bookmark_ids})
-//order by center_id desc limit {$offset},{$limit}
-//QUERY;
-//
-//        $center_list = $this->db->query($query)->result();
-//        $center_data = $this->get_center_data($center_list);
-
-        $where = array('type' => $center_type, 'activate' => 1);
-        $categories = $this->db->order_by('category_id', 'asc')->get_where('category_center', $where)->result();
-
-        $this->page_data['page_name'] = "find/center";
-        $this->page_data['asset_page'] = "center";
-        $this->page_data['page_title'] = $center_type == CENTER_TYPE_YOGA ? "YOGA" : "PILATES";
-//        $this->page_data['center_data'] = $center_data;
-        $this->page_data['categories'] = $categories;
-        $this->page_data['center_type'] = $center_type;
-        $this->page_data['bookmarks'] = $bookmarks;
-        $this->load->view('front/index', $this->page_data);
-
-      }
-
-    } else if ($view == 'search') {
-
-      $type = $para2;
-
-      if ($type == 'list') {
-
-        if (!isset($_GET['q'])) {
-          $base_url = base_url();
-          echo "<script>alert('잘못된 접근입니다');location.href='{$base_url}'</script>";
-          exit;
-        }
-
-        $q = $_GET['q'];
-
-        $page = $_GET['page'];
-        $type = $_GET['type'];
-        $limit = 10;
-        $offset = 10 * ($page - 1);
-
-        $ids = array();
-        if ($this->is_login()) {
-          $user_id = $this->session->userdata('user_id');
-          if ($type == FIND_TYPE_CENTER) {
-
-            $query = <<<QUERY
-select center_id from bookmark_center where user_id={$user_id}
-QUERY;
-
-            $bookmarks = $this->db->query($query)->result();
-            foreach ($bookmarks as $c) {
-              $ids[] = $c->center_id;
-            }
-
-          } else if ($type == FIND_TYPE_TEACHER) {
-
-            $query = <<<QUERY
-select teacher_id from bookmark_teacher where user_id={$user_id}
-QUERY;
-
-            $bookmarks = $this->db->query($query)->result();
-            foreach ($bookmarks as $t) {
-              $ids[] = $t->teacher_id;
-            }
-
-          } else {
-            $base_url = base_url();
-            echo "<script>alert('잘못된 접근입니다');location.href='{$base_url}'</script>";
-            exit;
-          }
-
-
-        }
-
-        if ($type == FIND_TYPE_CENTER) {
-
-          $query = <<<QUERY
-select * from center where title like '%{$q}%' order by center_id desc limit {$offset},{$limit}
-QUERY;
-
-          $center_data = $this->db->query($query)->result();
-          foreach ($center_data as $center) {
-            if (in_array($center->center_id, $ids)) {
-              $center->bookmark = true;
-            } else {
-              $center->bookmark = false;
-            }
-          }
-
-          $this->page_data['center_data'] = $center_data;
-
-        } else if ($type == FIND_TYPE_TEACHER) {
-
-          $query = <<<QUERY
-select * from teacher where name like '%{$q}%' order by teacher_id desc limit {$offset},{$limit}
-QUERY;
-
-          $teacher_data = $this->db->query($query)->result();
-          foreach ($teacher_data as $teacher) {
-            if (in_array($teacher->teacher_id, $ids)) {
-              $teacher->bookmark = true;
-            } else {
-              $teacher->bookmark = false;
-            }
-          }
-
-          $this->page_data['teacher_data'] = $teacher_data;
-
-        } else {
-          $base_url = base_url();
-          echo "<script>alert('잘못된 접근입니다');location.href='{$base_url}'</script>";
-          exit;
-        }
-
-        $this->page_data['type'] = $type;
-        $this->load->view('front/find/search/list', $this->page_data);
-
-      } else {
-
-        if (!isset($_GET['q'])) {
-          $base_url = base_url();
-          echo "<script>alert('잘못된 접근입니다');location.href='{$base_url}'</script>";
-          exit;
-        }
-
-        $q = $_GET['q'];
-
-        $query = <<<QUERY
-select count(*) as cnt from center where title like '%{$q}%'
-QUERY;
-        $center_cnt = $this->db->query($query)->row()->cnt;
-
-        $query = <<<QUERY
-select count(*) as cnt from teacher where name like '%{$q}%'
-QUERY;
-        $teacher_cnt = $this->db->query($query)->row()->cnt;
-
-        $this->page_data['page_name'] = "find/search";
-        $this->page_data['asset_page'] = "find";
-        $this->page_data['page_title'] = "find";
-        $this->page_data['q'] = $q;
-        $this->page_data['center_cnt'] = $center_cnt;
-        $this->page_data['teacher_cnt'] = $teacher_cnt;
-        $this->load->view('front/index', $this->page_data);
-      }
-
-    } else {
-
-      $this->page_data['page_name'] = "find";
-      $this->page_data['asset_page'] = "find";
-      $this->page_data['page_title'] = "find";
-      $this->load->view('front/index', $this->page_data);
-
-    }
-  }
-
-  function get_center_data(array $center_list)
+  private function get_center_data(array $center_list)
   {
     $center_data = array();
 
@@ -3411,7 +3442,7 @@ QUERY;
     return $center_data;
   }
 
-  function sns($para1 = '', $para2 = '', $para3 = '')
+  public function sns($para1 = '', $para2 = '', $para3 = '')
   {
     if ($this->session->userdata('user_login') != "yes") {
       $result['status'] = 'not_login';
@@ -3479,11 +3510,15 @@ QUERY;
     }
   }
 
-  function shop($para1 = '', $para2 = '', $para3 = '')
+  public function shop($para1 = '', $para2 = '', $para3 = '')
   {
+    if ($para1 == '' && empty($_GET)) {
+      redirect(base_url().'home/shop/main', 'refresh');
+    }
+  
     $view = $para1;
     $type = $para2;
-
+    
     if ($view == 'product') {
 
       $product_id = $_GET['id'];
@@ -3845,6 +3880,7 @@ QUERY;
 
         $this->page_data['purchase_infos'] = $purchase_infos;
         $this->load->view('front/shop/order/list', $this->page_data);
+      
       } else {
 
         $this->page_data['page_name'] = "shop/order";
@@ -4516,7 +4552,7 @@ QUERY;
           $this->crud_model->alert_exit('잘못된 접근입니다.');
         }
   
-        $url = sprintf('https://info.sweettracker.co.kr/api/v1/trackingInfo?t_key=%s&t_code=%s&t_invoice=%s', 'OiMqBmE0a9g8ibCUoY8yng', $shipping_data->shipping_company, $shipping_data->shipping_code);
+        $url = sprintf('https://info.sweettracker.co.kr/api/v1/trackingInfo?t_key=%s&t_code=%s&t_invoice=%s', 'FRvPgPCF5VFWcYEprruZ9A', $shipping_data->shipping_company, $shipping_data->shipping_code);
         
         $opts = array(
           CURLOPT_URL => $url,
@@ -4935,13 +4971,12 @@ QUERY;
     }
   }
 
-  function bootpay($para1 = '', $para2 = '', $para3 = '')
+  public function bootpay($para1 = '', $para2 = '', $para3 = '')
   {
-
     echo 'OK';
   }
 
-  function notice($para1 = '', $para2 = '', $para3 = '')
+  public function notice($para1 = '', $para2 = '', $para3 = '')
   {
     if ($para1 == 'list') {
 
@@ -5017,7 +5052,7 @@ QUERY;
     }
   }
   
-  function coupon($para1 = '', $para2 = '', $para3 = '')
+  public function coupon($para1 = '', $para2 = '', $para3 = '')
   {
     if ($this->is_login() == false) {
       $this->crud_model->alert_exit('로그인 후 이용이 가능합니다.', base_url().'home');
@@ -5151,7 +5186,7 @@ QUERY;
     }
   }
   
-  function qna()
+  public function qna()
   {
     $user_id = 0;
     if ($this->is_login() == true) {

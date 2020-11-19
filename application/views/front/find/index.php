@@ -63,7 +63,7 @@
     <div class="col-md-6 col-sm-6 col-xs-6 find-left">
       <div class="thumbnail my-2 no-scale no-border no-padding thumbnail-banner ">
         <div class="media">
-          <a class="media-link" href="<?php echo base_url().'home/find/center/a/'.CENTER_TYPE_YOGA; ?>">
+          <a class="media-link" href="<?php echo base_url().'home/find/center/'.CENTER_TYPE_YOGA; ?>">
             <div class="col-md-6 img-bg image_delay" data-src="<?php echo base_url(); ?>uploads/icon_0604/yoga.png"
                  style="background-image: url('<?php echo base_url(); ?>uploads/icon_0604/yoga.png');">
             </div>
@@ -74,7 +74,7 @@
     <div class="col-md-6 col-sm-6 col-xs-6 find-right">
       <div class="thumbnail my-2 no-scale no-border no-padding thumbnail-banner">
         <div class="media">
-          <a class="media-link" href="<?php echo base_url().'home/find/center/a/'.CENTER_TYPE_PILATES; ?>">
+          <a class="media-link" href="<?php echo base_url().'home/find/center/'.CENTER_TYPE_PILATES; ?>">
             <div class="col-md-6 img-bg image_delay" data-src="<?php echo base_url(); ?>uploads/icon_0604/pilates.png"
                  style="background-image: url('<?php echo base_url(); ?>uploads/icon_0604/pilates.png');">
             </div>
