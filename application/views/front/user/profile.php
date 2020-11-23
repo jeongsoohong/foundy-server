@@ -88,7 +88,7 @@
               </td>
               <td style="width: 10%; text-align: center;">
                 <a href="javascript:void(0);">
-                  <span class="profile-edit" data-target='profile-edit' style="color: grey;">
+                  <span class="profile-edit" data-target='profile-edit' style="color: grey; padding-right: 20px">
 <!--                    <i class="fa fa-ellipsis-v"></i>-->
                     <img src="<?php echo base_url(); ?>uploads/icon/dots.png" alt="" style="width: 10px; height: 10px">
                   </span>

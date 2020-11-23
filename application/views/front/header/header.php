@@ -502,7 +502,7 @@ if ($this->session->userdata('user_login') == "yes") {
               <img src="<?php echo base_url(); ?>template/front/header/imgs/icon_menu_black.png" alt="menu" style="height:15px; width:22px; margin-top:12px">
             </a>
           <?php } else if (strncasecmp($page_name,'home',4)) { ?>
-            <a href="javascript:void(0)" onclick="go_prev_page();">
+            <a href="javascript:void(0)" onclick="getBack();">
               <img src="<?php echo base_url(); ?>template/front/header/imgs/prev_black.png" alt="menu" style="height:22px; width:15px; margin-top:10px">
             </a>
 <!--          --><?php //} else { ?>
@@ -640,14 +640,6 @@ if ($this->session->userdata('user_login') == "yes") {
     // pageY2 = pageY;
     // pageY = _pY;
     <?php } ?>
-  }
-
-  function go_back() {
-    document.referrer&&-1!==document.referrer.indexOf("<?php echo base_url(); ?>")?history.back():location.href="<?php echo base_url(); ?>";
-  }
-  function go_prev_page() {
-    // go_back();
-    history.back();
   }
 
   let menu_on = 0;

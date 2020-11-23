@@ -2871,11 +2871,11 @@ QUERY;
       }
 
       $user_data = $this->db->get_where('user', array('user_id' => $teacher_user_id))->row();
-      if (!($user_data->user_type & USER_TYPE_TEACHER)) {
-        echo ("<script>alert('강사회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
-        exit;
-      }
-
+//      if (!($user_data->user_type & USER_TYPE_TEACHER)) {
+//        echo ("<script>alert('강사회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
+//        exit;
+//      }
+//
       $teacher_data = $this->db->get_where('teacher', array('user_id' => $teacher_user_id))->row();
       if ($teacher_data->activate == 0) {
         echo ("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");

@@ -731,7 +731,6 @@
     });
   }
 
-
 </script>
 
 <?php if ($this->app_model->is_app()) { ?>

@@ -3,7 +3,9 @@
     <div class="container">
       <div class="row">
         <div class="col-md-12 col-xs-12">
-          <div class="copyright" version="Currently v0.1">
+<!--          <br><button class="btn btn-warning" onclick="return appLinkAndInstall('')">앱링크</button><br>-->
+<!--          <br><button class="btn btn-warning" onclick="return appLinkAndInstall('https://www.foundy.me/home/shop')">앱DL</button><br>-->
+          <div class="copyright" version="Currently v1.0">
             주식회사 파운디 | 대표 : 신두철 | 통신판매업신고번호 : 제 2020-서울마포-3960 호 ㅣ 사업자등록번호 : 658-87-01852(
             <a href="javascript:void(0);" onclick="onopen('business');"><u>사업자정보확인</u></a>
             )<br>
