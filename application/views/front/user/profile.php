@@ -257,3 +257,24 @@
     </div>
   </div>
 </div>
+<script>
+  
+  function openPop() {
+    if ($('#profile-edit').css('display') === 'none') {
+      var html = "<a href=\"javascript:void(0);\" onclick=\"$(\'.pnav_edit_profile\').click();\">수정</a>";
+      $('#profile-edit').empty().append(html);
+      $('#profile-edit').show();
+    } else {
+      closePop();
+    }
+  }
+  function closePop() {
+    $('#profile-edit').hide();
+  }
+  
+  $(document).ready(function() {
+    $('.profile-edit').click(function (e) {
+      openPop();
+    });
+  });
+</script>
