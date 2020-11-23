@@ -108,7 +108,7 @@
       <div class="thumbnail my-2 no-scale no-border no-padding thumbnail-banner">
         <div class="media">
 <!--          <a class="media-link" href="javascript:void(0);" onclick="open_qna_modal()">-->
-          <a class="media-link" href="http://pf.kakao.com/_xnzxbxaxb/chat">
+          <a class="media-link" href="http://pf.kakao.com/_xnzxbxaxb/chat" target="_blank">
             <div class="col-md-6 img-bg image_delay" data-src="<?php echo base_url(); ?>uploads/icon_0604/question.png"
                  style="background-image: url('<?php echo base_url(); ?>uploads/icon_0604/question.png');">
             </div>

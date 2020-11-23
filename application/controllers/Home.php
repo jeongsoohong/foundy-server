@@ -198,14 +198,20 @@ class Home extends CI_Controller
     return false;
   }
   
+  private function get_login_url($url = '') {
+    if ($url == '') {
+      return base_url().'home/login?l='.build_url($this->uri, $_GET);
+    }
+    return base_url().'home/login?l='.$url;
+  }
+  
   private function redirect_login() {
-    redirect(base_url().'home/login?l='.build_url($this->uri, $_GET), 'refresh');
+    redirect($this->get_login_url(), 'refresh');
   }
 
   public function login($para1 = '', $para2 = '', $para3 = '')
   {
-    if ($this->is_login() == true && $this->session->userdata('user_restore') != 'yes' &&
-      $this->session->userdata('need_agreement') != 'yes') {
+    if ($this->is_login() == true && $this->session->userdata('user_restore') != 'yes') {
       redirect('home', 'refresh');
     }
 
@@ -531,7 +537,7 @@ class Home extends CI_Controller
       if ($para2 == 'rest') { // kakao login with rest api
   
         if (!isset($_GET["code"])) {
-          $this->crud_model->alert_exit('오류가 발생했습니다. 다시 로그인해주세요.', base_url().'home/login');
+          $this->crud_model->alert_exit('오류가 발생했습니다. 다시 로그인해주세요.', $this->get_login_url());
         }
         $code = $_GET["code"];	//발급받은 code 값
   
@@ -563,8 +569,7 @@ class Home extends CI_Controller
         if (isset($result->error)) {
           $base_url = base_url();
           $message = sprintf("오류가 발생했습니다. 다시 로그인해주세요. 오류 메세지 : %s'", $result->error_description);
-          echo ("<script>alert(\"$message\"); window.location.href='${base_url}home/login';</script>");
-          exit;
+          $this->crud_model->alert_exit($message, $this->get_login_url());
         }
         
         $access_token = $result->access_token; // 6시간 유효, refresh_token은 60일 유효
@@ -602,20 +607,6 @@ class Home extends CI_Controller
           $this->kakao_model->set_user_kakao($user_id, $kakao_id, $scope, $access_token, $refresh_token, $expires_in,
             $refresh_token_expires_in);
           
-//          $res = $this->kakao_model->send_message($access_token);
-//          if (isset($res) && isset($res->code) && $res->code == -402) {
-//            $this->session->sess_destroy();
-//            redirect('home/login?a=');
-//            exit;
-//          }
-//
-//          $user_kakao = $this->db->get_where('user_kakao', array('user_id' => $user_id))->row();
-//          if (isset($user_kakao) == true || empty($user_kakao) == false) {
-//            if (!$this->kakao_model->has_talk_message_agreement($user_kakao)) {
-//              $this->session->set_userdata('need_agreement', 'yes');
-//              redirect('home/login?a=');
-//            }
-//          }
           $relocation = $this->cookie_model->get_cookie('relocation');
           if (isset($relocation) == false || empty($relocation)) {
             $relocation = base_url();
@@ -760,18 +751,14 @@ class Home extends CI_Controller
       $restore = isset($_GET['r']);
       $relocation = base_url();
       if (isset($_GET['l'])) {
-        $relocation = $_GET['l'];
+        $relocation = substr(http_build_query($_GET), 2);
       }
-      $need_kakao_agreement = isset($_GET['a']);
-      if ($need_kakao_agreement) {
-        $this->session->set_userdata('need_agreement', 'no');
-      }
+
       $this->page_data['page_name'] = "user/login";
       $this->page_data['asset_page'] = "login";
       $this->page_data['page_title'] = "login";
       $this->page_data['restore'] = $restore;
       $this->page_data['relocation'] = $relocation;
-      $this->page_data['need_kakao_agreement'] = $need_kakao_agreement;
       $this->load->view('front/index', $this->page_data);
     }
   }
@@ -1200,8 +1187,7 @@ QUERY;
 
     if ($this->session->userdata('user_login') != "yes") {
       if ($view_type != 'service' && $view_type != 'privacy') {
-        $redirect = base_url()."home/login";
-        echo "<script>alert('로그인해주세요');location.href='{$redirect}'</script>";
+        $this->redirect_login();
         exit;
       }
     }
@@ -3073,7 +3059,7 @@ QUERY;
           echo("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
           exit;
         }
-
+        
         $this->page_data['page_name'] = "teacher/video/" . $action;
         $this->page_data['asset_page'] = "teacher_video_" . $action;
         $this->page_data['page_title'] = "teacher_video_" . $action;
@@ -3446,8 +3432,9 @@ QUERY;
   {
     if ($this->session->userdata('user_login') != "yes") {
       $result['status'] = 'not_login';
-      $result['redirect_url'] = base_url().'home/login';
-      $result['message'] = "로그인 후 이용이 가능합니다";
+//      $result['redirect_url'] = base_url().'home/login';
+      $result['redirect_url'] = $this->get_login_url($this->agent->referrer());
+      $result['message'] = "로그인 후 이용이 가능합니다.";
       echo json_encode($result);
     } else {
 
@@ -3474,7 +3461,6 @@ QUERY;
         echo json_encode($result);
         exit;
       }
-
 
       $func_type = $para2; // like, bookmark
       $action = $para3; // do, undo
@@ -3812,7 +3798,6 @@ QUERY;
         }
         if ($purchase_info->user_id > 0) {
           if ($this->is_login() == false) {
-//            $this->crud_model->alert_exit('로그인이 필요합니다.', base_url() . 'home/login');
             $this->redirect_login();
           } else {
             $user_id = $this->session->userdata('user_id');
@@ -4599,7 +4584,7 @@ QUERY;
       if ($type == 'qes') {
 
         if ($this->is_login() == false) {
-          $this->crud_model->alert_exit('로그인 후 이용이 가능합니다.');
+          $this->crud_model->alert_exit('로그인 후 이용이 가능합니다.', $this->get_login_url($this->agent->referrer()));
         }
 
         $user_id = $this->session->userdata('user_id');
@@ -4674,7 +4659,7 @@ QUERY;
 
           if ($qna->is_private == 1) {
             if ($this->is_login() == false) {
-              $this->crud_model->alert_exit('로그인 후 이용이 가능합니다.');
+              $this->crud_model->alert_exit('로그인 후 이용이 가능합니다.', $this->get_login_url($this->agent->referrer()));
             }
 
             $user_id = $this->session->userdata('user_id');
@@ -4722,7 +4707,7 @@ QUERY;
         }
 
         if ($this->is_login() == false) {
-          $this->crud_model->alert_exit('로그인 후 이용이 가능합니다.');
+          $this->crud_model->alert_exit('로그인 후 이용이 가능합니다.', $this->get_login_url($this->agent->referrer()));
         }
 
         $user_id = $this->session->userdata('user_id');
@@ -4889,7 +4874,7 @@ QUERY;
         $user_id = 0;
       } elseif ($category == 'wish' || $category =='WISH') {
         if ($this->is_login() == false) {
-          $this->crud_model->alert_exit('로그인 후 이용이 가능합니다.', base_url().'home/shop/main');
+          $this->redirect_login();
         }
 
         $user_id = $this->session->userdata('user_id');
@@ -4957,6 +4942,10 @@ QUERY;
         $this->page_data['cats'] = $cats;
         $this->page_data['cat_level'] = $cat_level;
 //        $this->crud_model->alert_exit(json_encode($cats));
+      } elseif ($category == 'wish' || $category =='WISH') {
+        if ($this->is_login() == false) {
+          $this->redirect_login();
+        }
       }
       
       $this->page_data['category'] = $category;
@@ -5053,14 +5042,14 @@ QUERY;
   
   public function coupon($para1 = '', $para2 = '', $para3 = '')
   {
-    if ($this->is_login() == false) {
-      $this->crud_model->alert_exit('로그인 후 이용이 가능합니다.', base_url().'home');
-    }
-    
     $user_id = $this->session->userdata('user_id');
   
     if ($para1 == 'list') {
       if ($para2 == 'my') {
+        if ($this->is_login() == false) {
+          $this->crud_model->alert_exit('로그인 후 이용이 가능합니다.', $this->get_login_url($this->agent->referrer()));
+        }
+  
         $page = $_GET['page'];
         $limit = COUPON_LIST_PAGE_SIZE;
         $offset = $limit * ($page - 1);
@@ -5085,6 +5074,10 @@ QUERY;
   
     } else if ($para1 == 'receive') {
   
+      if ($this->is_login() == false) {
+        $this->crud_model->alert_exit('로그인 후 이용이 가능합니다.', $this->get_login_url($this->agent->referrer()));
+      }
+      
       $coupon_id = $_GET['id'];
   
       $now = date('Y-m-d H:i:s');
@@ -5145,6 +5138,10 @@ QUERY;
       echo 'done';
   
     } else if ($para1 == 'get') {
+  
+      if ($this->is_login() == false) {
+        $this->crud_model->alert_exit('로그인 후 이용이 가능합니다.', $this->get_login_url($this->agent->referrer()));
+      }
       
       $user_coupon_id = $_GET['id'];
       $user_id = $this->session->userdata('user_id');
@@ -5178,6 +5175,9 @@ QUERY;
       echo json_encode($result);
       
     } else {
+      if ($this->is_login() == false) {
+        $this->redirect_login();
+      }
       $this->page_data['page_name'] = "coupon";
       $this->page_data['asset_page'] = "user_profile";
       $this->page_data['page_title'] = "coupon";

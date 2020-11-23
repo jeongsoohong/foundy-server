@@ -454,10 +454,6 @@
       $('#restoreModal .modal-body .text-center').text(res.message);
       $('#restoreModal').modal('show');
     }
-    <?php if ($need_kakao_agreement) { ?>
-    kakaoReauthorized('talk_message');
-    <?php } ?>
-    
   });
 
 </script>

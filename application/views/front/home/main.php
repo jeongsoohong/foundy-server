@@ -73,10 +73,10 @@
         <a href="<?php echo base_url().'home/find'; ?>" style="margin:auto;">
           <img class="img-responsive" src="<?php echo base_url(); ?>uploads/icon_0604/find01.png" alt="" />
         </a>
-        <a href="<?php echo base_url().'home/find/center/a/'.CENTER_TYPE_YOGA; ?>" style="margin:auto;">
+        <a href="<?php echo base_url().'home/find/center/'.CENTER_TYPE_YOGA; ?>" style="margin:auto;">
           <img class="img-responsive" src="<?php echo base_url(); ?>uploads/icon_0604/find02.png" alt="" />
         </a>
-        <a href="<?php echo base_url().'home/find/center/b/'.CENTER_TYPE_PILATES; ?>" style="margin:auto;">
+        <a href="<?php echo base_url().'home/find/center/'.CENTER_TYPE_PILATES; ?>" style="margin:auto;">
           <img class="img-responsive" src="<?php echo base_url(); ?>uploads/icon_0604/find03.png" alt="" />
         </a>
         <a href="<?php echo base_url().'home/find/class'; ?>" style="margin:auto;">

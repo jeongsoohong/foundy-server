@@ -422,7 +422,7 @@
     window.location.href='<?php echo base_url().'home/notice?type=introduce'; ?>';
   });
   $('.pnav_customer_center').on('click',function(){
-    window.location.href='http://pf.kakao.com/_xnzxbxaxb/chat';
+    window.open('http://pf.kakao.com/_xnzxbxaxb/chat', '_blank');
   });
   $('.pnav_shop_wishlist').on('click',function(){
     window.location.href='<?php echo base_url(); ?>home/shop?cat=wish&col=product_id&order=desc';

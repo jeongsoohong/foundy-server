@@ -96,12 +96,12 @@ include 'includes/bottom/index.php';
   }
   
   function appLinkAndInstall(url) {
-
     // 앱에 설정해놓은 커스텀 스킴. 여기선 "customScheme"
+    let scheme_url;
     <?php if (DEV_SERVER) { ?>
-    let scheme_url = "foundydev://";
+    scheme_url = "foundydev://";
     <?php } else { ?>
-    let scheme_url = 'foundy://';
+    scheme_url = 'foundy://';
     <?php } ?>
     if (url !== null && url !== '') {
       scheme_url = scheme_url + "web?url=" + url;
@@ -119,16 +119,13 @@ include 'includes/bottom/index.php';
       // 매 인터벌 마다 웹뷰가 활성화 인지 체크
       if(document.webkitHidden || document.mozHidden || document.msHidden || document.hidden){// 웹뷰 비활성화
         clearTimer();// 앱이 설치되어있을 경우 타이머 제거
-        // alert(1);
       }else{	// 웹뷰 활성화
         let diffTime = (new Date()).getTime() - visitedAt;
-        // alert(diffTime);
         if (diffTime > 2000) {
           clearTimer();// 앱이 설치되어있을 경우 타이머 제거
         }
       }
     }
-    // alert(userAgent);
     if (userAgent.match(/iPhone|iPad|iPod/)) {
       location.replace(scheme_url);
       // 앱이 설치 되어있는지 체크
@@ -143,10 +140,11 @@ include 'includes/bottom/index.php';
         // 안드로이드의 크롬에서는 intent만 동작하기 때문에 intent로 호출해야함
         setTimeout(
           function() {
+            let intent_url;
             <?php if (DEV_SERVER) { ?>
-            let intent_url = 'intent://#Intent;scheme=foundydev;package=me.foundy.dev;end';
+            intent_url = 'intent://#Intent;scheme=foundydev;package=me.foundy.dev;end';
             <?php } else { ?>
-            let intent_url = 'intent://#Intent;scheme=foundy;package=me.foundy;end';
+            intent_url = 'intent://#Intent;scheme=foundy;package=me.foundy;end';
             <?php } ?>
             if (url !== null && url !== '') {
               <?php if (DEV_SERVER) { ?>
@@ -155,7 +153,6 @@ include 'includes/bottom/index.php';
               intent_url = 'intent://web?url=' + url + '#Intent;scheme=foundy;package=me.foundy;end';
               <?php } ?>
             }
-            // alert(intent_url);
             location.href = intent_url;
           }, 1000);
       } else { // 크롬 이외의 브라우저들
