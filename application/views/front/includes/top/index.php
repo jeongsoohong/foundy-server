@@ -1,11 +1,3 @@
-<meta charset="UTF-8">
-<meta name="author" content="FOUNDY">
-<meta name="revisit-after" content="2 days">
-<meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
-<!--<meta name="appleid-signin-client-id" content="[CLIENT_ID]">-->
-<!--<meta name="appleid-signin-scope" content="[SCOPES]">-->
-<!--<meta name="appleid-signin-redirect-uri" content="[REDIRECT_URI]">-->
-<!--<meta name="appleid-signin-state" content="[STATE]">-->
 <?php
 $e = array(
   'general' => true, //description
@@ -40,6 +32,10 @@ meta_tags($e, $title, $desc, $imgurl, $url);
 <?php
 include 'meta/' . $asset_page . '.php';
 ?>
+<!--<meta name="appleid-signin-client-id" content="[CLIENT_ID]">-->
+<!--<meta name="appleid-signin-scope" content="[SCOPES]">-->
+<!--<meta name="appleid-signin-redirect-uri" content="[REDIRECT_URI]">-->
+<!--<meta name="appleid-signin-state" content="[STATE]">-->
 <!-- Favicon -->
 <link rel="apple-touch-icon-precomposed" sizes="167x167" href="<?php echo base_url(); ?>uploads/others/favicon.png">
 <link rel="shortcut icon" href="<?php echo base_url(); ?>uploads/others/favicon.png">
