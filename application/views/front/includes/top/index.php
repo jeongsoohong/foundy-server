@@ -1,14 +1,11 @@
 <meta charset="UTF-8">
-<!--<meta name="description" content="Find Health & Earth">-->
-<meta name="keywords" content="Yoga & Pilates, Class & Shop">
-<meta name="author" content="Five N Dime">
+<meta name="author" content="FOUNDY">
 <meta name="revisit-after" content="2 days">
 <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
 <!--<meta name="appleid-signin-client-id" content="[CLIENT_ID]">-->
 <!--<meta name="appleid-signin-scope" content="[SCOPES]">-->
 <!--<meta name="appleid-signin-redirect-uri" content="[REDIRECT_URI]">-->
 <!--<meta name="appleid-signin-state" content="[STATE]">-->
-
 <?php
 $e = array(
   'general' => true, //description
