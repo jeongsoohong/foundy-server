@@ -363,79 +363,79 @@
     </button>
     <div class="menu_main">
       <h3>
-        <a href="<?php echo base_url(); ?>home/user" style="color: #A5A3A0; font-size: 21px">MY PAGE</a>
+        <a href="javascript:void(0)" onclick="getLink('<?php echo base_url(); ?>home/user')" style="color: #A5A3A0; font-size: 21px">MY PAGE</a>
       </h3>
       <h3>
-        <a href="<?php echo base_url(); ?>home/coupon" style="color: #A5A3A0; font-size: 21px">COUPON BOX</a>
+        <a href="javascript:void(0)" onclick="getLink('<?php echo base_url(); ?>home/coupon')" style="color: #A5A3A0; font-size: 21px">COUPON BOX</a>
       </h3>
       <article class="main_shop">
         <h3 style="color: #845B4C; font-size: 21px">SHOP</h3>
         <section class="shop_theme">
           <h4>
-            <a href="<?php echo base_url(); ?>home/shop/main" style="color: #A5A3A0; font-size: 18px;">main</a>
+            <a href="javascript:void(0)" onclick="getLink('<?php echo base_url(); ?>home/shop/main')" style="color: #A5A3A0; font-size: 18px;">main</a>
           </h4>
           <h4>
-            <a href="<?php echo base_url().'home/shop?cat=all&col=product_id&order=desc'; ?>" style="color: #A5A3A0; font-size: 18px;">new</a>
+            <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=all&col=product_id&order=desc'; ?>')" style="color: #A5A3A0; font-size: 18px;">new</a>
           </h4>
           <div class="sld_wrap">
             <h4 class="sld_tit highlight" style="color: #A5A3A0; font-size: 18px;">yoga</h4>
             <div class="sld_li" style="display: none;">
               <a href="#" class="li_theme li_focus" style="color: #939393; font-size: 18px">Yoga wear</a>
               <div style="display: none;" class="li_cnt">
-                <a href="<?php echo base_url().'home/shop?cat=010101&col=product_id&order=desc'; ?>" style="color:#111111; font-size: 18px;">TOP</a>
-                <a href="<?php echo base_url().'home/shop?cat=010102&col=product_id&order=desc'; ?>" style="color:#111111; font-size: 18px;">BOTTOM</a>
-                <a href="<?php echo base_url().'home/shop?cat=010103&col=product_id&order=desc'; ?>" style="color:#111111; font-size: 18px;">OUTER</a>
+                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=010101&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">TOP</a>
+                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=010102&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">BOTTOM</a>
+                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=010103&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">OUTER</a>
               </div>
               <a href="#" class="li_theme li_focus" style="color: #939393; font-size: 18px">Yoga mat</a>
               <div style="display: none;" class="li_cnt">
-                <a href="<?php echo base_url().'home/shop?cat=010201&col=product_id&order=desc'; ?>" style="color:#111111; font-size: 18px;">Mat</a>
-                <a href="<?php echo base_url().'home/shop?cat=010202&col=product_id&order=desc'; ?>" style="color:#111111; font-size: 18px;">Towel</a>
+                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=010201&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">Mat</a>
+                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=010202&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">Towel</a>
               </div>
-              <a href="<?php echo base_url().'home/shop?cat=010203&col=product_id&order=desc'; ?>" class="li_focus" style="color: #939393; font-size: 18px">Prop</a>
-              <a href="<?php echo base_url().'home/shop?cat=010301&col=product_id&order=desc'; ?>" class="li_focus" style="color: #939393; font-size: 18px">Accessories</a>
+              <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=010203&col=product_id&order=desc'; ?>')" class="li_focus" style="color: #939393; font-size: 18px">Prop</a>
+              <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=010301&col=product_id&order=desc'; ?>')" class="li_focus" style="color: #939393; font-size: 18px">Accessories</a>
             </div>
             <h4 class="sld_tit highlight" style="color: #A5A3A0; font-size: 18px;">vegan</h4>
             <div class="sld_li" style="display: none;">
-              <a href="<?php echo base_url().'home/shop?cat=020100&col=product_id&order=desc'; ?>" class="li_focus" style="color: #939393; font-size: 18px">Cosmetic</a>
-              <a href="<?php echo base_url().'home/shop?cat=020200&col=product_id&order=desc'; ?>" class="li_focus" style="color: #939393; font-size: 18px">Foods</a>
+              <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=020100&col=product_id&order=desc'; ?>')" class="li_focus" style="color: #939393; font-size: 18px">Cosmetic</a>
+              <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=020200&col=product_id&order=desc'; ?>')" class="li_focus" style="color: #939393; font-size: 18px">Foods</a>
             </div>
             <h4 class="sld_tit highlight" style="color: #A5A3A0; font-size: 18px;">healing</h4>
             <div class="sld_li" style="display: none;">
               <a href="#" class="li_theme li_focus" style="color: #939393; font-size: 18px">Tea</a>
               <div style="display: none;" class="li_cnt">
-                <a href="<?php echo base_url().'home/shop?cat=030101&col=product_id&order=desc'; ?>" style="color:#111111; font-size: 18px;">차</a>
-                <a href="<?php echo base_url().'home/shop?cat=030102&col=product_id&order=desc'; ?>" style="color:#111111; font-size: 18px;">다도용품</a>
+                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=030101&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">차</a>
+                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=030102&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">다도용품</a>
               </div>
               <a href="#" class="li_theme li_focus" style="color: #939393; font-size: 18px">Fragrance</a>
               <div style="display: none;" class="li_cnt">
-                <a href="<?php echo base_url().'home/shop?cat=030201&col=product_id&order=desc'; ?>" style="color:#111111; font-size: 18px;">향</a>
-                <a href="<?php echo base_url().'home/shop?cat=030202&col=product_id&order=desc'; ?>" style="color:#111111; font-size: 18px;">아로마</a>
-                <a href="<?php echo base_url().'home/shop?cat=030203&col=product_id&order=desc'; ?>" style="color:#111111; font-size: 18px;">향꽂이</a>
+                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=030201&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">향</a>
+                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=030202&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">아로마</a>
+                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=030203&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">향꽂이</a>
               </div>
-              <a href="<?php echo base_url().'home/shop?cat=030301&col=product_id&order=desc'; ?>" class="li_focus" style="color: #939393; font-size: 18px">Meditation</a>
-              <a href="<?php echo base_url().'home/shop?cat=030302&col=product_id&order=desc'; ?>" class="li_focus" style="color: #939393; font-size: 18px">Book</a>
+              <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=030301&col=product_id&order=desc'; ?>')" class="li_focus" style="color: #939393; font-size: 18px">Meditation</a>
+              <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=030302&col=product_id&order=desc'; ?>')" class="li_focus" style="color: #939393; font-size: 18px">Book</a>
             </div>
           </div>
         </section>
       </article>
       <h3 >
-        <a href="<?php echo base_url(); ?>home/find" style="color: #845B4C; font-size: 21px">FIND</a>
+        <a href="javascript:void(0)" onclick="getLink('<?php echo base_url(); ?>home/find')" style="color: #845B4C; font-size: 21px">FIND</a>
       </h3>
       <h3>
-        <a href="<?php echo base_url(); ?>home/blog" style="color: #845B4C; font-size: 21px">LIFE</a>
+        <a href="javascript:void(0)" onclick="getLink('<?php echo base_url(); ?>home/blog')" style="color: #845B4C; font-size: 21px">LIFE</a>
       </h3>
     </div>
     <div class="menu_sub">
       <?php if ($this->app_model->is_app()) { ?>
         <h3 class="sub_work work_set">
-          <button onclick="open_setting_menu()" style="color: #845B4C;">SETTINGS</button>
+          <button href="javascript:void(0)" onclick="open_setting_menu()" style="color: #845B4C;">SETTINGS</button>
         </h3>
       <?php } ?>
       <h3 class="sub_work">
         <?php if ($this->session->userdata('user_login') == 'yes') { ?>
           <a href="javascript:void(0)" onclick="_logout();" style="color: #845B4C;">LOGOUT</a>
         <?php } else { ?>
-          <a href="<?php echo base_url(); ?>home/login" style="color: #845B4C;">LOGIN</a>
+          <a onclick="getLink('<?php echo base_url(); ?>home/login');" style="color: #845B4C;">LOGIN</a>
         <?php } ?>
       </h3>
     </div>
@@ -631,7 +631,7 @@
     // pageY = _pY;
     <?php } ?>
   }
-
+  
   let menu_on = 0;
   let setting_on = 0;
   function open_menu() {
@@ -661,6 +661,12 @@
     } else {
       user_logout();
     }
+  }
+  
+  function getLink(url) {
+    close_setting_menu();
+    close_menu();
+    location.href = url;
   }
 
   $(function(){
