@@ -51,8 +51,11 @@ if(! function_exists('meta_tags')){
       $url = base_url();
     }
     
+    $keywords = $CI->config->item('seo_keywords');
+    
     if($enable['general']){
       $output .= '<meta name="description" content="'.$desc.'" />';
+      $output .= '<meta name="keywords" content="'.$keywords.'" />';
     }
     if($enable['robot']){
       $output .= '<meta name="robots" content="index,follow"/>';
