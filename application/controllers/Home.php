@@ -751,7 +751,7 @@ class Home extends CI_Controller
       $restore = isset($_GET['r']);
       $relocation = base_url();
       if (isset($_GET['l'])) {
-        $relocation = substr(http_build_query($_GET), 2);
+        $relocation = build_get_location($_GET, 'l');
       }
 
       $this->page_data['page_name'] = "user/login";

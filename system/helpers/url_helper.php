@@ -611,6 +611,19 @@ if ( ! function_exists('build_url'))
   }
 
 }
+if ( ! function_exists('build_get_location'))
+{
+  function build_get_location($get, $target)
+  {
+    foreach ($get as $key => $value) {
+      if ($key == $target) {
+        return $value;
+      }
+    }
+    return '';
+  }
+  
+}
 if ( ! function_exists('get_back_url'))
 {
   function get_back_url($page_name, $is_login)
@@ -620,6 +633,7 @@ if ( ! function_exists('get_back_url'))
       $page_name == 'teacher/profile' ||
       $page_name == 'teacher/video/view' ||
       $page_name == 'shop/product' ||
+      $page_name == 'user/login' ||
       $page_name == 'blog/blog_view'
     )
     {
@@ -663,7 +677,7 @@ if ( ! function_exists('get_back_url'))
       } else {
         $back_url = base_url();
       }
-    } else { // find, blog, shop, shop/main, user, login
+    } else { // find, blog, shop, shop/main, user
       $back_url = base_url();
     }
     
