@@ -23,7 +23,6 @@ if(isset($from_admin)){
         $("#loading").fadeOut(500);
       });
       // setTimeout(function(){ load_iamges(); }, 1000);
-      
     });
   </script>
   

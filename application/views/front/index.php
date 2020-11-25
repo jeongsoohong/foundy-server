@@ -189,6 +189,11 @@ include 'includes/bottom/index.php';
     location.replace('<?php echo $back_url; ?>');
     <?php } ?>
   }
+  $(window).bind("pageshow", function(event) {
+    if (event.originalEvent.persisted) {
+      $("#loading").show().delay(500).fadeOut(500);
+    }
+  });
 </script>
 <?php } ?>
 </body>
