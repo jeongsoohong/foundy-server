@@ -636,10 +636,15 @@
   }
   
   function getLink(url) {
+    <?php if ($this->app_model->is_android_app()) { ?>
     setTimeout(function() {
       close_setting_menu();
       close_menu();
     }, 500);
+    <?php } else if ($this->app_model->is_ios_app()) { ?>
+    close_setting_menu();
+    close_menu();
+    <?php } ?>
     location.href = url;
   }
 
