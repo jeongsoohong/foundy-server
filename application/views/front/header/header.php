@@ -636,8 +636,10 @@
   }
   
   function getLink(url) {
-    close_setting_menu();
-    close_menu();
+    setTimeout(function() {
+      close_setting_menu();
+      close_menu();
+    }, 500);
     location.href = url;
   }
 
