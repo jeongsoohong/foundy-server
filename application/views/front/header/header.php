@@ -592,44 +592,16 @@
 
 <script type="text/javascript">
   
-  <?php if ($this->app_model->is_app()) { ?>
-  // var pageY = 0;
-  // var pageY2 = 0;
-  <?php } ?>
   window.onscroll = function() {
     var navbar = document.getElementById("navbar");
     var sticky = navbar.offsetTop;
     var _pY = window.pageYOffset;
 
-    // let bottomPos = $(window).height() + _pY;
-    // let pageHeight = $(document).height();
-  
-    // console.log('scrollTop: ' + $(window).scrollTop());
-    // console.log('window height : ' + $(window).height());
-    // console.log('page height: ' + $(document).height());
-    // console.log('bottom position: ' + bottomPos);
-  
-    // console.log('sticky : ' + sticky + ', pageYOffset : ' + _pY);
-    
     if (_pY > sticky) {
       navbar.classList.add("navigation-sticky");
     } else {
       navbar.classList.remove("navigation-sticky");
     }
-  
-    <?php if ($this->app_model->is_app()) { ?>
-    // if (_pY >= 56 && bottomPos < pageHeight - 56 && pageY > pageY2 && _pY > pageY) { // scroll down
-    //   toggleBottomBar('OFF');
-    //   $('#navbar').hide();
-      // } else if (_pY >= 56 && _pY < pageY) { // scroll up
-      //   toggleBottomBar('ON');
-    // } else {
-    //   toggleBottomBar('ON');
-    //   $('#navbar').show();
-    // }
-    // pageY2 = pageY;
-    // pageY = _pY;
-    <?php } ?>
   }
   
   let menu_on = 0;
