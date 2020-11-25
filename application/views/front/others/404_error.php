@@ -1,46 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html style="height: 100%;">
 <head>
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="<?php echo base_url(); ?>template/front/ico/apple-touch-icon-144-precomposed.png">
+  <meta charset="utf-8">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>파운디-건강한 라이프스타일 가이드</title>
   <link rel="shortcut icon" href="<?php echo base_url(); ?>uploads/others/favicon.png">
-  <!--    --><?php //$theme =  $this->db->get_where('ui_settings',array('type' => 'header_color'))->row()->value;?>
-  <link href="<?php echo base_url(); ?>template/front/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="<?php echo base_url(); ?>template/front/css/theme.css" rel="stylesheet">
-  <link href="<?php echo base_url(); ?>template/front/css/theme-ash-1.css" rel="stylesheet" id="theme-config-link">
-  <!--    --><?php //
-  //        $font =  $this->db->get_where('ui_settings',array('type' => 'font'))->row()->value;
-  //    ?><!--  -->
-  <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,600,700,800,900' rel='stylesheet' type='text/css'>
-  <link href='//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css' rel='stylesheet' type='text/css'>
-  <link href='//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-jp.css' rel='stylesheet' type='text/css'>
   <style>
-    *{
-      font-family: 'Spoqa Han Sans', 'Spoqa Han Sans JP', /*'Noto Sans KR',*/ 'Quicksand', 'Patua One', 'Roboto', FontAwesome, 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+    @font-face{
+      font-family:"futura-pt";
+      src:url("https://dev.foundy.me/template/fonts/futura-pt/FuturaPTMedium.otf") format("woff"),
+      url("https://dev.foundy.me/template/fonts/futura-pt/FuturaPTMedium.otf") format("opentype"),
+      url("https://dev.foundy.me/template/fonts/futura-pt/FuturaPTMedium.otf") format("truetype");
     }
-    .remove_one{
-      cursor:pointer;
-      padding-left:5px;
+    * {
+      padding: 0;
+      border: 0;
+      margin: 0;
     }
   </style>
 </head>
-<body id="home" class="wide">
-<section class="page-section text-center error-page" style="background-color: white; min-height: 100vh;">
-  <div class="container">
-    <div class="col-md-12 text-center">
-      <img src="<?php echo base_url(); ?>uploads/logo_image/foundy logo_0507.png" alt="foundy" style="height: 40px; width: 100px; "/>
-      </a>
+<body style="height: 100%; font-family: sans-serif;">
+<div style="height: inherit; box-sizing: border-box; margin: 0; min-width: 320px; position: relative; background-color: #845b4c;">
+  <div style="font-size: 0; text-align: center; width: 240px; height: 184px; position: absolute; top: 40%; left: 50%; margin-top: -92px; margin-left: -120px;">
+    <div>
+      <div>
+        <img src="<?php echo base_url(); ?>template/icon/exclamation_white.png" width="44" height="44" style="display: block; margin: 0 auto 12px;">
+        <h1 style="font-family: 'futura-pt' !important; color: #fff; font-size: 36px; font-weight: normal !important; line-height: 32px; vertical-align: top;">Oops!</h1>
+      </div>
+      <p style="margin: 28px 0 0 0; color: #fff; font-size: 16px; font-weight: normal; line-height: 1.65; text-align: center;">페이지를 찾을 수 없습니다!</p>
     </div>
-    <h3 style="margin: 64px auto; font-size: 64px; line-height: 64px;">404</h3>
-    <h2>
-      <i class="fa fa-warning"></i>
-      oops! the page you requested was not found
-    </h2>
-    <p>
-      <a class="btn btn-theme" href="<?php echo base_url(); ?>">
-        back to home
-      </a>
-    </p>
+    <a href="<?php echo base_url(); ?>" style="display: block; text-decoration: none; font-family: 'futura-pt' !important; background-color: #fff; box-sizing: border-box; padding: 0 16px; color: #111; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.3); font-size: 16px; font-weight: normal; height: 56px; line-height: 56px; border-radius: 28px; margin: 24px auto 0;">BACK TO HOME</a>
   </div>
-</section>
+</div>
+
 </body>
 </html>

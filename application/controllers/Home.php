@@ -10,6 +10,10 @@ class Home extends CI_Controller
   {
     parent::__construct();
 
+//    if ($this->uri->segment(2) != 'server' && $this->uri->segment(3) != 'check') {
+//      redirect(base_url().'home/server/check');
+//    }
+    
     $this->load->database();
 
     defined('IMG_PATH_PROFILE')  OR define('IMG_PATH_PROFILE', '/web/public_html/uploads/profile_image/');
@@ -5217,5 +5221,11 @@ QUERY;
       echo 'done';
     }
   }
-  
+ 
+  public function server($para1 = '')
+  {
+    if ($para1 == 'check') {
+      $this->load->view('front/others/server_check');
+    }
+  }
 }
