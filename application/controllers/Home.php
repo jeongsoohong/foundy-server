@@ -14,6 +14,8 @@ class Home extends CI_Controller
 //      redirect(base_url().'home/server/check');
 //    }
     
+//   $this->mts_model->send_user_approval_code('01045644126', '123456');
+    
     $this->load->database();
 
     defined('IMG_PATH_PROFILE')  OR define('IMG_PATH_PROFILE', '/web/public_html/uploads/profile_image/');
@@ -1368,17 +1370,16 @@ QUERY;
 
     } elseif ($view_type == "center_register") {
 
-      $user_id = $this->session->userdata('user_id');
-      $query = <<<QUERY
-SELECT center_id FROM user WHERE user_id={$user_id}
-QUERY;
-      $row = $this->db->query($query)->row();
+//      $user_id = $this->session->userdata('user_id');
+//      $query = <<<QUERY
+//SELECT center_id FROM user WHERE user_id={$user_id}
+//QUERY;
+//      $row = $this->db->query($query)->row();
 
-      if ($row->center_id > 0) {
-        echo ("<script>alert('이미신청하셨습니다'); window.location.href='{$base_url}home/user'</script>");
-        exit;
-      } else {
-      }
+//      if ($row->center_id > 0) {
+//        echo ("<script>alert('이미신청하셨습니다'); window.location.href='{$base_url}home/user'</script>");
+//        exit;
+//      }
       $this->load->view('front/user/center_register');
 
     } elseif ($view_type == "teacher_register") {
@@ -5228,4 +5229,5 @@ QUERY;
       $this->load->view('front/others/server_check');
     }
   }
+  
 }
