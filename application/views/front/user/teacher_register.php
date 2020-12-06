@@ -45,7 +45,7 @@
                     <div class="form-group">
                       <input class="form-control" id="instagram-url" name="instagram" value=""
                              type="url"
-                             placeholder="인스타그램 홈 URL" data-toggle="tooltip"
+                             placeholder="인스타그램 홈 url" data-toggle="tooltip"
                              title="instagram">
                     </div>
                   </div>

@@ -185,26 +185,26 @@
                         <?php
                         if (isset($teacher_data->youtube) && strlen($teacher_data->youtube) > 0) {
                           ?>
-                          <a href="<?php echo $teacher_data->youtube; ?>" onclick="window.open(this.href, '_blank'); return false;">
+                          <a href="<?php echo $teacher_data->youtube; ?>" target="_blank">
                             <span class="img-youtube"><img src="<?php echo base_url(); ?>template/icon/youtube_icon.png" width="20" height="20"></span>
                           </a>
                           <?php
                         }
                         if (isset($teacher_data->instagram) && strlen($teacher_data->instagram) > 0) {
                           ?>
-                          <a href="<?php echo $teacher_data->instagram; ?>" onclick="window.open(this.href, '_blank'); return false;">
+                          <a href="<?php echo $teacher_data->instagram; ?>" target="_blank">
                             <span class="img-insta"><img src="<?php echo base_url(); ?>template/icon/insta_icon.png" width="20" height="20"></span>
                           </a>
                         <?php } ?>
-<!--                        --><?php
-//                        if (isset($teacher_data->homepage) && strlen($teacher_data->homepage) > 0) {
+                        <?php
+                        if (isset($teacher_data->homepage) && strlen($teacher_data->homepage) > 0) {
 //                        ?>
-                          <a href="<?php echo $teacher_data->homepage; ?>" onclick="window.open(this.href, '_blank'); return false;">
+                          <a href="<?php echo $teacher_data->homepage; ?>" target="_blank">
                             <span class="img-blog">
-                              <img src="<?php echo base_url(); ?>template/icon/ic_blog.png" width="12" height="auto">
+                              <img src="<?php echo base_url(); ?>template/icon/ic_blog.png" width="12" height="auto" style="margin-bottom: 4px;">
                             </span>
                           </a>
-<!--                        --><?php //} ?>
+                        <?php } ?>
                       </td>
                       <td>
                       </td>

@@ -327,13 +327,15 @@
                             <img src="<?php echo base_url(); ?>uploads/icon/icon01_call.png" style="height: 12px; width: 12px; margin-bottom: 4px;">
                           </a>
                           <!-- 인스타그램 버튼 -->
-                          <a href="#">
+                          <? if ($center_data->instagram) { ?>
+                          <a href="<?= $center_data->instagram; ?>" target="_blank">
                             <img src="<?php echo base_url(); ?>template/icon/ic_instagram.png" width="16" height="16" style="margin-bottom: 4px;">
                           </a>
+                          <? } ?>
                           <!-- 블로그 버튼 -->
-                          <a href="#">
-                            <img src="<?php echo base_url(); ?>template/icon/ic_blog.png" width="16" height="auto" style="margin-bottom: 4px;">
-                          </a>
+<!--                          <a href="#">-->
+<!--                            <img src="--><?php //echo base_url(); ?><!--template/icon/ic_blog.png" width="16" height="auto" style="margin-bottom: 4px;">-->
+<!--                          </a>-->
                         </li>
                         <li class="btn_fn">
                           <!-- 구분선 -->

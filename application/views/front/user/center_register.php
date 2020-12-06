@@ -88,6 +88,14 @@
                   </div>
                   <div class="col-md-12">
                     <div class="form-group">
+                      <input class="form-control" id="instagram-url" name="instagram" value=""
+                             type="url"
+                             placeholder="인스타그램 홈 url" data-toggle="tooltip"
+                             title="instagram">
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
                       <label class="col-sm-3 control-label" for="demo-hor-inputemail">요가</label>
                       <div class="col-sm-6">
                         <div class="col-sm-">

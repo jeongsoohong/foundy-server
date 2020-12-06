@@ -1555,6 +1555,7 @@ QUERY;
       $this->form_validation->set_rules('address-detail', 'center-address-detail', 'trim|max_length[256]');
       $this->form_validation->set_rules('latitude', 'center-latitude', 'trim|required|max_length[32]');
       $this->form_validation->set_rules('longitude', 'center-longitude', 'trim|required|max_length[32]');
+      $this->form_validation->set_rules('instagram', 'instagram', 'trim|valid_url|max_length[256]');
 
       if ($this->form_validation->run() == FALSE) {
         echo '<br>' . validation_errors();
@@ -1567,6 +1568,7 @@ QUERY;
         $address_detail = $this->input->post('address-detail');
         $longitude = $this->input->post('longitude');
         $latitude = $this->input->post('latitude');
+        $instagram = $this->input->post('instagram');
         $categories_yoga = $this->input->post('category_yoga');
         $categories_pilates = $this->input->post('category_pilates');
         $shower = $this->input->post('shower');
@@ -1623,6 +1625,10 @@ QUERY;
         } else {
           $valet = 1;
         }
+        
+        if (isset($instagram) == false || empty($instagram) == true) {
+          $instagram = null;
+        }
 
         $data = array(
           'user_id' => $user_id,
@@ -1633,6 +1639,7 @@ QUERY;
           'address_detail' => $address_detail,
           'latitude' => $latitude,
           'longitude' => $longitude,
+          'instagram' => $instagram,
           'activate' => 0,
           'shower' => $shower,
           'towel' => $towel,
@@ -1674,7 +1681,7 @@ QUERY;
       $this->form_validation->set_rules('teacher_name', 'teacher_name', 'trim|required|max_length[32]');
       $this->form_validation->set_rules('about', 'about', 'trim|required|max_length[64]');
       $this->form_validation->set_rules('youtube', 'youtube', 'trim|valid_url|max_length[256]');
-      $this->form_validation->set_rules('instagram_', 'instagram', 'trim|valid_url|max_length[256]');
+      $this->form_validation->set_rules('instagram', 'instagram', 'trim|valid_url|max_length[256]');
 //      $this->form_validation->set_rules('homepage', 'homepage', 'trim|valid_url|max_length[256]');
 
       if ($this->form_validation->run() == FALSE) {
