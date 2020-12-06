@@ -1011,10 +1011,10 @@ class Home extends CI_Controller
         }
     
         $auth_data = json_decode($auth->auth_data);
-//        $user_data = $this->db->get_where('user', array('phone' => $auth_data->mobileno))->row();
-//        if (isset($user_data) && empty($user_data) == false) {
-//          $this->redirect_error('이미 가입한 회원입니다!');
-//        }
+        $user_data = $this->db->get_where('user', array('phone' => $auth_data->mobileno))->row();
+        if (isset($user_data) && empty($user_data) == false) {
+          $this->redirect_error('이미 가입한 회원입니다!');
+        }
     
         $reg_type = $this->session->userdata('reg_type');
         if ($reg_type == 'kakao') {
