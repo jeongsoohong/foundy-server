@@ -46,7 +46,7 @@
           </div>
           <div class="col-sm-12">
             <a href="javascript:void(0)" onclick="do_register()">
-              <span class="btn btn-theme-sm btn-block btn-theme-dark pull-right">
+              <span class="btn btn-theme-sm btn-block btn-theme-dark pull-right" style="border-width:unset;border-color:#ad796d;background-color:#ad796d">
                 회원가입
               </span>
             </a>
@@ -115,6 +115,9 @@
         if (res.status === 'success') {
           alert(res.message);
           window.location.href = '<?php echo base_url(); ?>';
+        } else if (res.status === 'approval') {
+            alert(res.message);
+            window.location.href = res.approval_url;
         } else {
           let text = '<strong>실패하였습니다</strong><br>' + res.message;
           notify(text,'warning','bottom','right');

@@ -106,6 +106,40 @@
     line-height: 40px;
     padding: 0 10px;
   }
+  .shop-item {
+    padding: 0 10px 10px !important;
+  }
+  .shop-best-items {
+    border: 0;
+  }
+  .shop-content {
+    border-bottom: 1px solid #e0e0e0;
+  }
+  .shop-content:last-child {
+    padding-bottom: 0;
+    border: 0;
+  }
+  .sub_thm, .sub_thm a {
+    color: #757575;
+  }
+  .brand-name {
+    margin: 12px 0 2px;
+  }
+  .item-title {
+    height: 20px !important;
+  }
+  .item-price {
+    height: 14px;
+  }
+  .item-price-bold {
+    margin: 2px 0 12px;
+  }
+  .item-img .item-banner {
+    width: 30px !important;
+    height: 30px !important;
+    right: 6px;
+    bottom: 6px;
+  }
 </style>
 <section class="page-section" style="margin-top: 0px !important; margin-bottom: 0px !important; padding-top: 0px
     !important; padding-bottom: 0px !important;">
@@ -121,7 +155,7 @@
               ?>
                 <a class="font-futura"
                   <?php if (!strcmp($cat->cat_code, $category)) { ?>
-                    style="color: darkorange"
+                    style="color: #FF6633"
                   <?php } ?>
                    href="<?php echo base_url(); ?>home/shop?col=product_id&order=desc&cat=<?php echo $cat->cat_code; ?>">
                   <?php
@@ -141,7 +175,7 @@
               ?>
               <a class="font-futura"
                 <?php if (!strcmp($cat->cat_code, $category)) { ?>
-                  style="color: coral"
+                  style="color: #FF6633"
                 <?php } ?>
                  href="<?php echo base_url(); ?>home/shop?col=product_id&order=desc&cat=<?php echo $cat->cat_code; ?>">
                 <?php
@@ -161,7 +195,7 @@
         <?php if (isset($best_items) && !empty($best_items)) { ?>
           <div class="col-md-12 shop-best shop-content">
             <div class="col-md-12 shop-header">
-              <h6 class="text-overflow text-center">BEST ITEM</h6>
+              <h6 class="text-overflow text-center font-futura">BEST ITEM</h6>
             </div>
             <div class="col-md-12 shop-best-items" style="margin: 0 !important;">
               <?php
@@ -174,7 +208,7 @@
                     <div class="col-md-12 item-img">
                       <a href="<?php echo base_url().'home/shop/product?id='.$item->product_id; ?>">
                         <img class="img-responsive" src="<?php echo $item->item_image_url_0; ?>" alt=""/>
-                        <img class="img-responsive item-banner" src="<?php echo base_url().'uploads/shop/best.png'; ?>" alt=""/>
+<!--                        <img class="img-responsive item-banner" src="--><?php //echo base_url().'uploads/shop/best.png'; ?><!--" alt=""/>-->
                       </a>
                     </div>
                     <div class="col-md-12 brand-name">
@@ -200,8 +234,15 @@
                         <?php echo $item->item_discount_rate.'% '.$this->crud_model->get_price_str($item->item_sell_price); ?>원
                       </div>
                     <?php } ?>
+                    <style>
+                      .item-like a {
+                        width: 20px;
+                        height: 20px;
+                        line-height: 20px;
+                      }
+                    </style>
                     <div class="col-md-12 item-like">
-                      <?php echo $this->crud_model->sns_func_html('like', 'product', $item->like, $item->product_id, 20, 20); ?>
+                      <?php echo $this->crud_model->sns_func_html('like', 'product', $item->like, $item->product_id, 20, 17.41); ?>
                     </div>
                   </div>
                 </div>
@@ -214,11 +255,11 @@
         <div class="col-md-12 shop-content">
           <?php if ($category == 'all' || $category == 'ALL') { ?>
             <div class="col-md-12 shop-header">
-              <h6 class="text-overflow text-center">NEW IN</h6>
+              <h6 class="text-overflow text-center font-futura">NEW IN</h6>
             </div>
           <?php } elseif ($category == 'wish' || $category == 'WISH') { ?>
             <div class="col-md-12 shop-header">
-              <h6 class="text-overflow text-center">WISH LIST</h6>
+              <h6 class="text-overflow text-center font-futura">WISH LIST</h6>
             </div>
           <?php } else { ?>
             <div class="col-md-12 shop-header">

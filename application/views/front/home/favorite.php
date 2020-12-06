@@ -33,15 +33,16 @@
   } else {
     foreach ($bookmark_centers as $center) {
       ?>
-      <tr style="height: 40px">
-        <td style="padding: 5px 10px 5px 10px; width: 65%;">
-          (스튜디오) <?php echo $center->title; ?>
+      <tr style="height: 68px" class="favorite_studio">
+        <td style="padding: 14px 16px; font-size: 11px; font-weight: bold; line-height: 1.75; color: #9e9e9e;">
+          스튜디오
+          <br><span style="display: block; font-size: 13px; color: #333;"><?php echo $center->title; ?></span>
         </td>
-        <td style="width: 20%; text-align: right;">
+        <td style="width: 32px; text-align: right;">
           <a href="<?php echo base_url().'home/center/profile/'.$center->center_id.'?nav=schedule'; ?>">
-              <span class="schedule" style="font-size: 10px;">
-                SCHEDULE
-              </span>
+            <div style="width: 32px; height: 32px; border-radius: 50%; background-color: #8B5949; line-height: 32px; text-align: center;">
+              <img src="<?php echo base_url(); ?>template/icon/ic_calendar.png" width="16" height="16" style="margin-bottom: 6px;">
+            </div>
           </a>
         </td>
         <td style="text-align: center;">
@@ -51,15 +52,16 @@
     <?php }
     foreach ($bookmark_teachers as $teacher) {
       ?>
-      <tr style="height: 40px">
-        <td style="padding: 5px 10px 5px 10px; width: 65%;">
-          (강사) <?php echo $teacher->name; ?>
+      <tr style="height: 68px" class="favorite_studio">
+        <td style="padding: 14px 16px; font-size: 11px; font-weight: bold; line-height: 1.75; color: #9e9e9e;">
+          강사
+          <br><span style="display: block; font-size: 13px; color: #333;"><?php echo $teacher->name; ?></span>
         </td>
-        <td style="width: 20%; text-align: right;">
-          <a href="<?php echo base_url().'home/teacher/profile/'.$teacher->user_id; ?>">
-                <span class="view" style="font-size: 10px;">
-                  VIEW
-                </span>
+        <td style="width: 32px; text-align: right;">
+          <a href="<?php echo base_url().'home/teacher/profile/'.$teacher->user_id.'?nav=schedule'; ?>">
+            <div style="width: 32px; height: 32px; border-radius: 50%; background-color: #8B5949; line-height: 32px; text-align: center;">
+              <img src="<?php echo base_url(); ?>template/icon/ic_calendar.png" width="16" height="16" style="margin-bottom: 6px;">
+            </div>
           </a>
         </td>
         <td style="text-align: center;">

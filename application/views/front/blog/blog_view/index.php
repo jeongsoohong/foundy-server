@@ -61,6 +61,22 @@
   .post-title {
     font-size: 20px;
   }
+  .content-area .page-section {
+    padding: 32px 0 0 !important;
+  }
+  .post-header {
+    margin-bottom: 40px;
+  }
+  .post-meta {
+    line-height: 1.5;
+  }
+  .content-area .col-md-12.content .post-wrap.post-single {
+    padding-top: 0 !important;
+  }
+  hr.page-divider {
+    border: 0;
+    margin: 0;
+  }
 </style>
 <section class="page-section with-sidebar">
   <div class="container">
@@ -102,7 +118,7 @@
 <!--            <img class="img-responsive" src="--><?php //echo $blog->main_image_url; ?><!--" alt="" style="min-height: 100%;"/>-->
 <!--          </div>-->
           <div class="post-body">
-            <div class="post-excerpt">
+            <div class="post-excerpt" style="padding: 0;">
               <p>
                 <?php echo $blog->description; ?>
               </p>

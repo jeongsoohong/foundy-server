@@ -99,6 +99,19 @@
   .post-desc {
     font-size: 13px !important;
   }
+  .post-body .post-excerpt {
+    height: 20px !important;
+    font-size: 0;
+    line-height: normal;
+  }
+  .post-body .post-excerpt .text-xl {
+    font-size: 0;
+    font-weight: normal;
+    line-height: 0;
+  }
+  .recent-post {
+    border: 0 !important;
+  }
 </style>
 <section class="page-section with-sidebar">
   <div class="container">
@@ -134,8 +147,12 @@
           <div class="post-media">
             <iframe src="<?php echo $video_data->video_url;?>" frameborder="0">
             </iframe>
-            <h2 class="post-title" style="padding: 10px 10px 0 10px !important; text-align: left"><?php echo $video_data->title; ?></h2>
-            <p class="post-desc" style="padding: 10px 10px 10px 10px !important;">
+          </div>
+          <div class="post-body" style="margin: 0 !important; padding: 20px 16px 24px; position: unset; box-sizing: border-box; height: auto !important;">
+            <h2 class="post-title" style="color: #111; font-size: 16px !important; font-weight: bold !important; margin: 0; padding-bottom: 16px; line-height: 1.5;">
+              <?php echo $video_data->title; ?>
+            </h2>
+            <p class="post-desc" style="color: #757575; font-size: 12px !important; line-height: 1.75; padding-bottom: 12px;">
               <?php echo $video_data->desc; ?>
               <br>
               <?php
@@ -146,32 +163,23 @@
               }
               $cat[strlen($cat) - 1] = "\0";
               ?>
-              <span class="text-sm" style="color:saddlebrown;">
-              <?php echo $cat; ?>
-            </span>
+              <span class="text-sm" style="color:saddlebrown; font-size: 11px; font-weight: bold !important;">
+                <?php echo $cat; ?>
+              </span>
             </p>
-          </div>
-          <!--            <div class="buttons">
-                          <div id="share"></div>
-                      </div>
-          -->
-          <div class="post-body">
             <div class="post-excerpt">
-              <?php if ($iam_this_video) { ?>
-                <a href="javascript:void(0);">
-                  <span class="video-edit pull-right" data-target='video-edit' style="color: grey;">
-                    <i class="fa fa-ellipsis-v"></i>
-                  </span>
-                </a>
-                <div id="video-edit">
-                </div>
-              <?php } ?>
+              <style>
+                #like a {
+                  width: 20px;
+                  height: 20px;
+                  line-height: 20px;
+                }
+              </style>
               <span class="text-xl pull-left" id="like">
-                <?php echo $this->crud_model->sns_func_html('like', 'class', $liked, $video_data->video_id, 20, 20); ?>
+                <?php echo $this->crud_model->sns_func_html('like', 'class', $liked, $video_data->video_id, 20, 17.41); ?>
               </span>
             </div>
           </div>
-          <!--          <hr class="page-divider"/>-->
         </article>
       </div>
       <!-- /CONTENT -->
@@ -219,7 +227,6 @@
       $('#video-edit').hide();
     }
   }
-
   $(document).ready(function() {
     active_menu_bar('find');
     $('.video-edit').click(function(e) {

@@ -45,8 +45,8 @@
     </div>
   </div>
 
-  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
-  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
   <style>
     .slick-slider .slick-prev.slick-arrow {
       left: 10px;
@@ -88,11 +88,14 @@
     .slider-nav-item a, .slider-nav-item a img {
       width: inherit;
     }
+    .slider-for .slick-track {
+      padding: 12px 0 !important;
+    }
   </style>
 
 <!--  <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>-->
-  <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-  <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
   <script type="text/javascript">
     $(document).ready(function() {
       $('.slider-nav').slick({

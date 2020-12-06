@@ -71,19 +71,20 @@ class Crud_model extends CI_Model
     }
   }
   
-  function do_register($email, $password, $account) {
+  function do_register($email, $password, $account, $user_name, $phone, $gender, $login_type) {
     $ins = array(
       'user_type' => USER_TYPE_GENERAL,
-      'username' => '',
+      'username' => $user_name,
       'nickname' => '',
-      'gender' => '',
+      'gender' => $gender,
       'email' => $email,
-      'phone' => '',
+      'phone' => $phone,
       'kakao_thumbnail_image_url' => '',
       'kakao_profile_image_url' => '',
       'profile_image_url' => '',
       'password' => (empty($password) == true ? '' : sha1($password)),
       'unregister' => 0,
+      'mobile_approval' => 1,
     );
   
     $this->db->set('create_at', 'NOW()', false);
@@ -93,8 +94,9 @@ class Crud_model extends CI_Model
     if ($this->db->affected_rows() <= 0) {
       $result['status'] = 'fail';
       $result['message'] = '관리자에게 문의 바랍니다(not inserted)';
-      echo json_encode($result);
-      exit;
+      return $result;
+//      echo json_encode($result);
+//      exit;
     }
   
     $user_id = $this->db->insert_id();
@@ -102,13 +104,72 @@ class Crud_model extends CI_Model
   
     $ins = array(
       'user_id' => $user_data->user_id,
-      'account' => $account,
+      'account' => json_encode($account),
       'unregistered' => 0,
     );
     $this->db->set('register_at', 'NOW()', false);
     $this->db->insert('user_register',$ins);
-
-    return $user_data;
+  
+    $ins = array(
+      'user_id' => $user_data->user_id,
+      'account' => json_encode($account),
+      'session_id' => $this->crud_model->get_session_id(),
+      'ip' => $this->crud_model->get_session_ip(),
+      'is_browser' => $this->agent->is_browser(),
+      'is_mobile' => $this->agent->is_mobile(),
+      'is_robot' => $this->agent->is_robot(),
+      'is_referral' => $this->agent->is_referral(),
+      'browser' => $this->agent->browser(),
+      'version' => $this->agent->version(),
+      'mobile' => $this->agent->mobile(),
+      'robot' => $this->agent->robot(),
+      'platform' => $this->agent->platform(),
+      'referrer' => $this->agent->referrer(),
+      'agent' => $this->agent->agent_string(),
+      'login_type' => $login_type,
+    );
+    $this->db->set('login_at', 'NOW()', false);
+    $this->db->insert('user_login', $ins);
+  
+    $user_id = $user_data->user_id;
+    $kakao_id = $user_data->kakao_id;
+    $email = $user_data->email;
+    $user_type = $user_data->user_type;
+    $nickname = $user_data->nickname;
+    $kakao_thumbnail_image_url = $user_data->kakao_thumbnail_image_url;
+    $profile_image_url = $user_data->profile_image_url;
+  
+    $this->session->set_userdata('user_login', 'yes');
+    $this->session->set_userdata('user_id', $user_id);
+    $this->session->set_userdata('kakao_id', $kakao_id);
+    $this->session->set_userdata('email', $email);
+    $this->session->set_userdata('user_type', $user_type);
+    $this->session->set_userdata('nickname', $nickname);
+    $this->session->set_userdata('kakao_thumbnail_image_url', $kakao_thumbnail_image_url);
+    $this->session->set_userdata('profile_image_url', $profile_image_url);
+    $this->session->set_userdata('login_type', $login_type);
+    
+    if ($login_type == 'apple') {
+      $data = array(
+        'sub' => $account->payload->sub,
+        'access_token' => $account->access_token,
+        'refresh_token' => $account->refresh_token,
+        'issued_at' => $account->payload->iat + 32400,
+        'expired_at' => $account->payload->iat + $account->expires_in + 32400,
+      );
+      $data['user_id'] = $user_id;
+      $this->db->set('last_updated_at', 'now()', false);
+      $this->db->set('create_at', 'now()', false);
+      $this->db->insert('user_apple', $data);
+    }
+  
+    $result['status'] = 'success';
+    $result['message'] = "첫 방문을 환영합니다.";
+    return $result;
+//    echo json_encode($result);
+//    exit;
+//
+//    return $user_data;
   }
   
   function do_kakao_login($post)
@@ -123,61 +184,81 @@ class Crud_model extends CI_Model
     $profile = $kakao_account['profile'];
     $email = $kakao_account['email'];
   
-  
     $user_data = $this->db->get_where('user', array('email' => $email))->row();
   
     if (empty($user_data)) {
-      $user_type = USER_TYPE_GENERAL;
-      $username = '';
-      $nickname = $profile['nickname'];
-      $gender = $kakao_account['gender'];
-      $kakao_thumbnail_image_url = $profile['thumbnail_image_url'];
-      $kakao_profile_image_url = $profile['profile_image_url'];
-      $profile_image_url = '';
-      $password = '';
+      $reg_type = $this->session->userdata('reg_type');
+      if ($reg_type == 'kakao') {
+        $auth_data = $post['auth'];
+        
+        $user_type = USER_TYPE_GENERAL;
+        $nickname = $profile['nickname'];
+//        $gender = $kakao_account['gender'];
+        $kakao_thumbnail_image_url = $profile['thumbnail_image_url'];
+        $kakao_profile_image_url = $profile['profile_image_url'];
+        $profile_image_url = '';
+        $password = '';
+        $username = $auth_data->name;
+        $phone = $auth_data->mobileno;
+        $gender = $auth_data->gender == 1 ? 'male' : 'female';
 //          $create_at = $connected_at;
-    
-      if ($kakao_account['has_phone_number'] == true) {
-        $phone = $kakao_account['phone_number'];
-      } else {
-        $phone = '';
-      }
-    
-      $ins = array(
-        'kakao_id' => $kakao_id,
-        'user_type' => $user_type,
-        'username' => $username,
-        'nickname' => $nickname,
-        'gender' => $gender,
-        'email' => $email,
+
+//      if ($kakao_account['has_phone_number'] == true) {
+//        $phone = $kakao_account['phone_number'];
+//      } else {
+//        $phone = '';
+//      }
+  
+        $ins = array(
+          'kakao_id' => $kakao_id,
+          'user_type' => $user_type,
+          'username' => $username,
+          'nickname' => $nickname,
+          'gender' => $gender,
+          'email' => $email,
         'phone' => $phone,
-        'kakao_thumbnail_image_url' => $kakao_thumbnail_image_url,
-        'kakao_profile_image_url' => $kakao_profile_image_url,
-        'profile_image_url' => $profile_image_url,
-        'password' => $password,
-        'unregister' => 0,
+          'kakao_thumbnail_image_url' => $kakao_thumbnail_image_url,
+          'kakao_profile_image_url' => $kakao_profile_image_url,
+          'profile_image_url' => $profile_image_url,
+          'password' => $password,
+          'unregister' => 0,
+          'mobile_approval' => 1,
 //            'last_login_at' => date("Y-m-d H:i:s"),
 //            'create_at' => $create_at,
-      );
-    
-      $this->db->set('create_at', 'NOW()', false);
-      $this->db->set('last_login_at', 'NOW()', false);
-      $this->db->insert('user', $ins);
-    
-      $user_data = $this->db->get_where('user', array('kakao_id' => $kakao_id))->row();
-    
-      $ins = array(
-        'user_id' => $user_data->user_id,
-        'kakao_id' => $user_data->kakao_id,
-        'account' => json_encode($kakao_account),
-        'unregistered' => 0,
-      );
-      $this->db->set('register_at', 'NOW()', false);
-      $this->db->insert('user_register', $ins);
-    
-      $result['status'] = 'success';
-      $result['message'] = "첫 방문을 환영합니다.";
-    
+        );
+  
+        $this->db->set('create_at', 'NOW()', false);
+        $this->db->set('last_login_at', 'NOW()', false);
+        $this->db->insert('user', $ins);
+  
+        $user_data = $this->db->get_where('user', array('kakao_id' => $kakao_id))->row();
+  
+        $ins = array(
+          'user_id' => $user_data->user_id,
+          'kakao_id' => $user_data->kakao_id,
+          'account' => json_encode($kakao_account),
+          'unregistered' => 0,
+        );
+        $this->db->set('register_at', 'NOW()', false);
+        $this->db->insert('user_register', $ins);
+  
+        $this->session->set_userdata('reg_type', '');
+        $this->session->set_userdata('reg_account', '');
+  
+        $result['status'] = 'success';
+        $result['message'] = "첫 방문을 환영합니다.";
+  
+      } else {
+        
+        $this->session->set_userdata('reg_type', 'kakao');
+        $this->session->set_userdata('reg_account', $post);
+  
+        $result['status'] = 'approval';
+        $result['message'] = "본인인증이 필요합니다.";
+        return $result;
+        
+      }
+      
     } else {
     
       if ($user_data->unregister == 1) {
@@ -205,10 +286,10 @@ class Crud_model extends CI_Model
         $result['message'] = "로그인해주셔서 감사합니다.";
       }
     
-      if ($kakao_account['has_phone_number'] == true) {
-        $phone = $kakao_account['phone_number'];
-        $this->db->set('phone', $phone);
-      }
+//      if ($kakao_account['has_phone_number'] == true) {
+//        $phone = $kakao_account['phone_number'];
+//        $this->db->set('phone', $phone);
+//      }
     
       $this->db->set('last_login_at', 'NOW()', false);
       $this->db->where('user_id', $user_data->user_id);
@@ -726,10 +807,14 @@ class Crud_model extends CI_Model
 //  }
   function get_like_icon($liked)
   {
+//    if ($liked == true) {
+//      return base_url() . 'uploads/shop/heart_do.png';
+//    }
+//    return base_url() . 'uploads/shop/heart_undo.png';
     if ($liked == true) {
-      return base_url() . 'uploads/shop/heart_do.png';
+      return base_url() . 'template/icon/ic_heart_on.png';
     }
-    return base_url() . 'uploads/shop/heart_undo.png';
+    return base_url() . 'template/icon/ic_heart_off.png';
   }
 
   function get_bookmark_icon($bookmarked)
@@ -1227,6 +1312,39 @@ QUERY;
     $this->db->delete('teacher', array('teacher_id' => $teacher_id));
   }
   
+  function user_register_validation($email, $password1, $password2)
+  {
+    $user_data = $this->db->get_where('user', array('email' => $email))->row();
+    if (isset($user_data) == true && empty($user_data) == false) {
+      if ($user_data->unregister == 0) {
+        $result['status'] = 'fail';
+        $result['message'] = "중복된 이메일이 존재합니다.";
+        echo json_encode($result);
+        exit;
+      } else {
+        $result['status'] = 'fail';
+        $result['message'] = "탈퇴한 회원입니다. 계정 복원 / 삭제를 원하시면 해당 이메일로 로그인해주세요.";
+        echo json_encode($result);
+        exit;
+      }
+    }
+  
+    if ($password1 != $password2) {
+      $result['status'] = 'fail';
+      $result['message'] = "입력하신 비밀번호가 일치하지 않습니다.";
+      echo json_encode($result);
+      exit;
+    }
+  
+    $r = $this->check_pw($password1);
+    if ($r[0] == false) {
+      $result['status'] = 'fail';
+      $result['message'] = $r[1];
+      echo json_encode($result);
+      exit;
+    }
+  }
+  
   function check_pw($pw)
   {
     $num = preg_match('/[0-9]/u', $pw);
@@ -1457,5 +1575,20 @@ QUERY;
     }
   
     return $purchase_info->purchase_code;
+  }
+  
+  function get_list_page_num($total_cnt, $size, $page)
+  {
+    $num['total'] = (int)($total_cnt / $size) + ($total_cnt % $size > 0 ? 1 : 0);
+    $num['prev'] = $page > 1 ? $page - 1 : 0;
+    $num['next'] = $num['total'] > $page ? $page + 1 : 0;
+    return $num;
+  }
+  
+  function get_user_auth_type_str($type) {
+    switch ($type) {
+      case USER_AUTH_TYPE_NICE_CHECK_PLUS_SAFE: return '나이스 안심인증';
+    }
+    return '';
   }
 }

@@ -82,16 +82,15 @@ include 'meta/' . $asset_page . '.php';
   }
   body {
     background: #F3EFEB;
+    margin: 0 !important; /* 리셋을 하지 않은 경우 추가 */
   }
   .page-section {
     padding-top: 10px !important;
     padding-bottom: 10px !important;
   }
-  body {
-      margin: 0 !important; /* 리셋을 하지 않은 경우 추가 */
-  }
   .content-area {
-      min-height: calc(100vh - 98px) !important;
+    /*min-height: calc(100vh - 98px) !important;*/
+    min-height: 100vh !important;
   }
   .font-futura {
     font-family: futura-pt !important;

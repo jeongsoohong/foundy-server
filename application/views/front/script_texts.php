@@ -726,11 +726,24 @@
   }
 
   function chatKakaoChannel() {
+    Kakao.init('8ee901a556539927d58b30a6bf21a781');
     Kakao.Channel.chat({
       channelPublicId: '_xnzxbxaxb',
     });
   }
 
+  function validateEmail(emailAddress) {
+    let pattern = new RegExp(/^(("[\w-+\s]+")|([\w-+]+(?:\.[\w-+]+)*)|("[\w-+\s]+")([\w-+]+(?:\.[\w-+]+)*))(@((?:[\w-+]+\.)*\w[\w-+]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][\d]\.|1[\d]{2}\.|[\d]{1,2}\.))((25[0-5]|2[0-4][\d]|1[\d]{2}|[\d]{1,2})\.){2}(25[0-5]|2[0-4][\d]|1[\d]{2}|[\d]{1,2})\]?$)/i);
+    return pattern.test(emailAddress);
+  }
+  
+  function fnNicePopup(){
+    nicePopup = window.open('', '_parent', 'width=500, height=550, top=100, left=100, fullscreen=no, menubar=no, status=no, toolbar=no, titlebar=yes, location=no, scrollbar=no');
+    document.form_chk.action = "https://nice.checkplus.co.kr/CheckPlusSafeModel/checkplus.cb";
+    // document.form_chk.target = "popupChk";
+    document.form_chk.target = "_parent";
+    document.form_chk.submit();
+  }
 </script>
 
 <?php if ($this->app_model->is_app()) { ?>

@@ -392,13 +392,101 @@
     width: 30px;
     height: 30px;
   }
+  .brand-name {
+    margin: 12px 0 0 !important;
+  }
+  .item-like a {
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    display: block;
+  }
+  .item-like img {
+    margin: 0;
+  }
+  .item-img .item-banner {
+    width: auto !important;
+    height: 38px !important;
+    right: 6px;
+    bottom: 6px;
+  }
+  .brand-name, .item-name,
+  .item-base-info, .item-meta-info,
+  .item-nav-tab, .item-content-info {
+    padding: 0 16px;
+  }
+  .item-price {
+    margin-bottom: 4px !important;
+  }
+  .item-base-info {
+    line-height: 1.5;
+  }
+  .item-nav-tab {
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 40px !important;
+  }
+  .item-nav-tab div {
+    padding: 0;
+  }
+  .item-meta-info td {
+    color: #757575;
+  }
+  .item-content-info td {
+    color: #757575;
+  }
+  .item-content-shipping td {
+    color: #757575;
+  }
+  .item-nav-tab a {
+    font-size: 11px;
+  }
+  .item-content-question {
+    margin-top: 16px;
+  }
+  .item-content-shipping {
+    padding: 16px;
+  }
+  .item-content-info, .item-content {
+    padding: 16px !important;
+  }
+  .item-question-btn {
+    margin: 0 16px;
+    padding: 0;
+  }
+  .item-review-on {
+    box-sizing: border-box;
+    padding: 0 10%;
+    height: 40px;
+    line-height: 40px;
+  }
+  @media(min-width: 414px){
+    .item-review-on {
+      padding: 0 11%;
+    }
+  }
+  .review-star, .item-review-star {
+    line-height: 60px;
+  }
+  .review-star span img, .item-review-star span img {
+    width: 20px;
+    height: 20px;
+  }
+  .item-base-info {
+    margin: 0 !important;
+    line-height: 1.5;
+  }
+  .item-name, .item-name h4 {
+    margin: 0 0 0 0 !important;
+    line-height: 1.5;
+  }
 </style>
 <section class="page-section">
   <div class="container">
     <div class="row">
       <div class="col-md-12 product-content">
         <?php if ($product->status != SHOP_PRODUCT_STATUS_ON_SALE) { ?>
-          <img class="img-responsive item-banner" src="<?php echo base_url().'uploads/shop/sold out.png'; ?>" alt=""/>
+          <img class="img-responsive item-banner" src="<?php echo base_url().'template/icon/ic_soldOut.png'; ?>" alt=""/>
         <?php } ?>
         <div class="col-md-12 item-images">
           <?php
@@ -419,17 +507,25 @@
           <?php echo $product->item_base_info; ?>
         </div>
         <div class="col-md-12 item-meta-info">
+          <style>
+            .item-price-bold .item-like a {
+              width: 20px;
+              height: 20px;
+              line-height: 20px;
+              margin-right: 8px;
+            }
+          </style>
           <?php if ($product->item_discount_rate == 0) { ?>
             <div class="col-md-12 item-price-bold">
               <?php echo $this->crud_model->get_price_str($product->item_sell_price); ?>원
               <span class="pull-right item-like">
-                <?php echo $this->crud_model->sns_func_html('like', 'product', $liked, $product->product_id, 20, 20); ?>
+                <?php echo $this->crud_model->sns_func_html('like', 'product', $liked, $product->product_id, 20, 17.41); ?>
               </span>
               <?php if ($this->app_model->is_app()) { ?>
-                <span class="pull-right item-share">
-                  <a href="javascript:shareURL('<?php echo $url; ?>')">
-                    <img src='<?php echo base_url(); ?>uploads/icon_0504/icon10_share.png' alt='share' style='width:15px !important; height: 15px !important;'>
-                  </a>
+                <span style="float: right; display: block; width: 20px; height: 20px; text-align: center; line-height: 20px; vertical-align: top; margin-right: 16px;">
+                    <a href="javascript:shareURL('<? echo $url; ?>');" style="display: block; width: inherit; height: inherit; line-height: inherit;">
+                      <img src="<? echo base_url(); ?>template/icon/ic_share_on.png" width="20" height="20">
+                    </a>
                 </span>
               <?php } ?>
             </div>
@@ -442,8 +538,15 @@
             <div class="col-md-12 item-price-bold" style="color: #FF6633">
               <?php echo $product->item_discount_rate.'% '.$this->crud_model->get_price_str($product->item_sell_price); ?>원
               <span class="pull-right item-like">
-                <?php echo $this->crud_model->sns_func_html('like', 'product', $liked, $product->product_id, 20, 20); ?>
+                <?php echo $this->crud_model->sns_func_html('like', 'product', $liked, $product->product_id, 20, 17.41); ?>
               </span>
+              <?php if ($this->app_model->is_app()) { ?>
+                <span style="float: right; display: block; width: 20px; height: 20px; text-align: center; line-height: 20px; vertical-align: top; margin-right: 16px;">
+                    <a href="javascript:shareURL('<? echo $url; ?>');" style="display: block; width: inherit; height: inherit; line-height: inherit;">
+                      <img src="<? echo base_url(); ?>template/icon/ic_share_on.png" width="20" height="20">
+                    </a>
+                </span>
+              <?php } ?>
             </div>
           <?php } ?>
         </div>
@@ -451,7 +554,7 @@
           <table>
             <tbody>
             <tr>
-              <th>배송정보</th>
+              <th style="vertical-align: top;">배송정보</th>
               <td>
                 <?php if ($shop_shipping->free_shipping) {?>
                   무료배송
@@ -462,8 +565,8 @@
               </td>
             </tr>
             <tr>
-              <th>브랜드공지</th>
-              <td><?php echo $brand_info->brand_text; ?></td>
+              <th style="vertical-align: top;">브랜드공지</th>
+              <td style="padding-bottom: 20px;"><? echo $brand_info->brand_text; ?></td>
             </tr>
             </tbody>
           </table>
@@ -538,20 +641,20 @@
           </div>
           <div class="col-md-12 item-review-star">
             <?php $i = 0; for (; $i < $review_score_i; $i++) { ?>
-              <span><img src="<?php echo base_url().'uploads/icon/icon13_star.png'; ?>"/></span>
+              <span><img src="<?php echo base_url().'uploads/icon/icon13_star.png'; ?>" alt="" width="20" height="20"/></span>
             <?php }
             if ($review_score_i < 5)  {
               if ($review_score_f <=2) { ?>
-                <span><img src="<?php echo base_url().'uploads/icon/icon12_star.png'; ?>"/></span>
+                <span><img src="<?php echo base_url().'uploads/icon/icon12_star.png'; ?>" alt="" width="20" height="20"/></span>
               <?php } else if ($review_score_f <= 8) { ?>
-                <span><img src="<?php echo base_url().'uploads/icon/icon14_star half.png'; ?>"/></span>
+                <span><img src="<?php echo base_url().'uploads/icon/icon14_star half.png'; ?>" alt="" width="20" height="20"/></span>
               <?php } else { ?>
-                <span><img src="<?php echo base_url().'uploads/icon/icon13_star.png'; ?>"/></span>
+                <span><img src="<?php echo base_url().'uploads/icon/icon13_star.png'; ?>" alt="" width="20" height="20"/></span>
               <?php }
               $i++;
             }
             for (; $i < 5; $i++) { ?>
-              <span><img src="<?php echo base_url().'uploads/icon/icon12_star.png'; ?>"/></span>
+              <span><img src="<?php echo base_url().'uploads/icon/icon12_star.png'; ?>" alt="" width="20" height="20"/></span>
             <?php
             }?>
           </div>

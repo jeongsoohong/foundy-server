@@ -61,7 +61,7 @@
         </div>
         <div class="row">
           <div class="col-xs-6 text-left">
-            <?php if ($control == 'shop') { ?>
+            <?php if ($control == 'shop' || $control == 'center') { ?>
               <div class="pad-ver">
                 <a href="#" onclick="ajax_modal('forget_form','forget_password','email_sent_with_new_password!','forget','')"
                    class="btn-link mar-rgt" style="color:#fff !important;">

@@ -21,7 +21,7 @@ foreach ($center_data as $center) {
               </td>
             </tr>
             <tr style="height: 23px">
-              <td style="width: 85%">
+              <td style="width: 85%; padding-top: 8px;">
                 <?php echo "{$center->address} {$center->address_detail}"; ?>
               </td>
               <td></td>

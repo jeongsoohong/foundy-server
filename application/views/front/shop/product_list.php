@@ -10,11 +10,11 @@ if (isset($shop_items)) {
           <a href="<?php echo base_url().'home/shop/product?id='.$item->product_id; ?>">
             <img class="img-responsive" src="<?php echo $item->item_image_url_0; ?>" alt=""/>
             <?php if ($item->status == SHOP_PRODUCT_STATUS_STOP_SALE) { ?>
-              <img class="img-responsive item-banner" src="<?php echo base_url().'uploads/shop/sold out.png'; ?>" alt=""/>
+              <img class="img-responsive item-banner" src="<?php echo base_url().'template/icon/ic_soldOut.png'; ?>" alt=""/>
             <?php } elseif ($item->item_discount_rate > 0) { ?>
-              <img class="img-responsive item-banner" src="<?php echo base_url().'uploads/shop/sale.png'; ?>" alt=""/>
+              <img class="img-responsive item-banner" src="<?php echo base_url().'template/icon/ic_sale.png'; ?>" alt=""/>
             <?php } else { ?>
-              <img class="img-responsive item-banner" src="<?php echo base_url().'uploads/shop/new.png'; ?>" alt=""/>
+<!--              <img class="img-responsive item-banner" src="--><?php //echo base_url().'uploads/shop/new.png'; ?><!--" alt=""/>-->
             <?php } ?>
           </a>
         </div>
@@ -41,8 +41,15 @@ if (isset($shop_items)) {
             <?php echo $item->item_discount_rate.'% '.$this->crud_model->get_price_str($item->item_sell_price); ?>원
           </div>
         <?php } ?>
+        <style>
+          .item-like a {
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+          }
+        </style>
         <div class="col-md-12 item-like">
-          <?php echo $this->crud_model->sns_func_html('like', 'product', $item->like, $item->product_id, 20, 20); ?>
+          <?php echo $this->crud_model->sns_func_html('like', 'product', $item->like, $item->product_id, 20, 17.41); ?>
         </div>
       </div>
     </div>

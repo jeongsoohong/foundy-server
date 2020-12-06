@@ -488,110 +488,252 @@
     </article>
   <?php } ?>
 </div>
-<header class="header header-logo-left">
-  <div class="header-wrapper">
-    <div class="container">
-      <div class="flex-row">
-        <div class="flex-col-2" style="text-align: center;">
-          <?php if ($this->app_model->is_app() == false) { ?>
-            <a href="javascript:void(0)" onclick="open_menu()">
-              <img src="<?php echo base_url(); ?>template/front/header/imgs/icon_menu_black.png" alt="menu" style="height:15px; width:22px; margin-top:12px">
-            </a>
-          <?php } else if (strncasecmp($page_name,'home',4)) { ?>
-            <a href="javascript:void(0)" onclick="getBack();">
-              <img src="<?php echo base_url(); ?>template/front/header/imgs/prev_black.png" alt="menu" style="height:22px; width:15px; margin-top:10px">
-            </a>
-<!--          --><?php //} else { ?>
-<!--            <a href="javascript:void(0)" onclick="categoryMenuToggle()">-->
-<!--              <img src="--><?php //echo base_url(); ?><!--template/front/header/imgs/icon_menu_black.png" alt="menu" style="height:15px; width:22px; margin-top:12px">-->
-<!--            </a>-->
-          <?php } ?>
-        </div>
-        <div class="flex-col-8" style="text-align: center;">
-          <!-- Logo -->
-          <a href="<?php echo base_url();?>">
-            <img src="<?php echo base_url(); ?>template/front/header/imgs/logo_foundy.png" alt="home" style="height: 30px; width: auto; margin-top: 5px;"/>
-          </a>
-          <!-- /Logo -->
-        </div>
-        <div class="flex-col-2" id="cart-on" style="text-align: center;">
-<!--          --><?php //if (!strncasecmp($page_name,'shop',4)) { ?>
-            <a id="go-cart" href="<?php echo base_url().'home/shop/cart';?>" style="display: flex">
-              <?php if ($this->crud_model->cart_on()) {?>
-                <img src="<?php echo base_url(); ?>template/front/header/imgs/icon_basket_black.png" alt="cart" style="height:26px;width:24px;margin-top:6px"/>
-                <img src="<?php echo base_url(); ?>template/front/header/imgs/basket_badge.png" alt="cart" style="height:10px;width:10px;margin-top:6px;margin-left:-2px;"/>
-              <?php } else { ?>
-                <img src="<?php echo base_url(); ?>template/front/header/imgs/icon_basket_black.png" alt="cart" style="height:26px;width:24px;margin-top:6px"/>
-                <img src="<?php echo base_url(); ?>template/front/header/imgs/basket_badge.png" alt="cart" style="display:none;height:10px;width:10px;margin-top:6px;margin-left:-2px;"/>
-              <?php } ?>
-            </a>
-<!--          --><?php //} else { ?>
-<!--          <a href="--><?php //echo base_url(); if ($this->session->userdata('user_login') == 'yes') { echo ('home/user'); } else { echo ('home/login'); } ?><!--">-->
-<!--            --><?php
-//            if ($this->session->userdata('user_login') == 'yes') {
-//              ?>
-<!--              <img src="--><?php //echo base_url(); ?><!--uploads/icon/mypage_icon.png" alt="foit" style="height:30px; width: 30px; margin-top: 5px"/>-->
-<!--              --><?php
-//            } else {
-//              ?>
-<!--              <img src="--><?php //echo base_url(); ?><!--uploads/icon/join_icon.png" alt="foit" style="height:30px; width: 30px; margin-top: 5px"/>-->
-<!--              --><?php
-//            }
-//            ?>
-<!--          </a>-->
-<!--          --><?php //} ?>
+
+<?php if ($this->app_model->is_app()) { ?>
+  <?php if ($page_name == 'home') {  // only home ?>
+    <header class="header header-logo-left" id="fd-header" style="position: fixed; width: 100%; height: 56px; z-index: 15;">
+      <div class="header-wrapper" style="padding: 0 !important; position: relative; width: inherit; height: inherit; background-color: transparent;">
+        <div class="container" style="padding: 0; border: 0; margin: 0; width: 100% !important;">
+          <div class="flex-row" style="display: block; margin: 0">
+            <div class="flex-col-8" style="text-align: center; width: 100%; height: 56px; padding: 0; flex: none; max-width: none;">
+              <a href="<?php echo base_url(); ?>" style="display: block; line-height: 56px;">
+                <img src="<?php echo base_url(); ?>template/icon/logo_foundy_white.png" alt="home" style="height: 23px; width: auto; margin-top: -1px;">
+              </a>
+            </div>
+            <div class="flex-col-2" id="cart-on" style="text-align: center; padding: 0; display: block; width: 40px; height: 40px; position: absolute; top: 8px; right: 0; z-index: 12">
+              <a id="go-cart" href="<?php echo base_url(); ?>home/shop/cart" style="display: block; width: 40px; height: 40px;">
+                <img src="<?php echo base_url(); ?>template/icon/icon_basket_white.png" alt="cart" style="width: 20px; height: 22px; margin-top: 8px;">
+                <?php if ($this->crud_model->cart_on()) {?>
+                  <img src="<?php echo base_url(); ?>template/front/header/imgs/basket_badge.png" alt="cart" style="width: 18px; height: 18px; margin-top: -8px; margin-left: -8px;">
+                <?php } else { ?>
+                  <img src="<?php echo base_url(); ?>template/front/header/imgs/basket_badge.png" alt="cart" style="display:none; width: 18px; height: 18px; margin-top: -8px; margin-left: -8px;">
+                <?php } ?>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="navigation-wrapper" id="navbar" style="background-color: #FFFFFF;">
-    <div class="container" style="height: 40px; width: 100%; padding: 0; margin: 0">
-      <!-- Navigation -->
-      <nav class="navigation clearfix">
-        <ul class="nav sf-menu">
-          <?php if (!strncasecmp($page_name,'shop',4)) { ?>
-            <li class="shop-nav main">
-              <a href="<?php echo base_url().'home/shop/main'; ?>" >MAIN</a>
-            </li>
-            <li class="shop-nav new">
-              <a href="<?php echo base_url().'home/shop?cat=all&col=product_id&order=desc'; ?>" >NEW</a>
-            </li>
-            <li class="shop-nav yoga">
-              <a href="<?php echo base_url().'home/shop?cat=010000&col=product_id&order=desc'; ?>" >YOGA</a>
-            </li>
-            <li class="shop-nav vegan">
-              <a href="<?php echo base_url().'home/shop?cat=020000&col=product_id&order=desc'; ?>" >VEGAN</a>
-            </li>
-            <li class="shop-nav healing">
-              <a href="<?php echo base_url().'home/shop?cat=030000&col=product_id&order=desc'; ?>" >HEALING</a>
-            </li>
-          <?php } else { ?>
-            <li class="main-nav home">
-              <a href="<?php echo base_url(); ?>">HOME</a>
-            </li>
-            <li class="main-nav find">
-              <a href="<?php echo base_url().'home/find'; ?>" >FIND</a>
-            </li>
-            <!--          <li class="life">-->
-            <!--            <a href="--><?php //echo $life_url; ?><!--">LIFE</a>-->
-            <!--          </li>-->
-            <li class="main-nav earth">
-              <!--                        <a href="--><?php //echo $earth_url; ?><!--">EARTH</a>-->
-              <a href="<?php echo base_url().'home/blog'; ?>" >LIFE</a>
-            </li>
-            <li class="main-nav shop">
-              <a id="go-shop" href="<?php echo base_url().'home/shop/main'; ?>" >SHOP</a>
-            </li>
-          <?php } ?>
-        </ul>
-      </nav>
-      <!-- /Navigation -->
-    </div>
-  </div>
-</header>
+    </header>
+  <?php } else if (!strncasecmp($page_name,'shop',4)) { // shop category ?>
+    <header class="header header-logo-left" id="fd-header">
+      <div class="header-wrapper" style="padding: 0 !important; background-color: #533a30;">
+        <div class="container" style="padding: 0; border: 0; margin: 0; width: 100% !important;">
+          <div class="flex-row" style="display: block; margin: 0">
+            <div class="flex-col-2" style="text-align: center; padding: 0; display: block; width: 40px; height: 40px; position: absolute; top: 8px; left: 0; z-index: 12;">
+              <a href="javascript:void(0)" onclick="getBack()" style="display: block; width: inherit; height: inherit; text-align: center; line-height: 40px;">
+                <img src="<?php echo base_url(); ?>template/icon/ic_back_white.png" alt="back" style="width: auto; height: 18px; margin-top: -3px; margin-left: -4px;" class="ic_white">
+              </a>
+            </div>
+            <div class="flex-col-8" style="text-align: center; width: 100%; height: 56px; padding: 0; flex: none; max-width: none;">
+              <a href="<?php echo base_url(); ?>" style="display: block; line-height: 56px;">
+                <img src="<?php echo base_url(); ?>template/icon/logo_foundy_white.png" alt="home" style="height: 23px; width: auto; margin-top: -1px;">
+              </a>
+            </div>
+            <div class="flex-col-2" id="cart-on" style="text-align: center; padding: 0; display: block; width: 40px; height: 40px; position: absolute; top: 8px; right: 0; z-index: 12">
+              <a id="go-cart" href="<?php echo base_url(); ?>home/shop/cart" style="display: block; width: 40px; height: 40px;">
+                <img src="<?php echo base_url(); ?>template/icon/icon_basket_white.png" alt="cart" style="width: 20px; height: 22px; margin-top: 8px;">
+                <?php if ($this->crud_model->cart_on()) {?>
+                  <img src="<?php echo base_url(); ?>template/front/header/imgs/basket_badge.png" alt="cart" style="width: 18px; height: 18px; margin-top: -8px; margin-left: -8px;">
+                <?php } else { ?>
+                  <img src="<?php echo base_url(); ?>template/front/header/imgs/basket_badge.png" alt="cart" style="display:none; width: 18px; height: 18px; margin-top: -8px; margin-left: -8px;">
+                <?php } ?>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="navigation-wrapper" id="navbar" style="background-color: #FFFFFF; height: 45px;">
+        <div class="container" style="height: 44px; width: 100%; padding: 0; margin: 0">
+          <nav class="navigation clearfix" style="height: 44px;">
+            <ul class="nav sf-menu" style="height: 44px;">
+              <li class="shop-nav main active_under" style="height: 44px;">
+                <a href="<?php echo base_url(); ?>home/shop/main" style="padding: 0; line-height: 44px;">MAIN</a>
+              </li>
+              <li class="shop-nav new" style="height: 44px;">
+                <a href="<?php echo base_url(); ?>home/shop?cat=all&col=product_id&order=desc" style="padding: 0; line-height: 44px;">NEW</a>
+              </li>
+              <li class="shop-nav yoga" style="height: 44px;">
+                <a href="<?php echo base_url(); ?>home/shop?cat=010000&col=product_id&order=desc" style="padding: 0; line-height: 44px;">YOGA</a>
+              </li>
+              <li class="shop-nav vegan" style="height: 44px;">
+                <a href="<?php echo base_url(); ?>home/shop?cat=020000&col=product_id&order=desc" style="padding: 0; line-height: 44px;">VEGAN</a>
+              </li>
+              <li class="shop-nav healing" style="height: 44px;">
+                <a href="<?php echo base_url(); ?>home/shop?cat=030000&col=product_id&order=desc" style="padding: 0; line-height: 44px;">HEALING</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </header>
+  <?php } else { // find, life ?>
+    <header class="header header-logo-left" id="fd-header" style=" /* position: fixed; z-index: 15; */ width: 100%; height: 56px; ">
+      <div class="header-wrapper" style="/* position: relative; */ padding: 0 !important; background-color: #533a30; width: inherit; height: inherit;">
+        <div class="container" style="padding: 0; border: 0; margin: 0; width: 100% !important;">
+          <div class="flex-row" style="display: block; margin: 0">
+            <div class="flex-col-2" style="text-align: center; padding: 0; display: block; width: 40px; height: 40px; position: absolute; top: 8px; left: 0; z-index: 12;">
+              <a href="javascript:void(0)" onclick="getBack()" style="display: block; width: inherit; height: inherit; text-align: center; line-height: 40px;">
+                <img src="<?php echo base_url(); ?>template/icon/ic_back_white.png" alt="back" style="width: auto; height: 18px; margin-top: -3px; margin-left: -4px;" class="ic_white">
+              </a>
+            </div>
+            <div class="flex-col-8" style="text-align: center; width: 100%; height: 56px; padding: 0; flex: none; max-width: none;">
+              <a href="<?php echo base_url(); ?>" style="display: block; line-height: 56px;">
+                <img src="<?php echo base_url(); ?>template/icon/logo_foundy_white.png" alt="home" style="height: 23px; width: auto; margin-top: -1px;">
+              </a>
+            </div>
+            <div class="flex-col-2" id="cart-on" style="text-align: center; padding: 0; display: block; width: 40px; height: 40px; position: absolute; top: 8px; right: 0; z-index: 12">
+              <a id="go-cart" href="<?php echo base_url(); ?>home/shop/cart" style="display: block; width: 40px; height: 40px;">
+                <img src="<?php echo base_url(); ?>template/icon/icon_basket_white.png" alt="cart" style="width: 20px; height: 22px; margin-top: 8px;">
+                <?php if ($this->crud_model->cart_on()) {?>
+                  <img src="<?php echo base_url(); ?>template/front/header/imgs/basket_badge.png" alt="cart" style="width: 18px; height: 18px; margin-top: -8px; margin-left: -8px;">
+                <?php } else { ?>
+                  <img src="<?php echo base_url(); ?>template/front/header/imgs/basket_badge.png" alt="cart" style="display:none; width: 18px; height: 18px; margin-top: -8px; margin-left: -8px;">
+                <?php } ?>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+  <?php } ?>
+<?php } else { ?>
+  <?php if (!strncasecmp($page_name,'shop',4)) { // shop category ?>
+    <header class="header header-logo-left" id="fd-header">
+      <div class="header-wrapper" style="padding: 0 !important;">
+        <div class="container" style="padding: 0; border: 0; margin: 0; width: 100% !important;">
+          <div class="flex-row" style="display: block; margin: 0">
+            <div class="flex-col-2" style="text-align: center; padding: 0; display: block; width: 40px; height: 40px; position: absolute; top: 8px; left: 0; z-index: 12;">
+              <a href="javascript:void(0)" onclick="open_menu()" style="display: block; width: inherit; height: inherit; text-align: center; line-height: 40px;">
+                <img src="<?php echo base_url(); ?>template/front/header/imgs/icon_menu_black.png" alt="menu" style="width: 19px; height: 13px; margin-top: -3px; margin-left: -1px;">
+              </a>
+            </div>
+            <div class="flex-col-8" style="text-align: center; width: 100%; height: 56px; padding: 0; flex: none; max-width: none;">
+              <a href="<?php echo base_url(); ?>" style="display: block; line-height: 56px;">
+                <img src="<?php echo base_url(); ?>template/front/header/imgs/logo_foundy.png" alt="home" style="height: 23px; width: auto; margin-top: -1px;">
+              </a>
+            </div>
+            <div class="flex-col-2" id="cart-on" style="text-align: center; padding: 0; display: block; width: 40px; height: 40px; position: absolute; top: 8px; right: 0; z-index: 12">
+              <a id="go-cart" href="<?php echo base_url(); ?>home/shop/cart" style="display: block; width: 40px; height: 40px;">
+                <img src="<?php echo base_url(); ?>template/front/header/imgs/icon_basket_black.png" alt="cart" style="width: 20px; height: 22px; margin-top: 8px;">
+                <?php if ($this->crud_model->cart_on()) {?>
+                  <img src="<?php echo base_url(); ?>template/front/header/imgs/basket_badge.png" alt="cart" style="width: 18px; height: 18px; margin-top: -8px; margin-left: -8px;">
+                <?php } else { ?>
+                  <img src="<?php echo base_url(); ?>template/front/header/imgs/basket_badge.png" alt="cart" style="display:none; width: 18px; height: 18px; margin-top: -8px; margin-left: -8px;">
+                <?php } ?>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="navigation-wrapper" id="navbar" style="background-color: #FFFFFF; height: 45px;">
+        <div class="container" style="height: 44px; width: 100%; padding: 0; margin: 0">
+          <nav class="navigation clearfix" style="height: 44px;">
+            <ul class="nav sf-menu" style="height: 44px;">
+              <li class="shop-nav main active_under" style="height: 44px;">
+                <a href="<?php echo base_url(); ?>home/shop/main" style="padding: 0; line-height: 44px;">MAIN</a>
+              </li>
+              <li class="shop-nav new" style="height: 44px;">
+                <a href="<?php echo base_url(); ?>home/shop?cat=all&col=product_id&order=desc" style="padding: 0; line-height: 44px;">NEW</a>
+              </li>
+              <li class="shop-nav yoga" style="height: 44px;">
+                <a href="<?php echo base_url(); ?>home/shop?cat=010000&col=product_id&order=desc" style="padding: 0; line-height: 44px;">YOGA</a>
+              </li>
+              <li class="shop-nav vegan" style="height: 44px;">
+                <a href="<?php echo base_url(); ?>home/shop?cat=020000&col=product_id&order=desc" style="padding: 0; line-height: 44px;">VEGAN</a>
+              </li>
+              <li class="shop-nav healing" style="height: 44px;">
+                <a href="<?php echo base_url(); ?>home/shop?cat=030000&col=product_id&order=desc" style="padding: 0; line-height: 44px;">HEALING</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </header>
+  <?php } else { // main category ?>
+    <header class="header header-logo-left" id="fd-header">
+      <div class="header-wrapper" style="padding: 0 !important;">
+        <div class="container" style="padding: 0; border: 0; margin: 0; width: 100% !important;">
+          <div class="flex-row" style="display: block; margin: 0">
+            <div class="flex-col-2" style="text-align: center; padding: 0; display: block; width: 40px; height: 40px; position: absolute; top: 8px; left: 0; z-index: 12;">
+              <a href="javascript:void(0)" onclick="open_menu()" style="display: block; width: inherit; height: inherit; text-align: center; line-height: 40px;">
+                <img src="<?php echo base_url(); ?>template/front/header/imgs/icon_menu_black.png" alt="menu" style="width: 19px; height: 13px; margin-top: -3px; margin-left: -1px;">
+              </a>
+            </div>
+            <div class="flex-col-8" style="text-align: center; width: 100%; height: 56px; padding: 0; flex: none; max-width: none;">
+              <a href="<?php echo base_url(); ?>" style="display: block; line-height: 56px;">
+                <img src="<?php echo base_url(); ?>template/front/header/imgs/logo_foundy.png" alt="home" style="height: 23px; width: auto; margin-top: -1px;">
+              </a>
+            </div>
+            <div class="flex-col-2" id="cart-on" style="text-align: center; padding: 0; display: block; width: 40px; height: 40px; position: absolute; top: 8px; right: 0; z-index: 12">
+              <a id="go-cart" href="<?php echo base_url(); ?>home/shop/cart" style="display: block; width: 40px; height: 40px;">
+                <img src="<?php echo base_url(); ?>template/front/header/imgs/icon_basket_black.png" alt="cart" style="width: 20px; height: 22px; margin-top: 8px;">
+                <?php if ($this->crud_model->cart_on()) {?>
+                  <img src="<?php echo base_url(); ?>template/front/header/imgs/basket_badge.png" alt="cart" style="width: 18px; height: 18px; margin-top: -8px; margin-left: -8px;">
+                <?php } else { ?>
+                  <img src="<?php echo base_url(); ?>template/front/header/imgs/basket_badge.png" alt="cart" style="display:none; width: 18px; height: 18px; margin-top: -8px; margin-left: -8px;">
+                <?php } ?>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="navigation-wrapper" id="navbar" style="background-color: #FFFFFF; height: 45px;">
+        <div class="container" style="height: 44px; width: 100%; padding: 0; margin: 0">
+          <nav class="navigation clearfix" style="height: 44px;">
+            <ul class="nav sf-menu sf-js-enabled sf-arrows" style="height: 44px;">
+              <li class="main-nav home active-under" style="height: 44px;">
+                <a href="<?php echo base_url(); ?>" style="padding: 0; line-height: 44px;">HOME</a>
+              </li>
+              <li class="main-nav find" style="height: 44px;">
+                <a href="<?php echo base_url(); ?>home/find" style="padding: 0; line-height: 44px;">FIND</a>
+              </li>
+              <li class="main-nav earth" style="height: 44px;">
+                <a href="<?php echo base_url(); ?>home/blog" style="padding: 0; line-height: 44px;">LIFE</a>
+              </li>
+              <li class="main-nav shop" style="height: 44px;">
+                <a id="go-shop" href="<?php echo base_url(); ?>home/shop/main" style="padding: 0; line-height: 44px;">SHOP</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </header>
+  <?php } ?>
+<?php } ?>
 
 <script type="text/javascript">
   
+  <?php if ($this->app_model->is_app()) { ?>
+  <?php  if ($page_name == 'home') {  // only home ?>
+  $(window).scroll(function(){
+    let scrollTop = $(this).scrollTop();
+    let height = $('.header-wrapper').height();
+    height = Number(height);
+    if(scrollTop >= height){
+      $('.header .header-wrapper').css({
+        'background' : 'rgba(83,58,48,0.8)'
+      });
+    }
+    else {
+      $('.header .header-wrapper').css('background','transparent');
+    }
+  });
+
+  let pageY = 0;
+  window.onscroll = function() {
+    var _pY = window.pageYOffset;
+    let bottomPos = $(window).height() + _pY;
+    let pageHeight = $(document).height();
+  
+    if (_pY >= 56 && bottomPos < pageHeight - 56 && _pY > pageY) { // scroll down
+      $('.header .header-wrapper').hide();
+    } else if (_pY >= 56 && _pY < pageY) { // scroll up
+      $('.header .header-wrapper').show();
+    } else {
+    }
+    pageY = _pY;
+  }
+  <?php } else if (!strncasecmp($page_name,'shop',4)) { // shop category ?>
   window.onscroll = function() {
     var navbar = document.getElementById("navbar");
     var sticky = navbar.offsetTop;
@@ -603,6 +745,35 @@
       navbar.classList.remove("navigation-sticky");
     }
   }
+  <?php } else { // find, life, etc?>
+  $(window).scroll(function(){
+    let scrollTop = $(this).scrollTop();
+    let height = $('.header-wrapper').height();
+    height = Number(height);
+    if(scrollTop >= height){
+      // alert(scrollTop + '.' + height);
+      $('.header').css('position', 'fixed').css('z-index', '15');
+      $('.header .header-wrapper').css('position', 'relative');
+    } else {
+      // alert(2);
+      $('.header').css('position', 'static').css('z-index', 'none');
+      $('.header .header-wrapper').css('position', 'static');
+    }
+  });
+  <?php } ?>
+  <?php } else { ?>
+  window.onscroll = function() {
+    var navbar = document.getElementById("navbar");
+    var sticky = navbar.offsetTop;
+    var _pY = window.pageYOffset;
+    
+    if (_pY > sticky) {
+      navbar.classList.add("navigation-sticky");
+    } else {
+      navbar.classList.remove("navigation-sticky");
+    }
+  }
+  <?php } ?>
   
   let menu_on = 0;
   let setting_on = 0;
@@ -636,15 +807,8 @@
   }
   
   function getLink(url) {
-    <?php if ($this->app_model->is_android_app()) { ?>
-    setTimeout(function() {
-      close_setting_menu();
-      close_menu();
-    }, 500);
-    <?php } else if ($this->app_model->is_ios_app()) { ?>
     close_setting_menu();
     close_menu();
-    <?php } ?>
     location.href = url;
   }
 
@@ -662,7 +826,6 @@
         $('.sld_li').slideUp();
       }
     })
-  
     // li_theme 슬라이드 UP/DOWN
     $('.li_theme').click(function(){
       var index = $('.li_theme').index(this);
@@ -677,47 +840,27 @@
       }
     
     })
-  
     // shop_theme 클릭시 다른 Lv 폰트색상 연하게
     $('.highlight').click(function(){
-      // var index = $('.highlight').index(this);
-      // console.log(index);
-    
-      // $('.highlight').addClass('gloomy');
-      // $('.highlight > a').addClass('gloomy');
-      // $(this).removeClass('gloomy');
-      // $(this).find('a').removeClass('gloomy');
-      
       $('.highlight').css('color', '#A5A3A0');
-      // $('.highlight > a').css('color', '#A5A3A0');
       $(this).css('color', '#8C8A86');
-      // $(this).find('a').css('color', '#8C9A86');
     })
-  
     // li_cnt > a 클릭시 다른 Lv 폰트색상 연하게
     $('.li_focus').click(function(){
-      // var index = $('.li_focus').index(this);
-    
-      // $('.li_focus').addClass('dark');
-      // $(this).removeClass('dark');
       $('.li_focus').css('color', '#939393');
       $(this).css('color', '#757575');
     })
   });
 </script>
-
 <style>
-.navigation-sticky {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 100;
-}
-/*    .navigation-sticky + .content {
-        padding-top: 60px;
-    }*/
-nav ul li a {
-  font-family: 'Quicksand' !important;
-}
+  .navigation-sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+  }
+  nav ul li a {
+    font-family: 'Quicksand' !important;
+  }
 </style>
 <!-- /HEADER -->

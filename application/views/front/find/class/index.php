@@ -16,13 +16,34 @@
     height: 20px !important;
     margin-right: 5px;
   }
+  .video_ul li {
+    padding: 0 0 20px !important;
+  }
+  @media(min-width:375px){
+    .video-title {
+      font-size: 14px !important;
+    }
+    .footprint {
+      padding-top: 4px !important;
+    }
+  }
+  @media(min-width:414px){
+    .media-link {
+      width: 207px !important;
+      padding: 0 0 123px 0 !important;
+      margin-right: 16px !important;
+    }
+  }
+  .content-area {
+    background-color: #fff;
+  }
 </style>
 <!-- PAGE -->
 <section class="page-section with-sidebar" style="padding-top: 0 !important; padding-bottom: 0 !important; background-color: white">
   <!-- /CONTENT -->
   <div class="container">
     <div class="row">
-
+      
       <?php if (!empty($bookmarks) && count($bookmarks) > 0) { ?>
         <!-- bookmark -->
         <div class="col-md-12 content" id="content" style="margin-bottom: 0 !important; background-color: white !important; border-bottom: 1px solid #F5F5F5">
@@ -68,19 +89,18 @@
           </div>
         </div>
       <?php } ?>
-
       <!-- online class -->
       <div class="col-md-12 content" id="content" style="background-color: white !important;">
         <div id="blog-content">
           <div class="col-md-12" style="padding: 0 0 0 0 !important; ">
             <div class="row">
               <div class="col-md-12" style="padding: 0 0 0 0 !important; ">
-                <div class="profile" style="display: flex; font-size: 15px; height: 50px; line-height: 50px; padding: 5px 20px 5px 20px !important; text-align: center">
-                  <div style="width: 70%; height: 50px; line-height: 50px;">
-                    <span style="position: absolute; left: 36%">파운디 추천 클래스</span>
+                <div class="profile" style="display: block; font-size: 16px; padding: 0 16px !important; text-align: left; height: 48px; line-height: 48px; margin: 16px 0 !important; position: relative; color: #845B4C;">
+                  <div style="width: calc(100% - 32px); height: inherit; line-height: inherit; position: absolute;">
+                    <span style="position: unset; left: 0;">파운디 추천 클래스</span>
                   </div>
-                  <div class="pull-right" style="width: 25%; height: 50px; line-height: 50px;">
-                    <select class="form-control select-arrow" id="class_category" name="class_category" style="height: 50px !important; line-height: 50px !important;">
+                  <div class="pull-right" style="width: 32%; height: 48px; line-height: 48px; position: absolute; float: none !important; right: 40px;">
+                    <select class="form-control select-arrow" id="class_category" name="class_category" style="height: 48px !important; line-height: 48px !important; text-align-last: unset;">
                       <option value="ALL" selected="selected">ALL</option>
                       <?php
                       $categories = $this->db->order_by('category_id', 'asc')->get_where('category_class', array('activate' => 1))->result();
@@ -92,17 +112,15 @@
                       ?>
                     </select>
                   </div>
-                  <div class="pull-right" style="width: 5%; text-align: right; height: 50px; line-height: 50px; color: grey">
+                  <div class="pull-right" style="position: absolute; right: 16px; width: 5%; text-align: right; height: 50px; line-height: 50px; color: grey">
                     <i class="fa fa-angle-down"></i>
                   </div>
                 </div>
                 <div class="widget" style="padding-bottom:10px; ">
+                  <!-- ajax_class_list() -->
                   <ul class="video_ul">
-
-                    <!-- ajax_class_list() -->
-                    <!-- /ajax_class_list() -->
-
                   </ul>
+                  <!-- /ajax_class_list() -->
                 </div>
               </div>
             </div>
@@ -120,14 +138,10 @@
     </div>
     <!-- /CONTENT -->
 </section>
-<!-- /PAGE -->
-<!--<label>-->
-<!--  <input id="page_num" type="hidden" value="0"/>-->
-<!--</label>-->
 <script>
   let page = 0;
   let filter = '';
-
+  
   function ajax_class_list() {
     page = page + 1;
     // console.log('page : ' + page + ', filter : ' + filter);
@@ -154,7 +168,7 @@
     });
     // $('#page_num').val(page);
   }
-
+  
   $(function() {
     $("#class_category").change(function() {
       console.log(this.value);
@@ -165,11 +179,11 @@
       ajax_class_list();
     });
   })
-
+  
   $(document).ready(function(){
     page = 0;
     filter = $("#class_category option:selected").val();
-
+    
     active_menu_bar('find');
     ajax_class_list();
   });
@@ -180,13 +194,13 @@ if (!empty($bookmarks) && count($bookmarks) > 0) {
   ?>
   <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
   <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-
+  
   <style>
-  .slick-content:focus {
-    outline: none !important;
-  }
-</style>
-<!--  <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>-->
+    .slick-content:focus {
+      outline: none !important;
+    }
+  </style>
+  <!--  <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>-->
   <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
   <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
   <script type="text/javascript">
@@ -195,7 +209,7 @@ if (!empty($bookmarks) && count($bookmarks) > 0) {
     //     console.log('instructor-add');
     //   });
     // });
-
+    
     $(document).ready(function(){
       $('.instructor.slick').slick({
         centerMode: false,

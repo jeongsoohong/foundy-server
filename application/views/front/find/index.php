@@ -41,7 +41,7 @@
 <section class="page-section" style="margin-top: 0px !important; margin-bottom: 0px !important; padding-top: 0px
     !important; padding-bottom: 0px !important;">
   <div class="container">
-    <div class="col-md-12 find-search">
+    <div class="col-md-12 find-search" style="padding: 0 16px; margin: 20px 0 28px;">
       <table class="col-md-12" style="width: 100%;">
         <tbody>
         <tr>
@@ -49,11 +49,11 @@
             Find your
           </td>
           <td style="width: auto; border-bottom: 1px solid grey">
-            <input type="text" name="search" id="search-text" value="" style="border: none; width: 100%">
+            <input type="text" name="search" id="search-text" value="" style="border: none; width: 100%; height: 32px;">
           </td>
           <td style="padding-left: 10px">
             <a href="javascript:void(0);" onclick="find_search($('#search-text').val());">
-              <img height="20px" width="20px" src="<?php echo base_url(); ?>uploads/icon_0504/icon07_find.png">
+              <img height="16" width="16" src="<?php echo base_url(); ?>uploads/icon_0504/icon07_find.png">
             </a>
           </td>
         </tr>
@@ -133,7 +133,7 @@
       </div>
       <div class="modal-footer">
         <!--        <button type="button" class="btn btn-danger btn-theme-sm" data-dismiss="modal"">취소</button>-->
-        <button type="button" class="btn btn-danger btn-theme-sm" onclick="close_find_modal()" style="text-transform: none; font-weight: 400;"">확인</button>
+        <button type="button" class="btn btn-danger btn-theme-sm" onclick="close_find_modal()" style="text-transform: none; font-weight: 400;">확인</button>
       </div>
     </div>
   </div>

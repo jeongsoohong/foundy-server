@@ -25,12 +25,20 @@
   <div style="font-size: 0; text-align: center; width: 240px; height: 184px; position: absolute; top: 40%; left: 50%; margin-top: -92px; margin-left: -120px;">
     <div>
       <div>
-        <img src="<?php echo base_url(); ?>template/icon/exclamation_white.png" width="44" height="44" style="display: block; margin: 0 auto 12px;">
+        <img src="<? echo base_url(); ?>template/icon/exclamation_white.png" width="44" height="44" style="display: block; margin: 0 auto 12px;">
         <h1 style="font-family: 'futura-pt' !important; color: #fff; font-size: 36px; font-weight: normal !important; line-height: 32px; vertical-align: top;">Oops!</h1>
       </div>
-      <p style="margin: 28px 0 0 0; color: #fff; font-size: 16px; font-weight: normal; line-height: 1.65; text-align: center;">페이지를 찾을 수 없습니다!</p>
+      <? if (isset($msg) == true && empty($msg) == false) { ?>
+        <p style="margin: 28px 0 0 0; color: #fff; font-size: 16px; font-weight: normal; line-height: 1.65; text-align: center;"><?= $msg ?></p>
+      <? } else { ?>
+        <p style="margin: 28px 0 0 0; color: #fff; font-size: 16px; font-weight: normal; line-height: 1.65; text-align: center;">페이지를 찾을 수 없습니다!</p>
+      <? } ?>
     </div>
-    <a href="<?php echo base_url(); ?>" style="display: block; text-decoration: none; font-family: 'futura-pt' !important; background-color: #fff; box-sizing: border-box; padding: 0 16px; color: #111; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.3); font-size: 16px; font-weight: normal; height: 56px; line-height: 56px; border-radius: 28px; margin: 24px auto 0;">BACK TO HOME</a>
+    <? if (isset($page_name)) { ?>
+        <a href="<?= base_url().$page_name ?>" style="display: block; text-decoration: none; font-family: 'futura-pt' !important; background-color: #fff; box-sizing: border-box; padding: 0 16px; color: #111; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.3); font-size: 16px; font-weight: normal; height: 56px; line-height: 56px; border-radius: 28px; margin: 24px auto 0;">BACK TO HOME</a>
+    <? } else { ?>
+      <a href="<?= base_url() ?>" style="display: block; text-decoration: none; font-family: 'futura-pt' !important; background-color: #fff; box-sizing: border-box; padding: 0 16px; color: #111; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.3); font-size: 16px; font-weight: normal; height: 56px; line-height: 56px; border-radius: 28px; margin: 24px auto 0;">BACK TO HOME</a>
+    <? } ?>
   </div>
 </div>
 

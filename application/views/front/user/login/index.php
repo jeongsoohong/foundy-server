@@ -43,7 +43,7 @@
           </div>
           <div class="col-sm-12">
             <a href="javascript:void(0)" onclick="do_login()">
-              <span class="btn btn-theme-sm btn-block btn-theme-dark pull-right">
+              <span class="btn btn-theme-sm btn-block btn-theme-dark pull-right" style="border-width:unset;border-color:#ad796d;background-color: #ad796d">
                 로그인
               </span>
             </a>
@@ -115,12 +115,15 @@
                 // dataType : 'json', // 받을 데이터 방식
                 success : function(res) {
                   $("#loading_set").fadeOut(500);
-                  // console.log(res);
+                  // alert(res);
                   res = JSON.parse(res);
                   if (res.status === 'success') {
                     // console.log(res.message);
                     alert(res.message);
                     window.location.href = '<?php echo $relocation; ?>';
+                  } else if (res.status === 'approval') {
+                    alert(res.message);
+                    window.location.href = res.approval_url;
                   } else if (res.status === 'error') {
                     alert(res.message);
                   } else {
@@ -148,38 +151,18 @@
               * 강사회원/센터회원은 로그인 후 마이페이지에서 신청해주세요
             </div>
           </div>
-          <div class="col-sm-12 title" style="background-color: #ffffff; padding: 10px 20px 5px; text-transform: uppercase; font-size: 18px; line-height: 24px; font-weight: 700; color: #232323">
-            <div class="option" style="text-align: center !important; margin: 0 auto 10px; text-transform: none; font-size: 10px; line-height: 14px; font-weight: 400; color: #232323">
-              <a class="media-link" href="javascript:void(0);" onclick="search_ship_modal()">
-                <u>비회원 배송조회</u>
-              </a>
-            </div>
-          </div>
+<!--          <div class="col-sm-12 title" style="background-color: #ffffff; padding: 10px 20px 5px; text-transform: uppercase; font-size: 18px; line-height: 24px; font-weight: 700; color: #232323">-->
+<!--            <div class="option" style="text-align: center !important; margin: 0 auto 10px; text-transform: none; font-size: 10px; line-height: 14px; font-weight: 400; color: #232323">-->
+<!--              <a class="media-link" href="javascript:void(0);" onclick="search_ship_modal()">-->
+<!--                <u>비회원 배송조회</u>-->
+<!--              </a>-->
+<!--            </div>-->
+<!--          </div>-->
         </div>
       </div>
     </div>
   </div>
 </section>
-<div class="modal fade" id="searchShipModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="find-modal-title" id="myModalLabel">비회원 배송조회</h4>
-      </div>
-      <div class="modal-body">
-        <div style="text-align: center">
-          Sorry! <br>
-          본 서비스는 아직 준비중입니다.
-        </div>
-      </div>
-      <div class="modal-footer">
-        <!--        <button type="button" class="btn btn-danger btn-theme-sm" data-dismiss="modal"">취소</button>-->
-        <button type="button" class="btn btn-danger btn-theme-sm" onclick="close_foundy_modal('searchShip')" style="text-transform: none; font-weight: 400;"">확인</button>
-      </div>
-    </div>
-  </div>
-</div>
 <div class="modal fade" id="restoreModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -199,37 +182,482 @@
     </div>
   </div>
 </div>
-<div class="modal fade" id="forgetPwModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="find-modal-title" id="myModalLabel">비밀번호 찾기</h4>
+<!--<div class="modal fade" id="forgetPwModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">-->
+<!--  <div class="modal-dialog modal-dialog-centered" role="document">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+<!--        <h4 class="find-modal-title" id="myModalLabel">비밀번호 찾기</h4>-->
+<!--      </div>-->
+<!--      <div class="modal-body" id="forget-password-modal-body">-->
+<!--      </div>-->
+<!--      <div class="modal-footer">-->
+<!--        <button type="button" class="btn btn-danger btn-theme-sm" data-dismiss="modal"">취소</button>-->
+<!--        <button type="button" class="btn btn-dark btn-theme-sm" onclick="reset_password()" style="background-color: black; color:white; text-transform: none; font-weight: 400;"">확인</button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+<div class="modal" id="forgetPopup" style="display: none; position: fixed; top: 0; left:0;">
+  <style>
+    * {
+      padding: 0;
+      border: 0;
+      margin: 0;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+    }
+    .bg {
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.23);
+      position: absolute;
+    }
+    clearfix::after {
+      content: "";
+      display: block;
+      clear: both;
+    }
+    a {text-decoration: none;}
+    li {list-style: none;}
+    button {
+      background: none;
+      outline: none;
+      cursor: pointer;
+    }
+    input {
+      background: none;
+      outline: none;
+      box-sizing: border-box;
+      border: 1px solid #e0e0e0;
+    }
+    .popup_pw {
+      min-width: 288px;
+      font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', '맑은 고딕', sans-serif;
+      position: absolute;
+      top: 15%;
+      left: 50%;
+      margin-left: -45%;
+      width: 90%;
+      /*height: 50%;*/
+      padding: 32px 0 16px;
+      box-sizing: border-box;
+      border-radius: 4px;
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.12);
+      background-color: #fff;
+    }
+    .pw_close {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 40px;
+      height: 40px;
+    }
+    .pw_how {
+      padding: 0 16px 12px;
+    }
+    .pw_tit {
+      color: #111;
+      font-size: 14px;
+      font-weight: normal;
+      padding-bottom: 16px;
+      text-align: center;
+    }
+    .how_tab {
+      margin-top: 24px;
+    }
+    .divide {
+      border-top: 1px dashed #eee;
+      margin-bottom: 24px;
+    }
+    .how_type {
+      height: 40px;
+      line-height: 40px;
+    }
+    .how_type li {
+      cursor: pointer;
+      width: 50%;
+      background-color: #fff;
+      color: #616161;
+      font-size: 12px;
+      font-weight: normal;
+      text-align: center;
+      height: inherit;
+      line-height: inherit;
+      float: left;
+      box-sizing: border-box;
+      border: 1px solid #eee;
+    }
+    .how_type .type_mail {
+      border-right: 0;
+    }
+    
+    .active {
+      background-color: #eee !important;
+      font-weight: bold !important;
+    }
+    .write_tit, .verify_tit,
+    .write_form, .verify_code {
+      float: left;
+    }
+    
+    .write_tit, .verify_tit {
+      width: 52px;
+      font-size: 11px;
+      font-weight: bold;
+      color: #bdbdbd;
+      height: 40px;
+      line-height: 40px;
+      margin: 0;
+    }
+    .email_write, .email_verify {
+      height: 40px;
+      line-height: 40px;
+    }
+    .email_write {
+      margin-bottom: 16px;
+    }
+    .write_form, .verify_code {
+      width: calc(100% - 52px);
+      height: inherit;
+      line-height: inherit;
+    }
+    .form_input {
+      width: calc(100% - 92px);
+      float: left;
+      height: inherit;
+      line-height: inherit;
+      padding: 0 10px;
+      color: #9e9e9e;
+      font-size: 12px;
+      box-sizing: border-box;
+      border: 1px solid #eee;
+    }
+    .form_send {
+      width: 92px;
+      float: left;
+      height: inherit;
+      background-color: #ad796d;
+      color: #fff;
+      font-size: 11px;
+      font-weight: bold;
+    }
+    .code_btn {
+      width: 92px;
+      font-size: 0;
+      vertical-align: top;
+      height: inherit;
+    }
+    .code_btn button {
+      display: inline-block;
+      color: #fff;
+      width: 64px;
+      height: inherit;
+      line-height: inherit;
+      font-size: 11px;
+      font-weight: bold;
+    }
+    #btn_no {
+      background-color: #d2c8ba;
+      margin-right: 8px;
+    }
+    #btn_yes {
+      width: inherit;
+      background-color: #ad796d;
+    }
+    .code_no, .code_btn {
+      float: left;
+    }
+    .code_no {
+      border: 0;
+      padding: 0 10px;
+      width: calc(100% - 92px);
+      height: inherit;
+      line-height: inherit;
+      background-color: #f5f5f5;
+      color: #bdbdbd !important;
+      font-size: 11px;
+      font-weight: bold;
+    }
+    .form_phone {
+      height: 40px;
+      line-height: inherit;
+      float: left;
+    }
+    .form\:phone {
+      display: block;
+      width: calc(34.7% - 12px);
+      float: left;
+      font-weight: normal;
+    }
+    .hyphen {
+      display: inline-block;
+      width: 12px;
+      float: left;
+      color: #616161;
+      font-size: 11px;
+      font-weight: normal;
+      text-align: center;
+      height: 40px;
+      line-height: 40px;
+    }
+    
+    .form\:phone_send {
+      margin-top: 8px;
+      width: 100%;
+      height: 40px;
+    }
+    .mobile_write {
+      height: 88px;
+      margin-bottom: 16px;
+    }
+    .form\:write_lg {
+      height: auto;
+    }
+    
+    .pw_advice {
+      font-size: 0;
+      height: 14px;
+      margin: 0 16px 24px 68px;
+      box-sizing: border-box;
+    }
+    .advice_type {
+      display: inline-block;
+      color: #0091ea;
+      font-size: 11px;
+      font-weight: normal;
+      line-height: inherit;
+      vertical-align: top;
+      margin-left: 4px;
+    }
+    
+    @media(min-width: 414px){
+      .popup_pw {
+        max-width: 372px;
+        margin-left: -186px;
+      }
+      .mobile_write {
+        height: 40px;
+      }
+      .form_phone {
+        width: calc(100% - 104px);
+        vertical-align: top;
+      }
+      .form\:phone_send {
+        /*margin-left: 12px;*/
+        width: 92px;
+        margin: 0 0 0 12px;
+      }
+    }
+    
+    @media(min-width: 768px){
+      .popup_pw {
+        max-width: 600px;
+        /*margin-left: -300px;*/
+      }
+      .pw_how {
+        max-width: 520px;
+        margin: 0 auto;
+      }
+      .pw_advice {
+        margin-left: 92px;
+      }
+      .how_tab {
+        margin-top: 36px;
+      }
+      .divide {
+        margin-bottom: 36px;
+      }
+      .form_input {
+        width: calc(100% - 136px);
+      }
+      .form\:mail {
+        width: calc(100% - 92px);
+      }
+      .form\:phone {
+        width: calc(34.3% - 12px);
+      }
+    }
+  </style>
+  <div class="bg">
+    <article class="popup_pw">
+      <p class="pw_tit">FORGET PASSWORD</p>
+      <button class="pw_close" onclick="fn_close();">
+        <img src="<? echo base_url(); ?>template/front/header/imgs/icon_close_black.png" width="12" height="12" alt="닫기" style="opacity: 0.2;">
+        <!-- popup_pw 닫기 -->
+        <script>
+          function fn_close() {
+            // $('.popup_pw').hide();
+            close_forget_password();
+          }
+        </script>
+      </button>
+      <div class="pw_wrap">
+        <div class="pw_how">
+          <ul class="how_type clearfix">
+            <li class="type_mail" onclick="fn_mail();">이메일 인증</li>
+            <li class="type_mobile" onclick="fn_mobile();">휴대폰 인증</li>
+            <!-- load / fn_mail,mobile 클릭 이벤트 -->
+            <script>
+              $(window).load(function(){
+                $('.type_mail').addClass('active');
+              })
+              function fn_mail() {
+                $('.tab_mail').show().next().hide();
+                $('.type_mail').addClass('active');
+                $('.type_mobile').removeClass('active');
+              }
+              // function fn_mobile() {
+                // $('.tab_mobile').show().prev().hide();
+                //$('.type_mobile').addClass('active');
+                //$('.type_mail').removeClass('active');
+                //$('#nice_approval').show();
+                //$('#nice_approval').load('<?// echo base_url(); ?>//home/nice/main')
+              // }
+              function fn_mobile() {
+                // $('.tab_mobile').show().prev().hide();
+                $('.type_mobile').addClass('active');
+                $('.type_mail').removeClass('active');
+                // $('#nice_approval').show();
+                $('#loading_set').show();
+                let formData = new FormData();
+                formData.append('s', sid);
+                formData.append('f', 'forget_passwd');
+                $.ajax({
+                  url: '<?= base_url(); ?>auth/nice/init',
+                  type: 'POST', // form submit method get/post
+                  dataType: 'html', // request type html/json/xml
+                  data: formData, // serialize form data
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  success: function (data) {
+                    $("#loading_set").delay(500).fadeOut(500);
+                    data = JSON.parse(data);
+                    // console.log(data);
+                    if (data.status === 'done') {
+                      enc = data.enc_data;
+                      auth_id = data.auth_id;
+                      window.document.form_chk.EncodeData.value = enc;
+                      window.document.form_chk.param_r1.value = sid;
+                      window.document.form_chk.param_r2.value = auth_id;
+                      window.document.form_chk.param_r3.value = 'forget_passwd';
+                      fnNicePopup();
+                    } else {
+                      alert(data.status);
+                    }
+                  },
+                  error: function (e) {
+                    console.log(e)
+                  }
+                });
+              }
+              function fnNicePopup(){
+                nicePopup = window.open('', '_parent', 'width=500, height=550, top=100, left=100, fullscreen=no, menubar=no, status=no, toolbar=no, titlebar=yes, location=no, scrollbar=no');
+                document.form_chk.action = "https://nice.checkplus.co.kr/CheckPlusSafeModel/checkplus.cb";
+                // document.form_chk.target = "popupChk";
+                document.form_chk.target = "_parent";
+                document.form_chk.submit();
+              }
+            </script>
+          </ul>
+          <div class="how_tab">
+            <div class="divide"></div>
+            <div class="tab_mail" style="display: none;">
+              <div class="email_write clearfix">
+                <p class="write_tit">이메일</p>
+                <div class="write_form clearfix">
+                  <input id="forget_email" class="form_input form:mail" placeholder="이메일을 입력해 주세요.">
+                  <button class="form_send" onclick="send_approval_code()">인증메일 보내기</button>
+                </div>
+              </div>
+              <div class="email_verify clearfix" style="display: none">
+                <p class="verify_tit">본인인증</p>
+                <div class="verify_code clearfix">
+                  <input id="approval_code" class="code_no" type="number" placeholder="인증코드">
+                  <div class="code_btn">
+                    <button id="btn_yes" onclick="reset_password('email');">인증번호 확인</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab_mobile" id="nice_approval" style="display: none;">
+              <div class="email_verify clearfix">
+<!--                <p class="write_tit">본인인증</p>-->
+                <div class="verify_code clearfix" style="display: none">
+                  <form name="form_chk" method="post">
+                    <input type="hidden" name="m" value="checkplusService">
+                    <input type="hidden" name="EncodeData">
+<!--                    <a id="form_chk" href="javascript:fnNicePopup();">-->
+                    <input type="hidden" id="sid" name="param_r1" value="">
+                    <input type="hidden" id="aid" name="param_r2" value="">
+                    <input type="hidden" id="did" name="param_r3" value="">
+                  </form>
+<!--                  <input id="approval_code" class="code_no" type="number" placeholder="인증코드">-->
+                </div>
+                <div class="code_btn" style="width: 100%">
+                  <button id="btn_yes" onclick="reset_password('nice');">인증확인하기</button>
+                </div>
+              </div>
+            </div>
+<!--            <div class="tab_mobile" style="display: none;">-->
+<!--              <div class="mobile_write clearfix">-->
+<!--                <p class="write_tit" style="line-height: 1.5; margin: 4px 0;">휴대폰<br>번호</p>-->
+<!--                <div class="write_form form:write_lg clearfix">-->
+<!--                  <div class="form_phone clearfix">-->
+<!--                    <input type="text" class="form_input form:phone">-->
+<!--                    <div class="hyphen">-</div>-->
+<!--                    <input type="text" class="form_input form:phone">-->
+<!--                    <div class="hyphen">-</div>-->
+<!--                    <input type="text" class="form_input form:phone">-->
+<!--                  </div>-->
+<!--                  <button class="form_send form:phone_send">인증번호 보내기</button>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="email_verify clearfix">-->
+<!--                <p class="verify_tit">본인인증</p>-->
+<!--                <div class="verify_code clearfix">-->
+<!--                  <input class="code_no" placeholder="인증코드">-->
+<!--                  <div class="code_btn">-->
+<!--                    <button id="btn_yes">인증번호 확인</button>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+          </div>
+        </div>
+        <div class="pw_advice" style="display: none;">
+          <div class="advice_type" style="margin: 0">
+            <img id="img_info" src="<? echo base_url(); ?>template/icon/information_mark.png" width="14" height="14" style="display: none">
+            <img id="img_exam" src="<? echo base_url(); ?>template/icon/exclamation_mark.png" width="14" height="14" style="display: none">
+            <span id="approval_msg"></span>
+          </div>
+        </div>
       </div>
-      <div class="modal-body" id="forget-password-modal-body">
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger btn-theme-sm" data-dismiss="modal"">취소</button>
-        <button type="button" class="btn btn-dark btn-theme-sm" onclick="reset_password()" style="background-color: black; color:white; text-transform: none; font-weight: 400;"">확인</button>
-      </div>
-    </div>
+    </article>
   </div>
 </div>
 <script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
-<script type="text/javascript">
-  
-  function reset_password() {
-    $('#loading_set').show();
-    
+<script>
+  let auth_id = '';
+  let enc = '';
+  let sid = '<?= $this->crud_model->get_session_id(); ?>';
+  // $(function () {
+  //   alert(sid);
+  // })
+  function send_approval_code() {
     let email = $('#forget_email').val();
-    let approval_code = $('#approval_code').val();
-    
+    if (validateEmail(email) === false) {
+      set_approval_msg('정확한 이메일 주소를 입력바랍니다',true);
+      return false;
+    }
+    $('#loading_set').show();
     let formData = new FormData();
     formData.append('email', email);
-    formData.append('approval_code', approval_code);
-  
     $.ajax({
-      url: '<?php echo base_url(); ?>' + 'home/login/forget', // form action url
+      url: '<?php echo base_url(); ?>' + 'home/login/send_approval', // form action url
       type: 'POST', // form submit method get/post
       dataType: 'html', // request type html/json/xml
       data: formData, // serialize form data
@@ -239,12 +667,65 @@
       success: function (data) {
         $("#loading_set").fadeOut(500);
         if (data === 'done' || data.search('done') !== -1) {
-          var text = '<strong>본인인증이 완료되었습니다.</strong>' + ' 해당 이메일 주소로 비밀번호가 발급되었으니 확인 후 로그인해 주세요.';
-          notify(text,'success','bottom','right');
-          setTimeout(function(){window.location.reload(true);}, 3000);
+          // alert('인증코드가 전송되었습니다. 이메일 확인 후 입력바랍니다.');
+          set_approval_msg('인증코드가 전송되었으니 이메일 확인 후 인증코드를 정확히 입력바랍니다!');
+          $('.email_verify').show();
+          $('#approval_code').focus();
         } else {
-          var text = '<strong>실패하였습니다</strong>' + data;
-          notify(text,'warning','bottom','right');
+          set_approval_msg('이메일 전송에 실패하였습니다! ' + data,true);
+          // alert(data);
+        }
+      },
+      error: function (e) {
+        console.log(e)
+      }
+    });
+  }
+  function reset_password(type) {
+    let formData = new FormData();
+    if (type === 'email') {
+      formData.append('email', $('#forget_email').val());
+      formData.append('approval_code', $('#approval_code').val());
+    } else {
+      formData.append('sid', $('#sid').val());
+      formData.append('aid', $('#aid').val());
+      formData.append('did', $('#did').val());
+    }
+    
+    let url;
+    if (type === 'email') {
+      url = '<?= base_url() ?>home/login/approval/email';
+    } else {
+      url = '<?= base_url() ?>home/login/approval/mobile';
+    }
+  
+    $('#loading_set').show();
+  
+    $.ajax({
+      url: url,
+      type: 'POST', // form submit method get/post
+      dataType: 'html', // request type html/json/xml
+      data: formData, // serialize form data
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function (data) {
+        let msg;
+        let res = JSON.parse(data);
+        $("#loading_set").fadeOut(500);
+        if (res.status === 'done') {
+          msg = '본인인증이 완료되었습니다! ';
+          $('#img_exam').hide();
+          $('#img_info').show();
+          set_approval_msg(msg + data);
+          notify('<strong>' + msg + '</strong>' + res.message,'success','bottom','right');
+          setTimeout(function(){window.location.reload(true);}, 1000);
+        } else {
+          msg = '본인인증에 실패하였습니다! ';
+          $('#img_exam').show();
+          $('#img_info').hide();
+          set_approval_msg(msg + data,true);
+          notify('<strong>' + msg + '</strong>' + res.message,'warning','bottom','right');
         }
       },
       error: function (e) {
@@ -254,32 +735,59 @@
   
   }
   
+  function set_approval_msg(msg,error=false) {
+    if (error) {
+      $('#img_info').hide();
+      $('#img_exam').show();
+      $('#approval_msg').css('color', 'darkred');
+    } else {
+      $('#img_exam').hide();
+      $('#img_info').show();
+      $('#approval_msg').css('color', '#0091ea');
+    }
+    $('#approval_msg').text(msg);
+    $('.pw_advice').show();
+  }
+
+  function clear_popup() {
+    $('.tab_mail').hide();
+    $('.tab_mobile').hide();
+    $('#forget_email').val('');
+    $('#approval_code').val('');
+    $('.type_mobile').removeClass('active');
+    $('.type_mail').removeClass('active');
+  }
+
   function close_forget_password() {
-    let list = $('#forget-password-modal-body');
-    list.html('');
-    $('#forgetPwModal').modal('hide');
+    let popup = $('#forgetPopup');
+    // popup.html('');
+    popup.hide();
+    clear_popup();
+    $('body').css('overflow-y', 'auto');
   }
   
   function open_forget_password() {
-    $('#loading_set').show();
-    let list = $('#forget-password-modal-body');
-    $.ajax({
-      url: '<?php echo base_url().'home/login/forget_form'; ?>',
-      beforeSend: function() {
-        list.html(''); // change submit button text
-      },
-      success: function(data) {
+    //$('#loading_set').show();
+    let popup = $('#forgetPopup');
+    //$.ajax({
+    //  url: '<?php //echo base_url().'home/login/forget_form'; ?>//',
+    //  beforeSend: function() {
+    //    popup.html(''); // change submit button text
+    //  },
+    //  success: function(data) {
         $("#loading_set").fadeOut(500);
-        list.html('');
-        list.html(data).fadeIn();
-        $('#forgetPwModal').modal('show');
-      },
-      error: function(e) {
-        console.log(e)
-      }
-    });
+        // popup.html('');
+        // popup.html(data).fadeIn();
+        popup.show();
+        clear_popup();
+        $('body').css('overflow-y', 'hidden');
+    //   },
+    //   error: function(e) {
+    //     console.log(e)
+    //   }
+    // });
   }
-  
+
   function search_ship_modal() {
     $('#searchShipModal').modal('show');
   }
@@ -455,5 +963,5 @@
       $('#restoreModal').modal('show');
     }
   });
-
+  
 </script>

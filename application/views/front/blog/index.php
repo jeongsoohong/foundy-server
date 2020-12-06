@@ -50,22 +50,25 @@
   .form-control {
     background: #F3EFEB;
   }
+  .blog-title h5 {
+    margin: 14px 0 4px !important;
+  }
+  .main-blog-content {
+    padding: 0 !important;
+    margin: 0 0 28px 0 !important;
+  }
+  #fd-container .content {
+    padding: 0 16px;
+  }
 </style>
 <section class="page-section with-sidebar">
-  <div class="container">
+  <div class="container" id="fd-container">
     <div class="row">
-      <!-- SIDEBAR -->
-<!--      --><?php
-//      include 'sidebar.php';
-//      ?>
-      <!-- /SIDEBAR -->
-      <!-- CONTENT -->
       <div class="col-md-12 content" id="content">
         <div id="blog-content">
-          <div class="col-md-12 main-blog">
+          <div class="col-md-12 main-blog" style="padding: 0;">
             <div class="col-md-12 main-header navigation-header" style="text-align: center; display: flex">
               <div class="col-md-6" style="text-align: right; width: 70%; padding: 0 0; font-size: 14px">
-<!--                <h6><b style="padding-right: 5px">EARTH</b><i class="fa fa-angle-right" style="font-size: 14px; color: grey;"></i></h6>-->
               </div>
               <div style="width: 25%">
                 <select class="form-control select-arrow" id="blog_category" name="blog_category" style="padding: 0 0; border: none">

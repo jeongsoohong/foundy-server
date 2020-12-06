@@ -1,15 +1,12 @@
-<footer class="footer1" >
+<footer class="footer1" id="fd-footer">
   <div class="footer1-meta">
     <div class="container">
       <div class="row">
         <div class="col-md-12 col-xs-12">
-<!--          <br><button class="btn btn-warning" onclick="return appLinkAndInstall('')">앱링크</button><br>-->
-<!--          <br><button class="btn btn-warning" onclick="return appLinkAndInstall('https://www.foundy.me/home/shop')">앱DL</button><br>-->
-          <div class="copyright" version="Currently v1.0">
-            주식회사 파운디 | 대표 : 신두철 | 통신판매업신고번호 : 제 2020-서울마포-3960 호 ㅣ 사업자등록번호 : 658-87-01852(
-            <a href="javascript:void(0);" onclick="onopen('business');"><u>사업자정보확인</u></a>
-            )<br>
-            주소 : 서울특별시 마포구 성미산로 19길 21 202호 ㅣ 전화 : <a href="tel:070-8656-8895">070-8656-8895</a><br>
+          <div class="copyright" version="Currently v0.1">
+            주식회사 파운디 | 대표 : 신두철 | 통신판매업신고번호 : 제 2020-서울마포-3960호 ㅣ 사업자등록번호 : 658-87-01852
+            <a href="javascript:void(0);" onclick="onopen(&#39;business&#39;);"><u>(사업자정보확인)</u></a>
+            ㅣ 주소 : 서울특별시 마포구 성미산로 19길 21 202호 ㅣ 전화 : <a href="tel:070-8656-8895">070-8656-8895</a>
             이메일 : <a href="mailto:hello@foundy.me">hello@foundy.me</a><br>
             개인정보보호책임자 홍정수(<a href="mailto:hello@foundy.me">hello@foundy.me</a>) |
             <a href="javascript:void(0);" onclick="onopen('service')"><u>서비스이용약관</u></a> |

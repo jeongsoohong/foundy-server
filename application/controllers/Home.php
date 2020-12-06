@@ -34,12 +34,39 @@ class Home extends CI_Controller
     if ($this->is_login() == true) {
       $user_id = $this->session->userdata('user_id');
       $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
-      if ($user_data->unregister == 1 && $this->session->userdata('user_restore') != 'yes') {
+  
+      if (isset($user_data) == false || empty($user_data) == true) { // 이상함
+        $this->session->sess_destroy();
+      } else if ($user_data->unregister == 1 && $this->session->userdata('user_restore') != 'yes') { // 복귀유저
+     
         $this->session->sess_destroy();
         $this->crud_model->alert_exit("(탈퇴회원) 탈퇴 후 7일간 로그인이 불가능합니다.", base_url() . 'home');
-      } else if (isset($user_data) == false || empty($user_data) == true) {
-        $this->session->sess_destroy();
-      } else {
+      
+      } else if ($user_data->mobile_approval == 0 && !$this->input->is_ajax_request()) { // 핸드폰 본인인증 안받은 유저
+  
+        log_message('debug', '[mobile_approval] mobile_approval['.$this->session->userdata('mobile_approval').']');
+        
+        if ($this->session->userdata('mobile_approval') == 'deny' ||
+          $this->session->userdata('mobile_approval') == 'no') {
+
+          $deny = $this->cookie_model->get_cookie('mobile_approval_deny');
+          log_message('debug', '[mobile_approval] deny[' . $deny . ']');
+     
+          if ($deny == 'yes') {
+            $deny_time = $this->cookie_model->get_cookie('mobile_approval_deny_time');
+            log_message('debug', '[mobile_approval] deny_time[' . $deny_time . '] now[' . strtotime('-1day') . ']');
+            if ($deny_time > strtotime('-1 day')) {
+              $this->session->set_userdata('mobile_approval', 'deny');
+            } else {
+              $this->session->set_userdata('mobile_approval', 'no');
+            }
+          }
+
+        } else {
+          $this->session->set_userdata('mobile_approval', 'no');
+        }
+  
+      } else { // 정상
         $this->session->set_userdata('user_data', json_encode($user_data));
       }
     } else {
@@ -191,11 +218,6 @@ class Home extends CI_Controller
     $this->load->view('front/index', $this->page_data);
   }
 
-  public function error()
-  {
-    $this->load->view('front/others/404_error');
-  }
-
   private function is_login()
   {
     if ($this->session->userdata('user_login') == "yes") {
@@ -254,43 +276,92 @@ class Home extends CI_Controller
         }
       }
     
-    } else if ($login_type == 'forget') {
-  
-      $this->load->library('form_validation');
-      $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
-      if ($this->form_validation->run() == FALSE) {
-        echo validation_errors();
-      } else {
-    
-        $email = $this->input->post('email');
-        $code = $this->input->post('approval_code');
-    
-        $approval_email = $this->session->userdata('user_approval_email');
-        $approval_code = $this->session->userdata('user_approval_code');
-    
-        if ($email != $approval_email) {
-          $this->crud_model->alert_exit('이메일이 올바르지 않습니다. 다시 확인 바랍니다.');
-        }
-        if ($code != $approval_code) {
-          $this->crud_model->alert_exit('인증코드가 올바르지 않습니다. 다시 확인 바랍니다.');
-        }
-    
-        $user_data = $this->db->get_where('user', array('email' => $email))->row();
-        if(isset($user_data) && empty($user_data) == false) {
+    } else if ($login_type == 'approval') {
       
+      if ($para2 == 'email') {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
+        if ($this->form_validation->run() == FALSE) {
+          echo validation_errors();
+        } else {
+    
+          $email = $this->input->post('email');
+          $code = $this->input->post('approval_code');
+    
+          $approval_email = $this->session->userdata('user_approval_email');
+          $approval_code = $this->session->userdata('user_approval_code');
+   
+          $result['status'] = 'done';
+          $result['message'] = '이메일에서 비밀번호 확인 후 로그인해주세요!';
+          if ($email != $approval_email) {
+            $this->crud_model->alert_exit('이메일이 올바르지 않습니다. 다시 확인 바랍니다.');
+          }
+          if ($code != $approval_code) {
+            $this->crud_model->alert_exit('인증코드가 올바르지 않습니다. 다시 확인 바랍니다.');
+          }
+    
+          $user_data = $this->db->get_where('user', array('email' => $email))->row();
+          if(isset($user_data) && empty($user_data) == false) {
+      
+            $password = substr(hash('sha512', rand()), 0, 12);
+            $data['password'] = sha1($password);
+            $this->db->where('email', $email);
+            $this->db->update('user', $data);
+      
+            if ($this->email_model->get_reset_pw_data($email, $password)) {
+              $this->response($result);
+            } else {
+              $result['status'] = 'fail';
+              $result['message'] = '이메일 전송에 실패하였습니다.';
+              $this->response($result);
+            }
+          } else {
+            $result['status'] = 'fail';
+            $result['message'] = '유효하지 않은 이메일입니다.';
+            $this->response($result);
+          }
+        }
+      } else if ($para2 == 'mobile') {
+        
+        if (isset($_GET['sid']) == false || isset($_GET['aid']) == false || isset($_GET['fid']) == false) {
+          $this->redirect_error('접근 오류가 발생하였습니다!');
+        }
+        
+        $session_id = $_GET['sid'];
+        $auth_id = $_GET['aid'];
+        $for = $_GET['fid'];
+  
+        $auth= $this->db->get_where('user_auth', array('auth_id' => $auth_id))->row();
+        if (isset($auth) == false || empty($auth) == true) {
+          $this->redirect_error('접근 오류가 발생하였습니다!(1)');
+        }
+        if ($auth->session_id != $session_id || $auth->session_id != $this->crud_model->get_session_id()) {
+          $this->redirect_error('접근 오류가 발생하였습니다!(2)');
+        }
+        if ($auth->for != $for || $for != 'forget_passwd') {
+          $this->redirect_error('접근 오류가 발생하였습니다!(3)');
+        }
+  
+        $auth_data = json_decode($auth->auth_data);
+        $user_data = $this->db->get_where('user', array('phone' => $auth_data->mobileno))->row();
+        if(isset($user_data) && empty($user_data) == false) {
+    
           $password = substr(hash('sha512', rand()), 0, 12);
           $data['password'] = sha1($password);
-          $this->db->where('email', $email);
+          $this->db->where('phone', $user_data->phone);
           $this->db->update('user', $data);
-      
-          if ($this->email_model->get_reset_pw_data($email, $password)) {
-            echo 'done';
+    
+          if ($this->mts_model->send_user_passwd($user_data->phone, $user_data->email, $password) > 0) {
+            $this->redirect_info('비밀번호가 전송되었습니다!<br> 문자메세지 확인 후 로그인해주세요!');
           } else {
-            echo '이메일 전송에 실패하였습니다.';
+            $this->redirect_error('문자전송에 실패하였습니다!');
           }
         } else {
-          echo '유효하지 않은 이메일입니다.';
+          $this->redirect_error('회원 전화번호가 아닙니다!');
         }
+  
+      } else {
+        $this->redirect_error();
       }
   
     } else if ($login_type == 'restore') {
@@ -432,11 +503,14 @@ class Home extends CI_Controller
         $refresh_token = $response->refresh_token;
         $id_token = $response->id_token;
         
-        log_message('debug', '[apple_login] (verify user) access_token : '.$access_token.', token_type : '.$token_type.
-        ', expires_in : '.$expires_in.', refresh_token : '.$refresh_token.', id_token : '.$id_token);
- 
+//        log_message('debug', '[apple_login] (verify user) access_token : '.$access_token.', token_type : '.$token_type.
+//        ', expires_in : '.$expires_in.', refresh_token : '.$refresh_token.', id_token : '.$id_token);
+//
         curl_close($ch);
   
+        $login_data['access_token'] = $access_token;
+        $login_data['refresh_token'] = $refresh_token;
+        $login_data['expires_in'] = $expires_in;
         $login_data['verify_user'] = array('req' => $req, 'res' => $response);
         $account = json_encode($login_data);
         
@@ -444,18 +518,36 @@ class Home extends CI_Controller
           $email = $payload->email;
         }
         if ($register) {
-          $password = '';
-          $user_data = $this->crud_model->do_register($email, $password, $account);
-          $result['status'] = 'success';
-          $result['message'] = "첫 방문을 환영합니다.";
+          $this->session->set_userdata('reg_type', 'apple');
+          $this->session->set_userdata('reg_email', $email);
+          $this->session->set_userdata('reg_account', $account);
+//          log_message('debug', '[apple_login] email['.$email.'] account['.$account.'');
+          $result['status'] = 'approval';
+          $result['message'] = "본인인증이 필요합니다.";
+          $result['approval_url'] = base_url().'home/register/approval';
+          echo json_encode($result);
+          exit;
+//          $password = '';
+//          $user_data = $this->crud_model->do_register($email, $password, $account);
+//          $result['status'] = 'success';
+//          $result['message'] = "첫 방문을 환영합니다.";
         } else {
           $user_data = $this->db->get_where('user', array('email' => $email))->row();
           if (empty($user_data) == true) {
-            $password = '';
             $account = json_encode($login_data);
-            $user_data = $this->crud_model->do_register($email, $password, $account);
-            $result['status'] = 'success';
-            $result['message'] = "첫 방문을 환영합니다.";
+            $this->session->set_userdata('reg_type', 'apple');
+            $this->session->set_userdata('reg_email', $email);
+            $this->session->set_userdata('reg_account', $account);
+//            log_message('debug', '[apple_login] email['.$email.'] account['.$account.'');
+            $result['status'] = 'approval';
+            $result['message'] = "본인인증이 필요합니다.";
+            $result['approval_url'] = base_url().'home/register/approval';
+            echo json_encode($result);
+            exit;
+//            $password = '';
+//            $user_data = $this->crud_model->do_register($email, $password, $account);
+//            $result['status'] = 'success';
+//            $result['message'] = "첫 방문을 환영합니다.";
           } else {
             if ($user_data->unregister == 1) {
               $ins = array(
@@ -528,11 +620,11 @@ class Home extends CI_Controller
           'issued_at' => $payload->iat + 32400,
           'expired_at' => $payload->iat + $expires_in + 32400,
         );
-        $this->db->set('last_updated_at', 'NOW()', false);
+        $this->db->set('last_updated_at', 'now()', false);
         $this->db->update('user_apple', $data, array('user_id' => $user_id));
         if ($this->db->affected_rows() == 0) {
           $data['user_id'] = $user_id;
-          $this->db->set('create_at', 'NOW()', false);
+          $this->db->set('create_at', 'now()', false);
           $this->db->insert('user_apple', $data);
         }
         echo json_encode($result);
@@ -604,8 +696,11 @@ class Home extends CI_Controller
         curl_setopt_array($ch, $opts);
         $result = json_decode(curl_exec($ch), true);
         curl_close($ch);
-        
+
+        $this->session->set_userdata('reg_type', '');
         $result = $this->crud_model->do_kakao_login($result);
+        
+//        log_message('debug', '[kakao] result['.$result['status'].']');
 
         if ($result['status'] == 'success') {
           $user_id = $this->session->userdata('user_id');
@@ -618,6 +713,8 @@ class Home extends CI_Controller
             $relocation = base_url();
           }
           $this->crud_model->alert_exit($result['message'], $relocation);
+        } else if ($result['status'] == 'approval') { // mobile approval for register
+          $this->crud_model->alert_exit($result['message'], base_url().'home/register/approval');
         } else if ($result['status'] == 'restore') { // relogin after unregister
           $this->crud_model->alert_exit($result['message'], base_url().'home/login');
         } else { // error
@@ -790,156 +887,192 @@ class Home extends CI_Controller
       $this->db->insert('user_logout',$ins);
   
       $this->session->sess_destroy();
+      $this->cookie_model->delete_cookie('mobile_approval_deny');
+      $this->cookie_model->delete_cookie('mobile_approval_deny_time');
     }
     
     echo json_encode($result);
     exit;
   }
   
-  public function register($para1 = '')
+  public function register($para1 = '', $para2 = '')
   {
-    if ($this->is_login() == true) {
-      $this->crud_moel->alert_exit('로그인 중입니다.', base_url());
-    }
-   
     if ($para1 == 'do_register') {
+  
+      if ($this->is_login() == true) {
+        $this->crud_model->alert_exit('로그인 중입니다.', base_url());
+      }
   
       $this->load->library('form_validation');
       $this->form_validation->set_rules('email', 'email', 'trim|required|max_length[32]');
       $this->form_validation->set_rules('password1', 'password1', 'trim|required|max_length[32]');
       $this->form_validation->set_rules('password2', 'password2', 'trim|required|max_length[32]');
-      
+  
       if ($this->form_validation->run() == FALSE) {
         $message = '';
         $message .= json_encode(array(
-            'email' => $this->input->post('email'),
+          'email' => $this->input->post('email'),
           'password1' => $this->input->post('password1'),
           'password2' => $this->input->post('password2'),
         ));;
-        $result['message'] = $message.'<br>' . validation_errors();
+        $result['message'] = $message . '<br>' . validation_errors();
         $result['status'] = 'fail';
         echo json_encode($result);
         exit;
       }
   
       $email = $this->input->post('email');
-      $user_data = $this->db->get_where('user', array('email' => $email))->row();
-      if (isset($user_data) == true && empty($user_data) == false) {
-        if ($user_data->unregister == 0) {
-          $result['status'] = 'fail';
-          $result['message'] = "중복된 이메일이 존재합니다.";
-          echo json_encode($result);
-          exit;
-        } else {
-          $result['status'] = 'fail';
-          $result['message'] = "탈퇴한 회원입니다. 계정 복원 / 삭제를 원하시면 해당 이메일로 로그인해주세요.";
-          echo json_encode($result);
-          exit;
-        }
-      }
-  
       $password1 = $this->input->post('password1');
       $password2 = $this->input->post('password2');
-      if ($password1 != $password2) {
-        $result['status'] = 'fail';
-        $result['message'] = "입력하신 비밀번호가 일치하지 않습니다.";
-        echo json_encode($result);
-        exit;
-      }
+      $this->crud_model->user_register_validation($email, $password1, $password2);
       
-      $r = $this->crud_model->check_pw($password1);
-      if ($r[0] == false) {
-        $result['status'] = 'fail';
-        $result['message'] = $r[1];
-        echo json_encode($result);
-        exit;
-      }
-
-      $account = '';
-      $user_data = $this->crud_model->do_register($email, $password1, $account);
-      /*
-      $ins = array(
-        'user_type' => USER_TYPE_GENERAL,
-        'username' => '',
-        'nickname' => '',
-        'gender' => '',
-        'email' => $email,
-        'phone' => '',
-        'kakao_thumbnail_image_url' => '',
-        'kakao_profile_image_url' => '',
-        'profile_image_url' => '',
-        'password' => sha1($password1),
-        'unregister' => 0,
-      );
+      $this->session->set_userdata('reg_type', 'email');
+      $this->session->set_userdata('reg_email', $email);
+      $this->session->set_userdata('reg_password1', $password1);
+      $this->session->set_userdata('reg_password2', $password2);
   
-      $this->db->set('create_at', 'NOW()', false);
-      $this->db->set('last_login_at', 'NOW()', false);
-      $this->db->insert('user', $ins);
-      
-      if ($this->db->affected_rows() <= 0) {
-        $result['status'] = 'fail';
-        $result['message'] = '관리자에게 문의 바랍니다(not inserted)';
-        echo json_encode($result);
-        exit;
-      }
-  
-      $user_id = $this->db->insert_id();
-      $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
-  
-      $ins = array(
-        'user_id' => $user_data->user_id,
-        'account' => '',
-        'unregistered' => 0,
-      );
-      $this->db->set('register_at', 'NOW()', false);
-      $this->db->insert('user_register',$ins);
-      */
-  
-      $ins = array(
-        'user_id' => $user_data->user_id,
-        'account' => '',
-        'session_id' => $this->crud_model->get_session_id(),
-        'ip' => $this->crud_model->get_session_ip(),
-        'is_browser' => $this->agent->is_browser(),
-        'is_mobile' => $this->agent->is_mobile(),
-        'is_robot' => $this->agent->is_robot(),
-        'is_referral' => $this->agent->is_referral(),
-        'browser' => $this->agent->browser(),
-        'version' => $this->agent->version(),
-        'mobile' => $this->agent->mobile(),
-        'robot' => $this->agent->robot(),
-        'platform' => $this->agent->platform(),
-        'referrer' => $this->agent->referrer(),
-        'agent' => $this->agent->agent_string(),
-        'login_type' => 'email',
-      );
-      $this->db->set('login_at', 'NOW()', false);
-      $this->db->insert('user_login',$ins);
-  
-      $user_id = $user_data->user_id;
-      $kakao_id = $user_data->kakao_id;
-      $email = $user_data->email;
-      $user_type = $user_data->user_type;
-      $nickname = $user_data->nickname;
-      $kakao_thumbnail_image_url = $user_data->kakao_thumbnail_image_url;
-      $profile_image_url = $user_data->profile_image_url;
-  
-      $this->session->set_userdata('user_login', 'yes');
-      $this->session->set_userdata('user_id', $user_id);
-      $this->session->set_userdata('kakao_id', $kakao_id);
-      $this->session->set_userdata('email', $email);
-      $this->session->set_userdata('user_type', $user_type);
-      $this->session->set_userdata('nickname', $nickname);
-      $this->session->set_userdata('kakao_thumbnail_image_url', $kakao_thumbnail_image_url);
-      $this->session->set_userdata('profile_image_url', $profile_image_url);
-      $this->session->set_userdata('login_type', 'email');
-  
-      $result['status'] = 'success';
-      $result['message'] = "첫 방문을 환영합니다.";
+      $result['status'] = 'approval';
+      $result['message'] = "본인인증이 필요합니다.";
+      $result['approval_url'] = base_url().'home/register/approval';
       echo json_encode($result);
       exit;
+  
+    } else if ($para1 == 'approval') {
+  
+      if ($para2 == 'mobile') {
+    
+        if (isset($_GET['sid']) == false || isset($_GET['aid']) == false || isset($_GET['fid']) == false) {
+          $this->redirect_error('접근 오류가 발생하였습니다!');
+        }
+    
+        $session_id = $_GET['sid'];
+        $auth_id = $_GET['aid'];
+        $for = $_GET['fid'];
+    
+        $auth = $this->db->get_where('user_auth', array('auth_id' => $auth_id))->row();
+        if (isset($auth) == false || empty($auth) == true) {
+          $this->redirect_error('접근 오류가 발생하였습니다!(1)');
+        }
+        if ($auth->session_id != $session_id || $auth->session_id != $this->crud_model->get_session_id()) {
+          $this->redirect_error('접근 오류가 발생하였습니다!(2)');
+        }
+        if ($auth->for != $for || $for != 'mobile_approval') {
+          $this->redirect_error('접근 오류가 발생하였습니다!(3)');
+        }
+    
+        $auth_data = json_decode($auth->auth_data);
+        $user_data = $this->db->get_where('user', array('phone' => $auth_data->mobileno))->row();
+        if (isset($user_data) && empty($user_data) == false) {
+          $this->redirect_error('이미 가입한 회원입니다!');
+        }
+    
+        $user_id = $this->session->userdata('user_id');
+        $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
+        if (isset($user_data) && empty($user_data) == false) {
       
+          $data['username'] = $auth_data->name;
+          $data['phone'] = $auth_data->mobileno;
+          $data['gender'] = $auth_data->gender == 1 ? 'male' : 'female';
+          $data['mobile_approval'] = 1;
+          $this->db->where('user_id', $user_data->user_id);
+          $this->db->update('user', $data);
+      
+          if ($this->db->affected_rows() > 0) {
+        
+            $this->session->set_userdata('mobile_approval', 'yes');
+            $this->redirect_info('인증이 완료되었습니다!');
+          } else {
+            $this->redirect_error('문제가 발생하였습니다! 관리자에게 문의 바랍니다!');
+          }
+      
+        } else {
+          $this->redirect_error('회원 전화번호가 아닙니다');
+        }
+    
+      } else if ($para2 == 'do') {
+    
+        if (isset($_GET['sid']) == false || isset($_GET['aid']) == false || isset($_GET['fid']) == false) {
+          $this->redirect_error('접근 오류가 발생하였습니다!');
+        }
+    
+        $session_id = $_GET['sid'];
+        $auth_id = $_GET['aid'];
+        $for = $_GET['fid'];
+    
+        $auth = $this->db->get_where('user_auth', array('auth_id' => $auth_id))->row();
+        if (isset($auth) == false || empty($auth) == true) {
+          $this->redirect_error('접근 오류가 발생하였습니다!(1)');
+        }
+        if ($auth->session_id != $session_id || $auth->session_id != $this->crud_model->get_session_id()) {
+          $this->redirect_error('접근 오류가 발생하였습니다!(2)');
+        }
+        if ($auth->for != $for || $for != 'register') {
+          $this->redirect_error('접근 오류가 발생하였습니다!(3)');
+        }
+    
+        $auth_data = json_decode($auth->auth_data);
+//        $user_data = $this->db->get_where('user', array('phone' => $auth_data->mobileno))->row();
+//        if (isset($user_data) && empty($user_data) == false) {
+//          $this->redirect_error('이미 가입한 회원입니다!');
+//        }
+    
+        $reg_type = $this->session->userdata('reg_type');
+        if ($reg_type == 'kakao') {
+          $account = $this->session->userdata('reg_account');
+          $account['auth'] = $auth_data;
+          $result = $this->crud_model->do_kakao_login($account);
+          if ($result['status'] == 'success') {
+            redirect(base_url().'home/register/complete');
+          } else {
+            $this->redirect_error($result['message']);
+          }
+        } else if ($reg_type == 'apple') {
+          $account = json_decode($this->session->userdata('reg_account'));
+          $email = $this->session->userdata('reg_email');
+          $password = '';
+          $result = $this->crud_model->do_register($email, $password, $account,
+            $auth_data->name, $auth_data->mobileno, ($auth_data->gender == 1 ? 'male' : 'female'), 'apple');
+          if ($result['status'] == 'success') {
+            redirect(base_url().'home/register/complete');
+          } else {
+            $this->redirect_error($result['message']);
+          }
+        } else if ($reg_type == 'email') {
+          $email = $this->session->userdata('reg_email');
+          $password1 = $this->session->userdata('reg_password1');
+//          $password2 = $this->session->userdata('reg_password2');
+          $account = '';
+          $result = $this->crud_model->do_register($email, $password1, $account,
+            $auth_data->name, $auth_data->mobileno, ($auth_data->gender == 1 ? 'male' : 'female'), 'email');
+          if ($result['status'] == 'success') {
+            redirect(base_url().'home/register/complete');
+          } else {
+            $this->redirect_error($result['message']);
+          }
+        } else {
+          $this->redirect_error('접근 오류가 발생하였습니다!(4)');
+        }
+    
+      } else {
+        if ($this->is_login() == true) {
+          $this->redirect_error('접근 오류가 발생하였습니다!(0)');
+        }
+        $reg_type = $this->session->userdata('reg_type');
+        if ($reg_type != 'kakao' && $reg_type != 'apple' && $reg_type != 'email') {
+          $this->redirect_error('접근 오류가 발생하였습니다!(1)');
+        }
+    
+        $this->load->view('front/user/register/mobile_approval', $this->page_data);
+      }
+  
+    } else if ($para1 == 'complete') {
+      $this->load->view('front/user/register/sign_up_complete', $this->page_data);
+    } else if ($para1 == 'cancel') {
+      $this->load->view('front/user/register/sign_up_cancel', $this->page_data);
     } else {
+      if ($this->is_login() == true) {
+        $this->crud_model->alert_exit('로그인 중입니다.', base_url());
+      }
       $this->page_data['page_name'] = "user/register";
       $this->page_data['asset_page'] = "login";
       $this->page_data['page_title'] = "login";
@@ -5230,4 +5363,43 @@ QUERY;
     }
   }
   
+  public function error() {
+    $msg = '';
+    if (isset($_GET['m'])) {
+      $msg = $_GET['m'];
+    }
+    $page = '';
+    if (isset($_GET['p'])) {
+      $page = $_GET['p'];
+    }
+    $this->page_data['page_name'] = $page;
+    $this->page_data['msg'] = $msg;
+    $this->load->view('front/others/404_error', $this->page_data);
+  }
+  public function info() {
+    $msg = '';
+    if (isset($_GET['m'])) {
+      $msg = $_GET['m'];
+    }
+    $page = '';
+    if (isset($_GET['p'])) {
+      $page = $_GET['p'];
+    }
+    $this->page_data['page_name'] = $page;
+    $this->page_data['msg'] = $msg;
+    $this->load->view('front/others/info', $this->page_data);
+  }
+  
+  private function redirect_error($msg = '', $page = '') {
+    redirect(base_url().'home/error?m='.$msg.'&p='.$page);
+  }
+  
+  private function redirect_info($msg = '', $page = '') {
+    redirect(base_url().'home/info?m='.$msg.'&p='.$page);
+  }
+  
+  private function response($result) {
+    echo json_encode($result);
+    exit;
+  }
 }

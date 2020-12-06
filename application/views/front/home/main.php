@@ -60,14 +60,12 @@
     padding-right: 0;
   }
 </style>
-<section class="page-section" style="margin: 0px 15px 0px 15px !important; padding: 5px 0 5px 0!important; border-top: 1px solid #353535;">
+<section class="page-section" style="border-top: 1px solid #bdbdbd; padding: 4px 0 32px !important; margin: 0 16px !important;">
   <div class="row">
     <div class="col-md-12 main-discovery">
       <div class="col-md-12 main-header navigation-header" style="text-align: center; margin: 10px 0">
-<!--        <p style="line-height: 20px;">-->
           <h6 class="font-futura" style="height: 20px; line-height: 20px;">Find</h6>
         <p>건강한 시작을 위한 클래스 찾기</p>
-<!--        </p>-->
       </div>
       <div class="col-md-12 main-nav" style="display: flex">
         <a href="<?php echo base_url().'home/find'; ?>" style="margin:auto;">
@@ -87,17 +85,377 @@
     <div class="col-md-12 main-fav">
       <div class="col-md-12 main-header navigation-header font-futura" style="text-align: center">
         <?php if (empty($bookmark_centers) && empty($bookmark_teachers)) { ?>
-          <h6 class="font-futura">Your Favorite</b></h6>
+          <h6 class="font-futura">Your Favorite</h6>
         <?php } else { ?>
-          <h6 class="font-futura">My Favorite</b></h6>
+          <h6 class="font-futura">My Favorite</h6>
         <?php } ?>
       </div>
       <div class="col-md-12 main-fav-content">
         <?php include "favorite.php"; ?>
       </div>
     </div>
+    <? if (DEV_SERVER) { ?>
+    <!-- UPCOMMING CLASS -->
+    <div class="col-md-12 main-upcoming">
+      <div class="upcoming_tit">
+        <p class="font-futura tit_txt">Upcoming Class</p>
+      </div>
+      <div class="upcoming_wrap">
+        <div class="upcoming_schedule">
+          <div class="schedule_type">
+            <div class="type_today" style="background-color: #000 !important;">
+              <p class="font-futura today_date">THU<br><span class="date_no">29</span>일</p>
+            </div>
+            <p class="type_info">
+              <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
+            </p>
+            <div class="type_name">
+              <p class="name_class">수업이름O수업이름O</p>
+              <p class="name_center">센터이름O센터이름O</p>
+            </div>
+            <button class="type_cancel">
+              <img src="<?php echo base_url(); ?>template/icon/ic_cancel_off.png" width="40" height="40">
+            </button>
+          </div>
+        </div>
+        <div class="upcoming_schedule">
+          <div class="schedule_type">
+            <div class="type_today">
+              <p class="font-futura today_date">THU<br><span class="date_no">29</span>일</p>
+            </div>
+            <p class="type_info">
+              <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
+            </p>
+            <div class="type_name">
+              <p class="name_class">수업이름O수업이름O</p>
+              <p class="name_center">강사이름O</p>
+            </div>
+            <button class="type_cancel">
+              <img src="<?php echo base_url(); ?>template/icon/ic_cancel_off.png" width="40" height="40">
+            </button>
+          </div>
+        </div>
+        <div class="upcoming_schedule">
+          <div class="schedule_type">
+            <div class="type_today">
+              <p class="font-futura today_date">THU<br><span class="date_no">29</span>일</p>
+            </div>
+            <p class="type_info">
+              <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
+            </p>
+            <div class="type_name">
+              <p class="name_class">수업이름O수업이름O</p>
+              <p class="name_center">센터이름O센터이름O</p>
+            </div>
+            <button class="type_cancel">
+              <img src="<?php echo base_url(); ?>template/icon/ic_cancel_off.png" width="40" height="40">
+            </button>
+          </div>
+        </div>
+        <div class="upcoming_schedule">
+          <div class="schedule_type">
+            <div class="type_today">
+              <p class="font-futura today_date">THU<br><span class="date_no">29</span>일</p>
+            </div>
+            <p class="type_info">
+              <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
+            </p>
+            <div class="type_name">
+              <p class="name_class">수업이름O수업이름O</p>
+              <p class="name_center">강사이름O</p>
+            </div>
+            <button class="type_cancel">
+              <img src="<?php echo base_url(); ?>template/icon/ic_cancel_off.png" width="40" height="40">
+            </button>
+          </div>
+        </div>
+        <div class="upcoming_hide hide_1" style="display: none;">
+          <div class="upcoming_schedule">
+            <div class="schedule_type">
+              <div class="type_today">
+                <p class="font-futura today_date">THU<br><span class="date_no">29</span>일</p>
+              </div>
+              <p class="type_info">
+                <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
+              </p>
+              <div class="type_name">
+                <p class="name_class">수업이름O수업이름O</p>
+                <p class="name_center">센터이름O센터이름O</p>
+              </div>
+              <button class="type_cancel">
+                <img src="<?php echo base_url(); ?>template/icon/ic_cancel_off.png" width="40" height="40">
+              </button>
+            </div>
+          </div>
+          <div class="upcoming_schedule">
+            <div class="schedule_type">
+              <div class="type_today">
+                <p class="font-futura today_date">THU<br><span class="date_no">29</span>일</p>
+              </div>
+              <p class="type_info">
+                <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
+              </p>
+              <div class="type_name">
+                <p class="name_class">수업이름O수업이름O</p>
+                <p class="name_center">강사이름O</p>
+              </div>
+              <button class="type_cancel">
+                <img src="<?php echo base_url(); ?>template/icon/ic_cancel_off.png" width="40" height="40">
+              </button>
+            </div>
+          </div>
+          <div class="upcoming_schedule">
+            <div class="schedule_type">
+              <div class="type_today">
+                <p class="font-futura today_date">THU<br><span class="date_no">29</span>일</p>
+              </div>
+              <p class="type_info">
+                <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
+              </p>
+              <div class="type_name">
+                <p class="name_class">수업이름O수업이름O</p>
+                <p class="name_center">센터이름O센터이름O</p>
+              </div>
+              <button class="type_cancel">
+                <img src="<?php echo base_url(); ?>template/icon/ic_cancel_off.png" width="40" height="40">
+              </button>
+            </div>
+          </div>
+          <div class="upcoming_schedule">
+            <div class="schedule_type">
+              <div class="type_today">
+                <p class="font-futura today_date">THU<br><span class="date_no">29</span>일</p>
+              </div>
+              <p class="type_info">
+                <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
+              </p>
+              <div class="type_name">
+                <p class="name_class">수업이름O수업이름O</p>
+                <p class="name_center">강사이름O</p>
+              </div>
+              <button class="type_cancel">
+                <img src="<?php echo base_url(); ?>template/icon/ic_cancel_off.png" width="40" height="40">
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="upcoming_hide hide_2" style="display: none;">
+          <div class="upcoming_schedule">
+            <div class="schedule_type">
+              <div class="type_today">
+                <p class="font-futura today_date">THU<br><span class="date_no">29</span>일</p>
+              </div>
+              <p class="type_info">
+                <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
+              </p>
+              <div class="type_name">
+                <p class="name_class">수업이름O수업이름O</p>
+                <p class="name_center">센터이름O센터이름O</p>
+              </div>
+              <button class="type_cancel">
+                <img src="<?php echo base_url(); ?>template/icon/ic_cancel_off.png" width="40" height="40">
+              </button>
+            </div>
+          </div>
+          <div class="upcoming_schedule">
+            <div class="schedule_type">
+              <div class="type_today">
+                <p class="font-futura today_date">THU<br><span class="date_no">29</span>일</p>
+              </div>
+              <p class="type_info">
+                <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
+              </p>
+              <div class="type_name">
+                <p class="name_class">수업이름O수업이름O</p>
+                <p class="name_center">강사이름O</p>
+              </div>
+              <button class="type_cancel">
+                <img src="<?php echo base_url(); ?>template/icon/ic_cancel_off.png" width="40" height="40">
+              </button>
+            </div>
+          </div>
+          <div class="upcoming_schedule">
+            <div class="schedule_type">
+              <div class="type_today">
+                <p class="font-futura today_date">THU<br><span class="date_no">29</span>일</p>
+              </div>
+              <p class="type_info">
+                <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
+              </p>
+              <div class="type_name">
+                <p class="name_class">수업이름O수업이름O</p>
+                <p class="name_center">센터이름O센터이름O</p>
+              </div>
+              <button class="type_cancel">
+                <img src="<?php echo base_url(); ?>template/icon/ic_cancel_off.png" width="40" height="40">
+              </button>
+            </div>
+          </div>
+          <div class="upcoming_schedule">
+            <div class="schedule_type">
+              <div class="type_today">
+                <p class="font-futura today_date">THU<br><span class="date_no">29</span>일</p>
+              </div>
+              <p class="type_info">
+                <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
+              </p>
+              <div class="type_name">
+                <p class="name_class">수업이름O수업이름O</p>
+                <p class="name_center">강사이름O</p>
+              </div>
+              <button class="type_cancel">
+                <img src="<?php echo base_url(); ?>template/icon/ic_cancel_off.png" width="40" height="40">
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="upcoming_hide hide_3" style="display: none;">
+          <div class="upcoming_schedule">
+            <div class="schedule_type">
+              <div class="type_today">
+                <p class="font-futura today_date">THU<br><span class="date_no">29</span>일</p>
+              </div>
+              <p class="type_info">
+                <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
+              </p>
+              <div class="type_name">
+                <p class="name_class">수업이름O수업이름O</p>
+                <p class="name_center">센터이름O센터이름O</p>
+              </div>
+              <button class="type_cancel">
+                <img src="<?php echo base_url(); ?>template/icon/ic_cancel_off.png" width="40" height="40">
+              </button>
+            </div>
+          </div>
+          <div class="upcoming_schedule">
+            <div class="schedule_type">
+              <div class="type_today">
+                <p class="font-futura today_date">THU<br><span class="date_no">29</span>일</p>
+              </div>
+              <p class="type_info">
+                <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
+              </p>
+              <div class="type_name">
+                <p class="name_class">수업이름O수업이름O</p>
+                <p class="name_center">강사이름O</p>
+              </div>
+              <button class="type_cancel">
+                <img src="<?php echo base_url(); ?>template/icon/ic_cancel_off.png" width="40" height="40">
+              </button>
+            </div>
+          </div>
+          <div class="upcoming_schedule">
+            <div class="schedule_type">
+              <div class="type_today">
+                <p class="font-futura today_date">THU<br><span class="date_no">29</span>일</p>
+              </div>
+              <p class="type_info">
+                <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
+              </p>
+              <div class="type_name">
+                <p class="name_class">수업이름O수업이름O</p>
+                <p class="name_center">센터이름O센터이름O</p>
+              </div>
+              <button class="type_cancel">
+                <img src="<?php echo base_url(); ?>template/icon/ic_cancel_off.png" width="40" height="40">
+              </button>
+            </div>
+          </div>
+          <div class="upcoming_schedule">
+            <div class="schedule_type">
+              <div class="type_today">
+                <p class="font-futura today_date">THU<br><span class="date_no">29</span>일</p>
+              </div>
+              <p class="type_info">
+                <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
+              </p>
+              <div class="type_name">
+                <p class="name_class">수업이름O수업이름O</p>
+                <p class="name_center">강사이름O</p>
+              </div>
+              <button class="type_cancel">
+                <img src="<?php echo base_url(); ?>template/icon/ic_cancel_off.png" width="40" height="40">
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="upcoming_hide hide_4" style="display: none;">
+          <div class="upcoming_schedule">
+            <div class="schedule_type">
+              <div class="type_today">
+                <p class="font-futura today_date">THU<br><span class="date_no">29</span>일</p>
+              </div>
+              <p class="type_info">
+                <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
+              </p>
+              <div class="type_name">
+                <p class="name_class">수업이름O수업이름O</p>
+                <p class="name_center">센터이름O센터이름O</p>
+              </div>
+              <button class="type_cancel">
+                <img src="<?php echo base_url(); ?>template/icon/ic_cancel_off.png" width="40" height="40">
+              </button>
+            </div>
+          </div>
+          <div class="upcoming_schedule">
+            <div class="schedule_type">
+              <div class="type_today">
+                <p class="font-futura today_date">THU<br><span class="date_no">29</span>일</p>
+              </div>
+              <p class="type_info">
+                <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
+              </p>
+              <div class="type_name">
+                <p class="name_class">수업이름O수업이름O</p>
+                <p class="name_center">강사이름O</p>
+              </div>
+              <button class="type_cancel">
+                <img src="<?php echo base_url(); ?>template/icon/ic_cancel_off.png" width="40" height="40">
+              </button>
+            </div>
+          </div>
+          <div class="upcoming_schedule">
+            <div class="schedule_type">
+              <div class="type_today">
+                <p class="font-futura today_date">THU<br><span class="date_no">29</span>일</p>
+              </div>
+              <p class="type_info">
+                <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
+              </p>
+              <div class="type_name">
+                <p class="name_class">수업이름O수업이름O</p>
+                <p class="name_center">센터이름O센터이름O</p>
+              </div>
+              <button class="type_cancel">
+                <img src="<?php echo base_url(); ?>template/icon/ic_cancel_off.png" width="40" height="40">
+              </button>
+            </div>
+          </div>
+          <div class="upcoming_schedule">
+            <div class="schedule_type">
+              <div class="type_today">
+                <p class="font-futura today_date">THU<br><span class="date_no">29</span>일</p>
+              </div>
+              <p class="type_info">
+                <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
+              </p>
+              <div class="type_name">
+                <p class="name_class">수업이름O수업이름O</p>
+                <p class="name_center">강사이름O</p>
+              </div>
+              <button class="type_cancel">
+                <img src="<?php echo base_url(); ?>template/icon/ic_cancel_off.png" width="40" height="40">
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="font-futura btn_more" style="font-weight: bold !important;">MORE</button>
+    </div>
+    <!-- /UPCOMMING CLASS -->
+    <? } ?>
     <?php if (count($blogs) > 0) { ?>
-      <div class="col-md-12 main-blog">
+      <div class="col-md-12 main-blog" style="padding: 0;">
         <div class="col-md-12 main-header navigation-header" style="text-align: center">
           <h6 class="font-futura">This Week</h6>
         </div>

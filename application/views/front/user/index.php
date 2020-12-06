@@ -12,7 +12,7 @@
     <div class="row profile">
       <div class="col-lg-12 col-md-12" style="padding-left: 0 !important; padding-right: 0 !important;">
         <div id="profile_content">
-
+        
         </div>
       </div>
       <div class="col-lg-12 col-md-12" style="margin-top: 20px !important;">
@@ -26,9 +26,9 @@
             <a class="pnav_introduce"><li>파운디 소개</li></a>
             <a class="pnav_faq"><li>자주하는 질문</li></a>
             <a class="pnav_customer_center"><li>고객센터</li></a>
-<!--            <a class="pnav_user_question" href="#"><li>1:1 문의하기</li></a>-->
-<!--            <a class="pnav_service" href="#profile_content"><li>서비스 이용 약관</li></a>-->
-<!--            <a class="pnav_privacy" href="#profile_content"><li>개인정보 보호정책</li></a>-->
+            <!--            <a class="pnav_user_question" href="#"><li>1:1 문의하기</li></a>-->
+            <!--            <a class="pnav_service" href="#profile_content"><li>서비스 이용 약관</li></a>-->
+            <!--            <a class="pnav_privacy" href="#profile_content"><li>개인정보 보호정책</li></a>-->
           </ul>
           <div class="information-title" style="margin-bottom: 0px; margin-top: 0px;">샵</div>
           <ul class="pleft_nav">
@@ -423,6 +423,7 @@
   });
   $('.pnav_customer_center').on('click',function(){
     window.open('http://pf.kakao.com/_xnzxbxaxb/chat', '_blank');
+    // chatKakaoChannel();
   });
   $('.pnav_shop_wishlist').on('click',function(){
     window.location.href='<?php echo base_url(); ?>home/shop?cat=wish&col=product_id&order=desc';
