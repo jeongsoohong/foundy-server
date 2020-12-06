@@ -4180,6 +4180,9 @@ QUERY;
 
         $purchase_code = $this->input->post('purchase_code');
         $bootpay_done_json_data = $this->input->post('bootpay_done_data');
+        
+        log_message('debug', '[bootpay] bootpay_done_data['.$bootpay_done_json_data.']');
+  
         $data = json_decode($bootpay_done_json_data);
 
         $purchase_info = $this->db->get_where('shop_purchase', array('purchase_code' => $purchase_code))->row();
@@ -4190,7 +4193,8 @@ QUERY;
         $upd = array(
           'status' => SHOP_PURCHASE_STATUS_DONE_SUCCESS,
           'status_code' => $this->crud_model->get_purchase_status_str(SHOP_PURCHASE_STATUS_DONE_SUCCESS),
-          'receipt_url' => $data->receipt_url,
+          'receipt_id' => $data->receipt_id,
+//          'receipt_url' => $data->receipt_url, // 페이앱에서 안나옴, 이니시스에서는 나옴
           'bootpay_done_data' => $bootpay_done_json_data,
           'sender_name' => $data->params->sender_info->username,
           'sender_email' => $data->params->sender_info->email,
@@ -4222,6 +4226,9 @@ QUERY;
 
         $purchase_code = $this->input->post('purchase_code');
         $bootpay_confirmed_json_data = $this->input->post('bootpay_confirmed_data');
+        
+        log_message('debug', '[bootpay] bootpay_confiremd_data['.$bootpay_confirmed_json_data.']');
+        
         $data = json_decode($bootpay_confirmed_json_data);
 
         $purchase_info = $this->db->get_where('shop_purchase', array('purchase_code' => $purchase_code))->row();

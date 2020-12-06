@@ -800,7 +800,7 @@
       price: total_balance - discount,
       application_id: "5ee197af8f0751001e4f2562",
       name: '<?php echo $cart_items[0]->product->item_name.' 등 '.count($cart_items).' 건'; ?>',
-      pg: 'inicis',
+      pg: 'payapp',
       method: 'card',
       show_agree_window: 0,
       items: items,
@@ -828,6 +828,7 @@
 
       //결제가 실행되기 전에 수행되며, 주로 재고를 확인하는 로직이 들어갑니다.
       //주의 - 카드 수기결제일 경우 이 부분이 실행되지 않습니다.
+      // 페이앱은 confirm 이 진행되지 않는 것으로 보임
 
       var enable = true; // 재고 수량 관리 로직 혹은 다른 처리
       if (data.params.purchase_info.total_balance !== total_balance) {
@@ -838,7 +839,7 @@
         enable = false;
       }
 
-      // console.log('confirm : ' + data);
+      console.log('confirm : ' + data);
 
       if (enable) {
 
