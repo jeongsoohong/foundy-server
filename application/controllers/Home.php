@@ -714,7 +714,8 @@ class Home extends CI_Controller
           }
           $this->crud_model->alert_exit($result['message'], $relocation);
         } else if ($result['status'] == 'approval') { // mobile approval for register
-          $this->crud_model->alert_exit($result['message'], base_url().'home/register/approval');
+//          $this->crud_model->alert_exit($result['message'], base_url().'home/register/approval');
+          redirect(base_url().'home/register/approval');
         } else if ($result['status'] == 'restore') { // relogin after unregister
           $this->crud_model->alert_exit($result['message'], base_url().'home/login');
         } else { // error
@@ -963,7 +964,7 @@ class Home extends CI_Controller
         $auth_data = json_decode($auth->auth_data);
         $user_data = $this->db->get_where('user', array('phone' => $auth_data->mobileno))->row();
         if (isset($user_data) && empty($user_data) == false) {
-          $this->redirect_error('이미 가입한 회원입니다!');
+          $this->redirect_error('이미 가입한 회원 전화번호입니다!');
         }
     
         $user_id = $this->session->userdata('user_id');
@@ -1013,7 +1014,7 @@ class Home extends CI_Controller
         $auth_data = json_decode($auth->auth_data);
         $user_data = $this->db->get_where('user', array('phone' => $auth_data->mobileno))->row();
         if (isset($user_data) && empty($user_data) == false) {
-          $this->redirect_error('이미 가입한 회원입니다!');
+          $this->redirect_error('이미 가입한 회원 전화번호입니다!');
         }
     
         $reg_type = $this->session->userdata('reg_type');

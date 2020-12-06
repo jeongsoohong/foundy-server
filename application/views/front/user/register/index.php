@@ -116,7 +116,7 @@
           alert(res.message);
           window.location.href = '<?php echo base_url(); ?>';
         } else if (res.status === 'approval') {
-            alert(res.message);
+            // alert(res.message);
             window.location.href = res.approval_url;
         } else {
           let text = '<strong>실패하였습니다</strong><br>' + res.message;

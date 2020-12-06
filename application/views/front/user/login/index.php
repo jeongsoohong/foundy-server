@@ -122,7 +122,7 @@
                     alert(res.message);
                     window.location.href = '<?php echo $relocation; ?>';
                   } else if (res.status === 'approval') {
-                    alert(res.message);
+                    // alert(res.message);
                     window.location.href = res.approval_url;
                   } else if (res.status === 'error') {
                     alert(res.message);
