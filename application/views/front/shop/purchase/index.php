@@ -812,7 +812,7 @@
         start_at: '',
         end_at: '',
         vbank_result: 0,
-        quota: '0,2,3,4,5,6'
+        quota: '0'
       }
     }).error(function (data) {
       $("#loading_set").fadeOut(500);
