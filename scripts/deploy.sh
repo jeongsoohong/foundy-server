@@ -19,7 +19,7 @@ rsync -avz --delete $GIT_PATH/system $WEB_PATH
 
 echo
 echo '----====---- template start ----====----'
-rsync -avz --delete $GIT_PATH/template --exclude="nice/modules" $WEB_PATH
+rsync -avz --delete $GIT_PATH/template --exclude="nice" $WEB_PATH
 
 echo
 echo '----====---- uploads/banner_image start ----====----'
