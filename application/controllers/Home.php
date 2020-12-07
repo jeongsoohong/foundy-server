@@ -44,17 +44,17 @@ class Home extends CI_Controller
       
       } else if ($user_data->mobile_approval == 0 && !$this->input->is_ajax_request()) { // 핸드폰 본인인증 안받은 유저
   
-        log_message('debug', '[mobile_approval] mobile_approval['.$this->session->userdata('mobile_approval').']');
+//        log_message('debug', '[mobile_approval] mobile_approval['.$this->session->userdata('mobile_approval').']');
         
         if ($this->session->userdata('mobile_approval') == 'deny' ||
           $this->session->userdata('mobile_approval') == 'no') {
 
           $deny = $this->cookie_model->get_cookie('mobile_approval_deny');
-          log_message('debug', '[mobile_approval] deny[' . $deny . ']');
+//          log_message('debug', '[mobile_approval] deny[' . $deny . ']');
      
           if ($deny == 'yes') {
             $deny_time = $this->cookie_model->get_cookie('mobile_approval_deny_time');
-            log_message('debug', '[mobile_approval] deny_time[' . $deny_time . '] now[' . strtotime('-1day') . ']');
+//            log_message('debug', '[mobile_approval] deny_time[' . $deny_time . '] now[' . strtotime('-1day') . ']');
             if ($deny_time > strtotime('-1 day')) {
               $this->session->set_userdata('mobile_approval', 'deny');
             } else {
@@ -4689,7 +4689,7 @@ QUERY;
           $this->crud_model->alert_exit('잘못된 접근입니다.');
         }
   
-        $url = sprintf('https://info.sweettracker.co.kr/api/v1/trackingInfo?t_key=%s&t_code=%s&t_invoice=%s', 'FRvPgPCF5VFWcYEprruZ9A', $shipping_data->shipping_company, $shipping_data->shipping_code);
+        $url = sprintf('https://info.sweettracker.co.kr/api/v1/trackingInfo?t_key=%s&t_code=%s&t_invoice=%s', '9PKYs9QJEOo9Ebvu4I95Ww', $shipping_data->shipping_company, $shipping_data->shipping_code);
         
         $opts = array(
           CURLOPT_URL => $url,

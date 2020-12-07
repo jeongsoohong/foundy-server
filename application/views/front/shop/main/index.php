@@ -9,7 +9,7 @@
   }
   .shop-item {
     width: 50%;
-    padding: 0 10px !important;
+    /*padding: 0 10px !important;*/
   }
   .item-content, .item-img, .brand-name, .item-title, .item-summery, .item-price, .item-price-bold, .item-like {
     padding-left: 0;
@@ -134,7 +134,7 @@
     width: 100%;
   }
   .shop-item {
-    padding: 0 10px 10px !important;
+    padding: 0 10px 24px !important;
   }
   .shop-best-items {
     border: 0 !important;

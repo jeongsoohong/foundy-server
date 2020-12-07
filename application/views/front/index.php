@@ -51,7 +51,10 @@ include 'includes/bottom/index.php';
 <? if ($this->session->userdata('mobile_approval') == 'no') {
   include 'user/mobile_approval.php';
   ?>
-<?php } else if ($this->app_model->is_app() == false && $this->agent->is_mobile()) { ?>
+<?php } else if ($this->app_model->is_app() == false && $this->agent->is_mobile()) {
+  $enroll_app_cookie = $this->cookie_model->get_cookie('enroll_app_time');
+  if (empty($enroll_app_cookie) == true || $enroll_app_cookie < strtotime('-1 day')) {
+  ?>
 <style>
   #enroll_app {
     padding: 0;
@@ -89,6 +92,8 @@ include 'includes/bottom/index.php';
 <script>
   
   $(function() {
+    let today = new Date();
+    _setCookie('enroll_app_time', parseInt(today.getTime()/1000), 1);
     $('body').css('overflow-y', 'hidden');
   });
   
@@ -170,7 +175,8 @@ include 'includes/bottom/index.php';
     }
   }
 </script>
-<?php } ?>
+<?php }
+} ?>
 <?php if ($this->app_model->is_app()) { ?>
 <script>
   <?php
@@ -204,6 +210,7 @@ include 'includes/bottom/index.php';
     $(function() {
       alert(_getCookie('mobile_approval_deny'))
       alert(_getCookie('mobile_approval_deny_time'))
+      alert(_getCookie('enroll_app_time'))
     })
   </script>
 <? } ?>

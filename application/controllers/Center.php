@@ -16,7 +16,7 @@ class Center extends CI_Controller
     parent::__construct();
     $this->load->database();
     
-    if (DEV_SERVER == false) {
+    if (DEV_SERVER == false && $this->uri->segment(2) != 'error') {
       $this->redirect_error();
     }
   

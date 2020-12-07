@@ -9,7 +9,7 @@
   }
   .shop-item {
     width: 50%;
-    padding: 0 10px 10px 10px !important;
+    /*padding: 0 10px 10px 10px !important;*/
   }
   .item-content, .item-img, .brand-name, .item-title, .item-summery, .item-price, .item-price-bold, .item-like {
     padding-left: 0;
@@ -107,7 +107,7 @@
     padding: 0 10px;
   }
   .shop-item {
-    padding: 0 10px 10px !important;
+    padding: 0 10px 24px !important;
   }
   .shop-best-items {
     border: 0;
@@ -155,8 +155,9 @@
               ?>
                 <a class="font-futura"
                   <?php if (!strcmp($cat->cat_code, $category)) { ?>
-                    style="color: #FF6633"
+                    style="color: #FF6633; font-size: 12px; padding-top: 12px;"
                   <?php } ?>
+                   style="font-size: 12px; padding-top: 12px;"
                    href="<?php echo base_url(); ?>home/shop?col=product_id&order=desc&cat=<?php echo $cat->cat_code; ?>">
                   <?php
                   echo $cat->cat_name;
@@ -175,8 +176,9 @@
               ?>
               <a class="font-futura"
                 <?php if (!strcmp($cat->cat_code, $category)) { ?>
-                  style="color: #FF6633"
+                  style="color: #FF6633; font-size: 12px; padding-top: 12px;"
                 <?php } ?>
+                 style="font-size: 12px; padding-top: 12px;"
                  href="<?php echo base_url(); ?>home/shop?col=product_id&order=desc&cat=<?php echo $cat->cat_code; ?>">
                 <?php
                 echo $cat->cat_name;
