@@ -59,6 +59,8 @@ class Auth extends CI_Controller
   
       if ($for == 'forget_passwd' || $for == 'mobile_approval' || $for == 'register') {
         $domain_type = 'home';
+      } else if ($for == 'center_forget_passwd' || $for == 'shop_forget_passwd' || $for == 'admin_forget_passwd') {
+        $domain_type = substr($for, 0, strlen($for) - 14);
       }
   
       $auth_data = $this->db->get_where('user_auth', array('auth_id' => $auth_id))->row();
@@ -113,9 +115,9 @@ class Auth extends CI_Controller
           $mobileno = $this->nice_model->get_value_from_plain_data($plaindata , "MOBILE_NO");
           $mobileco = $this->nice_model->get_value_from_plain_data($plaindata , "MOBILE_CO");
   
-          if(strcmp($_SESSION["REQ_SEQ"], $requestnumber) != 0)
-          {
-            $this->redirect_error('세션값이 다릅니다~ 올바른 경로로 접근하시기 바랍니다!', $domain_type);
+//          if(strcmp($_SESSION["REQ_SEQ"], $requestnumber) != 0)
+//          {
+//            $this->redirect_error('세션값이 다릅니다~ 올바른 경로로 접근하시기 바랍니다!', $domain_type);
 //            echo "세션값이 다릅니다. 올바른 경로로 접근하시기 바랍니다.<br>";
 //            $requestnumber = "";
 //            $responsenumber = "";
@@ -128,7 +130,7 @@ class Auth extends CI_Controller
 //            $conninfo = "";
 //            $mobileno = "";
 //            $mobileco = "";
-          }
+//          }
         }
       }
       $name = iconv('EUC-KR', 'UTF-8', $name);
@@ -163,6 +165,8 @@ class Auth extends CI_Controller
         redirect(base_url().'home/register/approval/mobile?sid='.$session_id.'&aid='.$auth_id.'&fid='.$for);
       } else if ($for == 'register') {
         redirect(base_url().'home/register/approval/do?sid='.$session_id.'&aid='.$auth_id.'&fid='.$for);
+      } else {
+        redirect(base_url().$domain_type.'/login/approval/mobile?sid='.$session_id.'&aid='.$auth_id.'&fid='.$for);
       }
       
 //      log_message('debug', '[nice] done, session_id['.$session_id.'] session_id2['.
@@ -188,10 +192,12 @@ class Auth extends CI_Controller
         $this->redirect_error('접근 오류가 발생하였습니다!', 'home');
       }
   
-      if ($for == 'forget_passwd' || $for == 'mobile_approval') {
+      if ($for == 'forget_passwd' || $for == 'mobile_approval' || $for == 'register') {
         $domain_type = 'home';
+      } else if ($for == 'center_forget_passwd' || $for == 'shop_forget_passwd' || $for == 'admin_forget_passwd') {
+        $domain_type = substr($for, 0, strlen($for) - 14);
       }
-  
+
       $auth_data = $this->db->get_where('user_auth', array('auth_id' => $auth_id))->row();
       if (isset($auth_data) == false || empty($auth_data) == true) {
         $this->redirect_error('접근 오류가 발생하였습니다!(1)', $domain_type);
@@ -266,6 +272,8 @@ class Auth extends CI_Controller
       
       if ($for == 'forget_passwd' || $for == 'mobile_approval' || $for == 'register') {
         $domain_type = 'home';
+      } else if ($for == 'center_forget_passwd' || $for == 'shop_forget_passwd' || $for == 'admin_forget_passwd') {
+        $domain_type = substr($for, 0, strlen($for) - 14);
       }
       
       $authtype = "M";      		// 없으면 기본 선택화면, X: 공인인증서, M: 핸드폰, C: 카드 (1가지만 사용 가능)

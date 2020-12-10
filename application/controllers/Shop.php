@@ -93,7 +93,7 @@ QUERY;
   }
 
   /* Login into Admin panel */
-  function login($para1 = '')
+  function login($para1 = '', $para2 = '')
   {
     // for login
     $page_data['control'] = "shop";
@@ -130,44 +130,104 @@ QUERY;
         }
       }
       
-    } else if ($para1 == 'forget') {
+    } else if ($para1 == 'approval') {
       
-      $this->load->library('form_validation');
-      $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
-      if ($this->form_validation->run() == FALSE) {
-        echo validation_errors();
-      } else {
-        
+      if ($para2 == 'email') {
+  
+        if (isset($_POST['email']) == false) {
+          $result['status'] = 'fail';
+          $result['message'] = '이메일이 올바르지 않습니다! 다시 확인 바랍니다!';
+          $this->response($result);
+        }
+        if (isset($_POST['email']) == false) {
+          $result['status'] = 'fail';
+          $result['message'] = '인증코드가 올바르지 않습니다! 다시 확인 바랍니다!';
+          $this->response($result);
+        }
+  
         $email = $this->input->post('email');
         $code = $this->input->post('approval_code');
-        
+  
         $approval_email = $this->session->userdata('shop_approval_email');
         $approval_code = $this->session->userdata('shop_approval_code');
-        
+  
         if ($email != $approval_email) {
-          $this->crud_model->alert_exit('이메일이 올바르지 않습니다. 다시 확인 바랍니다.');
+          $result['status'] = 'fail';
+          $result['message'] = '이메일이 올바르지 않습니다! 다시 확인 바랍니다!';
+          $this->response($result);
         }
         if ($code != $approval_code) {
-          $this->crud_model->alert_exit('인증코드가 올바르지 않습니다. 다시 확인 바랍니다.');
+          $result['status'] = 'fail';
+          $result['message'] = '인증코드가 올바르지 않습니다! 다시 확인 바랍니다!';
+          $this->response($result);
         }
-        
+  
         $shop_data = $this->db->get_where('shop', array('email' => $email, 'activate' => 1))->row();
         if(isset($shop_data) && empty($shop_data) == false) {
-  
+    
           $password = substr(hash('sha512', rand()), 0, 12);
           $data['password'] = sha1($password);
           $this->db->where('email', $email);
           $this->db->update('shop', $data);
-          
+    
           if ($this->email_model->get_reset_pw_data($email, $password)) {
-            echo 'email_sent';
+            $result['status'] = 'done';
+            $result['message'] = '비밀번호가 전송되었습니다! 비밀번호 확인 후 로그인해주세요!';
+            $this->response($result);
           } else {
-            echo 'email_not_sent';
+            $result['status'] = 'fail';
+            $result['message'] = '이메일 전송에 실패하였습니다!';
+            $this->response($result);
           }
         } else {
-          echo 'email_nay';
+          $result['status'] = 'fail';
+          $result['message'] = '회원 정보가 존재하지 않습니다!';
+          $this->response($result);
         }
+
+      } else if ($para2 == 'mobile') {
+  
+        if (isset($_GET['sid']) == false || isset($_GET['aid']) == false || isset($_GET['fid']) == false) {
+          $this->redirect_error('접근 오류가 발생하였습니다!', 'close');
+        }
+  
+        $session_id = $_GET['sid'];
+        $auth_id = $_GET['aid'];
+        $for = $_GET['fid'];
+  
+        $auth= $this->db->get_where('user_auth', array('auth_id' => $auth_id))->row();
+        if (isset($auth) == false || empty($auth) == true) {
+          $this->redirect_error('접근 오류가 발생하였습니다!(1)', 'close');
+        }
+        if ($auth->session_id != $session_id) {
+          $this->redirect_error('접근 오류가 발생하였습니다!(2)', 'close');
+        }
+        if ($auth->for != $for || $for != 'shop_forget_passwd') {
+          $this->redirect_error('접근 오류가 발생하였습니다!(3)', 'close');
+        }
+  
+        $auth_data = json_decode($auth->auth_data);
+        $shop_data = $this->db->get_where('shop', array('shop_phone' => $auth_data->mobileno, 'activate' => 1))->row();
+        if(isset($shop_data) && empty($shop_data) == false) {
+    
+          $password = substr(hash('sha512', rand()), 0, 12);
+          $data['password'] = sha1($password);
+          $this->db->where('shop_phone', $shop_data->shop_phone);
+          $this->db->update('shop', $data);
+    
+          if ($this->mts_model->send_user_passwd($shop_data->shop_phone, $shop_data->email, $password) > 0) {
+            $this->redirect_info('비밀번호가 전송되었습니다!<br> 문자메세지 확인 후 로그인해주세요!', 'close');
+          } else {
+            $this->redirect_error('문자전송에 실패하였습니다!', 'close');
+          }
+        } else {
+          $this->redirect_error('회원 전화번호가 아닙니다!', 'close');
+        }
+        
+      } else {
+        $this->redirect_error('접근 오류가 발생하였습니다!', 'close');
       }
+      
       
     } else { // login
      
@@ -1816,5 +1876,51 @@ QUERY;
 
     }
   }
-
+  
+  public function server($para1 = '')
+  {
+    if ($para1 == 'check') {
+      $this->load->view('front/others/server_check');
+    }
+  }
+  
+  public function error() {
+    $msg = '';
+    if (isset($_GET['m'])) {
+      $msg = $_GET['m'];
+    }
+    $page = 'shop';
+    if (isset($_GET['p'])) {
+      $page = $_GET['p'];
+    }
+    $this->page_data['page_name'] = $page;
+    $this->page_data['msg'] = $msg;
+    $this->load->view('front/others/404_error', $this->page_data);
+  }
+  public function info() {
+    $msg = '';
+    if (isset($_GET['m'])) {
+      $msg = $_GET['m'];
+    }
+    $page = 'shop';
+    if (isset($_GET['p'])) {
+      $page = $_GET['p'];
+    }
+    $this->page_data['page_name'] = $page;
+    $this->page_data['msg'] = $msg;
+    $this->load->view('front/others/info', $this->page_data);
+  }
+  
+  private function redirect_error($msg = '', $page = 'shop') {
+    redirect(base_url().'shop/error?m='.$msg.'&p='.$page);
+  }
+  
+  private function redirect_info($msg = '', $page = 'shop') {
+    redirect(base_url().'shop/info?m='.$msg.'&p='.$page);
+  }
+  
+  private function response($result) {
+    echo json_encode($result);
+    exit;
+  }
 }

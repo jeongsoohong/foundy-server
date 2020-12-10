@@ -103,37 +103,155 @@ QUERY;
   }
 
   /* Login into Admin panel */
-  function login($para1 = '')
+  function login($para1 = '', $para2 = '')
   {
     // for login
     $page_data['control'] = "admin";
 
     if ($para1 == 'forget_form') {
-//      $page_data['control'] = 'admin';
+   
+      $page_data['control'] = 'admin';
       $this->load->view('back/forget_password', $page_data);
-    } else if ($para1 == 'forget') {
+    
+    } else if ($para1 == 'send_approval') {
+  
       $this->load->library('form_validation');
       $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
       if ($this->form_validation->run() == FALSE) {
         echo validation_errors();
       } else {
-        $query = $this->db->get_where('admin', array('email' => $this->input->post('email')));
-        if ($query->num_rows() > 0) {
-          $admin_id = $query->row()->admin_id;
-          $password = substr(hash('sha512', rand()), 0, 12);
-          $data['password'] = sha1($password);
-          $this->db->where('admin_id', $admin_id);
-          $this->db->update('admin', $data);
-          if ($this->email_model->password_reset_email('admin', $admin_id, $password)) {
-            echo 'email_sent';
-          } else {
-            echo 'email_not_sent';
-          }
+  
+        $email = $this->input->post('email');
+        $user_data = $this->db->get_where('user', array('email' => $email))->row();
+        if (!isset($user_data) && empty($user_data) == true) {
+          echo '존재하지 않는 이메일입니다!';
+          exit;
+        }
+  
+        if (!($user_data->user_type & USER_TYPE_ADMIN)) {
+          echo '어드민 권한이 없습니다!';
+          exit;
+        }
+  
+        $code = rand(111111, 999999);
+  
+        if ($this->email_model->get_user_approval_data($code, $email)) {
+    
+          $this->session->set_userdata('shop_approval_email', $email);
+          $this->session->set_userdata('shop_approval_code', $code);
+          echo 'done';
         } else {
-          echo 'email_nay';
+          echo '이메일 전송에 문제가 발생했습니다!';
         }
       }
-    } else {
+  
+    } else if ($para1 == 'approval') {
+  
+      if ($para2 == 'email') {
+    
+        if (isset($_POST['email']) == false) {
+          $result['status'] = 'fail';
+          $result['message'] = '이메일이 올바르지 않습니다! 다시 확인 바랍니다!';
+          $this->response($result);
+        }
+        if (isset($_POST['email']) == false) {
+          $result['status'] = 'fail';
+          $result['message'] = '인증코드가 올바르지 않습니다! 다시 확인 바랍니다!';
+          $this->response($result);
+        }
+    
+        $email = $this->input->post('email');
+        $code = $this->input->post('approval_code');
+    
+        $approval_email = $this->session->userdata('shop_approval_email');
+        $approval_code = $this->session->userdata('shop_approval_code');
+    
+        if ($email != $approval_email) {
+          $result['status'] = 'fail';
+          $result['message'] = '이메일이 올바르지 않습니다! 다시 확인 바랍니다!';
+          $this->response($result);
+        }
+        if ($code != $approval_code) {
+          $result['status'] = 'fail';
+          $result['message'] = '인증코드가 올바르지 않습니다! 다시 확인 바랍니다!';
+          $this->response($result);
+        }
+    
+        $user_data = $this->db->get_where('user', array('email' => $email))->row();
+        if (!isset($user_data) && empty($user_data) == true) {
+          $result['status'] = 'fail';
+          $result['message'] = '회원 정보가 존재하지 않습니다!';
+          $this->response($result);
+        }
+  
+        if (!($user_data->user_type & USER_TYPE_ADMIN)) {
+          $result['status'] = 'fail';
+          $result['message'] = '어드민 권한이 없습니다!';
+          $this->response($result);
+        }
+  
+        $password = substr(hash('sha512', rand()), 0, 12);
+        $data['password'] = sha1($password);
+        $this->db->where('email', $email);
+        $this->db->update('user', $data);
+  
+        if ($this->email_model->get_reset_pw_data($email, $password)) {
+          $result['status'] = 'done';
+          $result['message'] = '비밀번호가 전송되었습니다! 비밀번호 확인 후 로그인해주세요!';
+          $this->response($result);
+        } else {
+          $result['status'] = 'fail';
+          $result['message'] = '이메일 전송에 실패하였습니다!';
+          $this->response($result);
+        }
+  
+      } else if ($para2 == 'mobile') {
+    
+        if (isset($_GET['sid']) == false || isset($_GET['aid']) == false || isset($_GET['fid']) == false) {
+          $this->redirect_error('접근 오류가 발생하였습니다!', 'close');
+        }
+    
+        $session_id = $_GET['sid'];
+        $auth_id = $_GET['aid'];
+        $for = $_GET['fid'];
+    
+        $auth= $this->db->get_where('user_auth', array('auth_id' => $auth_id))->row();
+        if (isset($auth) == false || empty($auth) == true) {
+          $this->redirect_error('접근 오류가 발생하였습니다!(1)', 'close');
+        }
+        if ($auth->session_id != $session_id) {
+          $this->redirect_error('접근 오류가 발생하였습니다!(2)', 'close');
+        }
+        if ($auth->for != $for || $for != 'admin_forget_passwd') {
+          $this->redirect_error('접근 오류가 발생하였습니다!(3)', 'close');
+        }
+    
+        $auth_data = json_decode($auth->auth_data);
+        $user_data = $this->db->get_where('user', array('phone' => $auth_data->mobileno))->row();
+        if (!isset($user_data) && empty($user_data) == true) {
+          $this->redirect_error('회원 정보가 존재하지 않습니다!', 'close');
+        }
+  
+        if (!($user_data->user_type & USER_TYPE_ADMIN)) {
+          $this->redirect_error('어드민 권한이 없습니다!', 'close');
+        }
+  
+        $password = substr(hash('sha512', rand()), 0, 12);
+        $data['password'] = sha1($password);
+        $this->db->where('phone', $user_data->phone);
+        $this->db->update('user', $data);
+  
+        if ($this->mts_model->send_user_passwd($user_data->phone, $user_data->email, $password) > 0) {
+          $this->redirect_info('비밀번호가 전송되었습니다!<br> 문자메세지 확인 후 로그인해주세요!', 'close');
+        } else {
+          $this->redirect_error('문자전송에 실패하였습니다!', 'close');
+        }
+    
+      } else {
+        $this->redirect_error('접근 오류가 발생하였습니다!', 'close');
+      }
+  
+    } else { // login
       $this->load->library('form_validation');
       $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
       $this->form_validation->set_rules('password', 'Password', 'required');
@@ -1659,5 +1777,52 @@ QUERY;
       $this->load->view('back/index', $page_data);
       
     }
+  }
+  
+  public function server($para1 = '')
+  {
+    if ($para1 == 'check') {
+      $this->load->view('front/others/server_check');
+    }
+  }
+  
+  public function error() {
+    $msg = '';
+    if (isset($_GET['m'])) {
+      $msg = $_GET['m'];
+    }
+    $page = 'admin';
+    if (isset($_GET['p'])) {
+      $page = $_GET['p'];
+    }
+    $this->page_data['page_name'] = $page;
+    $this->page_data['msg'] = $msg;
+    $this->load->view('front/others/404_error', $this->page_data);
+  }
+  public function info() {
+    $msg = '';
+    if (isset($_GET['m'])) {
+      $msg = $_GET['m'];
+    }
+    $page = 'admin';
+    if (isset($_GET['p'])) {
+      $page = $_GET['p'];
+    }
+    $this->page_data['page_name'] = $page;
+    $this->page_data['msg'] = $msg;
+    $this->load->view('front/others/info', $this->page_data);
+  }
+  
+  private function redirect_error($msg = '', $page = 'admin') {
+    redirect(base_url().'admin/error?m='.$msg.'&p='.$page);
+  }
+  
+  private function redirect_info($msg = '', $page = 'admin') {
+    redirect(base_url().'admin/info?m='.$msg.'&p='.$page);
+  }
+  
+  private function response($result) {
+    echo json_encode($result);
+    exit;
   }
 }
