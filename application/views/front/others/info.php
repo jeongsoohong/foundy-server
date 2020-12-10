@@ -34,13 +34,19 @@
         <p style="margin: 28px 0 0 0; color: #fff; font-size: 16px; font-weight: normal; line-height: 1.65; text-align: center;">파운디에 오신걸 환영합니다!</p>
       <? } ?>
     </div>
-    <? if (isset($page_name)) { ?>
+    <? if (isset($page_name) && $page_name != 'close') { ?>
         <a href="<?= base_url().$page_name ?>" style="display: block; text-decoration: none; font-family: 'futura-pt' !important; background-color: #fff; box-sizing: border-box; padding: 0 16px; color: #111; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.3); font-size: 16px; font-weight: normal; height: 56px; line-height: 56px; border-radius: 28px; margin: 24px auto 0;">BACK TO HOME</a>
+    <? } else if ($page_name == 'close') { ?>
+      <a href="javascript:void(0)" onclick="close_popup();" style="display: block; text-decoration: none; font-family: 'futura-pt' !important; background-color: #fff; box-sizing: border-box; padding: 0 16px; color: #111; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.3); font-size: 16px; font-weight: normal; height: 56px; line-height: 56px; border-radius: 28px; margin: 24px auto 0;">CLOSE</a>
     <? } else { ?>
       <a href="<?= base_url() ?>" style="display: block; text-decoration: none; font-family: 'futura-pt' !important; background-color: #fff; box-sizing: border-box; padding: 0 16px; color: #111; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.3); font-size: 16px; font-weight: normal; height: 56px; line-height: 56px; border-radius: 28px; margin: 24px auto 0;">BACK TO HOME</a>
     <? } ?>
   </div>
 </div>
-
+<script>
+  function close_popup() {
+    close();
+  }
+</script>
 </body>
 </html>
