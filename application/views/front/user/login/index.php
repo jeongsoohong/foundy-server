@@ -20,9 +20,9 @@
       <div class="col-sm-12">
         <div class="row box_shape" style="border: none; box-shadow: none;">
           <div class="title">
-            <div class="col-sm-12 title" style="background-color: #ffffff; padding: 20px; height: 64px; font-weight: 700; color: #232323">
+            <div class="col-sm-12 title" style="background-color: #ffffff; padding: 20px; height: auto; font-weight: 700; color: #232323">
               <!-- 로그인 -->
-              <div class="option" style="text-align: center !important; margin: 0 auto 10px; text-transform: none; font-size: 12px; line-height: 12px; font-weight: 400; color: #757575">
+              <div class="option" style="text-align: center !important; margin: 0 auto; text-transform: none; font-size: 12px; line-height: 1.5; font-weight: 400; color: #757575">
                 간편하게 로그인하고<br>
                 균형잡힌 삶을 찾아보세요
               </div>
@@ -60,15 +60,15 @@
               </a>
             </div>
           </div>
-          <hr style="margin-top: 10px; margin-bottom: 10px;">
+          <hr style="margin-top: 12px; margin-bottom: 24px;">
 <!--          <div class="col-sm-12">-->
 <!--            <span class="btn btn-theme-sm btn-block btn-theme-transparent pull-center kakao-login btn-kakao-login">-->
 <!--              카카오 로그인-->
 <!--            </span>-->
 <!--          </div>-->
           <div class="col-sm-12" style="text-align: center">
-            <a href="javascript:void(0);" onclick="loginWithKakaoRest();">
-              <img src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" width="210" height="44"/>
+            <a href="javascript:void(0);" onclick="loginWithKakaoRest();" style="display: block;">
+              <img src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" width="225" height="48.78">
             </a>
           </div>
           <!-- 애플 로그인 -->
@@ -146,9 +146,10 @@
           </script>
           <?php } ?>
           <!-- 애플 로그인 완료 -->
-          <div class="col-sm-12 title" style="background-color: #ffffff; padding: 10px 20px 5px; text-transform: uppercase; font-size: 18px; line-height: 24px; font-weight: 700; color: #232323">
-            <div class="option" style="text-align: center !important; margin: 0 auto 10px; text-transform: none; font-size: 10px; line-height: 14px; font-weight: 400; color: #757575">
-              * 강사회원/센터회원은 로그인 후 마이페이지에서 신청해주세요
+          <div class="col-sm-12 title" style="background-color: #ffffff; padding: 10px 20px 5px; text-transform: uppercase; font-size: 18px; line-height: 24px; font-weight: 700; color: #232323; width: 225px; margin: 12px auto 0; padding: 0;">
+            <div class="option" style="text-align: center !important; margin: 0 auto 10px; text-transform: none; font-size: 10px; line-height: 1.5; font-weight: 400; color: #757575">
+              * 강사회원/센터회원은<br>
+              로그인 후 마이페이지에서 신청해주세요
             </div>
           </div>
 <!--          <div class="col-sm-12 title" style="background-color: #ffffff; padding: 10px 20px 5px; text-transform: uppercase; font-size: 18px; line-height: 24px; font-weight: 700; color: #232323">-->
@@ -767,25 +768,12 @@
   }
   
   function open_forget_password() {
-    //$('#loading_set').show();
     let popup = $('#forgetPopup');
-    //$.ajax({
-    //  url: '<?php //echo base_url().'home/login/forget_form'; ?>//',
-    //  beforeSend: function() {
-    //    popup.html(''); // change submit button text
-    //  },
-    //  success: function(data) {
-        $("#loading_set").fadeOut(500);
-        // popup.html('');
-        // popup.html(data).fadeIn();
-        popup.show();
-        clear_popup();
-        $('body').css('overflow-y', 'hidden');
-    //   },
-    //   error: function(e) {
-    //     console.log(e)
-    //   }
-    // });
+    $("#loading_set").fadeOut(500);
+    popup.show();
+    clear_popup();
+    $('.type_mail').addClass('active');
+    $('body').css('overflow-y', 'hidden');
   }
 
   function search_ship_modal() {

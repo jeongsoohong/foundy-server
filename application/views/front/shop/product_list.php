@@ -21,7 +21,7 @@ if (isset($shop_items)) {
         <div class="col-md-12 brand-name">
           <?php echo $item->brand_name; ?>
         </div>
-        <div class="col-md-12 item-title">
+        <div class="col-md-12 item-title" style="height: auto !important; line-height: 1.5 !important; padding-bottom: 4px;">
           <?php echo $item->item_name; ?>
         </div>
         <!--      <div class="col-md-12 item-summery">-->

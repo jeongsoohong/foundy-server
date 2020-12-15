@@ -48,13 +48,22 @@ include 'includes/bottom/index.php';
 <div id="loading_set"style="display:none;text-align:center;width:100%;height:100%;position:fixed;top:0;left:0;z-index:5000;background-color:rgba(20,20,20,0.5)">
   <i class="fa fa-refresh fa-spin fa-5x fa-fw" style="position:relative;top:50%"></i>
 </div>
-<? if ($this->session->userdata('mobile_approval') == 'no') {
+<?
+$server_check = true;
+//$this->cookie_model->set_cookie('server_check_popup_time', '0'); // just use only test
+$now = time();
+if ($server_check == true &&
+  strtotime('2020-12-15 19:50:00') < $now && $now < strtotime('2020-12-15 20:50:00') &&
+  $this->cookie_model->get_cookie('server_check_popup_time') < strtotime('-1 day')) {
+  include 'others/server_check_popup.php';
+?>
+<? } else if ($this->session->userdata('mobile_approval') == 'no') {
   include 'user/mobile_approval.php';
   ?>
-<?php } else if ($this->app_model->is_app() == false && $this->agent->is_mobile()) {
+<? } else if ($this->app_model->is_app() == false && $this->agent->is_mobile()) {
   $enroll_app_cookie = $this->cookie_model->get_cookie('enroll_app_time');
   if (empty($enroll_app_cookie) == true || $enroll_app_cookie < strtotime('-1 day')) {
-  ?>
+    ?>
 <style>
   #enroll_app {
     padding: 0;
@@ -208,9 +217,10 @@ include 'includes/bottom/index.php';
 <? if (false) { ?>
   <script>
     $(function() {
-      alert(_getCookie('mobile_approval_deny'))
-      alert(_getCookie('mobile_approval_deny_time'))
-      alert(_getCookie('enroll_app_time'))
+      // alert(_getCookie('mobile_approval_deny'))
+      // alert(_getCookie('mobile_approval_deny_time'))
+      // alert(_getCookie('enroll_app_time'))
+      // alert(_getCookie('server_check_popup_time'))
     })
   </script>
 <? } ?>
