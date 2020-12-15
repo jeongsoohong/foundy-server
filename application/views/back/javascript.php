@@ -1,4 +1,13 @@
 <script>
+  function IsJsonString(str) {
+    try {
+      JSON.parse(str);
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+  
   function send_post(dataArr, url, reload = true, relocation = '', callback = null) {
     let formData = new FormData();
     for (let key in dataArr) {
@@ -60,7 +69,7 @@
       }
     });
   }
-  
+
   function send_post_data(dataArr, url, callback = null) {
     let formData = new FormData();
     for (let key in dataArr) {
@@ -79,12 +88,58 @@
       processData: false,
       success: function (data) {
         $("#loading_set").delay(500).fadeOut(500);
-        data = JSON.parse(data);
-        // console.log(data);
-        if (data.status === 'done') {
-          callback(data);
+        console.log(data);
+        if (IsJsonString(data)) {
+          data = JSON.parse(data);
+          if (data.status === 'done') {
+            if (callback !== null) {
+              callback(data);
+            } else {
+              $.notify({
+                message: '성공하였습니다.',
+                icon: 'fa fa-check'
+              }, {
+                type: 'success',
+                timer: 1000,
+                delay: 2000,
+                animate: {
+                  enter: 'animated lightSpeedIn',
+                  exit: 'animated lightSpeedOut'
+                }
+              });
+            }
+          } else {
+            var title = '<strong>실패하였습니다</strong>';
+            $.notify({
+              title: title,
+              message: '<br>' + data.message,
+              icon: 'fa fa-check'
+            }, {
+              type: 'warning',
+              timer: 1000,
+              delay: 5000,
+              animate: {
+                enter: 'animated lightSpeedIn',
+                exit: 'animated lightSpeedOut'
+              }
+            });
+          }
         } else {
-          alert(data.message);
+          console.log(data);
+          var title = '<strong>실패하였습니다</strong>';
+          $.notify({
+            title: title,
+            message: '<br>' + data,
+            icon: 'fa fa-check'
+          }, {
+            type: 'warning',
+            timer: 1000,
+            delay: 5000,
+            animate: {
+              enter: 'animated lightSpeedIn',
+              exit: 'animated lightSpeedOut'
+            }
+          });
         }
       },
       error: function (e) {
@@ -113,4 +168,26 @@
     return obj.replace(/\s+$/,"");
   }
 
+  function _setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
+
+  function _getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
 </script>

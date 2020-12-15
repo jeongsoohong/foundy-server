@@ -49,7 +49,7 @@ include 'includes/bottom/index.php';
   <i class="fa fa-refresh fa-spin fa-5x fa-fw" style="position:relative;top:50%"></i>
 </div>
 <?
-$server_check = true;
+$server_check = false;
 //$this->cookie_model->set_cookie('server_check_popup_time', '0'); // just use only test
 $now = time();
 if ($server_check == true &&
