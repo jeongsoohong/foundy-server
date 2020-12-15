@@ -812,9 +812,9 @@ class Crud_model extends CI_Model
 //    }
 //    return base_url() . 'uploads/shop/heart_undo.png';
     if ($liked == true) {
-      return base_url() . 'template/icon/ic_heart_on.png';
+      return base_url() . 'template/icon/ic_heart_on.png?v=2';
     }
-    return base_url() . 'template/icon/ic_heart_off.png';
+    return base_url() . 'template/icon/ic_heart_off.png?v=2';
   }
 
   function get_bookmark_icon($bookmarked)
