@@ -312,7 +312,7 @@
   function do_kakao_unregister() {
     $('#loading_set').show();
     $.getScript("https://developers.kakao.com/sdk/js/kakao.min.js", function() {
-      Kakao.init('8ee901a556539927d58b30a6bf21a781');
+      Kakao.init('<?= APIKEY_KAKAO_JAVASCRIPT; ?>');
       // console.log(Kakao.Auth.getAccessToken());
       if (!Kakao.Auth.getAccessToken()) {
         $("#loading_set").fadeOut(500);
@@ -374,7 +374,7 @@
     $("#profile_content").load("<?php echo base_url()?>home/user/center_register");
     $(".pleft_nav").find("li").removeClass("active");
     $(".pnav_center_register").find("li").addClass("active");
-    $.getScript("//dapi.kakao.com/v2/maps/sdk.js?appkey=8ee901a556539927d58b30a6bf21a781&autoload=false&libraries=services", function() {
+    $.getScript("//dapi.kakao.com/v2/maps/sdk.js?appkey=<?= APIKEY_KAKAO_JAVASCRIPT; ?>&autoload=false&libraries=services", function() {
       kakao.maps.load(function() {
         // getLocation();
         var mapContainer = document.getElementById('kakao-map'), // 지도를 표시할 div

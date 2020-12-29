@@ -666,7 +666,7 @@ QUERY;
   
         log_message('debug', '[kakao login] GET code : '.json_encode($_GET));
 
-        $app_key = "c08aebc9e7ed5722a399bbc3962ca051";
+        $app_key = APIKEY_KAKAO_REST;
         $redirect_uri = base_url()."home/login/kakao/rest";
   
         $api_url = "https://kauth.kakao.com/oauth/token";
@@ -5209,7 +5209,8 @@ QUERY;
           $this->crud_model->alert_exit('잘못된 접근입니다.');
         }
   
-        $url = sprintf('https://info.sweettracker.co.kr/api/v1/trackingInfo?t_key=%s&t_code=%s&t_invoice=%s', '9PKYs9QJEOo9Ebvu4I95Ww', $shipping_data->shipping_company, $shipping_data->shipping_code);
+        $url = sprintf('https://info.sweettracker.co.kr/api/v1/trackingInfo?t_key=%s&t_code=%s&t_invoice=%s',
+          APIKEY_SWEET_TRACKER, $shipping_data->shipping_company, $shipping_data->shipping_code);
         
         $opts = array(
           CURLOPT_URL => $url,

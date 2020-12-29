@@ -88,7 +88,7 @@ class Kakao_model extends CI_Model
 //    if (isset($res) && isset($res->code) && $res->code == -402) {
 //      $url = 'https://kauth.kakao.com//oauth/authorize';
 //      $params = array(
-//        'client_id' => '8ee901a556539927d58b30a6bf21a781',
+//        'client_id' => APIKEY_KAKAO_JAVASCRIPT,
 //        'redirect_uri' => base_url()."home/login/kakao/rest",
 //        'response_type' => 'code',
 //        'scope' => 'talk_message',

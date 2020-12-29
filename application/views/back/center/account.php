@@ -224,7 +224,7 @@
   </div>
 </div>
 <script src="//stackpath.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8ee901a556539927d58b30a6bf21a781&libraries=services"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=<?= APIKEY_KAKAO_JAVASCRIPT; ?>&libraries=services"></script>
 <script type="text/javascript">
   function open_kakao_map() {
     var coord = new kakao.maps.LatLng(<?php echo $center->latitude; ?>, <?php echo $center->longitude; ?>);

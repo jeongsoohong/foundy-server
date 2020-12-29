@@ -662,7 +662,7 @@
     
     <?php if ($this->session->userdata('need_kakao_access_token') == 'yes') { ?>
     $.getScript("https://developers.kakao.com/sdk/js/kakao.min.js", function() {
-      Kakao.init('8ee901a556539927d58b30a6bf21a781');
+      Kakao.init('<?= APIKEY_KAKAO_JAVASCRIPT; ?>');
       Kakao.Auth.setAccessToken('<?php echo json_decode($this->session->userdata('kakao_auth'))->access_token; ?>');
       // console.log(Kakao.Auth.getAccessToken());
     });
@@ -706,7 +706,7 @@
     // console.log(login_type);
     if (login_type === 'kakao') {
       $.getScript("https://developers.kakao.com/sdk/js/kakao.min.js", function() {
-        Kakao.init('8ee901a556539927d58b30a6bf21a781');
+        Kakao.init('<?= APIKEY_KAKAO_JAVASCRIPT; ?>');
         // console.log(Kakao.Auth.getAccessToken());
         if (!Kakao.Auth.getAccessToken()) {
           $("#loading_set").fadeOut(500);
@@ -726,7 +726,7 @@
   }
 
   function chatKakaoChannel() {
-    Kakao.init('8ee901a556539927d58b30a6bf21a781');
+    Kakao.init('<?= APIKEY_KAKAO_JAVASCRIPT; ?>');
     Kakao.Channel.chat({
       channelPublicId: '_xnzxbxaxb',
     });

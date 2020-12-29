@@ -868,7 +868,7 @@
   }
 
   function loginWithKakao() { // with JDK
-    Kakao.init('8ee901a556539927d58b30a6bf21a781');
+    Kakao.init('<?= APIKEY_KAKAO_JAVASCRIPT; ?>');
     Kakao.Auth.login({
       success: function(authObj) {
         // alert(JSON.stringify(authObj))
@@ -927,7 +927,7 @@
   }
 
   function kakaoReauthorized(scope) {
-    Kakao.init('8ee901a556539927d58b30a6bf21a781');
+    Kakao.init('<?= APIKEY_KAKAO_JAVASCRIPT; ?>');
     Kakao.Auth.authorize({
       redirectUri: '<?php echo base_url(); ?>home/login/kakao/rest',
       scope: scope
@@ -935,7 +935,7 @@
   }
 
   function loginWithKakaoRest() { // with REST API
-    let app_key = "c08aebc9e7ed5722a399bbc3962ca051";
+    let app_key = "<?= APIKEY_KAKAO_REST; ?>";
     let redirect_uri  ='<?php echo base_url()."home/login/kakao/rest"; ?>';
     
     _setCookie('relocation', '<?php echo $relocation; ?>');

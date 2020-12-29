@@ -123,7 +123,7 @@
   var shipping_company_codes = [<?php foreach ($shop_shipping_company as $c) { echo "'".$c->shipping_company_code."',";} ?>];
   function get_shipping_company() {
     $.ajax({
-      url: 'https://info.sweettracker.co.kr/api/v1/companylist?t_key=9PKYs9QJEOo9Ebvu4I95Ww',
+      url: 'https://info.sweettracker.co.kr/api/v1/companylist?t_key=<?= APIKEY_SWEET_TRACKER; ?>',
       type: 'GET', // form submit method get/post
       cache: false,
       contentType: 'application/json',

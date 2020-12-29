@@ -798,7 +798,7 @@
 
     BootPay.request({
       price: total_balance - discount,
-      application_id: "5ee197af8f0751001e4f2562",
+      application_id: "<?= APIKEY_BOOTPAY_WEB; ?>",
       name: '<?php echo $cart_items[0]->product->item_name.' 등 '.count($cart_items).' 건'; ?>',
       pg: 'payapp',
       method: 'card',

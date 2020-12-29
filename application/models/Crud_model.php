@@ -1431,8 +1431,8 @@ QUERY;
     }
   
     $url = 'https://api.bootpay.co.kr/request/token';
-    $app_key = '5ee197af8f0751001e4f2565';
-    $private_key = 'e5KGzIH4VAY4FU1gY3o3AekqPk2AzF1fFaVx47MhI2Q=';
+    $app_key = APIKEY_BOOTPAY_REST;
+    $private_key = APIKEY_BOOTPAY_PRIVATE;
   
     $post_data = array(
       'application_id' => $app_key,

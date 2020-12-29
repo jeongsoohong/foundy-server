@@ -220,7 +220,7 @@
   </div>
 </div>
 <!-- Modal For C-C Post confirm -->
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8ee901a556539927d58b30a6bf21a781&libraries=services"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=<?= APIKEY_KAKAO_JAVASCRIPT; ?>&libraries=services"></script>
 <script type="text/javascript">
 
   $(document).ready(function(){
