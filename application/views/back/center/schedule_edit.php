@@ -339,7 +339,15 @@ function get_time($time)
     $('#schedule-reservable2').click();
     <? } ?>
     $('#schedule-reservable2').prop('disabled', true);
-    
+  
+    // btn_select2 클릭 이벤트
+    $('.btn_select2').on('click',function(){
+      let $selected = $('#ticket_candidate2 option:selected');
+      let clone = $selected.clone();
+      $selected.remove();
+      $('#ticket_choice2 select').append(clone);
+    })
+  
     $('#open-immediateA').click(function(){
       let open = $('#open-immediateA').prop('checked');
       // console.log(open);

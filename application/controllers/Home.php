@@ -3217,19 +3217,21 @@ QUERY;
           $this->center_model->unlock_schedule_info($schedule_info_id);
   
           if ($reserve_id > 0) {
-            $ins = array(
-              'member_id' => $ticket->member_id,
-              'ticket_id' => $ticket->ticket_id,
-              'user_id' => $user_id,
-              'schedule_info_id' => $schedule_info_id,
-              'reserve_id' => $reserve_id,
-              'action' => $action,
-              'action_str' => $this->center_model->get_ticket_member_action_str($action),
-              'action_duration' => 0,
-              'action_data' => '<' . $schedule_info->schedule_title . '>, 일시 : ' . date('Y.m.d', strtotime($schedule_info->schedule_date)),
-            );
-            $this->db->set('history_at', 'NOW()', false);
-            $this->db->insert('center_ticket_member_history', $ins);
+            $this->center_model->ticket_member_reserve($ticket->member_id, $ticket->ticket_id, $user_id, $schedule_info_id,
+            $reserve_id, $action, $schedule_info->schedule_title, $schedule_info->schedule_date);
+//            $ins = array(
+//              'member_id' => $ticket->member_id,
+//              'ticket_id' => $ticket->ticket_id,
+//              'user_id' => $user_id,
+//              'schedule_info_id' => $schedule_info_id,
+//              'reserve_id' => $reserve_id,
+//              'action' => $action,
+//              'action_str' => $this->center_model->get_ticket_member_action_str($action),
+//              'action_duration' => 0,
+//              'action_data' => '<' . $schedule_info->schedule_title . '>, 일시 : ' . date('Y.m.d', strtotime($schedule_info->schedule_date)),
+//            );
+//            $this->db->set('history_at', 'NOW()', false);
+//            $this->db->insert('center_ticket_member_history', $ins);
  
             if ($reserve) {
               $this->db->set('reserve', 'reserve+1', false);

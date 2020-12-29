@@ -71,7 +71,7 @@ class Mts_model extends CI_Model
     $msg = "[파운디] 인증번호는 [{$approval_code}] 입니다.";
     
     $id = $this->send_sms($phone, $msg);
-    log_message('debug', "[send smsmms] send_user_approval_code, id[$id] phone[$phone] msg[$msg]");
+//    log_message('debug', "[send smsmms] send_user_approval_code, id[$id] phone[$phone] msg[$msg]");
     return $id;
   }
   
@@ -84,7 +84,7 @@ class Mts_model extends CI_Model
     $msg = "[파운디] <{$email}>님의 비밀번호가 [{$passwd}]으로 초기화되었습니다.";
     
     $id = $this->send_sms($phone, $msg);
-    log_message('debug', "[send smsmms] send_user_passwd, id[$id] phone[$phone] msg[$msg]");
+//    log_message('debug', "[send smsmms] send_user_passwd, id[$id] phone[$phone] msg[$msg]");
     return $id;
   }
   
@@ -96,32 +96,6 @@ class Mts_model extends CI_Model
   function get_time($time)
   {
     return ($time <= '12:00:00' ? substr($time, 0, 5) : substr(date('H:i:s', strtotime($time) - 12 * ONE_HOUR), 0, 5));
-  }
-  
-  function send_class_reminder($phone, $center_title, $schedule_title, $start_time)
-  {
-    if ($phone == null || $phone == '') {
-      return 0;
-    }
-  
-    $subject = '예약알림/리마인드 01';
-    $msg = <<<MSG
-[FOUNDY 예약알림]
-
-예약하신 #{센터명} #{수업명} 수업은 오늘 #{시간} 시작입니다!
-제시간 입장으로 시작 준비운동부터 안전한 수업 즐기시길 바랍니다 :)
-
-*예약취소 가능시간은 센터마다 상이하며, 시스템상 취소가 불가한 시간에 취소를 원하실 경우, 예약하신 센터에 문의를 부탁드립니다!
-MSG;
-  
-    $msg = str_replace('#{센터명}', $center_title, $msg);
-    $msg = str_replace('#{수업명}', $schedule_title, $msg);
-    $msg = str_replace('#{시간}', $start_time, $msg);
-  
-    $id = $this->send_atalk($phone, $msg, $subject, 'FOUNDY_reminder01');
-    log_message('debug', "[send atalk] send_class_reminder, id[$id] phone[$phone] msg[$msg]");
- 
-    return $id;
   }
   
   function send_class_reserve($phone, $type, $schedule_title, $date, $center_title, $start_time, $end_time)
@@ -161,9 +135,10 @@ MSG;
     $msg = str_replace('#{수업명}', $schedule_title, $msg);
     $msg = str_replace('#{예약일자}', $date, $msg);
     $msg = str_replace('#{시간}', $time, $msg);
-    
-    $id = $this->send_atalk($phone, $msg, $subject, 'FOUNDY_reservation');
-    log_message('debug', "[send atalk] send_class_reserve, id[$id] phone[$phone] msg[$msg]");
+   
+    $template_code = 'FOUNDY_reservation';
+    $id = $this->send_atalk($phone, $msg, $subject, $template_code);
+//    log_message('debug', "[send atalk] send_class_reserve, id[$id] phone[$phone] msg[$msg]");
 
 //    $msg = <<<MSG
 //[파운디] 클래스 예약신청 안내
@@ -174,7 +149,55 @@ MSG;
 //MSG;
     $id = $this->send_mms($phone, $msg);
 
-    log_message('debug', "[send smsmms] send_class_reserve, id[$id] phone[$phone] msg[$msg]");
+//    log_message('debug', "[send smsmms] send_class_reserve, id[$id] phone[$phone] msg[$msg]");
+    return $id;
+  }
+  
+  function send_class_reserve_by_center($phone, $type, $schedule_title, $date, $center_title, $start_time, $end_time)
+  {
+    if ($phone == null || $phone == '') {
+      return 0;
+    }
+    if ($type == CENTER_TICKET_MEMBER_ACTION_RESERVE) {
+      $reserve_msg = '신청완료';
+    } else if ($type == CENTER_TICKET_MEMBER_ACTION_RESERVE_WAIT) {
+      $reserve_msg = '대기신청';
+    } else if ($type == CENTER_TICKET_MEMBER_ACTION_RESERVE_CANCEL) {
+      $reserve_msg = '취소완료';
+    } else {
+      return 0;
+    }
+    $subject = '수업정보 변동 (예약상태 변경)';
+    $center_title = "<{$center_title}>";
+    $schedule_title = "\"{$schedule_title}\"";
+    $date = date('Y.m.d', strtotime($date));
+    $time = $this->get_ampm($start_time).' '.$this->get_time($start_time).' ~ '.$this->get_ampm($end_time).' '.$this->get_time($end_time);
+    $msg = <<<MSG
+[FOUNDY #{예약현황}]
+수업정보 변동으로 인하여 클래스 예약이 #{예약현황} 되었습니다.
+
+-예약내역 : #{센터명} #{수업명}
+-예약일자 : #{예약일자} #{시간}
+
+*예약 관련 주의사항
+-예약취소 가능시간은 센터 마다 상이하며, 시스템상 취소가 불가한 시간에 취소를 원하실 경우, 예약하신 센터로 연락 부탁드립니다! 타인의 소중한 시간을 배려해주세요.
+-예약 취소를 실수로 누르셨을 경우라도, 다시 스케줄 예약을 해주셔야 합니다.
+-예약대기자의 경우 예약이 완료될 경우 알림톡이 발송됩니다.
+-기타 수업에관한 문의는 해당 센터로 직접 연락 부탁드립니다.
+MSG;
+    $msg = str_replace('#{예약현황}', $reserve_msg, $msg);
+    $msg = str_replace('#{센터명}', $center_title, $msg);
+    $msg = str_replace('#{수업명}', $schedule_title, $msg);
+    $msg = str_replace('#{예약일자}', $date, $msg);
+    $msg = str_replace('#{시간}', $time, $msg);
+  
+    $template_code = 'FOUNDY_reservation02';
+    $id = $this->send_atalk($phone, $msg, $subject, $template_code);
+//    log_message('debug', "[send atalk] send_class_reserve_by_center, id[$id] phone[$phone] msg[$msg]");
+
+    $id = $this->send_mms($phone, $msg);
+    
+//    log_message('debug', "[send smsmms] send_class_reserve_by_center, id[$id] phone[$phone] msg[$msg]");
     return $id;
   }
   
@@ -191,7 +214,7 @@ MSG;
 궁금한 점은 파운디를 통해서 센터에 문의바랍니다!
 MSG;
     $id = $this->send_mms($phone, $msg);
-    log_message('debug', "[send smsmms] send_class_wait, id[$id] phone[$phone] msg[$msg]");
+//    log_message('debug', "[send smsmms] send_class_wait, id[$id] phone[$phone] msg[$msg]");
     return $id;
   }
   
@@ -208,8 +231,67 @@ MSG;
 궁금한 점은 파운디를 통해서 센터에 문의바랍니다!
 MSG;
     $id = $this->send_mms($phone, $msg);
-    log_message('debug', "[send smsmms] send_class_reserve, id[$id] phone[$phone] msg[$msg]");
+//    log_message('debug', "[send smsmms] send_class_reserve, id[$id] phone[$phone] msg[$msg]");
     return $id;
   }
   
+  function send_class_reminder($phone, $schedule_title, $date, $center_title, $start_time, $end_time)
+  {
+    if ($phone == null || $phone == '') {
+      return 0;
+    }
+    $subject = '예약알림/리마인드톡';
+    $center_title = "<{$center_title}>";
+    $schedule_title = "\"{$schedule_title}\"";
+    $date = date('Y.m.d', strtotime($date));
+    $time = $this->get_ampm($start_time).' '.$this->get_time($start_time).' ~ '.$this->get_ampm($end_time).' '.$this->get_time($end_time);
+    $msg = <<<MSG
+[FOUNDY 예약알림]
+
+예약하신 #{센터명} #{수업명} 수업은 #{일시} #{시간} 시작입니다!
+수업 시작 전에 여유있게 입장하셔서 시작 준비운동부터 안전한 수업 즐기시길 바랍니다 :)
+
+*예약취소 가능시간은 센터마다 상이하며, 시스템상 취소가 불가한 시간에 취소를 원하실 경우, 예약하신 센터에 문의를 부탁드립니다!
+MSG;
+    $msg = str_replace('#{센터명}', $center_title, $msg);
+    $msg = str_replace('#{수업명}', $schedule_title, $msg);
+    $msg = str_replace('#{일시}', $date, $msg);
+    $msg = str_replace('#{시간}', $time, $msg);
+    
+    $template_code = 'FOUNDY_reminder_talk';
+    $id = $this->send_atalk($phone, $msg, $subject, $template_code);
+//    log_message('debug', "[send atalk] send_class_reminder, id[$id] phone[$phone] msg[$msg]");
+    
+    $id = $this->send_mms($phone, $msg);
+    
+//    log_message('debug', "[send smsmms] send_class_reminder, id[$id] phone[$phone] msg[$msg]");
+    return $id;
+  }
+  
+  function send_class_update($phone, $center_title)
+  {
+    if ($phone == null || $phone == '') {
+      return 0;
+    }
+    $subject = '센터 스케줄 업데이트 알림';
+    $center_title = "<{$center_title}>";
+    $msg = <<<MSG
+[FOUNDY 클래스 업데이트]
+
+안녕하세요, 회원님이 소식 받아보기 신청하신 #{센터명} 스케줄이 업데이트 되었습니다.
+지금 파운디에서 확인해 주세요!
+
+건강한 라이프 스타일 가이드, 파운디
+MSG;
+    $msg = str_replace('#{센터명}', $center_title, $msg);
+    
+    $template_code = 'FOUNDY_class_update';
+    $id = $this->send_atalk($phone, $msg, $subject, $template_code);
+//    log_message('debug', "[send atalk] send_class_update, id[$id] phone[$phone] msg[$msg]");
+    
+    $id = $this->send_mms($phone, $msg);
+    
+//    log_message('debug', "[send smsmms] send_class_update, id[$id] phone[$phone] msg[$msg]");
+    return $id;
+  }
 }

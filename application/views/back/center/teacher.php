@@ -1282,14 +1282,6 @@
       $('#ticket_candidate select').append(clone);
     })
   
-    // btn_select2 클릭 이벤트
-    $('.btn_select2').on('click',function(){
-      let $selected = $('#ticket_candidate2 option:selected');
-      let clone = $selected.clone();
-      $selected.remove();
-      $('#ticket_choice2 select').append(clone);
-    })
-    
     /* ======= 활성/비활성화 기능 Error 개선 + 활성 select 선택시 비활성 select 배경색 제거 도움 부탁드립니다. */
     // btn_delete 비활성화
     $('.move-origin option').click(function(){

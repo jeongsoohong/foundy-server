@@ -1073,20 +1073,16 @@ QUERY;
                 // 예약자 => 대기자
                 $this->center_model->transfer_reserve2wait($reserve_info, $schedule_title, $schedule_info->schedule_date);
                 $user_info = $this->db->get_where('user', array('user_id' => $reserve_info->user_id))->row();
-                $this->mts_model->send_class_reserve($user_info->phone, CENTER_TICKET_MEMBER_ACTION_RESERVE_WAIT,
+                $this->mts_model->send_class_reserve_by_center($user_info->phone, CENTER_TICKET_MEMBER_ACTION_RESERVE_WAIT,
                   $schedule_info->schedule_title, $schedule_info->schedule_date, $this->center->title,
                   $schedule_info->start_time,$schedule_info->end_time);
-//                $this->mts_model->send_class_wait($user_info->phone, $user_info->username, $schedule_info->schedule_title,
-//                  date('Y.m.d', strtotime($schedule_info->schedule_date)));
               } else {
                 // 예약자 => 취소
                 $this->center_model->schedule_cancel($reserve_info, $schedule_title, $schedule_info->schedule_date);
                 $user_info = $this->db->get_where('user', array('user_id' => $reserve_info->user_id))->row();
-                $this->mts_model->send_class_reserve($user_info->phone, CENTER_TICKET_MEMBER_ACTION_RESERVE_CANCEL,
+                $this->mts_model->send_class_reserve_by_center($user_info->phone, CENTER_TICKET_MEMBER_ACTION_RESERVE_CANCEL,
                   $schedule_info->schedule_title, $schedule_info->schedule_date, $this->center->title,
                   $schedule_info->start_time,$schedule_info->end_time);
-//                $this->mts_model->send_class_cancel($user_info->phone, $user_info->username, $schedule_info->schedule_title,
-//                  date('Y.m.d', strtotime($schedule_info->schedule_date)));
               }
               $reserve_count--;
             }
@@ -1108,7 +1104,7 @@ QUERY;
               // 대기자 => 예약자
               $this->center_model->transfer_wait2reserve($reserve_info, $schedule_title, $schedule_info->schedule_date);
               $user_info = $this->db->get_where('user', array('user_id' => $reserve_info->user_id))->row();
-              $this->mts_model->send_class_reserve($user_info->phone, $user_info->username, $schedule_title,
+              $this->mts_model->send_class_reserve_by_center($user_info->phone, $user_info->username, $schedule_title,
                 $schedule_info->schedule_date, $this->center->center_title, $start_time, $end_time);
               $wait_count--;
               $reserve_count++;
@@ -1128,11 +1124,9 @@ QUERY;
               // 대기자 => 취소
               $this->center_model->schedule_cancel($reserve_info, $schedule_title, $schedule_info->schedule_date);
               $user_info = $this->db->get_where('user', array('user_id' => $reserve_info->user_id))->row();
-              $this->mts_model->send_class_reserve($user_info->phone, CENTER_TICKET_MEMBER_ACTION_RESERVE_CANCEL,
+              $this->mts_model->send_class_reserve_by_center($user_info->phone, CENTER_TICKET_MEMBER_ACTION_RESERVE_CANCEL,
                 $schedule_info->schedule_title, $schedule_info->schedule_date, $this->center->title,
                 $schedule_info->start_time,$schedule_info->end_time);
-//              $this->mts_model->send_class_cancel($user_info->phone, $user_info->username, $schedule_info->schedule_title,
-//                date('Y.m.d', strtotime($schedule_info->schedule_date)));
               $wait_count--;
             }
           }
@@ -1141,14 +1135,6 @@ QUERY;
           log_message('debug', '[schedule] center admin schedule('.$schedule_info_id.') edit wait2, wait_count['.$_wait_count.'=>'.$wait_count.']');
   
           $this->center_model->unlock_schedule_info($schedule_info_id);
-//          $result['class'] = array(
-//            'reservable' => $reservable,
-//            'reservable_number' => $reservable_number,
-//            'reserve_count' => $reserve_count,
-//            'waitable' => $waitable,
-//            'waitable_number' => $waitable_number,
-//            'wait_count' => $wait_count,
-//          );
           $this->response($result);
  
         } else {
@@ -1208,7 +1194,9 @@ QUERY;
           $result['message'] = '비정상적인 접근입니다!';
           $this->response($result);
         }
- 
+
+        $this->db->set('updated_at', 'NOW()', false);
+        $this->db->set('deleted_at', 'NOW()', false);
         $this->db->update('center_schedule_info', array('activate' => 0), array('schedule_info_id' => $schedule_info_id));
         if ($this->db->affected_rows() <= 0) {
           $this->center_model->unlock_schedule_info($schedule_info_id);
@@ -1221,7 +1209,7 @@ QUERY;
         foreach ($reserve_list as $reserve_info) {
           $this->center_model->schedule_cancel($reserve_info, $schedule_info->schedule_title, $schedule_info->schedule_date);
           $user_info = $this->db->get_where('user', array('user_id' => $reserve_info->user_id))->row();
-          $this->mts_model->send_class_reserve($user_info->phone, CENTER_TICKET_MEMBER_ACTION_RESERVE_CANCEL,
+          $this->mts_model->send_class_reserve_by_center($user_info->phone, CENTER_TICKET_MEMBER_ACTION_RESERVE_CANCEL,
             $schedule_info->schedule_title, $schedule_info->schedule_date, $this->center->title,
             $schedule_info->start_time,$schedule_info->end_time);
 //          $this->mts_model->send_class_cancel($user_info->phone, $user_info->username, $schedule_info->schedule_title,
@@ -1231,7 +1219,7 @@ QUERY;
         foreach ($wait_list as $reserve_info) {
           $this->center_model->schedule_cancel($reserve_info, $schedule_info->schedule_title, $schedule_info->schedule_date);
           $user_info = $this->db->get_where('user', array('user_id' => $reserve_info->user_id))->row();
-          $this->mts_model->send_class_reserve($user_info->phone, CENTER_TICKET_MEMBER_ACTION_RESERVE_CANCEL,
+          $this->mts_model->send_class_reserve_by_center($user_info->phone, CENTER_TICKET_MEMBER_ACTION_RESERVE_CANCEL,
             $schedule_info->schedule_title, $schedule_info->schedule_date, $this->center->title,
             $schedule_info->start_time,$schedule_info->end_time);
 //          $this->mts_model->send_class_cancel($user_info->phone, $user_info->username, $schedule_info->schedule_title,
