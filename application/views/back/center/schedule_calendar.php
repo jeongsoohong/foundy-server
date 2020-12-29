@@ -32,599 +32,104 @@
     <col width="14.28%">
   </colgroup>
   <tbody>
+  <style>
+    .grey {
+      color: #EAEAEA !important;
+    }
+  </style>
   <!-- 총 주차를 반복합니다. -->
-  <?php for ($day = 1, $i = 0; $i < $total_week; $i++) { ?>
+  <?php
+  for ($day = 1, $i = 0; $i < $total_week; $i++) { ?>
     <tr>
       <!-- 1일부터 7일 (한 주) -->
       <?php for ($week = 0; $week < 7; $week++) { ?>
         <td>
           <div class="days-wrap clearfix">
-            <p <?php if ($week == 0) echo "class='sun'"; ?>>
+            <?php
+            if ($i == 0 && $week < $start_week) {
+              $d = ($last_month_total_day - ($start_week - $week) + 1);
+              $m = $month - 1;  $y = $year;
+              if ($m <= 0) { $m = 12; $y = $year - 1; }
+              $grey = true;
+            } else if ($day <= $total_day) {
+              $d = $day; $m = $month; $y = $year;
+              $day += 1;
+              $grey = false;
+            } else {
+              $d = $day % $total_day;
+              $m = $month + 1; $y = $year;
+              if ($m >= 13) { $m = 1; $y = $year + 1; }
+              $day += 1;
+              $grey = true;
+            }
+            ?>
+            <p class="<?php if ($grey) {echo 'grey'; } elseif ($week == 0) { echo 'sun'; } ?>">
               <?php
-              if ($i == 0 && $week < $start_week) {
-                echo($last_month_total_day - ($start_week - $week));
-              } else if ($day <= $total_day) {
-                echo $day;
-                $day += 1;
-              } else {
-                echo $day % $total_day;
-                $day += 1;
-              }
+              echo $d;
               ?>
             </p>
             <?php if ($week == 0) { ?>
               <p class="holiday"></p>
             <?php } ?>
           </div>
-          <div class="case-time">
-            <p class="time-class">11:00 ~ 12:00</p>
-            <p class="time-class">11:00 ~ 12:00</p>
-            <p class="time-class">11:00 ~ 12:00</p>
-            <p class="time-class">11:00 ~ 12:00</p>
-            <p class="time-class">11:00 ~ 12:00</p>
-            <p class="time-class">11:00 ~ 12:00</p>
-            <p class="time-class">11:00 ~ 12:00</p>
-          </div>
+          <?
+          $where = array('center_id' => $center_id, 'schedule_date' => "{$y}-{$m}-{$d}", 'activate' => 1);
+          $schedules = $this->db->order_by('start_time', 'asc')->get_where('center_schedule_info', $where)->result();
+          ?>
+          <? if (empty($schedules) == false) { ?>
+            <div class="case-time" data-id="<?= $schedules[0]->schedule_date ?>" id="schedule_info_<?= $schedules[0]->schedule_date; ?>">
+              <? foreach ($schedules as $schedule) { ?>
+                <p class="time-class <? if ($grey) echo 'grey'; ?>">
+                  <?= substr($schedule->start_time, 0, 5); ?>
+                  ~
+                  <?= substr($schedule->end_time, 0, 5); ?></p>
+              <? } ?>
+            </div>
+          <? } ?>
         </td>
-      <?php } ?>
+      <?php
+      } ?>
     </tr>
-  <?php } ?>
+  <?php
+  } ?>
   </tbody>
 </table>
 <script>
+  $('#schedule_list').html('');
   $(function() {
     // case-time 클릭 이벤트
     $('.case-time').click(function(){
-      $('.schedule_detail').toggle();
+      let date = $(this).data('id');
+      let _y = date.substr(0, 4);
+      let _m = date.substr(5, 2);
+      let _d = date.substr(8, 2);
+      day = parseInt(_d);
+      if (parseInt(_m) !== month) {
+        let w = 0;
+        if (parseInt(_m) > month) {
+          if (parseInt(_y) !== year) {
+            w = -1;
+          } else {
+            w = 1;
+          }
+        } else {
+          if (parseInt(_y) !== year) {
+            w = 1;
+          } else {
+            w = -1;
+          }
+        }
+        get_schedule_calendar(w);
+      } else {
+        let target = $('#schedule_list');
+        get_page('schedule_list', '<?= base_url(); ?>center/teacher/schedule/list?date=' + date , true);
+        target.show();
+        $('#focus_date').text(_y+ '.' + _m + '.' + _d);
+      }
+      // console.log(day);
     })
+    <? if ($open_date != null) { ?>
+    $('#schedule_info_<?= $open_date; ?>').click();
+    <? } ?>
   });
 </script>
-<!--
-<table class="table_days">
-  <colgroup>
-    <col width="14.28%">
-    <col width="14.28%">
-    <col width="14.28%">
-    <col width="14.28%">
-    <col width="14.28%">
-    <col width="14.28%">
-    <col width="14.28%">
-  </colgroup>
-  <tbody>
-  <tr>
-    <td>
-      <div class="days-wrap clearfix">
-        <p class="sun">30</p>
-        <p class="holiday"></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class">11:00 ~ 12:00</p>
-        <p class="time-class">11:00 ~ 12:00</p>
-        <p class="time-class">11:00 ~ 12:00</p>
-        <p class="time-class">11:00 ~ 12:00</p>
-        <p class="time-class">11:00 ~ 12:00</p>
-        <p class="time-class">11:00 ~ 12:00</p>
-        <p class="time-class">11:00 ~ 12:00</p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p>31</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p>1</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p>2</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p>3</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p>4</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td class="days-wrap sat">
-      <div class="clearfix">
-        <p>5</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <div class="days-wrap clearfix">
-        <p class="sun">6</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p>7</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p>8</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p>9</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p>10</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p>11</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td class="sat">
-      <div class="days-wrap clearfix">
-        <p>12</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <div class="days-wrap clearfix">
-        <p class="sun">13</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p>14</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p>15</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p>16</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p>17</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p>18</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td class="sat">
-      <div class="days-wrap clearfix">
-        <p>19</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <div class="days-wrap clearfix">
-        <p class="sun">20</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p>21</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p>22</p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p>23</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p>24</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p>25</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td class="sat">
-      <div class="days-wrap clearfix">
-        <p>26</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <div class="days-wrap clearfix">
-        <p class="sun">27</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p>28</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p>29</p>
-        <p></p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p class="sun">30</p>
-        <p class="holiday">추석 연휴</p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p class="sun">1</p>
-        <p class="holiday">추석</p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td>
-      <div class="days-wrap clearfix">
-        <p class="sun">2</p>
-        <p class="holiday">추석 연휴</p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-    <td class="sat">
-      <div class="days-wrap clearfix">
-        <p class="sun">3</p>
-        <p class="holiday">개천절</p>
-      </div>
-      <div class="case-time">
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-        <p class="time-class"></p>
-      </div>
-    </td>
-  </tr>
-  </tbody>
-</table>
--->

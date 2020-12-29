@@ -975,5 +975,157 @@
     });
   </script>
 <?php } ?>
-
-
+<!-- center -->
+<script>
+  function IsJsonString(str) {
+    try {
+      JSON.parse(str);
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+  function open_reserve_popup(id) {
+    $('#loading_set').show();
+    let formData = new FormData();
+    formData.append('id', id);
+    $.ajax({
+      url: "<?php echo base_url().'home/center/schedule/reserve/info'; ?>",
+      type: 'POST', // form submit method get/post
+      dataType: 'html', // request type html/json/xml
+      data: formData, // serialize form data
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function(data) {
+        $("#loading_set").fadeOut(500);
+        if(IsJsonString(data) === true) {
+          open_alert_popup(JSON.parse(data).message);
+        } else {
+          $('#schedule_reserve_popup').html(data);
+          $('#schedule_reserve_popup').show();
+          $('body').css('overflow-y', 'hidden');
+        }
+      },
+      error: function(e) {
+        console.log(e);
+        alert(e);
+      }
+    });
+  }
+  function close_reserve_popup() {
+    $('#schedule_reserve_popup').hide();
+    $('body').css('overflow-y', 'auto');
+  }
+  function reserve_schedule(id, mid) {
+    $('#loading_set').show();
+    let formData = new FormData();
+    formData.append('id', id);
+    formData.append('mid', mid);
+    $.ajax({
+      url: "<?php echo base_url().'home/center/schedule/reserve/do'; ?>",
+      type: 'POST', // form submit method get/post
+      dataType: 'json', // request type html/json/xml
+      data: formData, // serialize form data
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function(data) {
+        $("#loading_set").delay(500).fadeOut(500);
+        close_reserve_popup();
+        if(data.status === 'done') {
+          open_notify_popup(data.message);
+        } else {
+          open_alert_popup(data.message);
+        }
+      },
+      error: function(e) {
+        console.log(e)
+      }
+    });
+  }
+  function open_cancel_popup(id) {
+    $('#loading_set').show();
+    let formData = new FormData();
+    formData.append('id', id);
+    $.ajax({
+      url: "<?php echo base_url().'home/center/schedule/cancel/info'; ?>",
+      type: 'POST', // form submit method get/post
+      dataType: 'html', // request type html/json/xml
+      data: formData, // serialize form data
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function(data) {
+        console.log(data);
+        $("#loading_set").fadeOut(500);
+        if(IsJsonString(data) === true) {
+          open_alert_popup(JSON.parse(data).message);
+        } else {
+          console.log($('#schedule_cancel_popup'));
+          $('#schedule_cancel_popup').html(data);
+          $('#schedule_cancel_popup').show();
+          $('body').css('overflow-y', 'hidden');
+        }
+      },
+      error: function(e) {
+        console.log(e);
+        alert(e);
+      }
+    });
+  }
+  function close_cancel_popup() {
+    $('#schedule_cancel_popup').hide();
+    $('body').css('overflow-y', 'auto');
+  }
+  function cancel_schedule(id) {
+    $('#loading_set').show();
+    let formData = new FormData();
+    formData.append('id', id);
+    $.ajax({
+      url: "<?php echo base_url().'home/center/schedule/cancel/do'; ?>",
+      type: 'POST', // form submit method get/post
+      dataType: 'json', // request type html/json/xml
+      data: formData, // serialize form data
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function(data) {
+        $("#loading_set").fadeOut(500);
+        close_cancel_popup();
+        if(data.status === 'done') {
+          open_notify_popup(data.message);
+        } else {
+          open_alert_popup(data.message);
+        }
+      },
+      error: function(e) {
+        console.log(e)
+      }
+    });
+  }
+  function open_alert_popup(message) {
+    $('#schedule_alert_popup .popup_guide').text(message);
+    $('#schedule_alert_popup').show();
+    $('body').css('overflow-y', 'hidden');
+  }
+  function close_alert_popup() {
+    $('#schedule_alert_popup').hide();
+    $('body').css('overflow-y', 'auto');
+  }
+  function open_notify_popup(message) {
+    $('#schedule_notify_popup .popup_guide').text(message);
+    $('#schedule_notify_popup').show();
+    $('body').css('overflow-y', 'hidden');
+  }
+  function close_notify_popup() {
+    $('#schedule_notify_popup').hide();
+    $('body').css('overflow-y', 'auto');
+    setTimeout(function() {window.location.reload(); }, 300);
+  }
+  function unreservable_schedule() {
+    $('#schedule_alert_popup .popup_guide').text('현재 예약이 불가능합니다!');
+    $('#schedule_alert_popup').show();
+    $('body').css('overflow-y', 'hidden');
+  }
+</script>

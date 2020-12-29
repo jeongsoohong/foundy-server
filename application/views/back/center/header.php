@@ -13,7 +13,7 @@
         <a href="<?php echo base_url().'center/account'; ?>" class="selected" id="menu_account">센터정보</a>
         <a href="<?php echo base_url().'center/teacher'; ?>" id="menu_teacher">강사 / 스케줄</a>
         <a href="<?php echo base_url().'center/course'; ?>" id="menu_course">수강권 관리</a>
-        <a href="<?php echo base_url().'center/member'; ?>" id="menu_member">회원 관리</a>
+<!--        <a href="--><?php //echo base_url().'center/member'; ?><!--" id="menu_member">회원 관리</a>-->
 <!--        <a href="#">온라인클래스</a>-->
 <!--        <a href="#">정산</a>-->
       </div>

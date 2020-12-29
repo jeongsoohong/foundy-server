@@ -1011,8 +1011,13 @@ table {
 
 /* alert */
 .popup__alert {
-    height: 140px;
+    height: auto;
+    text-align: center;
 }
+.popup__alert .guide_alert {
+    font-size: 15px;
+}
+
 
 /* extend */
 .popup__extend, .popup__stop {
@@ -1323,11 +1328,13 @@ table {
     background-color: #fff;
     position: absolute;
     top: 4px;
-    left: 32px; /* on : 4px, off : 32px */
+    left: 4px; /* on : 32px, off : 4px */
+    transition: left 0.3s;
 }
 
 .onoff_point_on {
-    left: 4px; /* on : 4px, off : 32px */
+    left: 32px; /* on : 32px, off : 4px */
+    transition: left 0.3s;
 }
 
 /* 스케줄 관리 */

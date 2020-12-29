@@ -132,7 +132,7 @@
   }
   
   .popup-box {
-    display: none;
+    /*display: none;*/
     background-color: rgba(0,0,0,0.3);
     width: 100%;
     height: 100%;
@@ -148,7 +148,7 @@
     border-radius: 4px;
     z-index: 11;
     width: 268px;
-    position: absolute;
+    position: fixed;
     left: 50%;
     top: 50%;
     margin-left: -134px;
@@ -435,14 +435,6 @@
                           <b class="font-futura">schedule</b>
                         </td>
                         <td style="width: 20%">
-                          <?php if ($iam_this_center == true) { ?>
-<!--                            <a href="javascript:void(0);">-->
-<!--                              <span class="pull-right center-edit" data-target='schedule-add' style="color: grey; padding-right: 25px">-->
-<!--                                <img src="--><?php //echo base_url(); ?><!--uploads/icon/dots.png" alt="" style="width: 10px; height: 10px">-->
-<!--                                <i class="fa fa-ellipsis-v"></i>-->
-<!--                              </span>-->
-<!--                            </a>-->
-                          <?php } ?>
                         </td>
                       </tr>
                       </tbody>
@@ -497,91 +489,10 @@
                         </div>
                       </div>
                     </div>
+                    <div class="col-md-12 widget schedule-detail" style="margin-top: 16px; padding: 0; border: 0;">
                     <!--  ajax schedule  -->
-                    <? if (DEV_SERVER) { ?>
-                    <div class="col-md-12 widget schedule-detail" style="margin-top: 16px; padding: 0; border-top: 1px solid #eee;">
-                      <div class="col-md-12 card_plan" style="padding: 0;">
-                        <div class="card_wrap">
-                          <div class="card_class">
-                            <p class="type_info">
-                              <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
-                            </p>
-                            <div class="type_class">
-                              <p class="class_name">빈야사</p>
-                              <p class="class_teacher">샤일라</p>
-                            </div>
-                            <button class="type_btn btn_on">
-                              <img src="<?php echo base_url(); ?>template/icon/ic_cancel_on.png" width="40" height="40">
-                            </button>
-                          </div>
-                          <div class="card_class">
-                            <p class="type_info">
-                              <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
-                            </p>
-                            <div class="type_class">
-                              <p class="class_name">리프레쉬 릴렉스</p>
-                              <p class="class_teacher">샤일라</p>
-                            </div>
-                            <button class="type_btn btn_off">
-                              <img src="<?php echo base_url(); ?>template/icon/ic_cancel_off.png" width="40" height="40">
-                            </button>
-                          </div>
-                          <div class="card_class">
-                            <p class="type_info">
-                              <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
-                            </p>
-                            <div class="type_class">
-                              <p class="class_name">빈야사</p>
-                              <p class="class_teacher">샤일라</p>
-                            </div>
-                            <button class="type_btn btn_on">
-                              <img src="<?php echo base_url(); ?>template/icon/ic_cancel_on.png" width="40" height="40">
-                            </button>
-                          </div>
-                          <div class="card_class">
-                            <p class="type_info">
-                              <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
-                            </p>
-                            <div class="type_class">
-                              <p class="class_name">리프레쉬 릴렉스</p>
-                              <p class="class_teacher">샤일라</p>
-                            </div>
-                            <button class="type_btn btn_off">
-                              <img src="<?php echo base_url(); ?>template/icon/ic_cancel_off.png" width="40" height="40">
-                            </button>
-                          </div>
-                          <div class="card_hide hide_1" style="display: none;">
-                            <div class="card_class">
-                              <p class="type_info">
-                                <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
-                              </p>
-                              <div class="type_class">
-                                <p class="class_name">빈야사</p>
-                                <p class="class_teacher">샤일라</p>
-                              </div>
-                              <button class="type_btn btn_on">
-                                <img src="<?php echo base_url(); ?>template/icon/ic_cancel_on.png" width="40" height="40">
-                              </button>
-                            </div>
-                            <div class="card_class">
-                              <p class="type_info">
-                                <span class="font-futura day_part">pm</span> <span class="font-futura time_no">7:00 <br>~ 8:00</span>
-                              </p>
-                              <div class="type_class">
-                                <p class="class_name">리프레쉬 릴렉스</p>
-                                <p class="class_teacher">샤일라</p>
-                              </div>
-                              <button class="type_btn btn_off">
-                                <img src="<?php echo base_url(); ?>template/icon/ic_cancel_off.png" width="40" height="40">
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                        <button class="font-futura btn_more">MORE</button>
-                      </div>
-                    </div>
-                    <? } ?>
                     <!--  /ajax schedule  -->
+                    </div>
                   </div>
                 </div>
               </div>
@@ -599,14 +510,6 @@
                           <b class="font-futura">instructors</b>
                         </td>
                         <td style="width: 20%">
-                          <?php if ($iam_this_center == true) { ?>
-<!--                            <a href="javascript:void(0);">-->
-<!--                              <span class="pull-right center-edit" data-target='instructor-add' style="color: grey; padding-right: 25px">-->
-<!--                                <img src="--><?php //echo base_url(); ?><!--uploads/icon/dots.png" alt="" style="width: 10px; height: 10px">-->
-<!--                                <i class="fa fa-ellipsis-v"></i>-->
-<!--                              </span>-->
-<!--                            </a>-->
-                          <?php } ?>
                         </td>
                       </tr>
                       </tbody>
@@ -662,14 +565,6 @@
                           <b class="font-futura">info</b>
                         </td>
                         <td style="width: 20%">
-                          <?php if ($iam_this_center == true) { ?>
-<!--                            <a href="javascript:void(0);">-->
-<!--                              <span class="pull-right center-edit" data-target="info-edit" style="color: grey; padding-right: 25px">-->
-<!--                                <img src="--><?php //echo base_url(); ?><!--uploads/icon/dots.png" alt="" style="width: 10px; height: 10px">-->
-<!--                                <i class="fa fa-ellipsis-v"></i>-->
-<!--                              </span>-->
-<!--                            </a>-->
-                          <?php } ?>
                         </td>
                       </tr>
                       </tbody>
@@ -695,50 +590,111 @@
   </div>
 </section>
 
-<div class="popup-box">
-  <div class="popup theme:book">
-    <div class="popup_tit">
-      <div class="popup_topic">
-        <div class="topic_icon">
-          <img src="<?php echo base_url(); ?>template/icon/ic_calendar.png" alt="" width="16" height="16">
-        </div>
-        <p class="topic_message" style="font-weight: bold !important;"><span class="font-futura">pm <span class="set_time">7:00</span> - <span class="set_time">8:00</span></span> [빈야사]
-          <br>수업을 예약합니다.</p>
-      </div>
-      <p class="popup_guide" style="text-align: left; width: 223px; margin: 0 auto;">예약 취소는 수업 시작 <span class="font-futura">00</span>시간 전까지만 가능하며,
-        <br>그 이후의 취소는 센터로 직접 문의 주세요!</p>
-    </div>
-    <div class="confirm_btn">
-      <button class="btn_no">CANCEL</button>
-      <button class="btn_yes">OK</button>
-    </div>
-  </div>
-  <div class="popup theme:alt_cancel">
-    <div class="popup_tit">
-      <div class="popup_topic">
-        <div class="topic_icon" style="background-color: #9C8F92;">
-          <img src="<?php echo base_url(); ?>template/icon/ic_calendar.png" alt="" width="16" height="16">
-        </div>
-        <p class="topic_message" style="font-weight: bold !important; color: #9C8F92;"><span class="font-futura">pm <span class="set_time">7:00</span> - <span class="set_time">8:00</span></span>
-          <br>[레스토레이티브]
-          <br>수업을 취소하시겠습니까?</p>
-      </div>
-    </div>
-    <div class="confirm_btn">
-      <button class="btn_no">CANCEL</button>
-      <button class="btn_yes">OK</button>
-    </div>
-  </div>
+<!-- popup -->
+<style type="text/css">
+  #txt_select, #txt_select2 {
+    position: relative;
+  }
+  .popup_topic {
+    width: 222px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  .popup_guide {
+    margin-top: 16px !important;
+  }
+  .topic_icon {
+    text-align: center;
+  }
+  .topic_message {
+    font-size: 13px;
+  }
+  .theme\:book {
+    height: 268px;
+    margin-top: -134px;
+  }
+  .theme\:wait {
+    height: 288px;
+    margin-top: -144px;
+  }
+  #choice, #choice2 {
+    display: block;
+    position: relative;
+    height: 32px;
+    line-height: 32px;
+    width: 220px;
+    margin: 16px auto 0;
+  }
+  #choice select, #choice2 select {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: inherit;
+    line-height: inherit;
+    padding: 0 10px;
+    color: #616161;
+    font-size: 11.5px;
+    font-weight: bold;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  #choice select {
+    color: #B0957A;
+    border: 1px solid #B0957A;
+  }
+  #choice2 select {
+    color: #f9a825;
+    border: 1px solid #f9a825;
+  }
+</style>
+<div class="popup-box" id="schedule_reserve_popup" style="display: none;">
+</div>
+<div class="popup-box" id="schedule_cancel_popup" style="display: none;">
+</div>
+<div class="popup-box" id="schedule_alert_popup" style="display: none;">
   <div class="popup theme:alt_cancel_detail">
     <div class="popup_tit">
       <div class="popup_topic">
         <div class="topic_icon" style="background-color: #d32f2f;">
-          <img src="<?php echo base_url(); ?>template/icon/ic_exclamation.png" alt="" width="16" height="16">
+          <img src="<?= base_url(); ?>template/icon/ic_exclamation.png" alt="" width="16" height="16">
         </div>
-        <p class="topic_message font-futura" style="font-weight: bold !important;     color: #d32f2f; margin: 0 !important; line-height: 44px;">Ooops!</p>
+        <p class="topic_message font-futura" style="font-weight: bold !important; color: #d32f2f; margin: 0 !important; line-height: 44px;">
+          Ooops!
+        </p>
       </div>
-      <p class="popup_guide">예약 취소는 수업 시작 <span>00</span>시간 전까지만 가능합니다.
-        <br>센터로 직접 문의 주세요!</p>
+      <div>
+        <p class="popup_guide">
+          예약 취소는 수업 시작 00시간 전까지만 가능합니다.
+          <br>센터로 직접 문의 주세요!
+        </p>
+      </div>
+      <div class="confirm_btn" style="border-top: 1px solid #eee !important;">
+        <button class="btn_yes" style="border:none !important;" onclick="close_alert_popup()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="popup-box" id="schedule_notify_popup" style="display: none;">
+  <div class="popup theme:alt_cancel_detail">
+    <div class="popup_tit">
+      <div class="popup_topic">
+        <div class="topic_icon" style="background-color: #1ba9e4;">
+          <img src="<?= base_url(); ?>template/icon/information_white.png" alt="" width="16" height="16">
+        </div>
+        <p class="topic_message font-futura" style="font-weight: bold !important; color: #1ba9e4; margin: 0 !important; line-height: 44px;">
+          SUCCESS!
+        </p>
+      </div>
+      <div>
+        <p class="popup_guide">
+          예약 취소는 수업 시작 00시간 전까지만 가능합니다.
+          <br>센터로 직접 문의 주세요!
+        </p>
+      </div>
+      <div class="confirm_btn" style="border-top: 1px solid #eee !important;">
+        <button class="btn_yes" style="border:none !important;" onclick="close_notify_popup()">OK</button>
+      </div>
     </div>
   </div>
 </div>
@@ -896,8 +852,8 @@
       success: function(data) {
         $("#loading_set").fadeOut(500);
         // alert(data);
-        $('.schedule-detail table').remove();
-        $('.schedule-detail').append(data);
+        // $('.schedule-detail table').remove();
+        $('.schedule-detail').html(data);
       },
       error: function(e) {
         console.log(e)
@@ -1112,63 +1068,4 @@ if ($center_data->teacher_cnt > 0) {
     });
     active_menu_bar('find');
   });
-  
-  $(function(){
-  
-    // btn_more 클릭 이벤트 기능 수정 요청드립니다.
-    $('.btn_more').click(function(){
-      var display = $('.card_hide').css('display');
-      // console.log(1);
-      /* ========= slide 기능 작업 요청 드립니다. ========= */
-      /* 4개씩 펼쳐지고 마지막 버튼 클릭시 card_hide 전체가 슬라이드업 되는 기능 부탁드립니다.*/
-      if(display == 'none'){
-        $(this).text('FOLD');
-        $('.card_hide').slideDown();
-      }
-      else {
-        $(this).text('MORE');
-        $('.card_hide').slideUp();
-      }
-    })
-  
-    // btn_on 클릭 이벤트
-    $('.popup-box').hide().children().hide();
-    $('.btn_on').click(function(){
-      //console.log(1);
-      $('.popup-box').show();
-      $('div[class*=book]').show();
-    })
-  
-    // btn_off 클릭 이벤트
-    $('.popup-box').hide().children().hide();
-    $('.btn_off').click(function(){
-      $('.popup-box').show();
-    
-      // 취소가능 시간에 클릭했을 경우
-      $('div[class$=_cancel]').show();
-    
-      // 취소가능 이외 시간에 클릭했을 경우
-      $('div[class$=_detail]').show();
-    })
-  
-    // btn_yes 클릭 이벤트
-    $('.btn_yes').click(function(){
-      $('.popup-box').hide().children().hide();
-    })
-  
-    // btn_no 클릭 이벤트
-    $('.btn_no').click(function(){
-      $('.popup-box').hide().children().hide();
-    })
-  
-    // cancel_detail 팝업창 닫기
-    $('div[class$=_detail]').click(function(){
-      $('.popup-box').hide().children().hide();
-    })
-  
-    // popup-box 팝업창 닫기
-    $('.popup-box').click(function(){
-      $('.popup-box').hide().children().hide();
-    })
-  })
 </script>

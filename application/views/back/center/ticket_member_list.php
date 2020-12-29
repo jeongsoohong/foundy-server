@@ -26,7 +26,7 @@
       <td><?php echo ($member->refund ? 'O' : 'X'); ?></td>
       <td><?php echo $member->reserve.'/'.$member->reservable_count;?></td>
       <td>
-        <button class="btn_valid view_info">활동내역</button>
+        <button class="btn_valid view_info" onclick="get_history(<?= $member->member_id ?>, 1);">활동내역</button>
         <button class="btn_valid change_info"
                 data-id="<?php echo $member->member_id; ?>"
                 data-type="<?php echo $member->ticket_type; ?>"
@@ -36,7 +36,7 @@
                 data-start="<?php echo substr($member->enable_start_at, 0, 10); ?>"
                 data-end="<?php echo substr($member->enable_end_at, 0, 10); ?>"
                 data-count="<?php echo $member->reservable_count; ?>"
-        >정보수정</button>
+        >회원정보</button>
       </td>
     </tr>
   <?php } ?>
@@ -119,12 +119,12 @@
       $('#member_phone').val(phone);
       $('#member_phone').prop('disabled',true);
       $('#enable_start_at').val(start);
-      $('#enable_start_at').prop('disabled',false);
+      $('#enable_start_at').prop('disabled',true);
       $('#enable_end_at').val(end);
-      $('#enable_end_at').prop('disabled',false);
+      $('#enable_end_at').prop('disabled',true);
       if (type === <?php echo CENTER_TICKET_TYPE_COUNT; ?>) {
         $('#reservable_count').val(count);
-        $('#reservable_count').prop('disabled',false);
+        $('#reservable_count').prop('disabled',true);
       } else {
         $('#reservable_count').val(0);
         $('#reservable_count').prop('disabled',true);
@@ -134,6 +134,7 @@
       $('.popup__member').show();
       $('.popup__member .member--join').hide();
       $('.popup__member .member--data').show();
+      $('.popup__member .member--data button.data-save').hide();
       $('.popup__member .member-party').css('margin-bottom', '10px');
     })
     $('.ticket_chk').click(function(){
@@ -153,6 +154,10 @@
       } else {
         $('.main_chk').prop('checked',false);
       }
-    })
+    });
+    $('.view_info').click(function(){
+      $('.popup-box').show();
+      $('div[class$=history]').show().find('table').show();
+    });
   });
 </script>

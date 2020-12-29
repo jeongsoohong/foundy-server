@@ -15,7 +15,7 @@ class Cron extends CI_Controller
     if (!$this->input->is_cli_request()) show_error('Direct access is not allowed');
   }
   
-  function unregister($para1 = '')
+  public function unregister($para1 = '')
   {
     log_message('info', '[cron] unregister, para1['.$para1.']');
     $date = date('Y-m-d', strtotime('-7 days'));
@@ -30,6 +30,23 @@ QUERY;
 //      echo json_encode($result);
     } else {
       log_message('error', '[cron] invalid para1['.$para1.'] for unregister');
+    }
+  }
+  
+  public function center($para1 = '', $para2 = '', $para3 = '')
+  {
+    if ($para1 == 'schedule') {
+      
+      if ($para2 == 'confirm') {
+        
+        $duration = 1; // crontab duration(minute)
+    
+      } else {
+        log_message('error', '[cron] invalid para2[' . $para2 . '] for center/schedule');
+      }
+      
+    } else {
+      log_message('error', '[cron] invalid para1['.$para1.'] for center');
     }
   }
 }

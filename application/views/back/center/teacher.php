@@ -1,14 +1,14 @@
 <h2 class="boxwrap__type meaning">강사 / 스케줄</h2>
 <div class="boxwrap__info">
   <div class="info--tit">
-    <a href="#" class="tit_theme">
+    <a href="#" class="tit_theme" id="teacher_mgr">
       강사 관리
       <div class="theme_arrow">
         <img src="<?php echo base_url().'template/back/center'; ?>/imgs/icon_next.png" width="6" height="auto">
         <img src="<?php echo base_url().'template/back/center'; ?>/imgs/icon_next_white.png" width="6" height="auto" style="display: none;" class="next_white">
       </div>
     </a>
-    <a href="#" class="tit_theme">
+    <a href="#" class="tit_theme" id="schedule_mgr">
       스케줄 관리
       <div class="theme_arrow">
         <img src="<?php echo base_url().'template/back/center'; ?>/imgs/icon_next.png" width="6" height="auto">
@@ -46,45 +46,36 @@
     <section class="contents_schedule contents_modify scroll-y">
       <h3 class="meaning">스케줄 관리</h3>
       <div class="schedule_detailbox modify_detailbox">
-        <div class="schedule_register ticket_name shadow_md">
+        <div class="schedule_register ticket_name shadow_md" style="position: relative;">
+          <button class="btn_save btn_val btn_rg" style="top: 28px; right: 20px;" onclick="register_schedule()">저장</button>
           <p class="schedule_tit1 register_tit tit-lg">스케줄 등록</p>
-          <dl class="register_area clearfix">
+          <dl class="register_area clearfix" style="margin: 0;">
             <dt class="area_tit">날짜</dt>
             <dd class="area_data clearfix">
               <div class="data_box">
                 <div class="data_function">
                   <div class="container">
                     <div class="form-group">
-                      <div class='input-group date datetimepicker1' id='datetimepicker1'>
+                      <div class='input-group date datetimepicker1' id='start_date'>
                         <input type='text' class="form-control" />
                         <span class="input-group-addon">
                           <span class="glyphicon glyphicon-calendar"></span>
                         </span>
                       </div>
                     </div>
-                    <script type="text/javascript">
-                      $(function() {
-                        $('.datetimepicker1').datepicker();
-                      });
-                    </script>
                   </div>
                 </div>
                 <span class="data_hyphen">-</span>
                 <div class="data_function">
                   <div class="container">
                     <div class="form-group">
-                      <div class='input-group date datetimepicker1' id='datetimepicker1'>
+                      <div class='input-group date datetimepicker1' id='end_date'>
                         <input type='text' class="form-control" />
                         <span class="input-group-addon">
                           <span class="glyphicon glyphicon-calendar"></span>
                         </span>
                       </div>
                     </div>
-                    <script type="text/javascript">
-                      $(function() {
-                        $('.datetimepicker1').datepicker();
-                      });
-                    </script>
                   </div>
                 </div>
               </div>
@@ -97,7 +88,7 @@
                     <div class="row">
                       <div class='col-sm-6'>
                         <div class="form-group">
-                          <div class='input-group date datetimepicker3' id='datetimepicker3'>
+                          <div class='input-group date datetimepicker3' id='start_time'>
                             <input type='text' class="form-control" />
                             <span class="input-group-addon">
                               <span class="glyphicon glyphicon-time"></span>
@@ -105,13 +96,6 @@
                           </div>
                         </div>
                       </div>
-                      <script type="text/javascript">
-                        $(function () {
-                          $('.datetimepicker3').datetimepicker({
-                            format: 'LT'
-                          });
-                        });
-                      </script>
                     </div>
                   </div>
                 </div>
@@ -121,7 +105,7 @@
                     <div class="row">
                       <div class='col-sm-6'>
                         <div class="form-group">
-                          <div class='input-group date datetimepicker3' id='datetimepicker3'>
+                          <div class='input-group date datetimepicker3' id='end_time'>
                             <input type='text' class="form-control" />
                             <span class="input-group-addon">
                               <span class="glyphicon glyphicon-time"></span>
@@ -129,13 +113,6 @@
                           </div>
                         </div>
                       </div>
-                      <script type="text/javascript">
-                        $(function () {
-                          $('.datetimepicker3').datetimepicker({
-                            format: 'LT'
-                          });
-                        });
-                      </script>
                     </div>
                   </div>
                 </div>
@@ -144,33 +121,33 @@
             <dt class="area_tit">반복</dt>
             <dd class="area_data" style="height: 34px">
               <div class="data_box">
-                <div class="chkbox_line">
+                <div class="chkbox_line" id="weekly">
                   <label class="form-chk col_sp">
-                    <input type="checkbox" name="number">
+                    <input type="checkbox" name="number" data-target="1">
                     월요일
                   </label>
                   <label class="form-chk col_sp">
-                    <input type="checkbox" name="number">
+                    <input type="checkbox" name="number" data-target="2">
                     화요일
                   </label>
                   <label class="form-chk col_sp">
-                    <input type="checkbox" name="number">
+                    <input type="checkbox" name="number" data-target="3">
                     수요일
                   </label>
                   <label class="form-chk col_sp">
-                    <input type="checkbox" name="number">
+                    <input type="checkbox" name="number" data-target="4">
                     목요일
                   </label>
                   <label class="form-chk col_sp">
-                    <input type="checkbox" name="number">
+                    <input type="checkbox" name="number" data-target="5">
                     금요일
                   </label>
                   <label class="form-chk col_sp">
-                    <input type="checkbox" name="number">
+                    <input type="checkbox" name="number" data-target="6">
                     토요일
                   </label>
                   <label class="form-chk col_sp">
-                    <input type="checkbox" name="number">
+                    <input type="checkbox" name="number" data-target="0">
                     일요일
                   </label>
                 </div>
@@ -179,59 +156,83 @@
             <dt class="area_tit">강사</dt>
             <dd class="area_data">
               <div class="data_box">
-                <div class="teacher_select clearfix">
+                <div class="teacher_select clearfix" id="teach">
                   <div class="selbox-wrap">
                     <select id="selbox">
-                      <option value="1">강사 A</option>
-                      <option value="2">강사 B</option>
-                      <option value="direct" class="direct">직접입력</option>
+                      <? foreach ($teachers as $teacher) { ?>
+                        <option value="<?= $teacher->teacher_id; ?>"><?= $teacher->name; ?></option>
+                      <? } ?>
+                      <option value="-1" class="direct">직접입력</option>
                     </select>
                     <div class="selbox-arrow">
                       <img src="<?php echo base_url().'template/back/center'; ?>/imgs/icon_down.png" width="12" class="arrow_down">
                       <img src="<?php echo base_url().'template/back/center'; ?>/imgs/icon_up.png" width="12" style="display: none;" class="arrow_up">
                     </div>
-                    <input type="text" id="selboxDirect">
+                    <input type="text" id="selboxDirect" placeholder="강사명 입력" style="display: none; padding: 0 10px;">
                   </div>
                   <div class="selbox-name">
                     <p>수업명</p>
-                    <input type="text" placeholder="text box" class="name_form">
+                    <input type="text" placeholder="" class="name_form" id="schedule_title">
                   </div>
                 </div>
+              </div>
+            </dd>
+            <dt class="area_tit tit_ex">예약기능</dt>
+            <dd class="area_data">
+              <div class="data_box">
                 <div class="teacher_book clearfix">
                   <label class="book-chk form-chk">
-                    <input type="checkbox" id="schedule-reservable" name="number">
+                    <input checked="" type="checkbox" id="schedule-reservable" name="number">
                     회원 예약기능 사용
                   </label>
-                  <div class="book-function" style="display: none;">
+                  <div class="book-function" style="">
                     <div class="book-ticket">
-                      <p>예약가능 수강권</p>
-                      <div class="book-select" style="height: 110px">
+                      <p style="line-height: 1.5;">예약가능 수강권</p>
+                      <div class="book-select" id="ticket_candidate" style="height: auto">
+                        <div class="book_type">운영 중인 수강권</div>
                         <select name="tickets[]" multiple="multiple" size="6" style="height: 100px;">
-                          <option value="1">3개월권</option>
-                          <option value="2">6개월권</option>
-                          <option value="3">1년권</option>
-                          <option value="3">1년권</option>
-                          <option value="3">1년권</option>
-                          <option value="3">1년권</option>
+                          <? foreach ($tickets as $ticket) { ?>
+                            <option value="<?= $ticket->ticket_id; ?>"><?= $ticket->ticket_title; ?></option>
+                          <? } ?>
                         </select>
                       </div>
-                      <!-- 태그 추가 -->
                       <div class="book-btn">
                         <button class="btn_select">
-                          <img src="<?php echo base_url(); ?>template/back/center/icon_next.png" width="6" height="auto">
+                          <img src="https://dev.foundy.me/template/back/center/icon_next.png" width="6" height="auto">
                         </button>
                         <button class="btn_delete">
-                          <img src="<?php echo base_url(); ?>template/back/center/icon_prev.png" width="6" height="auto">
+                          <img src="https://dev.foundy.me/template/back/center/icon_prev.png" width="6" height="auto">
                         </button>
-  
                       </div>
-                      <div class="book-move">
+                      <div class="book-move" id="ticket_choice" style="height: auto;">
+                        <div class="book_type">예약 가능 수강권</div>
                         <select name="tickets[]" multiple="multiple" size="6" style="height: 100px;" class="move-sel">
-    
                         </select>
                       </div>
                       <!-- 스타일 추가 -->
                       <style>
+                        #whole .header {
+                          border-bottom: 0;
+                        }
+                        #whole .header h1 {
+                          margin: 5px 16px 0 0;
+                        }
+                        #whole .header .logo_home {
+                          text-align: center;
+                        }
+                        #whole .header .logo_home img {
+                          padding: 0;
+                        }
+                        .book_type {
+                          height: 28px;
+                          border-bottom: 1px solid #ccc;
+                          background: #fcfafa;
+                          color: #757575;
+                          text-align: center;
+                          font-size: 10px;
+                          line-height: 28px;
+                          box-sizing: border-box;
+                        }
                         #whole {
                           padding: 0;
                         }
@@ -247,7 +248,7 @@
                           height: 24px;
                           border-radius: 4px;
                           border: 1px solid #ccc;
-      
+                
                         }
                         .btn_select {
                           margin-bottom: 8px;
@@ -263,7 +264,7 @@
                             width: 156px;
                           }
                         }
-    
+              
                         .start_time {
                           display: inline-block;
                           width: 44px;
@@ -282,136 +283,372 @@
                         .book-function > div {
                           margin-bottom: 20px;
                         }
+              
+                        /* ================= !!! 스타일 추가 및 수정 !!! ================= */
+                        .gray_txt {
+                          color: #bdbdbd !important;
+                        }
+                        .book-function,
+                        /*.a1box, .a2box,*/
+                        dt[class^="centerBook"],
+                        dd[class^="centerBook"] {
+                          display: none;
+                        }
+                        .selbox-name p {
+                          margin-right: 22px;
+                        }
+                        .name_form {
+                          width: 78%;
+                        }
+                        .tit_ex {
+                          line-height: 1.5;
+                          margin: 1px 0 0;
+                        }
+                        #center_time {
+                          width: 132%;
+                          margin: 20px 0;
+                        }
+                        #center_time .ready-chk {
+                          width: 31.8%;
+                        }
+                        .ready-chk {
+                          color: #333;
+                          float: left;
+                          width: 42%;
+                          height: 32px;
+                          line-height: 32px;
+                        }
+                        .timebox_a {
+                          float: left;
+                          width: auto;
+                          line-height: 32px;
+                        }
+                        .set-chk {
+                          width: 120px;
+                          color: #333;
+                          float: left;
+                          margin-right: 0;
+                        }
+                        .start_time {
+                          width: 80px;
+                          margin: 0 4px;
+                        }
+                        .timewrap p {
+                          margin-bottom: 8px;
+                        }
+                        .timewrap p:last-child {
+                          margin-bottom: 0;
+                        }
+                        .book_wd {
+                          display: inline-block;
+                          width: 107px;
+                        }
+                        .book-limit p {
+                          height: 32px;
+                          line-height: 32px;
+                        }
+                        .book-limit input {
+                          margin-right: 8px;
+                        }
+                        .book-select select, .book-move select {
+                          padding: 4px 8px;
+                        }
+              
+                        /* 태블릿 698 */
+                        @media(min-width: 600px){
+                          .book-function > div > p {
+                            width: 48px;
+                          }
+                          .book-start p:last-child {
+                            width: 300px;
+                          }
+                          .book-select, .book-move {
+                            width: 80px !important;
+                          }
+                          .timewrap p {
+                            font-size: 13.5px;
+                          }
+                          .time_sp {
+                            font-size: 13.5px;
+                            word-break: keep-all;
+                            width: 80%;
+                          }
+                          .time_sp span:last-child {
+                            margin-top: 6px;
+                          }
+                          .book-function > div > p,
+                          .book-function .book-limit p {
+                            font-size: 13.5px;
+                          }
+                        }
+              
+                        @media(min-width:888px){
+                          .name_form {
+                            width: 82%;
+                          }
+                          .book-select, .book-move {
+                            width: 90px !important;
+                          }
+                          .book-function > div > p {
+                            width: 20.4%;
+                            margin: 0;
+                          }
+                          .book-function .book-limit p {
+                            width: 35.9%;
+                            margin: 0;
+                          }
+                        }
+              
+                        /* 태블릿 968 */
+                        @media(min-width: 968px){
+                          .book-function > div > p {
+                            line-height: 1.5;
+                            width: 18.8%;
+                          }
+                          .book-select, .book-move {
+                            width: 96px !important;
+                          }
+                          .book-function .book-limit p {
+                            width: 33.1%;
+                          }
+                          .book_wd {
+                            width: 111px;
+                          }
+                          .time_sp {
+                            width: auto;
+                            font-size: 14px;
+                          }
+                          .timewrap p,
+                          .book-function > div > p,
+                          .book-function .book-limit p {
+                            font-size: 14px;
+                          }
+                          .time_sp span:last-child {
+                            margin-top: 0;
+                          }
+                        }
+              
+                        @media(min-width: 1025px){
+                          .book_type {
+                            font-size: 12px;
+                          }
+                          .area_tit {
+                            width: 12%;
+                          }
+                          .area_data {
+                            width: 88%;
+                          }
+                          .data_box {
+                            width: 82.5%;
+                          }
+                          .book-function > div > p {
+                            width: 21.4%;
+                          }
+                          .book-limit {
+                            width: 104%;
+                          }
+                          .book-function .book-limit p {
+                            width: 36%;
+                            line-height: 32px;
+                          }
+                          .book-select, .book-move {
+                            width: 140px !important;
+                          }
+                          .book-ticket {
+                            max-width: 590px;
+                          }
+                          .book-limit {
+                            max-width: 351px;
+                          }
+                          .a1box {
+                            max-width: 282px;
+                          }
+                          .a2box {
+                            max-width: 392px;
+                          }
+                          .wait_type {
+                            max-width: 338px;
+                          }
+                        }
                       </style>
-
+          
                     </div>
-                    <div class="book-start">
-                      <p>예약 / 취소 가능 시간 : 수업 시작
-                        <span class="start_time">
-                          <input type="text" placeholder="00" class="form_time">
-                        </span> 시간
-                        <span class="start_time">
-                          <input type="text" placeholder="00" class="form_time">
-                        </span> 분 이전까지
-                      </p>
-                    </div>
+                    <!--                    <div class="book-start">-->
+                    <!--                      <p>예약 / 취소 가능 시간 : 수업 시작-->
+                    <!--                        <span class="start_time" style="width: 80px;">-->
+                    <!--                          <input type="number" min="1" max="48" placeholder="" value="1" class="form_time" id="reservable_hour">-->
+                    <!--                        </span> 시간-->
+                    <!--                        <span class="start_time" style="width: 80px;">-->
+                    <!--                          <input type="number" min="0" max="60" placeholder="" value="0" class="form_time" id="reservable_min">-->
+                    <!--                        </span> 분 이전까지-->
+                    <!--                      </p>-->
+                    <!--                    </div>-->
                     <div class="book-limit">
                       <p>예약정원</p>
-                      <input type="text">
+                      <input type="number" min="1" max="100" id="reservable_number" value="1" style="width: 80px;">
                       <p class="limit_count">명</p>
                     </div>
                   </div>
                 </div>
-                <!-- 예약기능 추가 -->
-                <div class="wait_wrap clearfix" style="width: 100%; margin-top: 4px; font-size: 0;">
+              </div>
+            </dd>
+            <dt class="centerBook area_tit tit_ex" style="margin-top: 8px; word-break: keep-all;">예약가능 시간</dt>
+            <dd class="centerBook area_data clearfix">
+              <!-- 태그 클래스 추가 -->
+              <div class="data_box">
+                <!-- 스케줄 등록 즉시 예약 오픈 -->
+                <div id="center_schedule" class="clearfix">
+                  <label class="wait_chk form-chk ready-chk" id="ready-soon">
+                    <input checked type="checkbox" id="open-immediate" data-role="immediate" name="number">
+                    스케줄 등록 즉시 예약 오픈
+                  </label>
+                  <div class="timebox_a a1box clearfix">
+                    <div class="timewrap">
+                      <p id="sch_bookEnd">예약 마감 시간 : 수업
+                        <span class="start_time">
+                          <input type="number" min="0" max="12" class="form_time" id="reserve_close_hour_0" value="0">
+                        </span>
+                        시간 전까지
+                      </p>
+                      <p id="sch_cancelActive">취소 가능 시간 : 수업
+                        <span class="start_time">
+                          <input type="number" min="0" max="12" class="form_time" id="reserve_cancel_close_hour_0" value="0">
+                        </span>
+                        시간 전까지
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <!-- 예약 시간 설정 -->
+                <div id="center_time" class="clearfix">
+                  <label class="wait_chk form-chk ready-chk gray_txt" id="ready-time">
+                    <input type="checkbox" id="open-immediate2" data-role="immediate" name="number">
+                    예약 시간 설정
+                  </label>
+                  <div class="timebox_a a2box clearfix" style="display: none;">
+                    <div class="timewrap">
+                      <p id="time_bookStart" class="time_sp">예약 시작 시간 : 수업
+                        <span class="start_time">
+                          <input type="number" min="0" max="30" class="form_time" id="reserve_open_day_1" value="0">
+                        </span>일
+                        <span class="start_time">
+                          <input type="number" min="0" max="23" class="form_time" id="reserve_open_hour_1" value="0">
+                        </span>시간 전까지
+                      </p>
+                      <p id="time_bookEnd">예약 마감 시간 : 수업
+                        <span class="start_time">
+                          <input type="number" min="0" max="48" class="form_time" id="reserve_close_hour_1" value="0">
+                        </span>시간 전까지
+                      </p>
+                      <p id="time_cancelActive" class="time_sp">취소 시작 시간 : 수업
+                        <span class="start_time">
+                          <input type="number" min="0" max="30" class="form_time" id="reserve_cancel_open_day_1" value="0">
+                        </span>일
+                        <span class="start_time">
+                          <input type="number" min="0" max="23" class="form_time" id="reserve_cancel_open_hour_1" value="0">
+                        </span>시간 전까지
+                      </p>
+                      <p id="time_bookEnd">취소 마감 시간 : 수업
+                        <span class="start_time">
+                          <input type="number" min="0" max="48" class="form_time" id="reserve_cancel_close_hour_1" value="0">
+                        </span>시간 전까지
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </dd>
+            <!-- 예약대기 -->
+            <dt class="centerBook area_tit">예약대기</dt>
+            <dd class="centerBook area_data">
+              <div class="data_box">
+                <div class="wait_wrap clearfix" style="width: 100%; font-size: 0; height: 32px; line-height: 32px;">
                   <label class="wait_chk book-chk form-chk" style="color: #333; float: left;">
                     <input type="checkbox" id="schedule-wait" name="number">
                     예약대기
                   </label>
                   <div class="wait_type" style="width: 58%; float: left; display: none;">
-                    <p style="display: inline-block; color: #616161; font-size: 14px; font-weight: normal; line-height: 32px;">예약대기 인원
-                      <span style="display: inline-block; margin: 0 12px;"><input type="text" class="name_form" style="width: 100%;"></span>명
+                    <p style="display: inline-block; color: #616161; font-size: 14px; font-weight: normal; line-height: 32px;"><span class="book_wd">예약대기 인원</span>
+                      <span style="display: inline-block; margin: 0 12px;">
+                        <input type="number" min="1" max="100" class="name_form" id="waitable_number" value="1" style="width: 80px;">
+                      </span>명
                     </p>
                   </div>
                 </div>
               </div>
             </dd>
+            <!-- 예약기능 클릭 script -->
+            <script>
+              $(document).ready(function(){
+                $('#schedule-reservable').removeAttr('checked');
+      
+                $('#schedule-reservable').click(function(){
+                  let chk = $('#schedule-reservable').prop('checked');
+                  // console.log(chk);
+        
+                  if(chk == true){
+                    $('.book-function').show();
+                    $('dt[class^=centerBook]').show();
+                    $('dd[class^=centerBook]').show();
+                  }
+                  else {
+                    $('.book-function').hide();
+                    $('dt[class^=centerBook]').hide();
+                    $('dd[class^=centerBook]').hide();
+                  }
+                })
+      
+                $('#open-immediate').click(function(){
+                  let open = $('#open-immediate').prop('checked');
+                  // console.log(open);
+        
+                  if(open === true){
+                    $('.a1box').show();
+                    $('.a2box').hide();
+                    $('#open-immediate2').prop('checked',false);
+                    // $('#open-immediate2').attr('disabled',true);
+                    $('#center_time #ready-time').addClass('gray_txt');
+                    $('#center_schedule #ready-soon').removeClass('gray_txt');
+                  }
+                  else {
+                    $('.a1box').hide();
+                    $('.a2box').show();
+                    $('#open-immediate2').prop('checked',true);
+                    // $('#open-immediate2').attr('disabled',false);
+                    $('#center_time #ready-time').removeClass('gray_txt');
+                    $('#center_schedule #ready-soon').addClass('gray_txt');
+                  }
+                })
+      
+                $('#open-immediate2').click(function(){
+                  let open = $('#open-immediate2').prop('checked');
+                  // console.log(open);
+        
+                  if(open === true){
+                    $('.a1box').hide();
+                    $('.a2box').show();
+                    $('#open-immediate').prop('checked',false);
+                    // $('#open-immediate').attr('disabled',true);
+                    $('#center_schedule #ready-soon').addClass('gray_txt');
+                    $('#center_time #ready-time').removeClass('gray_txt');
+                  }
+                  else {
+                    $('.a1box').show();
+                    $('.a2box').hide();
+                    $('#open-immediate').prop('checked',true);
+                    // $('#open-immediate').attr('disabled',false);
+                    $('#center_time #ready-time').addClass('gray_txt');
+                    $('#center_schedule #ready-soon').removeClass('gray_txt');
+                  }
+                })
+              })
+            </script>
           </dl>
         </div>
         <div class="schefule_status ticket_name shadow_md">
           <p class="schedule_tit1 register_tit tit-lg">스케줄 현황</p>
-          <div class="schedule_detail" style="display: none;">
-            <div class="detail_status clearfix">
-              <div class="status_course">
-                <p class="course_time">11:00~12:00</p>
-                <p class="course_teacher">(강사) 수업명</p>
-              </div>
-              <div class="status_book">
-                <p class="book_proceed">예약현황 5/10</p>
-                <div class="book_btn">
-                  <button class="book_modify btn_val btn_sm">수정</button>
-                  <button class="book_remove btn_val btn_sm">삭제</button>
-                </div>
-              </div>
-            </div>
-            <div class="detail_status clearfix">
-              <div class="status_course">
-                <p class="course_time">11:00~12:00</p>
-                <p class="course_teacher">(강사) 수업명</p>
-              </div>
-              <div class="status_book">
-                <p class="book_proceed">예약현황 5/10</p>
-                <div class="book_btn">
-                  <button class="book_modify btn_val btn_sm">수정</button>
-                  <button class="book_remove btn_val btn_sm">삭제</button>
-                </div>
-              </div>
-            </div>
-            <div class="detail_status clearfix">
-              <div class="status_course">
-                <p class="course_time">11:00~12:00</p>
-                <p class="course_teacher">(강사) 수업명</p>
-              </div>
-              <div class="status_book">
-                <p class="book_proceed">예약현황 5/10</p>
-                <div class="book_btn">
-                  <button class="book_modify btn_val btn_sm">수정</button>
-                  <button class="book_remove btn_val btn_sm">삭제</button>
-                </div>
-              </div>
-            </div>
-            <div class="detail_status clearfix">
-              <div class="status_course">
-                <p class="course_time">11:00~12:00</p>
-                <p class="course_teacher">(강사) 수업명</p>
-              </div>
-              <div class="status_book">
-                <p class="book_proceed">예약현황 5/10</p>
-                <div class="book_btn">
-                  <button class="book_modify btn_val btn_sm">수정</button>
-                  <button class="book_remove btn_val btn_sm">삭제</button>
-                </div>
-              </div>
-            </div>
-            <div class="detail_status clearfix">
-              <div class="status_course">
-                <p class="course_time">11:00~12:00</p>
-                <p class="course_teacher">(강사) 수업명</p>
-              </div>
-              <div class="status_book">
-                <p class="book_proceed">예약현황 5/10</p>
-                <div class="book_btn">
-                  <button class="book_modify btn_val btn_sm">수정</button>
-                  <button class="book_remove btn_val btn_sm">삭제</button>
-                </div>
-              </div>
-            </div>
-            <div class="detail_status clearfix">
-              <div class="status_course">
-                <p class="course_time">11:00~12:00</p>
-                <p class="course_teacher">(강사) 수업명</p>
-              </div>
-              <div class="status_book">
-                <p class="book_proceed">예약현황 5/10</p>
-                <div class="book_btn">
-                  <button class="book_modify btn_val btn_sm">수정</button>
-                  <button class="book_remove btn_val btn_sm">삭제</button>
-                </div>
-              </div>
-            </div>
-            <div class="detail_status clearfix">
-              <div class="status_course">
-                <p class="course_time">11:00~12:00</p>
-                <p class="course_teacher">(강사) 수업명</p>
-              </div>
-              <div class="status_book">
-                <p class="book_proceed">예약현황 5/10</p>
-                <div class="book_btn">
-                  <button class="book_modify btn_val btn_sm">수정</button>
-                  <button class="book_remove btn_val btn_sm">삭제</button>
-                </div>
-              </div>
-            </div>
+          <div class="schedule_detail" id="schedule_list" style="display: none;">
+           <!-- schedule list -->
           </div>
           <div class="schedule_date">
             <div class="date_month">
@@ -429,7 +666,6 @@
           </div>
           <div class="schedule_table" id="schedule_calendar">
             <!-- schedule calendar -->
-<!--            --><?php //include 'schedule_calendar.php'; ?>
           </div>
         </div>
       </div>
@@ -453,298 +689,45 @@
       </div>
     </div>
   </div>
-  <div class="popup theme:schedule">
-    <div class="popup_cnt">
-      <div class="schedule_register ticket_name shadow_md">
-        <p class="schedule_tit1 register_tit tit-lg">스케줄 등록</p>
-        <dl class="register_area clearfix">
-          <dt class="area_tit" style="width: 60px;">날짜</dt>
-          <dd class="area_data clearfix" style="width: 542px;">
-            <div class="data_box" style="width: 100%;">
-              <div class="data_function" style="width: 196px;">
-                <div class="container">
-                  <div class="form-group">
-                    <div class="input-group date datetimepicker1" id="datetimepicker1">
-                      <input type="text" class="form-control">
-                      <span class="input-group-addon">
-                                      <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
-                    </div>
-                  </div>
-                  <script type="text/javascript">
-                    $(function() {
-                      $('.datetimepicker1').datepicker();
-                    });
-                  </script>
-                </div>
-              </div>
-              <span class="data_hyphen">-</span>
-              <div class="data_function" style="width: 196px;">
-                <div class="container">
-                  <div class="form-group">
-                    <div class="input-group date datetimepicker1" id="datetimepicker1">
-                      <input type="text" class="form-control">
-                      <span class="input-group-addon">
-                                      <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
-                    </div>
-                  </div>
-                  <script type="text/javascript">
-                    $(function() {
-                      $('.datetimepicker1').datepicker();
-                    });
-                  </script>
-                </div>
-              </div>
-            </div>
-          </dd>
-          <dt class="area_tit" style="width: 60px;">시간</dt>
-          <dd class="area_data" style="width: 542px;">
-            <div class="data_box" style="width: 100%;">
-              <div class="data_function" style="width: 196px;">
-                <div class="container">
-                  <div class="row">
-                    <div class="col-sm-6">
-                      <div class="form-group">
-                        <div class="input-group date datetimepicker3" id="datetimepicker3">
-                          <input type="text" class="form-control">
-                          <span class="input-group-addon">
-                                          <span class="glyphicon glyphicon-time"></span>
-                                        </span>
-                        </div>
-                      </div>
-                    </div>
-                    <script type="text/javascript">
-                      $(function () {
-                        $('.datetimepicker3').datetimepicker({
-                          format: 'LT'
-                        });
-                      });
-                    </script>
-                  </div>
-                </div>
-              </div>
-              <span class="data_hyphen">-</span>
-              <div class="data_function" style="width: 196px;">
-                <div class="container">
-                  <div class="row">
-                    <div class="col-sm-6">
-                      <div class="form-group">
-                        <div class="input-group date datetimepicker3" id="datetimepicker3">
-                          <input type="text" class="form-control">
-                          <span class="input-group-addon">
-                                          <span class="glyphicon glyphicon-time"></span>
-                                        </span>
-                        </div>
-                      </div>
-                    </div>
-                    <script type="text/javascript">
-                      $(function () {
-                        $('.datetimepicker3').datetimepicker({
-                          format: 'LT'
-                        });
-                      });
-                    </script>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </dd>
-          <dt class="area_tit" style="width: 60px;">반복</dt>
-          <dd class="area_data" style="height: 34px; width: 542px;">
-            <div class="data_box" style="width: 100%;">
-              <div class="chkbox_line">
-                <label class="form-chk col_sp" style="width: 60px;">
-                  <input type="checkbox" name="number">
-                  월요일
-                </label>
-                <label class="form-chk col_sp" style="width: 60px;">
-                  <input type="checkbox" name="number">
-                  화요일
-                </label>
-                <label class="form-chk col_sp" style="width: 60px;">
-                  <input type="checkbox" name="number">
-                  수요일
-                </label>
-                <label class="form-chk col_sp" style="width: 60px;">
-                  <input type="checkbox" name="number">
-                  목요일
-                </label>
-                <label class="form-chk col_sp" style="width: 60px;">
-                  <input type="checkbox" name="number">
-                  금요일
-                </label>
-                <label class="form-chk col_sp" style="width: 60px;">
-                  <input type="checkbox" name="number">
-                  토요일
-                </label>
-                <label class="form-chk col_sp" style="width: 60px;">
-                  <input type="checkbox" name="number">
-                  일요일
-                </label>
-              </div>
-            </div>
-          </dd>
-          <dt class="area_tit" style="width: 60px;">강사</dt>
-          <dd class="area_data" style="width: 542px;">
-            <div class="data_box" style="width: 100%;">
-              <div class="teacher_select clearfix" id="teach">
-                <div class="selbox-wrap" style="width: 128px;" id="selwrap">
-                  <select id="selbox" class="selcnt">
-                    <option value="1">강사 A</option>
-                    <option value="2">강사 B</option>
-                    <option value="direct" class="direct">직접입력</option>
-                  </select>
-                  <div class="selbox-arrow">
-                    <img src="<?php echo base_url(); ?>template/back/center/imgs/icon_down.png" width="12" class="arrow_down">
-                    <img src="<?php echo base_url(); ?>template/back/center/imgs/icon_up.png" width="12" style="display: none;" class="arrow_up">
-                  </div>
-                  <input type="text" id="selboxDirect" style="display: none;" class="selDirect">
-                </div>
-                <div class="selbox-name" style="width: 264px;">
-                  <p>수업명</p>
-                  <input type="text" placeholder="text box" class="name_form">
-                </div>
-              </div>
-              <div class="teacher_book clearfix">
-                <label class="book-chk form-chk" style="width: 128px;">
-                  <input type="checkbox" id="schedule-reservable2" name="number">
-                  회원 예약기능 사용
-                </label>
-                <div class="book-function" id="book_fn">
-                  <!-- width 값 수정 -->
-                  <div class="book-ticket">
-                    <p>예약가능 수강권</p>
-                    <!-- height 값 수정 -->
-                    <div style="height: 110px; width: 120px; display: inline-block; box-sizing: border-box; border: 1px solid #ccc;" id="book-sel">
-                      <select name="tickets[]" multiple="multiple" size="6" style="height: 100px;" id="move-org">
-                        <option value="1">3개월권</option>
-                        <option value="2">6개월권</option>
-                        <option value="3">1년권</option>
-                        <option value="3">1년권</option>
-                        <option value="3">1년권</option>
-                        <option value="3">1년권</option>
-                      </select>
-                    </div>
-                    
-                    <!-- 태그 추가 -->
-                    <div class="book-btn">
-                      <button id="btn_sel" style="display: block; width: 24px; height: 24px; border-radius: 4px; border: 1px solid #ccc; margin-bottom: 8px;">
-                        <img src="<?php echo base_url(); ?>template/back/center/imgs/icon_next.png" width="6" height="auto">
-                      </button>
-                      <button id=btn_del style="display: block; width: 24px; height: 24px; border-radius: 4px; border: 1px solid #ccc;">
-                        <img src="<?php echo base_url(); ?>template/back/center/imgs/icon_prev.png" width="6" height="auto">
-                      </button>
-                    
-                    </div>
-                    <div style="width: 120px; height: 110px; border: 1px solid #ccc; display: inline-block; vertical-align: top;" id="book-left">
-                      <select name="tickets[]" multiple="multiple" size="6" style="height: 100px;" id="left-sel">
-                      
-                      </select>
-                    </div>
-                    <!-- 스타일 추가 -->
-                    <style>
-                      .book-btn {
-                        margin: 0 8px;
-                        display: inline-block;
-                        width: 24px;
-                        vertical-align: top;
-                      }
-                      .book-btn button {
-                        display: block;
-                        width: 24px;
-                        height: 24px;
-                        border-radius: 4px;
-                        border: 1px solid #ccc;
-                        
-                      }
-                      .btn_select {
-                        margin-bottom: 8px;
-                      }
-                      .book-select, .book-move {
-                        width: 96px;
-                      }
-                      @media(min-width:1025px){
-                        .book-select, .book-move {
-                          width: 156px;
-                        }
-                      }
-                      .book-move {
-                        height: 110px;
-                        border: 1px solid #ccc;
-                        display: inline-block;
-                        vertical-align: top;
-                      }
-                      .start_time {
-                        display: inline-block;
-                        width: 44px;
-                      }
-                      .form_time {
-                        width: inherit;
-                        height: inherit;
-                        padding: 0 10px;
-                      }
-                      .book-ticket, .book-start {
-                        width: 176%;
-                      }
-                      .book-start p:last-child {
-                        margin-left: 0;
-                      }
-                      .book-function > div {
-                        margin-bottom: 20px;
-                      }
-                    </style>
-                  
-                  </div>
-                  <div class="book-start">
-                    <p>예약 / 취소 가능 시간 : 수업 시작 <span class="start_time"><input type="text" placeholder="00" class="form_time"></span> 시간 <span class="start_time"><input type="text" placeholder="00" class="form_time"></span> 분 이전까지</p>
-                  </div>
-                  <div class="book-limit">
-                    <p>예약정원</p>
-                    <input type="text">
-                    <p class="limit_count">명</p>
-                  </div>
-                </div>
-              </div>
-              <div class="wait_wrap clearfix" style="width: 100%; margin-top: 4px; font-size: 0;">
-                <label class="wait_chk book-chk form-chk" style="color: #333; float: left;">
-                  <input type="checkbox" id="schedule-wait2" name="number">
-                  예약대기
-                </label>
-                <div class="wait_type2" style="width: 58%; float: left; display: none;">
-                  <p style="display: inline-block; color: #616161; font-size: 14px; font-weight: normal; line-height: 32px;">예약대기 인원
-                    <span style="display: inline-block; margin: 0 12px;"><input type="text" class="name_form" style="width: 100%;"></span>명
-                  </p>
-                </div>
-              </div>
-            </div>
-          </dd>
-        </dl>
-      </div>
-      <div class="btn_wrap">
-        <button class="btn_wth btn_val btn_rg theme:fn_save">저장</button>
-        <button class="btn_wth btn_val btn_rg theme:fn_cancel">취소</button>
-        <button class="btn_wth btn_val btn_rg theme:fn_remove">삭제</button>
-      </div>
-    </div>
+  <div class="popup theme:schedule" id="popSchedule" style="display: none;">
+    <!-- schedule edit -->
   </div>
   
-  <div class="popup theme:alert_remove_this">
+  <div class="popup theme:alert_remove_this" id="popScheduleRemove">
     <div class="popup_cnt">
       <div class="guide_box confirm_box">
         <img src="<?php echo base_url(); ?>template/back/center/imgs/exclamation_mark.png" alt="" width="40" height="40" class="guide_icon">
-        <p class="confirm_message" style="line-height: 40px">해당 스케줄을 <strong>삭제</strong>하시겠습니까?</p>
+        <p class="confirm_message" style="line-height: 40px">해당 스케줄을 <strong>취소</strong>하시겠습니까?</p>
+        <p class="confirm_message" style="line-height: 20px; padding: 10px 30px;">
+          현재 클래스 예약/대기를 포함해서 지난 클래스 참석이 취소될 수 있습니다!
+        </p>
       </div>
       <div class="confirm_btn">
-        <button class="btn_cancel font-futura">CANCEL</button>
-        <button class="btn_ok font-futura">OK</button>
+        <button class="btn_cancel font-futura" onclick="close_schedule_remove_popup()">CANCEL</button>
+        <button class="btn_ok font-futura" onclick="unregister_schedule()">OK</button>
       </div>
     </div>
   </div>
+  <div class="popup theme:alert_remove_this" id="popScheduleEdit">
+    <div class="popup_cnt">
+      <div class="guide_box confirm_box">
+        <img src="<?php echo base_url(); ?>template/back/center/imgs/information_mark.png" alt="" width="40" height="40" class="guide_icon">
+        <p class="confirm_message" style="line-height: 40px">해당 스케줄을 <strong>수정</strong>하시겠습니까?</p>
+        <p class="confirm_message" style="line-height: 20px; padding: 10px 30px;">
+          예약정원/대기인원 수정 시 예약현황이 변경될 수 있습니다!
+        </p>
+      </div>
+      <div class="confirm_btn">
+        <button class="btn_cancel font-futura" onclick="close_schedule_remove_popup()">CANCEL</button>
+        <button class="btn_ok font-futura" onclick="schedule_edit()">OK</button>
+      </div>
+    </div>
+  </div>
+  <!--
   <div class="popup theme:alert_remove_repeat">
     <div class="popup_cnt">
       <div class="guide_box confirm_box">
-        <img src="<?php echo base_url(); ?>template/back/center/imgs/exclamation_mark.png" alt="" width="40" height="40" class="guide_icon">
+        <img src="<?php //echo base_url(); ?>template/back/center/imgs/exclamation_mark.png" alt="" width="40" height="40" class="guide_icon">
         <p class="confirm_message">반복되는 스케줄이 있습니다.
           <br>모든 스케줄을 <strong>삭제</strong>하시겠습니까?</p>
       </div>
@@ -754,6 +737,11 @@
         <button class="btn_ok" style="width: 33.1%;">이 수업만 삭제</button>
       </div>
     </div>
+  </div>
+  -->
+  <!-- 예약현황 클릭 팝업 -->
+  <div class="popup theme:alert_situation pop:situation" id="schedule_status">
+    <!-- schedule status -->
   </div>
 </div>
 
@@ -886,7 +874,8 @@
   .btn_ok {
     border-bottom-right-radius: 4px;
   }
-  
+ 
+  /*
   .theme\:schedule {
     width: 656px;
     height: 592px;
@@ -897,6 +886,8 @@
     margin-left: -328px;
     margin-top: -296px;
   }
+   */
+  
   .btn_wrap {
     position: absolute;
     top: 28px;
@@ -920,6 +911,8 @@
   // schedule
   let year = <?php echo $year; ?>;
   let month = <?php echo $month; ?>;
+  let day = <?php echo $day; ?>;
+  let last_day = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   function get_schedule_calendar(where) {
     month += where;
     if (month > 12) {
@@ -929,11 +922,14 @@
       year -= 1;
       month = 12;
     }
-    $('#month_no').text(year + '.' + (month < 10 ? '0' + month : month));
-    if (where !== 0) {
-      $('#focus_date').text(year + '.' + (month < 10 ? '0' + month : month) + '.01');
+    if (day > last_day[month - 1]) {
+      day = last_day[month - 1];
     }
-    get_page('schedule_calendar', '<?php echo base_url(); ?>center/teacher/schedule/calendar?y=' + year + '&m=' + month, false);
+    let date = year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day: day);
+    let text_date = year + '.' + (month < 10 ? '0' + month : month) + '.' + (day < 10 ? '0' + day: day);
+    $('#month_no').text(text_date.substr(0, 7));
+    $('#focus_date').text(text_date);
+    get_page('schedule_calendar', '<?php echo base_url(); ?>center/teacher/schedule/calendar?y=' + year + '&m=' + month + '&d=' + date, false);
   }
   $(function() {
     get_schedule_calendar(0);
@@ -968,7 +964,6 @@
       $(this).text(origin);
     })
     
-    
     // tit_theme 클릭이벤트
     $('.tit_theme').click(function(){
       $('.tit_theme').removeClass('reverse_color');
@@ -981,32 +976,39 @@
       $('.info--contents > section').eq(index).show();
     })
     
+    <? if ($tab == 'schedule') { ?>
+    $('#schedule_mgr').click();
+    <? } else { ?>
+    $('#teacher_mgr').click();
+    <? } ?>
+    
     // selbox-wrap 이벤트
     $(function(){
       $("#selboxDirect").hide();
       $("#selbox").change(function() {
-        if($("#selbox").val() == "direct") {
+        if($("#selbox").val() === "-1") {
+          // $("#selboxDirect").val('');
           $("#selboxDirect").show();
-          $(".teacher_select").css("margin-bottom", "48px");
-        }
-        else {
-          $("#selboxDirect").hide();
-          $(".teacher_select").css("margin-bottom", "24px");
-        }
-      })
-      /* ================= change 이벤트 추가 ================= */
-      // selcnt 전환 이벤트
-      $(".selDirect").hide();
-      $(".selcnt").change(function() {
-        if($(".selcnt").val() == "direct") {
-          $(".selDirect").show();
           $("#teach").css("margin-bottom", "48px");
         }
         else {
-          $(".selDirect").hide();
+          $("#selboxDirect").hide();
           $("#teach").css("margin-bottom", "24px");
         }
       })
+      /* ================= change 이벤트 추가 ================= */
+      // // selcnt 전환 이벤트
+      // $(".selDirect").hide();
+      // $(".selcnt").change(function() {
+      //   if($(".selcnt").val() == "direct") {
+      //     $(".selDirect").show();
+      //     $("#teach").css("margin-bottom", "48px");
+      //   }
+      //   else {
+      //     $(".selDirect").hide();
+      //     $("#teach").css("margin-bottom", "24px");
+      //   }
+      // })
       // $('#selboxDirect').on('keyup',function(){
       //   let val = $('#selboxDirect').val();
       //   $('.direct').text(val);
@@ -1022,7 +1024,7 @@
     $(function() {
       $('#schedule-reservable').change(function() {
         let reservable = $(this).prop('checked');
-        console.log(reservable);
+        // console.log(reservable);
         if (reservable === true) {
           $('.book-function').show();
         } else {
@@ -1124,6 +1126,8 @@
     
     // window 로드이벤트
     $(window).load(function(){
+      <? if ($tab == 'schedule') { ?>
+      <? } else { ?>
       // 첫번째 목록의 콘텐츠만 보이게!
       $('.tit_theme:first').addClass('reverse_color');
       $('.tit_theme:first').find('.next_white').show().prev().hide();
@@ -1134,6 +1138,7 @@
       $('.table-list').hide();
       $('.table-list:first').show();
       $('.no-indicator:first').addClass('btn_click');
+      <? } ?>
     })
     
     // id_remove 클릭이벤트
@@ -1264,19 +1269,27 @@
     
     // btn_select 클릭 이벤트
     $('.btn_select').on('click',function(){
-      let $selected = $('.move-origin option:selected');
+      let $selected = $('#ticket_candidate option:selected');
       let clone = $selected.clone();
       $selected.remove();
-      $('.move-sel').append(clone);
+      $('#ticket_choice select').append(clone);
     })
     // btn_delete 클릭 이벤트
     $('.btn_delete').on('click',function(){
-      let $selected = $('.move-sel option:selected');
+      let $selected = $('#ticket_choice option:selected');
       let clone = $selected.clone();
       $selected.remove();
-      $('.move-origin').append(clone);
+      $('#ticket_candidate select').append(clone);
     })
   
+    // btn_select2 클릭 이벤트
+    $('.btn_select2').on('click',function(){
+      let $selected = $('#ticket_candidate2 option:selected');
+      let clone = $selected.clone();
+      $selected.remove();
+      $('#ticket_choice2 select').append(clone);
+    })
+    
     /* ======= 활성/비활성화 기능 Error 개선 + 활성 select 선택시 비활성 select 배경색 제거 도움 부탁드립니다. */
     // btn_delete 비활성화
     $('.move-origin option').click(function(){
@@ -1395,6 +1408,49 @@
       $('div[class$=schedule]').hide();
       $('.popup-box').hide();
     })
+    
+    $('#open-immediate, #open-wait').click(function() {
+      let role = $(this).data('role');
+      let checked = $(this).prop('checked');
+      let immediate = $('#open-immediate');
+      let wait = $('#open-wait');
+      let reserve_open = $('#reserve_open_hour');
+      let reserve_close = $('#reserve_close_hour');
+      
+      if (role === 'wait') {
+        if (checked) {
+          immediate.prop('checked', false);
+          wait.prop('checked', true);
+          reserve_open.prop('disabled', false);
+          reserve_open.removeClass('bg_grey');
+          reserve_close.prop('disabled', false);
+          reserve_close.removeClass('bg_grey');
+        } else {
+          immediate.prop('checked', true);
+          wait.prop('checked', false);
+          reserve_open.prop('disabled', true);
+          reserve_open.addClass('bg_grey');
+          reserve_close.prop('disabled', true);
+          reserve_close.addClass('bg_grey');
+        }
+      } else {
+        if (checked) {
+          immediate.prop('checked', true);
+          wait.prop('checked', false);
+          reserve_open.prop('disabled', true);
+          reserve_open.addClass('bg_grey');
+          reserve_close.prop('disabled', true);
+          reserve_close.addClass('bg_grey');
+        } else {
+          immediate.prop('checked', false);
+          wait.prop('checked', true);
+          reserve_open.prop('disabled', false);
+          reserve_open.removeClass('bg_grey');
+          reserve_close.prop('disabled', false);
+          reserve_close.removeClass('bg_grey');
+        }
+      }
+    });
   
   });
  
@@ -1408,6 +1464,107 @@
         console.log(teacher_ids[idx]);
         idx++;
       }
+    });
+  }
+  
+  $('#start_date').datepicker({
+    format: "yyyy-mm-dd",
+    autoclose: true,
+    todayHighlight: true, // 오늘에 하이라이트
+    language: "ko",
+    title: '스케줄 시작일자',
+  }).on('changeDate', function(e) {
+    let start_date = $(this).datepicker('getDate');
+    let end_date = new Date();
+    // console.log(e.format());
+    // console.log(start_date.getDate() + reservable_duration - 1);
+    end_date.setDate(start_date.getDate() + 365);
+    $('#end_date').datepicker('setDate', start_date);
+    $('#end_date').datepicker('setStartDate', start_date);
+    $('#end_date').datepicker('setEndDate', end_date);
+  });
+  $('#end_date').datepicker({
+    format: "yyyy-mm-dd",
+    autoclose: true,
+    todayHighlight: true, // 오늘에 하이라이트
+    language: "ko",
+    title: '스케줄 종료일자',
+  });
+  $('#start_time').datetimepicker({
+    format: "LT",
+    // title: '스케줄 시작시간',
+  }).on('changeTime', function(e) {
+  });
+  $('#end_time').datetimepicker({
+    format: "LT",
+    // title: '스케줄 종료시간',
+  });
+  
+  function register_schedule(id) {
+    let url = '<?php echo base_url()."center/teacher/schedule/register"; ?>';
+    
+    let tickets = [];
+    $.each($('#ticket_choice').find('option'), function(i,v){
+      // console.log($(v).val());
+      // console.log($(v).text());
+      tickets[i] = $(v).val();
+    });
+  
+    // let weekly = [0,0,0,0,0,0,0];
+    let weekly = [];
+    $.each($('#weekly').find('input[type=checkbox]:checked'), function(i,v){
+      console.log($(v).data('target'));
+      // weekly[$('v').data('target')] = 1;
+      weekly[i] = $(v).data('target');
+    });
+    
+    let data = [];
+    data['start_date'] = $('#start_date').find('input').val();
+    data['end_date'] = $('#end_date').find('input').val();
+    data['weeklys'] = JSON.stringify(weekly);
+    data['start_time'] = $('#start_time').find('input').val();
+    data['end_time'] = $('#end_time').find('input').val();
+    data['teacher_id'] = parseInt($('#selbox').find('option:selected').val());
+    data['teacher_name'] = $('#selboxDirect').val();
+    data['schedule_title'] = $('#schedule_title').val();
+    data['reservable'] = $('#schedule-reservable').prop('checked') ? 1 : 0;
+    data['reservable_number'] = parseInt($('#reservable_number').val());
+    data['tickets'] = JSON.stringify(tickets);
+    data['open_immediate'] = $('#open-immediate').prop('checked') ? 1 : 0;
+    if (data['open_immediate']) {
+      data['reserve_open_hour'] = 0;
+      data['reserve_close_hour'] = parseInt($('#reserve_close_hour_0').val());
+      data['reserve_cancel_open_hour'] = 0;
+      data['reserve_cancel_close_hour'] = parseInt($('#reserve_cancel_close_hour_0').val());
+    } else {
+      data['reserve_open_hour'] = parseInt($('#reserve_open_day_1').val()) * 24 + parseInt($('#reserve_open_hour_1').val());
+      data['reserve_close_hour'] = $('#reserve_close_hour_1').val();
+      data['reserve_cancel_open_hour'] = parseInt($('#reserve_cancel_open_day_1').val()) * 24 + parseInt($('#reserve_cancel_open_hour_1').val());
+      data['reserve_cancel_close_hour'] = $('#reserve_cancel_close_hour_1').val();
+    }
+    data['waitable'] = $('#schedule-wait').prop('checked') ? 1 : 0;
+    data['waitable_number'] = $('#waitable_number').val();
+    
+    // console.log(data);
+  
+    let start_date = data['start_date'];
+    send_post_data(data, url, function() {
+      $.notify({
+        message: '성공하였습니다.',
+        icon: 'fa fa-check'
+      }, {
+        type: 'success',
+        timer: 1000,
+        delay: 2000,
+        animate: {
+          enter: 'animated lightSpeedIn',
+          exit: 'animated lightSpeedOut'
+        }
+      });
+      let _y = start_date.substr(0, 4);
+      let _m = start_date.substr(5, 2);
+      let _d = start_date.substr(8, 2);
+      setTimeout(function() {window.location = '<?= base_url(); ?>center/teacher?t=schedule&y=' + _y + '&m=' + _m + '&d=' + _d;}, 1000);
     });
   }
 </script>

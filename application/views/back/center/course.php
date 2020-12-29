@@ -174,7 +174,6 @@ input:checked + .slider:before {
     width: 100%;
     height: 100%;
   }
-  
   .confirm_message {
     padding-top: 60px;
   }
@@ -300,8 +299,6 @@ input:checked + .slider:before {
   .admin_detailbox, .enroll_detailbox {
     margin-bottom: 28px;
   }
-</style>
-<style type="text/css">
   .table_head tr th, .table_body tr td {
     word-break: break-all;
   }
@@ -319,6 +316,56 @@ input:checked + .slider:before {
   }
   .btn_valid.view_info{
     background-color: #da6547;
+  }
+  .member--guide .guide_id {
+    font-size: 18px;
+  }
+  .agree_btn, div[class$="card"] {
+    position: relative;
+  }
+  .ticketHover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 16;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+  
+    height: auto;
+    width: 360px;
+    padding: 28px 28px 32px;
+    background-color: #fff;
+    border-radius: 4px;
+  }
+  .table_head tr th:first-child {
+    border-top-left-radius: 4px;
+  }
+  .table_head tr th:last-child {
+    border-top-right-radius: 4px;
+  }
+  #table_bottom tr th:first-child {
+    border-top-left-radius: 0;
+  }
+  #table_bottom tr th:last-child {
+    border-top-right-radius: 0;
+  }
+  .ticketHover_tit {
+    text-align: center;
+    color: #845b4c;
+    font-size: 21px;
+    font-weight: normal;
+    padding-bottom: 16px;
+  }
+  .table_body {
+    border: 0;
+  }
+  .table-list {
+    border-bottom: 1px solid #f5f5f5 !important;
+  }
+  .ticket_hover_member_list td {
+    height: 68px;
+  }
+  .member--guide .guide_id {
+    font-size: 18px;
   }
 </style>
 <h2 class="boxwrap__type meaning">수강권 관리</h2>
@@ -371,7 +418,7 @@ input:checked + .slider:before {
                       <p class="info_data"><?php if ($ticket->ticket_type == CENTER_TICKET_TYPE_COUNT) echo $ticket->reservable_count.'회'; ?></p><!-- 유효기간 추가 -->
                       <p class="info_deadline">유효기간 <span><?php echo $ticket->reservable_duration; ?></span>일</p>
                     </div>
-                    <button class="edit_btn clearfix">수정</button>
+                    <button class="edit_btn clearfix" id="edit_btn_<?=$ticket->ticket_id; ?>">수정</button>
                     <button class="info_btn clearfix">관리</button>
                   </div>
                 </div>
@@ -385,6 +432,108 @@ input:checked + .slider:before {
                       <?php echo $ticket->limit_enroll_member_count; ?>매
                     </span>
                   </p>
+                </div>
+                <div class="ticketHover" id="ticket_hover_<?= $ticket->ticket_id; ?>" style="display: none;">
+                  <p class="ticketHover_tit">수강권</p>
+                  <div class="table_main ticketHover_table">
+                    <div class="table_wrap">
+                      <div class="table_top">
+                        <table class="table_head">
+                          <colgroup>
+                            <col width="33.33%">
+                            <col width="33.33%">
+                            <col width="33.33%">
+                          </colgroup>
+                          <thead>
+                          <tr>
+                            <th>이름</th>
+                            <th>종류</th>
+                            <th>가격</th>
+                          </tr>
+                          </thead>
+                        </table>
+                        <div class="table_body_wrap">
+                          <div class="table_body ticket_hover_member_list">
+                            <table class="table-list" style="display: table;">
+                              <colgroup>
+                                <col width="33.33%">
+                                <col width="33.33%">
+                                <col width="33.33%">
+                              </colgroup>
+                              <tbody>
+                              <tr>
+                                <td class="ticket_form"><?= $ticket->ticket_title; ?></td>
+                                <td>
+                                  <? if ($ticket->ticket_type == CENTER_TICKET_TYPE_COUNT) { ?>
+                                    정액권 <span class="formal_no"><?= $ticket->reservable_count; ?></span>회,
+                                    <br>유효기간 <span class="formal_date"><?= $ticket->reservable_duration; ?></span>일
+                                  <? } else { ?>
+                                    <!-- (기간제 회원권일 시 아래의 내용으로) -->
+                                    기간제 회원권<br><span class="term_no"><?= $ticket->reservable_duration; ?></span>일
+                                  <? } ?>
+                                </td>
+                                <td>
+                                <span class="formal_price"><?= $this->crud_model->get_price_str($ticket->ticket_price); ?>
+                                </span>원
+                                </td>
+                              </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="table_bottom" id="table_bottom">
+                        <table class="table_head">
+                          <colgroup>
+                            <col width="36%">
+                            <col width="32%">
+                            <col width="32%">
+                          </colgroup>
+                          <thead>
+                          <tr>
+                            <th>1일예약<br>가능횟수</th>
+                            <th>취소횟수<br>제한</th>
+                            <th>지급가능<br>최대인원</th>
+                          </tr>
+                          </thead>
+                        </table>
+                        <div class="table_body_wrap">
+                          <div class="table_body ticket_hover_member_list">
+                            <table class="table-list" style="display: table;">
+                              <colgroup>
+                                <col width="36%">
+                                <col width="32%">
+                                <col width="32%">
+                              </colgroup>
+                              <tbody>
+                              <tr>
+                                <td>
+                                  <? if ($ticket->reservable_count_oneday) { ?>
+                                  <span class="formal_book"><?= $ticket->reservable_count_oneday; ?></span>회
+                                  <? } else { ?>
+                                    -
+                                  <? } ?>
+                                </td>
+                                <td>
+                                  <? if ($ticket->limit_cancel_count_oneday) { ?>
+                                    1일<span class="formal_cancel"><?= $ticket->limit_cancel_count_oneday; ?></span>회<br>
+                                  <? } ?>
+                                  <? if ($ticket->limit_cancel_count_total) { ?>
+                                  최대<span class="formal_cancel"><?= $ticket->limit_cancel_count_total; ?></span>회
+                                  <? } ?>
+                                  <? if ($ticket->limit_cancel_count_oneday == 0 && $ticket->limit_cancel_count_total == 0) { ?>
+                                    -
+                                  <? } ?>
+                                </td>
+                                <td><span class="formal_person"><?= $ticket->limit_enroll_member_count; ?></span>명</td>
+                              </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             <?php } ?>
@@ -413,7 +562,7 @@ input:checked + .slider:before {
                       <p class="info_data"><?php if ($ticket->ticket_type == CENTER_TICKET_TYPE_COUNT) echo $ticket->reservable_count.'회'; ?></p><!-- 유효기간 추가 -->
                       <p class="info_deadline">유효기간 <span><?php echo $ticket->reservable_duration; ?></span>일</p>
                     </div>
-                    <button class="edit_btn clearfix" style="color: #bdbdbd; border: 2px solid #bdbdbd;">수정</button>
+                    <button class="edit_btn clearfix" id="edit_btn_<?= $ticket->ticket_id; ?>" style="color: #bdbdbd; border: 2px solid #bdbdbd;">수정</button>
                     <button class="info_btn clearfix" style="color: #bdbdbd; border: 2px solid #bdbdbd;">관리</button>
                   </div>
                 </div>
@@ -427,6 +576,108 @@ input:checked + .slider:before {
                       <?php echo $ticket->limit_enroll_member_count; ?>매
                     </span>
                   </p>
+                </div>
+                <div class="ticketHover" id="ticket_hover_<?= $ticket->ticket_id; ?>" style="display: none;">
+                  <p class="ticketHover_tit">수강권</p>
+                  <div class="table_main ticketHover_table">
+                    <div class="table_wrap">
+                      <div class="table_top">
+                        <table class="table_head">
+                          <colgroup>
+                            <col width="33.33%">
+                            <col width="33.33%">
+                            <col width="33.33%">
+                          </colgroup>
+                          <thead>
+                          <tr>
+                            <th>이름</th>
+                            <th>종류</th>
+                            <th>가격</th>
+                          </tr>
+                          </thead>
+                        </table>
+                        <div class="table_body_wrap">
+                          <div class="table_body ticket_hover_member_list">
+                            <table class="table-list" style="display: table;">
+                              <colgroup>
+                                <col width="33.33%">
+                                <col width="33.33%">
+                                <col width="33.33%">
+                              </colgroup>
+                              <tbody>
+                              <tr>
+                                <td class="ticket_form"><?= $ticket->ticket_title; ?></td>
+                                <td>
+                                  <? if ($ticket->ticket_type == CENTER_TICKET_TYPE_COUNT) { ?>
+                                    정액권 <span class="formal_no"><?= $ticket->reservable_count; ?></span>회,
+                                    <br>유효기간 <span class="formal_date"><?= $ticket->reservable_duration; ?></span>일
+                                  <? } else { ?>
+                                    <!-- (기간제 회원권일 시 아래의 내용으로) -->
+                                    기간제 회원권<br><span class="term_no"><?= $ticket->reservable_duration; ?></span>일
+                                  <? } ?>
+                                </td>
+                                <td>
+                                <span class="formal_price"><?= $this->crud_model->get_price_str($ticket->ticket_price); ?>
+                                </span>원
+                                </td>
+                              </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="table_bottom" id="table_bottom">
+                        <table class="table_head">
+                          <colgroup>
+                            <col width="36%">
+                            <col width="32%">
+                            <col width="32%">
+                          </colgroup>
+                          <thead>
+                          <tr>
+                            <th>1일예약<br>가능횟수</th>
+                            <th>취소횟수<br>제한</th>
+                            <th>지급가능<br>최대인원</th>
+                          </tr>
+                          </thead>
+                        </table>
+                        <div class="table_body_wrap">
+                          <div class="table_body ticket_hover_member_list">
+                            <table class="table-list" style="display: table;">
+                              <colgroup>
+                                <col width="36%">
+                                <col width="32%">
+                                <col width="32%">
+                              </colgroup>
+                              <tbody>
+                              <tr>
+                                <td>
+                                  <? if ($ticket->reservable_count_oneday) { ?>
+                                    <span class="formal_book"><?= $ticket->reservable_count_oneday; ?></span>회
+                                  <? } else { ?>
+                                    -
+                                  <? } ?>
+                                </td>
+                                <td>
+                                  <? if ($ticket->limit_cancel_count_oneday) { ?>
+                                    1일<span class="formal_cancel"><?= $ticket->limit_cancel_count_oneday; ?></span>회<br>
+                                  <? } ?>
+                                  <? if ($ticket->limit_cancel_count_total) { ?>
+                                    최대<span class="formal_cancel"><?= $ticket->limit_cancel_count_total; ?></span>회
+                                  <? } ?>
+                                  <? if ($ticket->limit_cancel_count_oneday == 0 && $ticket->limit_cancel_count_total == 0) { ?>
+                                    -
+                                  <? } ?>
+                                </td>
+                                <td><span class="formal_person"><?= $ticket->limit_enroll_member_count; ?></span>명</td>
+                              </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             <?php } ?>
@@ -445,10 +696,13 @@ input:checked + .slider:before {
             </button>
           </div>
           <div class="type_btn">
-            <button class="btn_stop btn_val btn_rg">정지</button>
-            <button class="btn_extend btn_val btn_rg">연장</button>
-            <button class="btn_change btn_val btn_rg">환불</button>
-            <button class="btn_remove btn_val btn_rg">삭제</button>
+            <? if ($ticket->ticket_type == CENTER_TICKET_TYPE_COUNT) { ?>
+              <button class="btn_addition btn_val btn_rg">횟수추가</button>
+            <? } ?>
+            <button class="btn_stop btn_val btn_rg">정지설정</button>
+            <button class="btn_extend btn_val btn_rg">기간연장</button>
+            <button class="btn_change btn_val btn_rg">회원환불</button>
+            <button class="btn_remove btn_val btn_rg">회원삭제</button>
           </div>
         </div>
         <div class="table_data">
@@ -537,6 +791,12 @@ input:checked + .slider:before {
             </div>
             <!-- cancel_option 이동 -->
           </dd><br>
+          <dt style="line-height: 1.5;">수강권 지급가능 최대인원</dt>
+          <dd>
+            <p class="count_limit">
+              <input type="number" id="enroll_max_ticket_count" class="form_people form_person" style="width: 67%"> 명
+            </p>
+          </dd>
           <dt>
             <!-- count_cancel 스타일 수정 -->
             <label class="count_cancel form-chk" id="count_cancel" style="float: none;">
@@ -553,12 +813,6 @@ input:checked + .slider:before {
               <p class="option_oneday">1일 최대 <input type="number" id="enroll_cancel_count_oneday" class="form_count count_oneday"> 회 또는</p>
               <p class="option_term">회원권 기간내 최대 <input type="number" id="enroll_cancel_count_total" class="form_count count_term"> 회</p>
             </div>
-          </dd>
-          <dt style="line-height: 1.5;">수강권 지급가능 최대인원</dt>
-          <dd>
-            <p class="count_limit">
-              <input type="number" id="enroll_max_ticket_count" class="form_people form_person" style="width: 67%"> 명
-            </p>
           </dd>
         </dl>
       </div>
@@ -702,6 +956,21 @@ input:checked + .slider:before {
 <!--    </div>-->
 <!--  </div>-->
   
+  <div class="popup__addition extend_term popup_layout shadow_sm" style="display: none;">
+    <div class="member--guide">
+      <img src="<?php echo base_url(); ?>template/back/center/imgs/information_mark.png" alt="" class="message_icon" width="40" height="40" style="margin: 4px 12px 0 0">
+      <p class="guide_question" style="text-align: left;">선택한 회원의 수업 횟수를
+        <br><strong>추가</strong>하시겠습니까?</p>
+    </div>
+    <div class="member--dates">
+      <input type="number" id="addition_count" style="width: 80px">
+      <span class="tit-md">회 추가</span>
+    </div>
+    <div class="member--how">
+      <button class="how_no btn_val btn_rg">아니오</button>
+      <button class="how_ok btn_val btn_rg">예</button>
+    </div>
+  </div>
   <div class="popup__change popup_extend extend_layout popup_layout shadow_sm" style="display: none; height: 208px; padding-top: 44px;">
     <div class="member--guide">
       <img src="<?php echo base_url(); ?>template/back/center/imgs/information_mark.png" alt="" class="message_icon" width="40" height="40" style="margin: 4px 12px 0 0;">
@@ -727,7 +996,7 @@ input:checked + .slider:before {
   </div>
   
   
-  <div class="popup__alert popup_layout shadow_sm" style="display: none; width: 400px; height: 180px; margin-left: -200px;">
+  <div class="popup__alert popup_layout shadow_sm" style="display: none; width: 400px; margin-left: -200px;">
     <div class="member--guide">
       <p class="guide_alert">저장되었습니다!</p>
     </div>
@@ -749,7 +1018,85 @@ input:checked + .slider:before {
       </div>
     </div>
   </div>
-
+  
+  <!-- 활동내역 클릭 팝업 -->
+  <div class="popup theme:alert_history pop:history">
+    <p class="history_tit">활동내역</p>
+    <button class="history_close" onclick="fn_close();">
+      <img src="https://dev.foundy.me/template/front/header/imgs/icon_close_black.png" width="12" height="12" alt="닫기" style="opacity: 0.2;">
+      <!-- popup_box, pop:history 닫기 -->
+      <script>
+        function fn_close() {
+          $('.popup-box').hide();
+          $('div[class*=history]').hide();
+        }
+      </script>
+    </button>
+    <div class="table_main history_table">
+      <table class="table_head">
+        <colgroup>
+          <col width="18%">
+          <col width="22%">
+          <col width="60%">
+        </colgroup>
+        <thead>
+        <tr>
+          <th>날짜</th>
+          <th>활동내역</th>
+          <th>상세정보</th>
+        </tr>
+        </thead>
+      </table>
+      <style type="text/css">
+        .table_head tr th:first-child {
+          border-top-left-radius: 4px;
+        }
+        .table_head tr th:last-child {
+          border-top-right-radius: 4px;
+        }
+        .history_close {
+          position: absolute;
+          top: 4px;
+          right: 4px;
+          width: 40px;
+          height: 40px;
+        }
+        .history_tit {
+          color: #845b4c;
+          font-size: 21px;
+          font-weight: normal;
+          padding-bottom: 20px;
+        }
+        div[class*=":history"] {
+          height: auto;
+          width: 624px;
+          margin-top: -347px;
+          margin-left: -312px;
+          padding: 28px 28px 16px;
+        }
+        .table_body {
+          border: 0;
+        }
+        .table-list {
+          border-bottom: 1px solid #ccc;
+        }
+        div[class*=":history"] tr td:nth-child(2) {
+          border-left: 1px dashed #eee;
+        }
+        div[class*=":history"] tr td:nth-child(2) {
+          border-right: 1px dashed #eee;
+        }
+        div[class*=":history"] tr td:last-child {
+          text-align: left !important;
+          box-sizing: border-box;
+          padding: 0 20px;
+        }
+      </style>
+      <div class="table_body_wrap" id="ticket_member_history">
+        <!-- ticket_member_history -->
+      </div>
+    </div>
+  </div>
 </div>
 
 <script type="text/javascript">
@@ -790,6 +1137,7 @@ input:checked + .slider:before {
       data['limit_cancel_count_oneday'] = $('#enroll_cancel_count_oneday').val();
       data['limit_cancel_count_total'] = $('#enroll_cancel_count_total').val();
     }
+    // console.log(data);
     send_post(data, url, true, '');
   }
   function activate_ticket(target) {
@@ -818,9 +1166,18 @@ input:checked + .slider:before {
     $('.contents_modify').load('<?php echo base_url(); ?>center/course/ticket/modify?id=' + ticket_id);
   }
   function get_list(id, page, filter = '') {
+    // console.log(id);
     let url = '<?php echo base_url(); ?>center/course/ticket/list?id=' + id + '&page=' +page + '&filter=' + filter;
     get_page('ticket_member_list', url);
     $('#ticket_current').show();
+  }
+  let history_member_id = 0;
+  function get_history(id, page) {
+    console.log(id);
+    let url = '<?php echo base_url(); ?>center/course/ticket/member/history?id=' + id + '&page=' +page;
+    get_page('ticket_member_history', url);
+    $(".popup .history_table").show();
+    
   }
   // member action
   function get_member_ids() {
@@ -844,10 +1201,12 @@ input:checked + .slider:before {
     data['stop_start_at'] = stop_start_at;
     data['stop_end_at'] = stop_end_at;
   
-    console.log(data);
+    // console.log(data);
     send_post_data(data, url, function(res) {
       get_list(ticket_id, 1);
+      let msg = '저장하였습니다! (total : ' + res.total + ', success : ' + res.success + ', failure : ' + res.failure + ')';
       $('.popup__'+popup_id).hide();
+      $('.popup__alert .guide_alert').text(msg);
       $('.popup__alert').show();
       $('#enroll_member_count_'+ticket_id).text(res.enroll_member_count);
       $('.main_chk').prop('checked', false);
@@ -1010,9 +1369,6 @@ input:checked + .slider:before {
     $('.enroll_detail .detail_type input[type=checkbox]').click(function(){
       let chk_id = $(this).data('id');
       let checked = $(this).prop('checked');
-      //console.log($(this));
-      // console.log(chk_id);
-      // console.log(checked);
       if(chk_id === 'c1'){
         if (checked === true) {
           $('#i1').prop('disabled', false);
@@ -1110,6 +1466,7 @@ input:checked + .slider:before {
     $('.join_ok').click(function(){
       // $('.popup__member .member--data').show();
       $('.popup__member .member--data').slideDown();
+      $('.popup__member .member--data button.data-save').show();
       // $('.p').slideDown();
     })
     // data-save 클릭이벤트
@@ -1131,6 +1488,7 @@ input:checked + .slider:before {
           get_list(ticket_id, 1);
           $('.popup__member .member--data .data-box').hide();
           $('.popup__member').hide();
+          $('.popup__alert .guide_alert').text('등록되었습니다!');
           $('.popup__alert').show();
           $('#enroll_member_count_'+ticket_id).text(res.enroll_member_count);
           $('#search_filter').val();
@@ -1169,6 +1527,16 @@ input:checked + .slider:before {
           get_list(ticket_id,page,filter);
         });
       }
+    })
+    // '추가' 버튼 클릭이벤트
+    $('.btn_addition').click(function(){
+      get_member_ids();
+      if (member_ids.length === 0) {
+        alert('멤버를 선택해주세요.');
+        return false;
+      }
+      $('.popup-box').show();
+      $('.popup__addition').show();
     })
     // '정지' 버튼 클릭이벤트
     $('.btn_stop').click(function(){
@@ -1239,6 +1607,21 @@ input:checked + .slider:before {
     $('.how_no').click(function(){
       $('.popup-box').fadeOut();
       $('.popup-box').children().hide();
+    })
+    // 추가 팝업창 저장 버튼
+    $('.popup__addition .how_ok').click(function(){
+      let action_duration = $('#addition_count').val();
+      if(action_duration === ""){
+        alert('횟수를 입력해주세요!')
+        return false;
+      }
+      action_duration = parseInt(action_duration);
+      if(action_duration <= 0){
+        alert('횟수를 정확히 입력해주세요!')
+        return false;
+      }
+      let today = '<?php echo date('Y-m-d'); ?>';
+      send_action(<?php echo CENTER_TICKET_MEMBER_ACTION_ADDITION; ?>, 'addition', action_duration, today, today);
     })
     // 연장 팝업창 저장 버튼
     $('.popup__extend .how_ok').click(function(){
@@ -1333,4 +1716,61 @@ input:checked + .slider:before {
       title: '정지 종료일자',
     });
   });
+  function show_ticket_info(ticket, e) {
+    if (ticket.hasClass('plusMember')) {
+      return false;
+    }
+    let ticket_id = ticket.find('.card_contents').data('id');
+    let target = $('#ticket_hover_'+ticket_id);
+    let offset = ticket.offset();
+    // 너비값 261px, offset.left 176px
+    let w = ticket.width();
+    // 높이값 215px, offset.top 166px
+    let h = ticket.height();
+    let x = offset.left + w;
+    let y = offset.top + h;
+    // relativeX 261px
+    // let relativeX = x - offset.left;
+    // relativeY 215px
+    // let relativeY = y - offset.top;
+    
+    let offset_e = $('#edit_btn_' + ticket_id).offset();
+    // let ex = offset_e.left + $('.edit_btn').width();
+    let ey = offset_e.top + $('#edit_btn_' + ticket_id).height();
+  
+    // 438px 394px
+    // console.log(e.pageX,e.pageY);
+    // // 437px 381px
+    // // console.log(x,y);
+    // console.log(offset.left,offset.top);
+    if(e.pageX < x && e.pageX > offset.left && e.pageY < y && e.pageY > offset.top){
+      // console.log(e.pageX,offset_e.left);
+      // console.log(e.pageY,ey);
+      if(e.pageX < offset_e.left || e.pageY > ey){
+        $(".ticketHover").hide();
+        target.show().css({
+          left : e.pageX - offset.left,
+          top : e.pageY - offset.top
+        });
+        target.find('table').show();
+        // console.log('show');
+      }
+      else {
+        $(".ticketHover").hide();
+        // console.log('hide');
+      }
+    }
+    else {
+      $(".ticketHover").hide();
+      // console.log('hide2');
+    }
+  }
+  $(function(){
+    $('.progress_card').mousemove(function(e){
+      show_ticket_info($(this), e);
+    });
+    $('.stop_card').mousemove(function(e){
+      show_ticket_info($(this), e);
+    })
+  })
 </script>

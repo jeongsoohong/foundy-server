@@ -84,6 +84,8 @@
     }
     .name_link {
       display: block;
+      box-sizing: border-box;
+      padding-left: 2px;
     }
     .name_link img:last-child {
       display: none;
@@ -215,6 +217,9 @@
       }
       .name_link img:last-child {
         display: inline-block;
+      }
+      .name_link {
+        padding-left: 0;
       }
       .page_name {
         margin-bottom: 36px;
@@ -574,9 +579,8 @@
   <div id="whole">
     <h1 class="page_name">
       <a href="#" class="name_link">
-        <img src="<?= base_url(); ?>template/icon/logo_sm.png" width="102" height="32" alt="파운디" style="padding-left: 6px;">
-        <img src="<?= base_url(); ?>template/icon/logo_lg.png" width="158" height="50" alt="파운디" style="
-                        padding-left: 12px;">
+        <img src="<?= base_url(); ?>template/icon/logo_sm.png" width="102" height="32" alt="파운디">
+        <img src="<?= base_url(); ?>template/icon/logo_lg.png" width="158" height="50" alt="파운디">
       </a>
     </h1>
     <div class="page_data">
@@ -873,12 +877,12 @@
   };
   window.addEventListener("keydown", checkKeyPressed, false);
   function checkKeyPressed(e) {
-    console.log(e.keyCode);
+    // console.log(e.keyCode);
     if (e.keyCode === 13) {
-      console.log('login');
+      // console.log('login');
       login();
     } else if(e.keyCode === 27){
-      console.log('close_popup');
+      // console.log('close_popup');
       close_forget_password();
     }
   };

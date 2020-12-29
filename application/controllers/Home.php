@@ -175,6 +175,7 @@ class Home extends CI_Controller
   {
     $bookmark_centers = array();
     $bookmark_teachers = array();
+    $upcoming_class = array();
     if ($this->is_login()) {
       $user_id = $this->session->userdata('user_id');
 
@@ -199,6 +200,29 @@ class Home extends CI_Controller
         $this->db->where_in('teacher_id', $teacher_ids);
         $bookmark_teachers = $this->db->get('teacher')->result();
       }
+
+      $now = time();
+      $start_date = date('Y-m-d H:i:s', $now);
+      $end_date = date('Y-m-d H:i:s', $now + ONE_WEEK);
+      $query = <<<QUERY
+select * from center_schedule_reserve
+where user_id={$user_id} and (reserve=1 or wait=1)
+and '{$start_date}'<= schedule_at and  schedule_at<='{$end_date}' order by schedule_at asc
+QUERY;
+      $upcoming_class = $this->db->query($query)->result();
+      foreach ($upcoming_class as $class) {
+        $class->schedule_info = $this->db->get_where('center_schedule_info', array('schedule_info_id' => $class->schedule_info_id))->row();
+        $class->center_info = $this->db->get_where('center', array('center_id' => $class->schedule_info->center_id))->row();
+        $class->wait_number = 0;
+        if ($class->wait == 1) {
+          $query = <<<QUERY
+select count(*) as cnt from center_schedule_reserve
+where schedule_info_id={$class->schedule_info_id} and wait=1 and reserve_id<={$class->reserve_id}
+QUERY;
+          $class->wait_number = $this->db->query($query)->row()->cnt;
+        }
+      }
+
     }
 
     $this->db->order_by('date', 'asc');
@@ -211,6 +235,7 @@ class Home extends CI_Controller
     $this->page_data['sliders'] = $sliders;
     $this->page_data['bookmark_centers'] = $bookmark_centers;
     $this->page_data['bookmark_teachers'] = $bookmark_teachers;
+    $this->page_data['upcoming_class'] = $upcoming_class;
     $this->page_data['blogs'] = $blogs;
     $this->page_data['page_name'] = "home";
     $this->page_data['asset_page'] = "home";
@@ -1409,10 +1434,42 @@ QUERY;
 //        $this->db->where_in('video_id', $video_ids);
 //        $bookmark_classes = $this->db->get('teacher_video')->result();
 //      }
+      $today = date('Y-m-d');
+      $query = <<<QUERY
+select * from center_ticket_member
+where user_id={$user_id} and refund=0 and deleted=0 and '{$today}'<=enable_end_at
+order by enable_end_at asc
+QUERY;
+
+      $all_tickets = $this->db->query($query)->result();
+      $on_tickets = array();
+      $stop_tickets = array();
+      $planed_tickets = array();
+      $now = time();
+      foreach ($all_tickets as $ticket) {
+        $ticket->d_day = (int)((strtotime($ticket->enable_end_at) - strtotime($today))/ONE_DAY);
+        if ($now < strtotime($ticket->enable_start_at)) { // 진행 예정 수강권
+          $planed_tickets[] = $ticket;
+        } else { // 진행중 수강권
+          if ($ticket->stop > 0) { // 정지 진행중 수강권
+            if (strtotime($ticket->stop_start_at) <= $now && $now <= strtotime($ticket->stop_end_at)) {
+              $stop_tickets[] = $ticket;
+            } else {
+              $on_tickets[] = $ticket;
+            }
+          } else {
+            $on_tickets[] = $ticket;
+          }
+        }
+        $ticket->center = $this->db->get_where('center', array('center_id' => $ticket->center_id))->row();
+      }
 
       $this->page_data['bookmark_centers'] = $bookmark_centers;
       $this->page_data['bookmark_teachers'] = $bookmark_teachers;
 //      $this->page_data['bookmark_classes'] = $bookmark_classes;
+      $this->page_data['on_tickets'] = $on_tickets;
+      $this->page_data['stop_tickets'] = $stop_tickets;
+      $this->page_data['planed_tickets'] = $planed_tickets;
       $this->load->view('front/user/profile', $this->page_data);
 
     } else if ($view_type == 'edit_profile') {
@@ -2209,11 +2266,11 @@ QUERY;
         exit;
       }
 
-      if ($user_data->user_id == $this->session->userdata('user_id')) {
-        $iam_this_center = true;
-      } else {
-        $iam_this_center = false;
-      }
+//      if ($user_data->user_id == $this->session->userdata('user_id')) {
+//        $iam_this_center = true;
+//      } else {
+//        $iam_this_center = false;
+//      }
 
       if ($center_data->teacher_cnt > 0) {
         $teacher_data = $this->db->get_where('center_teacher', array('center_id' => $center_data->center_id,'activate' => 1))->result();
@@ -2228,7 +2285,8 @@ QUERY;
       $week = date('w', $start_time);
 
       $query = <<<QUERY
-select * from center_schedule where center_id={$center_data->center_id} and start_date<='{$start_date}' and '{$start_date}'<=end_date order by start_time asc
+select * from center_schedule
+where center_id={$center_data->center_id} and start_date<='{$start_date}' and '{$start_date}'<=end_date order by start_time asc
 QUERY;
       $schedules = $this->db->query($query)->result();
 
@@ -2257,7 +2315,7 @@ QUERY;
       $this->page_data['start_date'] = $start_date;
       $this->page_data['end_date'] = $end_date;
       $this->page_data['schedule_data'] = $schedule_data;
-      $this->page_data['iam_this_center'] = $iam_this_center;
+//      $this->page_data['iam_this_center'] = $iam_this_center;
       $this->page_data['liked'] = $liked;
       $this->page_data['bookmarked'] = $bookmarked;
       $this->page_data['nav'] = $nav;
@@ -2661,33 +2719,33 @@ QUERY;
         $this->load->view('front/index', $this->page_data);
 
       }
-
+  
     } else if ($para1 == 'schedule') {
-
+  
       $type = $para2;
-
+  
       if ($type == 'mod') {
-
+    
         $center_id = $_GET['cid'];
         $schedule_id = $_GET['sid'];
-
+    
         $center_data = $this->db->get_where('center', array('center_id' => $center_id))->row();
         if ($center_data->activate == 0) {
           echo("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
           exit;
         }
-
+    
         $user_data = $this->db->get_where('user', array('user_id' => $center_data->user_id))->row();
         if (!($user_data->user_type & USER_TYPE_CENTER)) {
           echo("<script>alert('센터회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
           exit;
         }
-
+    
         if ($user_data->user_id != $this->session->userdata('user_id')) {
           echo("<script>alert('권한이 없습니다'); window.location.href='{$base_url}home/user'</script>");
           exit;
         }
-
+    
         $schedule_data = new stdClass();
         if ($schedule_id > 0) {
           $schedule_data = $this->db->get_where('center_schedule', array('schedule_id' => $schedule_id))->row();
@@ -2711,13 +2769,13 @@ QUERY;
           $schedule_data->weekly_6 = 0;
           $schedule_data->weekly_none = 1;
         }
-
+    
         $teacher_data = array();
         $teachers = $this->db->get_where('center_teacher', array('center_id' => $center_data->center_id))->result();
         foreach ($teachers as $teacher) {
           $teacher_data[] = $this->db->get_where('teacher', array('teacher_id' => $teacher->teacher_id))->row();
         }
-
+    
         $this->page_data['page_name'] = "center/schedule/mod";
         $this->page_data['asset_page'] = "center_schedule_mod";
         $this->page_data['page_title'] = "center_schedule_mod";
@@ -2726,47 +2784,47 @@ QUERY;
         $this->page_data['schedule_data'] = $schedule_data;
         $this->page_data['teacher_data'] = $teacher_data;
         $this->load->view('front/index', $this->page_data);
-
+    
       } else if ($type == 'do_mod') {
-
+    
         $center_id = $_GET['cid'];
         $schedule_id = $_GET['sid'];
-
+    
         $center_data = $this->db->get_where('center', array('center_id' => $center_id))->row();
         if ($center_data->activate == 0) {
           echo("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
           exit;
         }
-
+    
         $user_data = $this->db->get_where('user', array('user_id' => $center_data->user_id))->row();
         if (!($user_data->user_type & USER_TYPE_CENTER)) {
           echo("<script>alert('센터회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
           exit;
         }
-
+    
         if ($user_data->user_id != $this->session->userdata('user_id')) {
           echo("<script>alert('권한이 없습니다'); window.location.href='{$base_url}home/user'</script>");
           exit;
         }
-
+    
         echo("<script>alert('1');</script>");
-
+    
         $schedule_del = $this->input->post('schedule_del');
         if (empty($schedule_del) or $schedule_del == 0) {
-
+      
           $this->load->library('form_validation');
-
+      
           $this->form_validation->set_rules('start_date', 'start_date', 'required');
           $this->form_validation->set_rules('end_date', 'end_date', 'required');
           $this->form_validation->set_rules('start_time', 'start_time', 'required');
           $this->form_validation->set_rules('end_time', 'end_time', 'required');
           $this->form_validation->set_rules('schedule_title', 'schedule_title', 'trim|required|max_length[32]');
-
+      
           if ($this->form_validation->run() == FALSE) {
             echo '<br>' . validation_errors();
             exit;
           } else {
-
+        
             $start_date = $this->input->post('start_date');
             $end_date = $this->input->post('end_date');
             $start_time = $this->input->post('start_time');
@@ -2775,12 +2833,12 @@ QUERY;
             $weeklys = $this->input->post('weeklys');
             $teacher_id = $this->input->post('teacher_id');
             $teacher_name = $this->input->post('teacher_name');
-
+        
             if ($teacher_id == 0) {
               echo("<script>alert('강사를 선택해 주세요');</script>");
               exit;
             }
-
+        
             if ($teacher_id == -1) {
               if (empty($teacher_name) || strlen($teacher_name) == 0) {
                 echo("<script>alert('강사이름을 입력해 주세요 {$teacher_name}');</script>");
@@ -2794,12 +2852,12 @@ QUERY;
               }
               $teacher_name = $teacher->name;
             }
-
+        
             $weekly = array(0, 0, 0, 0, 0, 0, 0);
             if (empty($weeklys) || count($weeklys) == 0) {
-
+          
               $weekly_none = 1;
-
+          
               $data = array(
                 'center_id' => $center_data->center_id,
                 'start_date' => $start_date,
@@ -2819,14 +2877,14 @@ QUERY;
                 'teacher_name' => $teacher_name
               );
             } else {
-
+          
               foreach ($weeklys as $w) {
                 $w = (int)$w;
                 $weekly[$w] = 1;
               }
-
+          
               $weekly_none = 0;
-
+          
               $data = array(
                 'center_id' => $center_data->center_id,
                 'start_date' => $start_date,
@@ -2848,7 +2906,7 @@ QUERY;
             }
           }
         }
-
+    
         if (isset($schedule_del) && $schedule_del == 1) {
           $this->db->where(array('schedule_id' => $schedule_id));
           $this->db->delete('center_schedule');
@@ -2858,58 +2916,520 @@ QUERY;
         } else {
           $this->db->insert('center_schedule', $data);
         }
-
+    
         echo 'done';
-
+    
       } else if ($type == 'info') {
-
+    
         $center_id = $_GET['cid'];
         $date = $_GET['date'];
-
+    
         $center_data = $this->db->get_where('center', array('center_id' => $center_id))->row();
         if ($center_data->activate == 0) {
           echo("<script>alert('승인 대기 중입니다');'</script>");
           exit;
         }
-
-        $user_data = $this->db->get_where('user', array('user_id' => $center_data->user_id))->row();
-        if (!($user_data->user_type & USER_TYPE_CENTER)) {
+    
+        $center_user_data = $this->db->get_where('user', array('user_id' => $center_data->user_id))->row();
+        if (!($center_user_data->user_type & USER_TYPE_CENTER)) {
           echo("<script>alert('센터회원이 아닙니다');'</script>");
           exit;
         }
-
-        if ($user_data->user_id == $this->session->userdata('user_id')) {
-          $iam_this_center = true;
-        } else {
-          $iam_this_center = false;
-        }
-
+    
         $query = <<<QUERY
-select * from center_schedule where center_id={$center_data->center_id} and start_date<='{$date}' and '{$date}'<=end_date order by start_time asc
+select * from center_schedule_info
+where center_id={$center_data->center_id} and schedule_date='{$date}' and activate=1
+order by start_time asc
 QUERY;
         $schedules = $this->db->query($query)->result();
-
-        $schedule_data = array();
-        $week = date('w', strtotime($date));
-        $w = "weekly_" . $week;
+    
+        $now = time();
         foreach ($schedules as $schedule) {
-          if ($schedule->{$w} == 1 or $schedule->weekly_none == 1) {
-//            if (strlen($schedule->title) > 35) {
-//              $schedule->title = mb_substr($schedule->title, 0, 35). '...';
-//            }
-            $schedule_data[] = $schedule;
+          if ($schedule->reservable == false) {
+            continue;
+          }
+          if (strtotime($schedule->reserve_open_at) <= $now && $now <= strtotime($schedule->reserve_close_at)) {
+            // 예약가능
+          } else {
+            // 예약불가
+            $schedule->reservable = false;
+          }
+          $schedule->reserve_info = null;
+          if ($this->is_login()) {
+            $user_id = $this->session->userdata('user_id');
+            $query = <<<QUERY
+select * from center_schedule_reserve
+where user_id={$user_id} and schedule_info_id={$schedule->schedule_info_id} and (reserve=1 or wait=1)
+QUERY;
+            $reserve_info = $this->db->query($query)->row();
+            if (empty($reserve_info) == false) {
+              if ($reserve_info->wait == 1) { // 대기중
+                $query = <<<QUERY
+select count(*) as cnt from center_schedule_reserve
+where schedule_info_id={$schedule->schedule_info_id} and wait=1 and  reserve_id<={$reserve_info->reserve_id}
+QUERY;
+                $reserve_info->wait_cnt = $this->db->query($query)->row()->cnt;
+              }
+              $schedule->reserve_info = $reserve_info;
+            }
           }
         }
-
-        $this->page_data['user_data'] = $user_data;
-        $this->page_data['schedule_data'] = $schedule_data;
+    
+        $this->page_data['schedules'] = $schedules;
         $this->page_data['center_data'] = $center_data;
-        $this->page_data['iam_this_center'] = $iam_this_center;
         $this->load->view('front/center/schedule/info/index', $this->page_data);
+    
+      } else if ($type == 'reserve') {
+    
+        if ($para3 == 'info') {
+  
+          if ($this->is_login() == false) {
+            $this->response('fail', '클래스 예약은 로그인이 필요합니다!');
+          }
+          
+          if (isset($_POST['id']) == false) {
+            $this->response('fail', '비정상적인 접근입니다!');
+          }
+  
+          $user_id = $this->session->userdata('user_id');
+          $schedule_info_id = $this->input->post('id');
+  
+          $schedule_info = $this->center_model->get_schedule_info($schedule_info_id);
+          if ($schedule_info->activate == false) {
+            $this->response('fail', '삭제된 클래스입니다!');
+          }
+          
+          if ($schedule_info->reservable == false) {
+            $this->response('fail', '예약이 오픈되지 않았습니다!');
+          }
+          
+          $now = time();
+          $start = strtotime($schedule_info->schedule_date . ' ' . $schedule_info->start_time);
+          $end = strtotime($schedule_info->schedule_date . ' ' . $schedule_info->end_time);
+          if ($start <= $now && $now <= $end) {
+            $this->response('fail', '클래스가 진행중입니다!');
+          }
+  
+          $reserve_open_time = strtotime($schedule_info->reserve_open_at);
+          $reserve_close_time = strtotime($schedule_info->reserve_close_at);
+          if ($now < $reserve_open_time) {
+            $this->response('fail', '예약이 오픈되지 않았습니다!');
+          }
+          if ($now > $reserve_close_time) {
+            $this->response('fail', '예약이 마감되었습니다!');
+          }
+          
+          $query = <<<QUERY
+select * from center_ticket_member
+where center_id={$schedule_info->center_id} and user_id={$user_id} and refund=0 and deleted=0
+and enable_start_at<='{$schedule_info->schedule_date}' and '{$schedule_info->schedule_date}'<=enable_end_at
+QUERY;
+          $user_tickets = $this->db->query($query)->result();
+          if (empty($user_tickets) == true) {
+            $this->response('fail', '예약 가능한 티켓이 없습니다!');
+          }
+  
+          $available_ticket_ids = json_decode($schedule_info->tickets);
+          foreach ($user_tickets as $ticket) {
+            if (in_array($ticket->ticket_id, $available_ticket_ids) == false) {
+              continue;
+            }
+            $user_available_tickets[] = $ticket;
+          }
+  
+          if (empty($user_available_tickets) == true) {
+            $this->response('fail', '예약 가능한 티켓이 없습니다!');
+          }
+  
+          $this->page_data['class'] = $schedule_info;
+          $this->page_data['tickets'] = $user_available_tickets;
+          $this->load->view('front/center/schedule/reserve_popup', $this->page_data);
+          
+        } else if ($para3 == 'do') {
+  
+          if ($this->is_login() == false) {
+            $this->response('fail', '클래스 예약은 로그인이 필요합니다!');
+          }
+  
+          if (isset($_POST['id']) == false || isset($_POST['mid']) == false) {
+            $this->response('fail', '비정상적인 접근입니다!');
+          }
+  
+          $user_id = $this->session->userdata('user_id');
+          $schedule_info_id = $this->input->post('id');
+          $member_id = $this->input->post('mid');
+      
+          $query = <<<QUERY
+select * from center_schedule_reserve where schedule_info_id={$schedule_info_id} and user_id={$user_id}
+and (wait=1 or reserve=1)
+QUERY;
+          $reserve_info = $this->db->query($query)->row();
+          if (empty($reserve_info) == false) {
+            if ($reserve_info->reserve == 1) {
+              $status = '예약완료';
+            } else if ($reserve_info->wait == 1) {
+              $status = '예약대기';
+            } else {
+              $status = '오류'; // unreachable
+            }
+            $this->response('fail', '이미 신청된 클래스입니다!<상태:' . $status . '>');
+          }
+  
+          $result = $this->center_model->lock_schedule_info($schedule_info_id);
+          if (empty($result) == true || $result == false) {
+            $this->response('fail', '클래스 예약 요청이 많습니다! 잠시 후 다시 시도해주세요!');
+          }
+  
+          $schedule_info = $this->center_model->get_schedule_info($schedule_info_id);
+          if ($schedule_info->activate == false) {
+            $this->center_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '삭제된 클래스입니다!');
+          }
+          
+          $center_info = $this->db->get_where('center', array('center_id' => $schedule_info->center_id))->row();
+          if (empty($center_info) == true || $center_info->activate == 0) {
+            $this->center_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '센터가 오픈되지 않았습니다!');
+          }
+          
+          if ($schedule_info->reservable == false) {
+            $this->center_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '예약이 오픈되지 않았습니다!');
+          }
+      
+          $now = time();
+          $start = strtotime($schedule_info->schedule_date . ' ' . $schedule_info->start_time);
+          $end = strtotime($schedule_info->schedule_date . ' ' . $schedule_info->end_time);
+          if ($start <= $now && $now <= $end) {
+            $this->center_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '클래스가 진행중입니다!');
+          }
+      
+          $reserve_open_time = strtotime($schedule_info->reserve_open_at);
+          $reserve_close_time = strtotime($schedule_info->reserve_close_at);
+          if ($now < $reserve_open_time) {
+            $this->center_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '예약이 오픈되지 않았습니다!');
+          }
+          if ($now > $reserve_close_time) {
+            $this->center_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '예약이 마감되었습니다!');
+          }
+      
+          $query = <<<QUERY
+select count(*) as cnt from center_schedule_reserve
+where schedule_info_id={$schedule_info_id} and (reserve=1 or wait=1)
+QUERY;
+          $reserve_cnt = $this->db->query($query)->row()->cnt;
+          $reservable_cnt = $schedule_info->reservable_number;
+          if ($schedule_info->waitable) {
+            $reservable_cnt += $schedule_info->waitable_number;
+          }
+          if ($reserve_cnt >= $reservable_cnt) {
+            $this->center_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '예약/대기 정원이 초과되었습니다!');
+          }
+      
+          $ticket = $this->db->get_where('center_ticket_member', array('member_id' => $member_id))->row();
+          if (empty($ticket) == true) {
+            $this->center_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '수강권이 존재하지 않습니다!');
+          }
+          if ($ticket->user_id != $user_id) {
+            $this->center_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '회원 수강권이 아닙니다!');
+          }
+      
+          $schedule_date = $schedule_info->schedule_date . ' ' . $schedule_info->start_time;
+          $schedule_time = strtotime($schedule_date);
+          $available_ticket_ids = json_decode($schedule_info->tickets);
 
+          if (in_array($ticket->ticket_id, $available_ticket_ids) == false) {
+            $this->center_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '예약이 불가능한 수강권입니다!');
+          }
+          // 정지 기간 체크
+          if ($ticket->stop > 0 && strtotime($ticket->stop_start_at) <= $schedule_time && $schedule_time <= strtotime($ticket->stop_end_at)) {
+            $this->center_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '정지중인 수강권입니다!');
+          }
+          // 정액권 횟수 체크
+          if ($ticket->ticket_type == CENTER_TICKET_TYPE_COUNT &&
+            ($ticket->reservable_count - ($ticket->reserve + $ticket->wait)) <= 0) {
+            $this->center_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '예약 가능한 횟수를 초과한 수강권입니다!');
+          }
+          // 하루 예약 가능한 수업 횟수 체크
+          $start_date = $schedule_info->schedule_date . ' 00:00:00';
+          $end_date = $schedule_info->schedule_date . ' 23:59:59';
+          $query = <<<QUERY
+select count(*) as cnt from center_schedule_reserve
+where user_id={$user_id} and ticket_id={$ticket->ticket_id} and (reserve=1 or wait=1)
+and '{$start_date}'<= schedule_at and  schedule_at<='{$end_date}'
+QUERY;
+          $oneday_reserve_count = $this->db->query($query)->row()->cnt;
+          if ($ticket->reservable_count_oneday <= $oneday_reserve_count) {
+            $this->center_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '1일 '.$ticket->reservable_count_oneday.'회의 클래스 예약이 가능한 수강권입니다!');
+          }
+          
+          $action = CENTER_TICKET_MEMBER_ACTION_RESERVE_FAIL;
+          
+          // 현재 정원 체크
+          $reserve_cnt = $this->center_model->get_schedule_reserve_cnt($schedule_info_id);
+          if ($reserve_cnt < $schedule_info->reservable_number) {
+            $action = CENTER_TICKET_MEMBER_ACTION_RESERVE;
+          } else if ($schedule_info->waitable) {
+            // 대기 인원 체크
+            $wait_cnt = $this->center_model->get_schedule_wait_cnt($schedule_info_id);
+            if ($wait_cnt < $schedule_info->waitable_number) {
+              $action = CENTER_TICKET_MEMBER_ACTION_RESERVE_WAIT;
+            }
+          }
+  
+          $reserve = 0;
+          $wait = 0;
+          $fail = 0;
+          if ($action == CENTER_TICKET_MEMBER_ACTION_RESERVE) {
+            $reserve = 1;
+          } else if ($action == CENTER_TICKET_MEMBER_ACTION_RESERVE_WAIT) {
+            $wait = 1;
+          } else {
+            $fail = 1;
+          }
+  
+          $ins = array(
+            'user_id' => $user_id,
+            'schedule_info_id' => $schedule_info_id,
+            'ticket_id' => $ticket->ticket_id,
+            'member_id' => $ticket->member_id,
+            'reserve' => $reserve,
+            'wait' => $wait,
+            'cancel' => 0,
+            'fail' => $fail,
+            'schedule_at' => $schedule_date,
+          );
+          $this->db->set('register_at', 'NOW()', false);
+          $this->db->set('cancel_at', 'NOW()', false);
+          $this->db->insert('center_schedule_reserve', $ins);
+          $reserve_id = $this->db->insert_id();
+  
+          $this->center_model->unlock_schedule_info($schedule_info_id);
+  
+          if ($reserve_id > 0) {
+            $ins = array(
+              'member_id' => $ticket->member_id,
+              'ticket_id' => $ticket->ticket_id,
+              'user_id' => $user_id,
+              'schedule_info_id' => $schedule_info_id,
+              'reserve_id' => $reserve_id,
+              'action' => $action,
+              'action_str' => $this->center_model->get_ticket_member_action_str($action),
+              'action_duration' => 0,
+              'action_data' => '<' . $schedule_info->schedule_title . '>, 일시 : ' . date('Y.m.d', strtotime($schedule_info->schedule_date)),
+            );
+            $this->db->set('history_at', 'NOW()', false);
+            $this->db->insert('center_ticket_member_history', $ins);
+ 
+            if ($reserve) {
+              $this->db->set('reserve', 'reserve+1', false);
+            } else if ($wait) {
+              $this->db->set('wait', 'wait+1', false);
+            } else {
+              $this->db->set('fail', 'fail+1', false);
+            }
+            $this->db->set('update_at', 'NOW()', false);
+            $this->db->update('center_ticket_member', array(), array('member_id' => $ticket->member_id));
+  
+            if ($action == CENTER_TICKET_MEMBER_ACTION_RESERVE) {
+              $user_data = json_decode($this->session->userdata('user_data'));
+              $this->mts_model->send_class_reserve($user_data->phone, CENTER_TICKET_MEMBER_ACTION_RESERVE,
+                $schedule_info->schedule_title, $schedule_info->schedule_date, $center_info->title,
+                $schedule_info->start_time,$schedule_info->end_time);
+              $this->response('done', '예약이 완료되었습니다!');
+            } else if ($action == CENTER_TICKET_MEMBER_ACTION_RESERVE_WAIT) {
+              $user_data = json_decode($this->session->userdata('user_data'));
+              $this->mts_model->send_class_reserve($user_data->phone, CENTER_TICKET_MEMBER_ACTION_RESERVE_WAIT,
+                $schedule_info->schedule_title, $schedule_info->schedule_date, $center_info->title,
+                $schedule_info->start_time,$schedule_info->end_time);
+//              $this->mts_model->send_class_wait($user_data->phone, $user_data->username, $schedule_info->schedule_title,
+//                date('Y.m.d', strtotime($schedule_info->schedule_date)));
+              $this->response('done', '클래스 정원 초과로 인해서 대기자 예약 상태입니다! 추후 정원에 여유가 생길 경우 자동으로 예약됩니다');
+            } else {
+              $this->response('fail', '클래스 정원 초과로 예약 실패했습니다!');
+            }
+            
+          } else {
+            $this->response('fail', '클래스 예약 불가 상태입니다! 잠시 후 다시 시도해주세요!');
+          }
+    
+        } else {
+          $this->response('fail', '접근오류!');
+        }
+  
+      } else if ($type == 'cancel') {
+  
+        if ($para3 == 'info') {
+  
+          if ($this->is_login() == false) {
+            $this->response('fail', '클래스 취소는 로그인이 필요합니다!');
+          }
+  
+          if (isset($_POST['id']) == false) {
+            $this->response('fail', '비정상적인 접근입니다!');
+          }
+  
+          $user_id = $this->session->userdata('user_id');
+          $schedule_info_id = $this->input->post('id');
+  
+          $query = <<<QUERY
+select * from center_schedule_reserve
+where schedule_info_id={$schedule_info_id} and user_id={$user_id} and (reserve=1 or wait=1)
+QUERY;
+          $reserve_info = $this->db->query($query)->row();
+          if (empty($reserve_info) == true) {
+            $this->response('fail', '예약 내역이 존재하지 않습니다!');
+          }
+  
+          $schedule_info = $this->center_model->get_schedule_info($schedule_info_id);
+          if ($schedule_info->activate == false) {
+            $this->response('fail', '삭제된 클래스입니다!');
+          }
+          
+          $now = time();
+          $start = strtotime($schedule_info->schedule_date.' '.$schedule_info->start_time);
+          $end = strtotime($schedule_info->schedule_date.' '.$schedule_info->end_time);
+          if ($start <= $now && $now <= $end) {
+            $this->response('fail', '클래스가 진행중입니다!');
+          }
+  
+          $reserve_cancel_open_time = strtotime($schedule_info->reserve_cancel_open_at);
+          $reserve_cancel_close_time = strtotime($schedule_info->reserve_cancel_close_at);
+          if ($now < $reserve_cancel_open_time) {
+            $this->response('fail', '예약취소가 오픈되지 않았습니다!');
+          }
+          if ($now > $reserve_cancel_close_time) {
+            $this->response('fail', '예약취소가 마감되었습니다!');
+          }
+  
+          $this->page_data['class'] = $schedule_info;
+          $this->load->view('front/center/schedule/cancel_popup', $this->page_data);
+  
+        } else if ($para3 == 'do') {
+  
+          if ($this->is_login() == false) {
+            $this->response('fail', '클래스 취소는 로그인이 필요합니다!');
+          }
+  
+          if (isset($_POST['id']) == false) {
+            $this->response('fail', '비정상적인 접근입니다!');
+          }
+  
+          $user_id = $this->session->userdata('user_id');
+          $schedule_info_id = $this->input->post('id');
+  
+          $query = <<<QUERY
+select * from center_schedule_reserve
+where schedule_info_id={$schedule_info_id} and user_id={$user_id} and (reserve=1 or wait=1)
+QUERY;
+          $reserve_info = $this->db->query($query)->row();
+          if (empty($reserve_info) == true) {
+            $this->center_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '예약 내역이 존재하지 않습니다!');
+          }
+  
+          $lock = $this->center_model->lock_schedule_info($schedule_info_id);
+          if (empty($lock) == true || $lock == false) {
+            $this->response('fail', '클래스 예약 요청이 많습니다! 잠시 후 다시 시도해주세요!');
+          }
+  
+          $schedule_info = $this->center_model->get_schedule_info($schedule_info_id);
+          if ($schedule_info->activate == false) {
+            $this->center_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '삭제된 클래스입니다!');
+          }
+  
+          $center_info = $this->db->get_where('center', array('center_id' => $schedule_info->center_id))->row();
+          if (empty($center_info) == true || $center_info->activate == 0) {
+            $this->center_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '센터가 오픈되지 않았습니다!');
+          }
+  
+          $now = time();
+          $start = strtotime($schedule_info->schedule_date.' '.$schedule_info->start_time);
+          $end = strtotime($schedule_info->schedule_date.' '.$schedule_info->end_time);
+          if ($start <= $now && $now <= $end) {
+            $this->center_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '수업이 진행중입니다!');
+          }
+  
+          $reserve_cancel_open_time = strtotime($schedule_info->reserve_cancel_open_at);
+          $reserve_cancel_close_time = strtotime($schedule_info->reserve_cancel_close_at);
+          if ($now < $reserve_cancel_open_time) {
+            $this->center_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '예약취소가 오픈되지 않았습니다!');
+          }
+          if ($now > $reserve_cancel_close_time) {
+            $this->center_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '예약취소가 마감되었습니다!');
+          }
+  
+          $ticket_info = $this->db->get_where('center_ticket_member', array('member_id' => $reserve_info->member_id))->row();
+          if ($ticket_info->limit_cancel_count_enable) {
+    
+            // 하루 취소 가능한 수업 횟수 체크
+            $start_date = $schedule_info->schedule_date.' 00:00:00';
+            $end_date = $schedule_info->schedule_date.' 23:59:59';
+            $query = <<<QUERY
+select count(*) as cnt from center_schedule_reserve
+where user_id={$user_id} and ticket_id={$ticket_info->ticket_id} and cancel=1
+and '{$start_date}'<= schedule_at and  schedule_at<='{$end_date}'
+QUERY;
+            $oneday_reserve_cancel_count = $this->db->query($query)->row()->cnt;
+            if ($ticket_info->limit_cancel_count_oneday <= $oneday_reserve_cancel_count) {
+              $this->center_model->unlock_schedule_info($schedule_info_id);
+              $this->response('fail', '1일 취소가능한 횟수를 초과하였습니다!');
+            }
+    
+            // 전체 취소 가능한 수업 횟수 체크
+            $query = <<<QUERY
+select count(*) as cnt from center_schedule_reserve
+where user_id={$user_id} and ticket_id={$ticket_info->ticket_id} and cancel=1
+QUERY;
+            $total_reserve_cancel_count = $this->db->query($query)->row()->cnt;
+            if ($ticket_info->limit_cancel_count_total <= $total_reserve_cancel_count) {
+              $this->center_model->unlock_schedule_info($schedule_info_id);
+              $this->response('fail', '전체 취소가능한 횟수를 초과하였습니다!');
+            }
+          }
+
+          $this->center_model->schedule_cancel($reserve_info, $schedule_info->schedule_title, $schedule_info->schedule_date);
+          
+          if ($schedule_info->waitable) {
+            $wait_info = $this->center_model->get_schedule_wait_info_first($schedule_info_id);
+            if (isset($wait_info) == true && empty($wait_info) == false) {
+              $this->center_model->transfer_wait2reserve($wait_info, $schedule_info->schedule_title, $schedule_info->schedule_date);
+            }
+          }
+  
+          $this->center_model->unlock_schedule_info($schedule_info_id);
+  
+          $user_data = json_decode($this->session->userdata('user_data'));
+          $this->mts_model->send_class_reserve($user_data->phone, CENTER_TICKET_MEMBER_ACTION_RESERVE_CANCEL,
+            $schedule_info->schedule_title, $schedule_info->schedule_date, $center_info->title,
+            $schedule_info->start_time,$schedule_info->end_time);
+//          $this->mts_model->send_class_cancel($user_data->phone, $user_data->username, $schedule_info->schedule_title,
+//            date('Y.m.d', strtotime($schedule_info->schedule_date)));
+          $this->response('done', '취소 신청이 완료되었습니다!');
+        
+        } else {
+          $this->response('fail', '접근오류!');
+        }
+    
       } else { // unreachable
+        $this->error();
       }
-
+  
     } else if ($para1 == 'info') {
 
       if ($para2 == 'update') {
@@ -5413,7 +5933,12 @@ QUERY;
     redirect(base_url().'home/info?m='.$msg.'&p='.$page);
   }
   
-  private function response($result) {
+  private function response($status, $msg = '') {
+    $result['status'] = $status;
+    if ($status == 'done' && $msg == '') {
+      $msg = '성공하였습니다!';
+    }
+    $result['message'] = $msg;
     echo json_encode($result);
     exit;
   }

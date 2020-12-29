@@ -77,8 +77,11 @@
     background-color: #fff;
     padding: 28px 16px;
   }
-  .thumb_box:first-child {
+  .thumb_box {
     margin-bottom: 20px;
+  }
+  .thumb_box:last-child {
+    margin-bottom: 0px;
   }
 
   .ticket_wrap p {
@@ -225,7 +228,6 @@
               <td style="width: 10%; text-align: center;">
                 <a href="javascript:void(0);">
                   <span class="profile-edit" data-target='profile-edit' style="color: grey; padding-right: 20px">
-<!--                    <i class="fa fa-ellipsis-v"></i>-->
                     <img src="<?php echo base_url(); ?>uploads/icon/dots.png" alt="" style="width: 10px; height: 10px">
                   </span>
                 </a>
@@ -340,7 +342,6 @@
                 foreach ($bookmark_centers as $center) {
                   $i++;
                   ?>
-<!--                  <li style="--><?php //echo ($i != $total_cnt ? 'border-bottom: 1px solid #EAEAEA' : ''); ?><!--">-->
                   <li class="profile_li" style="height: 68px !important">
                     <table class="col-md-12" style="width: 100%">
                       <tbody>
@@ -374,7 +375,6 @@
                 foreach ($bookmark_teachers as $teacher) {
                   $i++;
                   ?>
-<!--                  <li style="--><?php //echo ($i != $total_cnt ? 'border-bottom: 1px solid #EAEAEA' : ''); ?><!--">-->
                   <li class="profile_li" style="height: 68px !important">
                     <table class="col-md-12" style="width: 100%">
                       <tbody>
@@ -388,9 +388,6 @@
                         </td>
                         <td style="width: 32px; text-align: right;">
                           <a href="<?php echo base_url().'home/teacher/profile/'.$teacher->user_id; ?>">
-<!--                            <span class="schedule" style="font-size: 10px;">-->
-<!--                              VIEW-->
-<!--                            </span>-->
                             <div style="width: 32px; height: 32px; border-radius: 50%; background-color: #8B5949; line-height: 32px; text-align: center;">
                               <img src="<?= base_url(); ?>template/icon/ic_calendar.png" width="16" height="16" style="margin-bottom: 7px;">
                             </div>
@@ -414,36 +411,119 @@
     </div>
   </div>
 </div>
-<?php if (DEV_SERVER) { ?>
+<? if (count($on_tickets) + count($stop_tickets) + count($planed_tickets) > 0) { ?>
   <div class="col-lg-12 col-md-12 ticket_wrap">
     <div class="ticket_tit">
       <p class="ticket_txt font-futura">My Ticket</p>
     </div>
     <div class="ticket_thumb">
-      <div class="thumb_box theme:thumb_member">
-        <div class="box_wrap">
-          <div class="box_member">
-            <p class="deadline">d - <span>00</span></p>
-            <div class="name">
-              <div class="name_academy">
-                <p>요가원 이름</p>
+      <? foreach ($on_tickets as $ticket) { // 진행중 티켓 ?>
+        <div class="thumb_box theme:thumb_member">
+          <div class="box_wrap">
+            <div class="box_member">
+              <p class="deadline">d - <span><?= $ticket->d_day; ?></span></p>
+              <div class="name">
+                <div class="name_academy">
+                  <p>
+                    <a href="<?php echo base_url().'home/center/profile/'.$ticket->center->center_id.'?nav=schedule'; ?>">
+                      <?= $ticket->center->title; ?>
+                    </a>
+                  </p>
+                </div>
+                <p class="name_ticket"><?= $ticket->ticket_title; ?></p>
               </div>
-              <p class="name_ticket">수강권 이름</p>
+              <p class="count">유효기간 :
+                <span><?= date('Y.m.d', strtotime($ticket->enable_start_at)); ?></span>
+                ~
+                <span><?= date('Y.m.d', strtotime($ticket->enable_end_at)); ?></span>
+              </p>
+              <img src="<?= base_url(); ?>template/icon/card_logo.png" class="logotype" width="58" height="auto">
             </div>
-            <p class="count">유효기간 : <span>20.00.00</span> ~ <span>20.00.00</span></p>
-            <img src="<?= base_url(); ?>template/icon/card_logo.png" class="logotype" width="58" height="auto">
+            <button class="question">
+              <span><a href="tel:<?= $ticket->center->phone; ?>">문의</a></span>
+            </button>
+            <p class="time_left">
+              <? if ($ticket->ticket_type == CENTER_TICKET_TYPE_COUNT) { ?>
+                <span>남은 횟수
+                    <br><?= $ticket->reservable_count - $ticket->reserve - $ticket->wait; ?>회
+                  </span>
+              <? } ?>
+            </p>
           </div>
-          <button class="question">
-            <span>문의</span>
-          </button>
-          <p class="time_left">
-          <span>남은 횟수
-            <br>10회
-          </span>
-          </p>
         </div>
-      </div>
-      <div class="thumb_box theme:thumb_term">
+      <? } ?>
+      <? foreach ($stop_tickets as $ticket) { // 정지중 티켓 ?>
+          <div class="thumb_box theme:thumb_term">
+            <div class="box_wrap">
+              <div class="box_member">
+                <p class="deadline txt_grey">d - <span><?= $ticket->d_day; ?></span></p>
+                <div class="name">
+                  <div class="name_academy">
+                    <p>
+                      <a href="<?php echo base_url().'home/center/profile/'.$ticket->center->center_id.'?nav=schedule'; ?>">
+                        <?= $ticket->center->title; ?>
+                      </a>
+                    </p>
+                  </div>
+                  <p class="name_ticket txt_grey"><?= $ticket->ticket_title; ?></p>
+                </div>
+                <p class="count txt_grey">유효기간 :
+                  <span><?= date('Y.m.d', strtotime($ticket->enable_start_at)); ?></span>
+                  ~
+                  <span><?= date('Y.m.d', strtotime($ticket->enable_end_at)); ?></span>
+                </p>
+                <img src="<?= base_url(); ?>template/icon/card_logo.png" class="logotype" width="58" height="auto">
+              </div>
+              <button class="question">
+                <span><a class="txt_grey" href="tel:<?= $ticket->center->phone; ?>">문의</a></span>
+              </button>
+              <p class="time_left">
+                <? if ($ticket->ticket_type == CENTER_TICKET_TYPE_COUNT) { ?>
+                  <span class="txt_grey">남은 횟수
+                    <br><?= $ticket->reservable_count - $ticket->reserve; ?>회
+                  </span>
+                <? } ?>
+              </p>
+            </div>
+          </div>
+      <? } ?>
+      <? foreach ($planed_tickets as $ticket) { // 예정된 티켓 ?>
+        <div class="thumb_box theme:thumb_term">
+          <div class="box_wrap">
+            <div class="box_member">
+              <p class="deadline txt_grey">d - <span><?= $ticket->d_day; ?></span></p>
+              <div class="name">
+                <div class="name_academy">
+                  <p>
+                    <a href="<?php echo base_url().'home/center/profile/'.$ticket->center->center_id.'?nav=schedule'; ?>">
+                      <?= $ticket->center->title; ?>
+                    </a>
+                  </p>
+                </div>
+                <p class="name_ticket txt_grey"><?= $ticket->ticket_title; ?></p>
+              </div>
+              <p class="count txt_grey">유효기간 :
+                <span><?= date('Y.m.d', strtotime($ticket->enable_start_at)); ?></span>
+                ~
+                <span><?= date('Y.m.d', strtotime($ticket->enable_end_at)); ?></span>
+              </p>
+              <img src="<?= base_url(); ?>template/icon/card_logo.png" class="logotype" width="58" height="auto">
+            </div>
+            <button class="question">
+              <span><a class="txt_grey" href="tel:<?= $ticket->center->phone; ?>">문의</a></span>
+            </button>
+            <p class="time_left">
+              <? if ($ticket->ticket_type == CENTER_TICKET_TYPE_COUNT) { ?>
+                <span class="txt_grey">남은 횟수
+                    <br><?= $ticket->reservable_count - $ticket->reserve; ?>회
+                  </span>
+              <? } ?>
+            </p>
+          </div>
+        </div>
+      <? } ?>
+      <? if (false) { // 수강권 정지 ?>
+        <div class="thumb_box theme:thumb_term">
         <div class="box_wrap">
           <div class="box_member">
             <p class="deadline txt_grey">d - <span>00</span></p>
@@ -466,6 +546,7 @@
           </p>
         </div>
       </div>
+      <? } ?>
     </div>
   </div>
 <?php } ?>

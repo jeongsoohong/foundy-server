@@ -126,20 +126,15 @@
     
     send_post(data, url, false, '', function() {
       let target = $('#onoff-btn-'+teacher_id);
-      let point = target.find('.onoff_point');
-      let left = point.css('left');
+      let onoff = target.find('.onoff');
+      let onoff_point = target.find('.onoff_point');
       // console.log(left)
-      if(left === '32px') {
-        point.animate({
-          left : '4px'
-        });
-        target.find('.onoff').addClass('onoff_on');
-      }
-      else if(left === '4px') {
-        point.animate({
-          left : '32px'
-        });
-        target.find('.onoff').removeClass('onoff_on');
+      if(onoff.hasClass('onoff_on')) {
+        onoff.removeClass('onoff_on');
+        onoff_point.removeClass('onoff_point_on');
+      } else {
+        onoff.addClass('onoff_on');
+        onoff_point.addClass('onoff_point_on');
       }
     });
   

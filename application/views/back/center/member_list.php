@@ -125,5 +125,5 @@
         $('.main_chk').prop('checked',false);
       }
     })
-  });
+  })
 </script>
