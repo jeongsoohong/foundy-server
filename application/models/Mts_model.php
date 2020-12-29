@@ -7,6 +7,7 @@ class Mts_model extends CI_Model
 {
   private $callback = '07086568895';
   private $kakao_sender_key = '4bd39ffc87041c754584b72a61aa500d2585f524';
+  
   function __construct()
   {
     parent::__construct();
@@ -41,7 +42,8 @@ class Mts_model extends CI_Model
     return $this->db->insert_id();
   }
   
-  function send_atalk($phone, $msg, $subject, $template_code) {
+  function send_atalk($phone, $msg, $subject, $template_code)
+  {
     $ins = array(
       'TRAN_PHONE' => $phone,
       'TRAN_CALLBACK' => $this->callback,
@@ -56,7 +58,7 @@ class Mts_model extends CI_Model
     );
     $this->db->set('TRAN_DATE', 'NOW()', false);
     $this->db->insert('MTS_ATALK_MSG', $ins);
-  
+    
     return $this->db->insert_id();
   }
   
@@ -67,7 +69,7 @@ class Mts_model extends CI_Model
     }
     
     $msg = "[파운디] 인증번호는 [{$approval_code}] 입니다.";
- 
+    
     $id = $this->send_sms($phone, $msg);
     log_message('debug', "[send smsmms] send_user_approval_code, id[$id] phone[$phone] msg[$msg]");
     return $id;
@@ -90,9 +92,36 @@ class Mts_model extends CI_Model
   {
     return ($time < '12:00:00' ? 'AM' : 'PM');
   }
+  
   function get_time($time)
   {
     return ($time <= '12:00:00' ? substr($time, 0, 5) : substr(date('H:i:s', strtotime($time) - 12 * ONE_HOUR), 0, 5));
+  }
+  
+  function send_class_reminder($phone, $center_title, $schedule_title, $start_time)
+  {
+    if ($phone == null || $phone == '') {
+      return 0;
+    }
+  
+    $subject = '예약알림/리마인드 01';
+    $msg = <<<MSG
+[FOUNDY 예약알림]
+
+예약하신 #{센터명} #{수업명} 수업은 오늘 #{시간} 시작입니다!
+제시간 입장으로 시작 준비운동부터 안전한 수업 즐기시길 바랍니다 :)
+
+*예약취소 가능시간은 센터마다 상이하며, 시스템상 취소가 불가한 시간에 취소를 원하실 경우, 예약하신 센터에 문의를 부탁드립니다!
+MSG;
+  
+    $msg = str_replace('#{센터명}', $center_title, $msg);
+    $msg = str_replace('#{수업명}', $schedule_title, $msg);
+    $msg = str_replace('#{시간}', $start_time, $msg);
+  
+    $id = $this->send_atalk($phone, $msg, $subject, 'FOUNDY_reminder01');
+    log_message('debug', "[send atalk] send_class_reminder, id[$id] phone[$phone] msg[$msg]");
+ 
+    return $id;
   }
   
   function send_class_reserve($phone, $type, $schedule_title, $date, $center_title, $start_time, $end_time)

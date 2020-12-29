@@ -1029,6 +1029,24 @@ QUERY;
             'waitable' => $waitable,
             'waitable_number' => $waitable_number,
           );
+          $schedule_open_date = $schedule_info->schedule_date.' '.$start_time;
+          if ($open_immediate) {
+            $reserve_close_at = date('Y-m-d H:i:s', strtotime($schedule_open_date) - $reserve_close_hour * ONE_HOUR);
+            $reserve_cancel_close_at = date('Y-m-d H:i:s', strtotime($schedule_open_date) - $reserve_cancel_close_hour * ONE_HOUR);
+            $this->db->set('reserve_open_at', 'NOW()', false);
+            $this->db->set('reserve_close_at', $reserve_close_at);
+            $this->db->set('reserve_cancel_open_at', 'NOW()', false);
+            $this->db->set('reserve_cancel_close_at', $reserve_cancel_close_at);
+          } else {
+            $reserve_open_at = date('Y-m-d H:i:s', strtotime($schedule_open_date) - $reserve_open_hour * ONE_HOUR);
+            $reserve_close_at = date('Y-m-d H:i:s', strtotime($schedule_open_date) - $reserve_close_hour * ONE_HOUR);
+            $reserve_cancel_open_at = date('Y-m-d H:i:s', strtotime($schedule_open_date) - $reserve_cancel_open_hour * ONE_HOUR);
+            $reserve_cancel_close_at = date('Y-m-d H:i:s', strtotime($schedule_open_date)- $reserve_cancel_close_hour * ONE_HOUR);
+            $this->db->set('reserve_open_at', $reserve_open_at);
+            $this->db->set('reserve_close_at', $reserve_close_at);
+            $this->db->set('reserve_cancel_open_at', $reserve_cancel_open_at);
+            $this->db->set('reserve_cancel_close_at', $reserve_cancel_close_at);
+          }
           $this->db->set('updated_at', 'NOW()', false);
           $this->db->update('center_schedule_info', $data, array('schedule_info_id' => $schedule_info_id));
   
@@ -1121,7 +1139,6 @@ QUERY;
   
           log_message('debug', '[schedule] center admin schedule('.$schedule_info_id.') edit wait2, reserve_count['.$_reserve_count.'=>'.$reserve_count.']');
           log_message('debug', '[schedule] center admin schedule('.$schedule_info_id.') edit wait2, wait_count['.$_wait_count.'=>'.$wait_count.']');
-  
   
           $this->center_model->unlock_schedule_info($schedule_info_id);
 //          $result['class'] = array(
