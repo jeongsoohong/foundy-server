@@ -61,6 +61,9 @@ if (isset($_SERVER['SERVER_NAME'])) {
 }
 //define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
 
+isset($_SERVER['REMOTE_ADDR']) || $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+isset($_SERVER['HTTP_HOST']) ||  $_SERVER['HTTP_HOST'] = 'localhost';
+
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING
