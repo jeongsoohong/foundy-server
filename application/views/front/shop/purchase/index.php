@@ -217,13 +217,86 @@
      text-align: center;
    }
 </style>
-<section class="page-section">
+<section class="page-section" id="paying">
   <div class="container">
     <div class="row">
       <div class="purchase-content">
-        <div class="cart-header">
+        <div class="cart-header" style="margin: 0;">
           주문상품 정보
         </div>
+        <style type="text/css">
+          #paying div[class$="header"] {
+            height: 52px;
+            line-height: 52px;
+            margin-top: 4px;
+          }
+          #paying .cart-header {
+            border-bottom: 1px solid #ccc;
+          }
+          #paying .cart-item-all {
+            margin-bottom: 0;
+          }
+          #paying .cart-item {
+            padding: 20px 0;
+          }
+          #paying .item-name {
+            margin-bottom: 12px;
+          }
+          #paying .item-price {
+            margin-bottom: 4px;
+          }
+          #paying .user-info,
+          #paying .shipping-new-info {
+            padding: 20px 16px 28px;
+          }
+          #paying .user-info tr th,
+          #paying .shipping-new-info tr th {
+            line-height: 32px;
+          }
+          #paying .user-info {
+            padding-bottom: 10px;
+          }
+          #paying .user-info tr th,
+          #paying .shipping-new-info tr th {
+            font-size: 11px;
+          }
+          #paying .user-postcode-btn a,
+          #paying .shipping-new-postcode-btn a {
+            padding: 0;
+            border-radius: 4px;
+            margin: 0 0 0 12px!important;
+            width: calc(100% - 12px);
+            font-weight: bold;
+          }
+          #paying .shipping-new-btn a button {
+            font-weight: bold;
+          }
+          #paying .coupon-choice {
+            padding: 0;
+            height: 40px;
+            line-height: 40px;
+          }
+          #paying .form-control {
+            height: 35px !important;
+          }
+          #paying #coupon-select {
+            height: inherit !important;
+          }
+          #paying .pay-agree {
+            border: 0;
+          }
+          #paying .pay-agree .form-checkbox {
+            line-height: 1.5;
+          }
+          #paying .readme {
+            letter-spacing: -0.05em;
+          }
+          @media(min-width: 360px) {
+            #paying .readme {
+              letter-spacing: 0;
+            }
+          }
+        </style>
         <div class="cart-item-all">
           <?php foreach ($cart_items as $item) { ?>
             <div class="cart-item" data-id="<?php echo $item->cart_id; ?>" data-price="<?php echo $item->item_sell_price; ?>" data-additional-price="<?php echo $item->additional_price;?>" data-shipping-fee="<?php echo $item->shipping_fee; ?>" data-purchase-cnt="<?php echo $item->total_purchase_cnt;?>" data-status="<?php echo $item->product_id->status; ?>"
@@ -276,13 +349,177 @@
         <div class="user-info" id="user-info">
           <p style="color: saddlebrown; text-align: center;">
             <span style="color:red;">*</span>
-            <span style="font-size: 10px"> 구매 취소 / 배송 조회 / 알림 등을 위해서 정확히 입력바랍니다.</span>
+            <span class="readme" style="font-size: 10px;"> 구매 취소 / 배송 조회 / 알림 등을 위해서 정확히 입력바랍니다.</span>
             <span style="color:red;">*</span>
           </p>
           <?php include 'purchase_user_info.php'; ?>
         </div>
-        <div class="shipping-info-header">
+        <div class="shipping-info-header" id="shipping_bar">
           배송정보
+          <style type="text/css">
+            #shipping_bar {
+              position: relative;
+              height: 52px;
+              line-height: 52px;
+            }
+            #bar_tip {
+              position: absolute;
+              top: 6px;
+              right: 0;
+              height: 40px;
+              line-height: 40px;
+            }
+    
+            /* 체크박스 디자인 & 클릭,해제 */
+            .tip_label {
+              padding-left: 28px;
+              height: inherit;
+              line-height: inherit;
+              color: #333;
+              font-size: 12px;
+              font-weight: 400;
+              margin: 0;
+            }
+            .tip_chkbox {
+              border: 0;
+              border-radius: 0;
+              background: transparent;
+              -webkit-appearance: none;
+              -moz-appearance: none;
+              appearance: none;
+              position: absolute;
+              top: 12px;
+              left: 3px;
+              z-index: -1;
+              width: 14px;
+              height: 14px;
+              margin-top: 1px !important;
+            }
+            .tip_label:before,
+            .tip_label:after {
+              position: absolute;
+              content: "";
+              cursor: pointer;
+            }
+            .tip_label:before {
+              z-index: 12;
+              top: 10px;
+              left: 0;
+              width: 20px;
+              height: 20px;
+              border-radius: 3px;
+              background-color: #fff;
+              border: 1px solid #ccc;
+              box-sizing: border-box;
+              text-align: center;
+            }
+            .tip_label:after {
+              z-index: 13;
+              top: 14px;
+              left: 8px;
+              width: 5px;
+              height: 10px;
+              border: 1px solid #ccc;
+              border-width: 0 1px 1px 0;
+              transform: rotate(45deg);
+            }
+            .tip_label.changed:after {
+              border: 1px solid #fff;
+              border-width: 0 1px 1px 0;
+            }
+            .tip_label.changed:before  {
+              border: 1px solid #ff6633;
+              background-color: #ff6633;
+            }
+    
+            /* 낱개 포지션 relative */
+            #agree_wrap, #agree_wrap2 {
+              position: relative;
+              height: 40px;
+              line-height: 40px;
+            }
+            #pay-wrap {
+              border-top: 1px solid #ccc;
+              padding-top: 12px;
+            }
+            #agree_wrap {
+              height: auto !important;
+            }
+            #agree_wrap .tip_label {
+              line-height: 1.5;
+            }
+            #agree_wrap .tip_label:before {
+              top: 10px;
+            }
+            #agree_wrap .tip_label:after {
+              top: 14px;
+            }
+          </style>
+          <div id="bar_tip">
+            <input type="checkbox" class="tip_chkbox" id="tip_customer_chkbox">
+            <label class="tip_label" id="tip_customer">
+              구매자 정보와 동일
+            </label>
+          </div>
+          <script>
+            function change_customer_chkbox(enforce = false) {
+              let target = $('#tip_customer_chkbox');
+              let checked = target.prop('checked');
+              if (enforce === true) {
+                if (checked === false) {
+                  return false;
+                }
+                checked = true;
+              }
+              if (checked === false) {
+                if (change_shipping_info_tab($('#shipping-new-tab')) === false) {
+                  return false;
+                }
+                let user_name = $('#user-name').val();
+                let user_phone = $('#user-phone').val();
+                let user_email = $('#user-email').val();
+                let user_postcode = $('#user-postcode').val();
+                let user_address_1 = $('#user-address-1').val();
+                let user_address_2 = $('#user-address-2').val();
+                if (user_name === '' || user_phone === '' || user_email === '') {
+                  alert('구매자 필수 정보(이름/연락처/이메일)를 먼저 입력해주세요.');
+                  return false;
+                }
+    
+                if (user_postcode === '' || user_address_1 === '') {
+                  alert('구매자 주소를 먼저 입력해주세요.');
+                  return false;
+                }
+    
+                $('#receiver-name').val(user_name);
+                $('#phone-1').val(user_phone);
+                $('#postcode').val(user_postcode);
+                $('#address-1').val(user_address_1);
+                $('#address-2').val(user_address_2);
+                $('#postcode').prop('readonly', false);
+                $('#address-1').prop('readonly', false);
+                $('#address-2').prop('readonly', false);
+  
+                target.prop('checked', true);
+                $('#tip_customer').addClass('changed');
+              } else {
+                $('#receiver-name').val('');
+                $('#phone-1').val('');
+                $('#postcode').val('');
+                $('#address-1').val('');
+                $('#address-2').val('');
+                $('#postcode').prop('readonly', true);
+                $('#address-1').prop('readonly', true);
+                $('#address-2').prop('readonly', true);
+  
+                target.prop('checked', false);
+                $('#tip_customer').removeClass('changed');
+              }
+            }
+            $('#tip_customer').click(function(){
+              change_customer_chkbox();
+            })
+          </script>
         </div>
         <div class="shipping-info-tab">
           <div class="shipping-base-tab <?php if ($shipping_info_cnt) echo 'active'; ?>">
@@ -322,11 +559,26 @@
         <div class="total-balance-detail">
           <span id="total-balance-detail"><?php echo $this->crud_model->get_price_str($purchase_info->total_balance); ?>원</span> - <span id="coupon-discount">0원</span>
         </div>
-        <div class="pay-agree">
-          <label style="text-align:left">
-            <input class='form-checkbox' id="pay-agree-checkbox" name="pay-agree" type="checkbox" value="1">
-            주문하실 상품 및 결제/주문정보를 확인하였으며, 이에 동의합니다(필수)
-          </label>
+        <div id="pay-wrap">
+          <div class="pay-agree" id="agree_wrap">
+            <input type="checkbox" class="tip_chkbox" id="pay-agree-checkbox" style="top: 12px;">
+            <label class="tip_label" id="tip_pay">
+              주문하실 상품 및 결제/주문정보를 확인하였으며, 이에 동의합니다(필수)
+            </label>
+            <script>
+              $('#tip_pay').click(function(){
+                let target = $('#pay-agree-checkbox');
+                let checked = target.prop('checked');
+                if (checked === true) {
+                  target.prop('checked', false);
+                  $(this).removeClass('changed');
+                } else {
+                  target.prop('checked', true);
+                  $(this).addClass('changed');
+                }
+              })
+            </script>
+          </div>
         </div>
       </div>
       <div class="col-md-12 item-purchase-btn" id="item-purchase-btn">
@@ -389,18 +641,24 @@
       }
     });
   }
-
-  function change_shipping_info_tab(e) {
-    let target = e.data('target');
+  
+  function check_shpping_info_tab(target) {
     let max_cnt = <?php echo SHOP_SHIPPING_ADDRESS_MAX_CNT; ?>;
-
     if (target === 'new' && address_cnt >= max_cnt) {
       alert('최대 3개까지 등록가능합니다.');
       return false;
     }
-
     if (target === 'base' && address_cnt === 0) {
       alert('저장된 배송지가 없습니다.');
+      return false;
+    }
+    return true;
+  }
+
+  function change_shipping_info_tab(e) {
+    let target = e.data('target');
+
+    if (check_shpping_info_tab(target) === false) {
       return false;
     }
 
@@ -409,6 +667,7 @@
     if (target === 'base') {
       $('#shipping-base-info').show();
       $('#shipping-new-info').hide();
+      change_customer_chkbox(true);
     } else {
       $('#shipping-base-info').hide();
       $('#shipping-new-info').show();
@@ -626,9 +885,10 @@
     let user_postcode = $('#user-postcode').val();
     let user_address_1 = $('#user-address-1').val();
     let user_address_2 = $('#user-address-2').val();
-    let user_save = $('#purchase-user-agree-checkbox').prop('checked');
+    let user_save = $('#purchase-user-save').prop('checked');
     let user_address = '';
 
+    console.log(user_save);
     if (user_postcode !== '' && user_address_1 !== '') {
       user_address = '(' + user_postcode + ')' + ' ' + user_address_1 + ' ' + user_address_2;
     }
@@ -801,18 +1061,21 @@
       application_id: "<?= APIKEY_BOOTPAY_WEB; ?>",
       name: '<?php echo $cart_items[0]->product->item_name.' 등 '.count($cart_items).' 건'; ?>',
       pg: 'payapp',
-      method: 'card',
-      show_agree_window: 0,
+      method: '', //결제수단, 입력하지 않으면 결제수단 선택부터 화면이 시작합니다.
+      show_agree_window: 1, // 부트페이 정보 동의 창 보이기 여부
       items: items,
       user_info: user_info,
       order_id: purchase_code, //고유 주문번호로, 생성하신 값을 보내주셔야 합니다.
       params: {purchase_info: purchase_info, receiver_info: receiver_info, sender_info: sender_info},
-      account_expire_at: '',
+      account_expire_at: '', // 가상계좌 입금기간 제한 ( yyyy-mm-dd 포멧으로 입력해주세요. 가상계좌만 적용됩니다. )
       extra: {
-        start_at: '',
-        end_at: '',
-        vbank_result: 0,
-        quota: '0'
+        start_at: '', // 정기 결제 시작일 - 시작일을 지정하지 않으면 그 날 당일로부터 결제가 가능한 Billing key 지급
+        end_at: '', // 정기결제 만료일 -  기간 없음 - 무제한
+        vbank_result: 0, // 가상계좌 사용시 사용, 가상계좌 결과창을 볼지(1), 말지(0), 미설정시 봄(1)
+        quota: '0,2,3,4,5,6', // 결제금액이 5만원 이상시 할부개월 허용범위를 설정할 수 있음, [0(일시불), 2개월, 3개월] 허용, 미설정시 12개월까지 허용,
+        theme: 'purple', // [ red, purple(기본), custom ]
+        custom_background: '#00a086', // [ theme가 custom 일 때 background 색상 지정 가능 ]
+        custom_font_color: '#ffffff' // [ theme가 custom 일 때 font color 색상 지정 가능 ]
       }
     }).error(function (data) {
       $("#loading_set").fadeOut(500);

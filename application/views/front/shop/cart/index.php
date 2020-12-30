@@ -97,16 +97,168 @@
     margin: 0;
   }
 </style>
-<section class="page-section">
+<section class="page-section" id="buying">
   <div class="container">
     <div class="row">
       <div class="cart-content">
         <div class="cart-header">
-          <div class="cart-item-checkbox">
-            <label style="text-align:left">
-              <input checked class='form-checkbox' id="cart-item-check-all" name="cart_item_check_all" type="checkbox" value="1" onchange="check_all();"/>
+          <style type="text/css">
+            #buying .cart-header {
+              border-bottom: 1px solid #ccc;
+              height: 52px;
+              line-height: 52px;
+            }
+            #buying .cart-header u {
+              text-decoration: none;
+              color: #ad796d;
+              font-size: 14px;
+              font-weight: bold;
+            }
+            #buying .cart-item-all {
+              border: 0;
+            }
+            #buying .cart-item {
+              padding: 16px 0;
+              border: 0;
+              border-bottom: 1px dashed #ccc;
+            }
+            #buying .item-brand {
+              margin-bottom: 12px;
+            }
+            #buying .item-name {
+              padding: 0 0 8px 0;
+              color: #333;
+              font-size: 13px !important;
+            }
+            #buying .item-price {
+              padding: 0 0 4px 0;
+              color: #757575;
+              font-size: 11px !important;
+              font-weight: 900;
+            }
+            #buying .item-option {
+              color: #757575;
+              padding: 0 0 0 0;
+              font-size: 11px !important;
+              font-weight: 900;
+            }
+            #buying .cart-item-info {
+              width: 64%;
+            }
+            #buying .cart-item-image {
+              width: 36%;
+            }
+            #buying .cart-balance tr {
+              height: 28px;
+            }
+            #buying .cart-balance tr th {
+              width: 24%;
+              color: #333;
+              font-size: 13px;
+              font-weight: 600;
+            }
+            #buying .cart-balance tr td {
+              color: #333;
+              font-size: 14px;
+            }
+            #buying .space {
+              height: 8px !important;
+            }
+    
+    
+            /* 체크박스 디자인 & 클릭,해제 */
+            .type_label {
+              padding-left: 28px;
+              height: inherit;
+              line-height: inherit;
+              color: #111;
+              font-size: 14px;
+              font-weight: 400;
+              margin: 0;
+            }
+            .chk_style {
+              border: 0;
+              border-radius: 0;
+              background: transparent;
+              -webkit-appearance: none;
+              -moz-appearance: none;
+              appearance: none;
+              position: absolute;
+              top: 12px;
+              left: 3px;
+              z-index: -1;
+              width: 14px;
+              height: 14px;
+              margin-top: 2px !important;
+            }
+            .type_label:before,
+            .type_label:after {
+              position: absolute;
+              content: "";
+              cursor: pointer;
+            }
+            .type_label:before {
+              z-index: 12;
+              top: 10px;
+              left: 0;
+              width: 20px;
+              height: 20px;
+              border-radius: 3px;
+              background-color: #fff;
+              border: 1px solid #ccc;
+              box-sizing: border-box;
+              text-align: center;
+            }
+            .type_label:after {
+              z-index: 13;
+              top: 14px;
+              left: 8px;
+              width: 5px;
+              height: 10px;
+              border: 1px solid #ccc;
+              border-width: 0 1px 1px 0;
+              transform: rotate(45deg);
+            }
+            .type_label.changed:after {
+              border: 1px solid #fff;
+              border-width: 0 1px 1px 0;
+            }
+            .type_label.changed:before  {
+              border: 1px solid #ff6633;
+              background-color: #ff6633;
+            }
+    
+            /* 낱개 포지션 relative */
+            #all_wrap {
+              position: relative;
+              line-height: 40px;
+              height: 40px !important;
+              top: 6px;
+            }
+            #chk--only {
+              position: relative;
+              line-height: 20px;
+            }
+            #chk--only .type_label:before {
+              top: 0;
+            }
+            #chk--only .type_label:after {
+              top: 4px;
+            }
+          </style>
+          <div class="cart-item-checkbox" id="all_wrap">
+            <input checked type="checkbox" id="cart-item-check-all" name="cart_item_check_all" class="chk_style"
+                   onchange="check_all()">
+            <label class="type_label changed" id="all_chk">
               전체선택
             </label>
+            <!--
+            <label style="text-align:left">
+              <input checked class='form-checkbox' id="cart-item-check-all" name="cart_item_check_all"
+              type="checkbox" value="1" onchange="check_all();"/>
+              전체선택
+            </label>
+            -->
           </div>
           <div class="cart-item-delete">
             <a href="javascript:void(0);" onclick="cart_item_del()">
@@ -117,13 +269,22 @@
         <div class="cart-item-all">
           <?php foreach ($cart_items as $item) { ?>
             <div class="cart-item" data-id="<?php echo $item->cart_id; ?>" data-price="<?php echo $item->item_sell_price; ?>" data-additional-price="<?php echo $item->additional_price;?>" data-shipping-fee="<?php echo $item->shipping_fee; ?>" data-purchase-cnt="<?php echo $item->total_purchase_cnt;?>" data-status="<?php echo $item->product_id->status; ?>"
-            <?php if ($item->product_id->status != SHOP_PRODUCT_STATUS_ON_SALE) echo 'style="color: grey;"'; ?>>
+              <?php if ($item->product_id->status != SHOP_PRODUCT_STATUS_ON_SALE) echo 'style="color: grey;"'; ?>>
               <div class="cart-item-info">
-                <div class="item-brand">
-                  <label style="text-align:left">
-                    <input <?php if ($item->product_id->status == SHOP_PRODUCT_STATUS_ON_SALE) echo 'checked'; ?> onchange="change_balance()" class='form-checkbox' id="cart-item-check-all" name="cart_item_check_all" type="checkbox" value="1" data-status="<?php echo $item->product_id->status; ?>"/>
+<!--                <div class="item-brand">-->
+                <div class="item-brand" id="chk--only">
+                  <input <?php if ($item->product_id->status == SHOP_PRODUCT_STATUS_ON_SALE) echo 'checked'; ?>
+                    class='chk_style' name="cart_item_check_all" type="checkbox"
+                    data-status="<?php echo $item->product_id->status; ?>" style="top: 1px;"/>
+                  <label class="type_label changed confirm_chk">
                     <?php echo $item->shop->shop_name; ?>
                   </label>
+                  <!--
+                  <label style="text-align:left">
+                    <input <?php //if ($item->product_id->status == SHOP_PRODUCT_STATUS_ON_SALE) echo 'checked'; ?> onchange="change_balance()" class='form-checkbox' id="cart-item-check-all" name="cart_item_check_all" type="checkbox" value="1" data-status="<?php //echo $item->product_id->status; ?>"/>
+                    <?php //echo $item->shop->shop_name; ?>
+                  </label>
+                  -->
                 </div>
                 <div class="item-name"><?php echo $item->product->item_name; ?></div>
                 <div class="item-price">
@@ -182,10 +343,17 @@
               <th>배송비</th>
               <td id="total-shipping-fee"><?php echo $this->crud_model->get_price_str($total_shipping_fee); ?>원</td>
             </tr>
+            <tr class="space"></tr>
+            <tr style="height: 52px; border-top: 1px dashed;">
+              <th style="font-size: 16px; font-weight: 900;">결제금액</th>
+              <td id="total-balance" style="font-size: 20px; font-weight: 900;"><?php echo $this->crud_model->get_price_str($total_balance); ?></td>
+            </tr>
+            <!--
             <tr>
               <th>결제금액</th>
-              <td id="total-balance"><b><?php echo $this->crud_model->get_price_str($total_balance); ?>원</b></td>
+              <td id="total-balance"><b><?php //echo $this->crud_model->get_price_str($total_balance); ?>원</b></td>
             </tr>
+            -->
             </tbody>
           </table>
         </div>
@@ -213,7 +381,7 @@
       </div>
       <div class="modal-footer">
         <!--        <button type="button" class="btn btn-danger btn-theme-sm" data-dismiss="modal"">취소</button>-->
-        <button type="button" class="btn btn-danger btn-theme-sm" onclick="close_beta_modal()" style="text-transform: none; font-weight: 400;"">확인</button>
+        <button type="button" class="btn btn-danger btn-theme-sm" onclick="close_beta_modal()" style="text-transform: none; font-weight: 400;">확인</button>
       </div>
     </div>
   </div>
@@ -228,19 +396,23 @@
 
   function check_all() {
     let checked = $('#cart-item-check-all').prop('checked');
-    // console.log(checked);
     $.each($('.cart-item-all').find('input:checkbox'),function(idx,item) {
       // console.log(item);
       $(item).prop('checked', checked);
+      if (checked === true) {
+        $(item).closest('.item-brand').find('.confirm_chk').addClass('changed')
+      } else {
+        $(item).closest('.item-brand').find('.confirm_chk').removeClass('changed')
+      }
     });
     change_balance();
   }
 
   function cart_item_del() {
-    $('#loading_set').show();
     $.each($('.cart-item-all').find('input:checkbox'),function(idx,item) {
       let checked = $(item).prop('checked');
       if (checked === true) {
+        $('#loading_set').show();
         let cart_item = $(item).closest('.cart-item');
         let cart_id = cart_item.data('id');
         let price = cart_item.data('price');
@@ -333,8 +505,10 @@
 
     if (all_checked === true) {
       $('#cart-item-check-all').prop('checked', true);
+      $('#all_chk').addClass('changed');
     } else {
       $('#cart-item-check-all').prop('checked', false);
+      $('#all_chk').removeClass('changed');
     }
 
     total_balance = total_price + total_shipping_fee + total_additional_price;
@@ -344,7 +518,6 @@
     $('#total-additional-price').text(get_price_str(total_additional_price) + '원');
     $('#total-shipping-fee').text(get_price_str(total_shipping_fee) + '원');
     $('#total-balance').text(get_price_str(total_balance) + '원');
-
   }
 
   function open_beta_modal() {
@@ -428,6 +601,35 @@
   }
   
   $(document).ready(function() {
+    $('#all_chk').click(function(){
+      let target = $('#cart-item-check-all');
+      let checked = target.prop('checked');
+      // console.log(target);
+      // console.log(checked);
+      if (checked === true) {
+        target.prop('checked', false);
+        // $(this).removeClass('changed');
+      } else {
+        target.prop('checked', true);
+        // $(this).addClass('changed');
+      }
+      // console.log($(this).hasClass('changed'));
+      check_all();
+    })
+    $('.confirm_chk').click(function(){
+      let target = $(this).closest('.item-brand').find('input[type=checkbox]');
+      let checked = target.prop('checked');
+      // console.log(target);
+      // console.log(checked);
+      if (checked === true) {
+        target.prop('checked', false);
+        $(this).removeClass('changed');
+      } else {
+        target.prop('checked', true);
+        $(this).addClass('changed');
+      }
+      change_balance();
+    })
     change_balance();
   });
 

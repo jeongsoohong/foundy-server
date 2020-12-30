@@ -13,7 +13,7 @@
     </td>
   </tr>
   <tr>
-    <th>배송지<span class="require">*</span></th>
+    <th style="line-height: 35px;">배송지<span class="require">*</span></th>
     <td class="shipping-new-address">
       <div class="shipping-new-postcode-blk">
         <div class="shipping-new-postcode">
