@@ -486,7 +486,7 @@
                   return false;
                 }
     
-                if (user_postcode === '' || user_address_1 === '') {
+                if (user_postcode === '' || user_address_1 === '' || user_address_2 === '') {
                   alert('구매자 주소를 먼저 입력해주세요.');
                   return false;
                 }
@@ -848,12 +848,13 @@
           $("#shipping-new-info").html(loading_set);
           $('#shipping-new-info').load("<?php echo base_url().'home/shop/shipping/new';?>");
 
-          $('#shipping-new-info').hide();
-          $('#shipping-base-info').show();
-
-          $('.shipping-new-tab').removeClass('active');
-          $('.shipping-base-tab').addClass('active');
-
+          change_shipping_info_tab($('#shipping-base-tab'));
+          // $('#shipping-new-info').hide();
+          // $('#shipping-base-info').show();
+          //
+          // $('.shipping-new-tab').removeClass('active');
+          // $('.shipping-base-tab').addClass('active');
+          //
           address_cnt += 1;
 
         } else {
