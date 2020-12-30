@@ -3,6 +3,21 @@
 if (!defined('BASEPATH'))
   exit('No direct script access allowed');
 
+// remove logs
+// 50 14 * * * root /usr/bin/find /web/log/logs/cron-*.log -ctime +7 -exec rm -f {} \;
+// 50 14 * * * root /usr/bin/find /web/log/logs/log-*.log -ctime +7 -exec rm -f {} \;
+// 50 14 * * * root /usr/bin/find /web/log/mts/alimtalk/common.log.* -ctime +7 -exec rm -f {} \;
+// 50 14 * * * root /usr/bin/find /web/log/mts/alimtalk/mms_dbmove.log.* -ctime +7 -exec rm -f {} \;
+// 50 14 * * * root /usr/bin/find /web/log/mts/alimtalk/mms_report.log.* -ctime +7 -exec rm -f {} \;
+// 50 14 * * * root /usr/bin/find /web/log/mts/alimtalk/mms_send.log.* -ctime +7 -exec rm -f {} \;
+// 50 14 * * * root /usr/bin/find /web/log/mts/smsmms/common.log.* -ctime +7 -exec rm -f {} \;
+// 50 14 * * * root /usr/bin/find /web/log/mts/smsmms/mms_dbmove.log.* -ctime +7 -exec rm -f {} \;
+// 50 14 * * * root /usr/bin/find /web/log/mts/smsmms/mms_report.log.* -ctime +7 -exec rm -f {} \;
+// 50 14 * * * root /usr/bin/find /web/log/mts/smsmms/mms_send.log.* -ctime +7 -exec rm -f {} \;
+// 50 14 * * * root /usr/bin/find /web/log/mts/smsmms/sms_dbmove.log.* -ctime +7 -exec rm -f {} \;
+// 50 14 * * * root /usr/bin/find /web/log/mts/smsmms/sms_report.log.* -ctime +7 -exec rm -f {} \;
+// 50 14 * * * root /usr/bin/find /web/log/mts/smsmms/sms_send.log.* -ctime +7 -exec rm -f {} \;
+
 class Cron extends CI_Controller
 {
   function __construct()
@@ -17,6 +32,8 @@ class Cron extends CI_Controller
   
   public function unregister($para1 = '')
   {
+    // 30 23 * * * root /usr/bin/nohup /usr/bin/php -f /web/public_html/index.php cron unregister delete 2>&1 &
+    
     $date = date('Y-m-d', strtotime('-7 days'));
     echo $date;
     if ($para1 == 'delete') {
@@ -39,6 +56,9 @@ QUERY;
       
       if ($para2 == 'reminder') {
         // 클래스 시작 시간 알림톡 전송
+        // 0 19 * * * root /usr/bin/php -f /web/public_html/index.php cron center class reminder 19 5 15
+        // 0 8 * * * root /usr/bin/php -f /web/public_html/index.php cron center class reminder 8 2 7
+        // 0 13 * * * root /usr/bin/php -f /web/public_html/index.php cron center class reminder 13 2 11
         
         $now = date('Y-m-d').' '.$para3.':00:00';
         $start_at = date('Y-m-d H:i:s', strtotime($now) + $para4 * ONE_HOUR);
@@ -77,20 +97,25 @@ QUERY;
         }
         
       } else if ($para2 == 'update') {
-        // 주기적으로 클래스 업데이트 될 때 알림톡 전송
+        // 주기적으로 클래스 업데이트 될 때 알림톡 전송(일주일 이내 클래스에 대해서)
+        // */15 * * * * root /usr/bin/php -f /web/public_html/index.php cron center class update 15
 
         $duration = $para3 * ONE_MINUTE; // minute * 60(sec)
         $now = time();
         $now = $now - $now % $duration;
+        $schedule_date_1 = date('Y-m-d', $now);
+        $schedule_date_2 = date('Y-m-d', $now + ONE_WEEK - 1);
         $start_at = date('Y-m-d H:i:s', $now - $duration);
         $end_at = date('Y-m-d H:i:s', $now - 1);
         $query = <<<QUERY
-select distinct(center_id) from center_schedule_info where '{$start_at}'<=updated_at and updated_at<='{$end_at}' and activate=1
+select distinct(center_id) from center_schedule_info
+where '{$schedule_date_1}'<=schedule_date and schedule_date<='{$schedule_date_2}' and
+'{$start_at}'<=updated_at and updated_at<='{$end_at}' and activate=1
 QUERY;
         $updated_centers = $this->db->query($query)->result();
   
-        log_message('debug', '[cron] center/class/update, now['.$now.'] start_at['.$start_at.
-          '] end_at['.$end_at.'] count['.count($updated_centers).'] ids['.json_encode($updated_centers).']');
+        log_message('debug', '[cron] center/class/update, date1['.$schedule_date_1.'] date2['.$schedule_date_2.
+          '] start_at['.$start_at.'] end_at['.$end_at.'] count['.count($updated_centers).'] ids['.json_encode($updated_centers).']');
        
         if (count($updated_centers) > 0) {
           $center_ids = array();
@@ -111,6 +136,7 @@ QUERY;
       
       } else if ($para2 == 'wait') {
         // 주기적으로 시작된 클래스에 대해서 대기자 취소
+        // */1 * * * * root /usr/bin/php -f /web/public_html/index.php cron center class wait 1
 
         $duration = $para3 * ONE_MINUTE; // minute * 60(sec)
         $now = time();
