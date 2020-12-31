@@ -83,7 +83,7 @@ QUERY;
         }
         $classes = $this->db->query($query)->result();
   
-        log_message('debug', '[cron] center/class/reminder, now['.$now.'] start_at['.$start_at.
+        log_message('info', '[cron] center/class/reminder, now['.$now.'] start_at['.$start_at.
           '] end_at['.$end_at.'] count['.count($classes).']');
   
         foreach ($classes as $class) {
@@ -114,7 +114,7 @@ where '{$schedule_date_1}'<=schedule_date and schedule_date<='{$schedule_date_2}
 QUERY;
         $updated_centers = $this->db->query($query)->result();
   
-        log_message('debug', '[cron] center/class/update, date1['.$schedule_date_1.'] date2['.$schedule_date_2.
+        log_message('info', '[cron] center/class/update, date1['.$schedule_date_1.'] date2['.$schedule_date_2.
           '] start_at['.$start_at.'] end_at['.$end_at.'] count['.count($updated_centers).'] ids['.json_encode($updated_centers).']');
        
         if (count($updated_centers) > 0) {
@@ -150,7 +150,7 @@ select * from center_schedule_info where schedule_date='{$schedule_date}' and
 QUERY;
         $classes = $this->db->query($query)->result();
   
-        log_message('debug', '[cron] center/class/wait, duration['.$duration.'] now['.$now.'] date['.$schedule_date.
+        log_message('info', '[cron] center/class/wait, duration['.$duration.'] now['.$now.'] date['.$schedule_date.
           '] start_time['.$start_time.'] end_time['.$end_time.'] count['.count($classes).']');
   
         foreach ($classes as $class) {
