@@ -70,6 +70,9 @@ class Center_model extends CI_Model
       case CENTER_TICKET_MEMBER_ACTION_RESERVE_FAIL: return '클래스예약실패';
       case CENTER_TICKET_MEMBER_ACTION_MODIFY: return '정보수정';
       case CENTER_TICKET_MEMBER_ACTION_ADDITION: return '수업횟수추가';
+      case CENTER_TICKET_MEMBER_ACTION_RESERVE_TRANS: return '클래스예약전환';
+      case CENTER_TICKET_MEMBER_ACTION_RESERVE_WAIT_TRANS: return '클래스예약대기전환';
+      case CENTER_TICKET_MEMBER_ACTION_RESERVE_CANCEL_TRANS: return '클래스예약취소전환';
     }
  
     return null;
@@ -173,7 +176,7 @@ class Center_model extends CI_Model
       'schedule_info_id' => $schedule_info_id,
       'reserve_id' => $reserve_id,
       'action' => $action,
-      'action_str' => $this->center_model->get_ticket_member_action_str($action),
+      'action_str' => $this->get_ticket_member_action_str($action),
       'action_duration' => 0,
       'action_data' => '<' . $schedule_title . '>, 일시 : ' . date('Y.m.d', strtotime($schedule_date)),
     );
@@ -462,7 +465,7 @@ QUERY;
     return $this->db->order_by('reserve_id', 'asc')->limit(1, 0)->get_where('center_schedule_reserve', array('schedule_info_id' => $schedule_info_id, 'wait' => 1))->row();
   }
  
-  function schedule_cancel($reserve_info, $schedule_title, $schedule_date)
+  function schedule_cancel($reserve_info, $schedule_title, $schedule_date, $trans = true)
   {
     $upd = array(
       'reserve' => 0,
@@ -484,9 +487,15 @@ QUERY;
     $this->db->set('cancel', 'cancel+1', false);
     $this->db->set('update_at', 'NOW()', false);
     $this->db->update('center_ticket_member', array(), array('member_id' => $reserve_info->member_id));
+    
+    if ($trans == true) {
+      $action = CENTER_TICKET_MEMBER_ACTION_RESERVE_CANCEL_TRANS;
+    } else {
+      $action = CENTER_TICKET_MEMBER_ACTION_RESERVE_CANCEL;
+    }
    
     $this->ticket_member_reserve($reserve_info->member_id, $reserve_info->ticket_id, $reserve_info->user_id,
-    $reserve_info->schedule_info_id, $reserve_info->reserve_id, CENTER_TICKET_MEMBER_ACTION_RESERVE_CANCEL,
+    $reserve_info->schedule_info_id, $reserve_info->reserve_id, $action,
     $schedule_title, $schedule_date);
   }
   
@@ -505,7 +514,7 @@ QUERY;
     $this->db->update('center_schedule_reserve', $upd, $where);
  
     $this->ticket_member_reserve($wait_info->member_id, $wait_info->ticket_id, $wait_info->user_id,
-      $wait_info->schedule_info_id, $wait_info->reserve_id, CENTER_TICKET_MEMBER_ACTION_RESERVE,
+      $wait_info->schedule_info_id, $wait_info->reserve_id, CENTER_TICKET_MEMBER_ACTION_RESERVE_TRANS,
     $schedule_title, $schedule_date);
   
     $this->db->set('reserve', 'reserve+1', false);
@@ -529,7 +538,7 @@ QUERY;
     $this->db->update('center_schedule_reserve', $upd, $where);
    
     $this->ticket_member_reserve($reserve_info->member_id, $reserve_info->ticket_id, $reserve_info->user_id,
-    $reserve_info->schedule_info_id, $reserve_info->reserve_id, CENTER_TICKET_MEMBER_ACTION_RESERVE,
+    $reserve_info->schedule_info_id, $reserve_info->reserve_id, CENTER_TICKET_MEMBER_ACTION_RESERVE_WAIT_TRANS,
     $schedule_title, $schedule_date);
     
     $this->db->set('reserve', 'reserve-1', false);

@@ -702,7 +702,7 @@
     return regexp.test(v);
   }
   function change_status() {
-    let next_status = <?php echo $next_status; ?>
+    let next_status = <?php echo $next_status; ?>;
   
     let shipping_infos = Array();
     let idx = 0;

@@ -1012,7 +1012,7 @@ QUERY;
           }
       
         } else {
-          $this->redirect_error('회원 전화번호가 아닙니다');
+          $this->redirect_error('접근 오류가 발생하였습니다!(4)');
         }
     
       } else if ($para2 == 'do') {
@@ -1037,9 +1037,11 @@ QUERY;
         }
     
         $auth_data = json_decode($auth->auth_data);
-        $user_data = $this->db->get_where('user', array('phone' => $auth_data->mobileno))->row();
-        if (isset($user_data) && empty($user_data) == false) {
-          $this->redirect_error('이미 가입한 회원 전화번호입니다!');
+        if (DEV_SERVER == false) {
+          $user_data = $this->db->get_where('user', array('phone' => $auth_data->mobileno))->row();
+          if (isset($user_data) && empty($user_data) == false) {
+            $this->redirect_error('이미 가입한 회원 전화번호입니다!');
+          }
         }
     
         $reg_type = $this->session->userdata('reg_type');
@@ -3405,7 +3407,7 @@ QUERY;
             }
           }
 
-          $this->center_model->schedule_cancel($reserve_info, $schedule_info->schedule_title, $schedule_info->schedule_date);
+          $this->center_model->schedule_cancel($reserve_info, $schedule_info->schedule_title, $schedule_info->schedule_date, false);
           
           if ($schedule_info->waitable) {
             $wait_info = $this->center_model->get_schedule_wait_info_first($schedule_info_id);
@@ -4686,11 +4688,20 @@ QUERY;
 //        }
         
         // send push
-        $title = '구매성공';
+        $title = $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_COMPLETED);
         $body = '상품을 주문해주셔서 감사합니다. 주문내역을 확인해주세요.';
         $this->push->send_push_private($this->session, $title, $body, $redirect_url, null);
         
         // send kakao alim talk
+        if ($this->is_login() == true) {
+          $user_data = json_decode($this->session->userdata('user_data'));
+          $phone = $user_data->phone;
+        } else {
+          $phone = $purchase_info->sender_phone;
+        }
+        $payment_info =  json_decode($purchase_info->bootpay_done_data);
+        $this->mts_model->send_shop_order($phone, SHOP_SHIPPING_STATUS_ORDER_COMPLETED, $purchase_code,
+          $payment_info->item_name, $payment_info->purchased_at, $redirect_url);
 
       
         //$this->crud_model->alert_exit('구매가 성공하였습니다.', base_url().'home/shop/main');

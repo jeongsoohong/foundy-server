@@ -113,8 +113,8 @@ class Crud_model extends CI_Model
     $ins = array(
       'user_id' => $user_data->user_id,
       'account' => json_encode($account),
-      'session_id' => $this->crud_model->get_session_id(),
-      'ip' => $this->crud_model->get_session_ip(),
+      'session_id' => $this->get_session_id(),
+      'ip' => $this->get_session_ip(),
       'is_browser' => $this->agent->is_browser(),
       'is_mobile' => $this->agent->is_mobile(),
       'is_robot' => $this->agent->is_robot(),
@@ -162,6 +162,21 @@ class Crud_model extends CI_Model
       $this->db->set('create_at', 'now()', false);
       $this->db->insert('user_apple', $data);
     }
+    
+    $this->mts_model->send_user_register($phone);
+ 
+//    $now = date('Y-m-d H:i:s');
+//    $coupon_type = COUPON_USER_TYPE_REGISTER;
+//    $query = <<<QUERY
+//select * from server_coupon where user_type={$coupon_type} and activate=1 and
+//start_at<='{$now}' and '{$now}'<=end_at
+//QUERY;
+//    $coupons = $this->db->query($query)->result();
+//    foreach ($coupons as $coupon) {
+//      if ($coupon->coupon_count == 0) {
+//        $this->mts_model->send_user_coupon($phone, $user_name, $coupon->coupon_title, $coupon->use_at);
+//      }
+//    }
   
     $result['status'] = 'success';
     $result['message'] = "첫 방문을 환영합니다.";
@@ -245,6 +260,8 @@ class Crud_model extends CI_Model
         $this->session->set_userdata('reg_type', '');
         $this->session->set_userdata('reg_account', '');
   
+        $this->mts_model->send_user_register($phone);
+        
         $result['status'] = 'success';
         $result['message'] = "첫 방문을 환영합니다.";
   
@@ -303,8 +320,8 @@ class Crud_model extends CI_Model
       'user_id' => $user_data->user_id,
       'kakao_id' => $user_data->kakao_id,
       'account' => json_encode($kakao_account),
-      'session_id' => $this->crud_model->get_session_id(),
-      'ip' => $this->crud_model->get_session_ip(),
+      'session_id' => $this->get_session_id(),
+      'ip' => $this->get_session_ip(),
       'is_browser' => $this->agent->is_browser(),
       'is_mobile' => $this->agent->is_mobile(),
       'is_robot' => $this->agent->is_robot(),
@@ -394,7 +411,7 @@ class Crud_model extends CI_Model
 //        }
       }
       if ($no_thumb == '') {
-        $this->crud_model->img_thumb($type, $id, $ext, $width, $height);
+        $this->img_thumb($type, $id, $ext, $width, $height);
       }
     } elseif ($multi == 'multi') {
       $ib = 1;
@@ -402,7 +419,7 @@ class Crud_model extends CI_Model
         $ib = $this->file_exist_ret($type, $id, $ib);
         move_uploaded_file($_FILES[$name]['tmp_name'][$i], $upload_path . 'uploads/' . $type . '_image/' . $type . '_' . $id . '_' . $ib . $ext);
         if ($no_thumb == '') {
-          $this->crud_model->img_thumb($type, $id . '_' . $ib, $ext, $width, $height);
+          $this->img_thumb($type, $id . '_' . $ib, $ext, $width, $height);
         }
       }
     }
@@ -419,7 +436,7 @@ class Crud_model extends CI_Model
           $got_content = file_get_contents($url);
           file_put_contents($to_path, $got_content);
           if ($no_thumb == '') {
-              $this->crud_model->img_thumb($type, $id . '_' . $ib, $ext);
+              $this->img_thumb($type, $id . '_' . $ib, $ext);
           }
       }
   }*/
@@ -434,7 +451,7 @@ class Crud_model extends CI_Model
       file_put_contents('uploads/' . $type . '_image/' . $type . '_' . $id . '_' . $ib . $ext, file_get_contents($url));
       //copy($url,FCPATH.'uploads/' . $type . '_image/' . $type . '_' . $id . '_' . $ib . $ext);
       if ($no_thumb == '') {
-        $this->crud_model->img_thumb($type, $id . '_' . $ib, $ext);
+        $this->img_thumb($type, $id . '_' . $ib, $ext);
       }
     }
   }
@@ -484,7 +501,7 @@ class Crud_model extends CI_Model
       }
 
     } else if ($multi == 'multi') {
-      $num = $this->crud_model->get_type_name_by_id($type, $id, 'num_of_imgs');
+      $num = $this->get_type_name_by_id($type, $id, 'num_of_imgs');
       //$num = 2;
       $i = 0;
       $p = 0;
@@ -548,7 +565,7 @@ class Crud_model extends CI_Model
       }
 
     } else if ($multi == 'multi') {
-      $num = $this->crud_model->get_type_name_by_id($type, $id, 'num_of_imgs');
+      $num = $this->get_type_name_by_id($type, $id, 'num_of_imgs');
       if ($m_sin == '') {
         $i = 0;
         $p = 0;
@@ -679,7 +696,7 @@ class Crud_model extends CI_Model
           if ($condition == '') {
             $return .= ucfirst(str_replace('_', ' ', $row));
           } else {
-            $return .= $this->crud_model->get_type_name_by_id($condition, $row, $c_match);
+            $return .= $this->get_type_name_by_id($condition, $row, $c_match);
           }
           $return .= '</option>';
         } else if ($type == 'edit') {
@@ -692,7 +709,7 @@ class Crud_model extends CI_Model
           if ($condition == '') {
             $return .= ucfirst(str_replace('_', ' ', $row));
           } else {
-            $return .= $this->crud_model->get_type_name_by_id($condition, $row, $c_match);
+            $return .= $this->get_type_name_by_id($condition, $row, $c_match);
           }
 
           $return .= '</option>';
@@ -767,7 +784,7 @@ class Crud_model extends CI_Model
           if ($condition == '') {
             $return .= ucfirst(str_replace('_', ' ', $row));
           } else {
-            $return .= $this->crud_model->get_type_name_by_id($condition, $row, $c_match);
+            $return .= $this->get_type_name_by_id($condition, $row, $c_match);
           }
           $return .= '</option>';
         } else if ($type == 'edit') {
@@ -780,7 +797,7 @@ class Crud_model extends CI_Model
           if ($condition == '') {
             $return .= ucfirst(str_replace('_', ' ', $row));
           } else {
-            $return .= $this->crud_model->get_type_name_by_id($condition, $row, $c_match);
+            $return .= $this->get_type_name_by_id($condition, $row, $c_match);
           }
 
           $return .= '</option>';
@@ -794,7 +811,7 @@ class Crud_model extends CI_Model
   //GET PRODUCT LINK
   function blog_link($blog_id)
   {
-    $name = url_title($this->crud_model->get_type_name_by_id('blog', $blog_id, 'title'));
+    $name = url_title($this->get_type_name_by_id('blog', $blog_id, 'title'));
     return base_url() . 'home/blog_view/' . $blog_id . '/' . $name;
   }
 
@@ -834,9 +851,9 @@ class Crud_model extends CI_Model
   {
     $action = $is_do ? 'undo' : 'do';
     if ($func_type == 'like') {
-      $img_src = $this->crud_model->get_like_icon($is_do);
+      $img_src = $this->get_like_icon($is_do);
     } else {
-      $img_src = $this->crud_model->get_bookmark_icon($is_do);
+      $img_src = $this->get_bookmark_icon($is_do);
     }
     return "<a href='javascript:void(0)' data-action='{$action}' onclick=\"sns_function('{$func_type}','{$find_type}',{$id},$(this))\">" .
 //      "<img class='{$find_type}-{$func_type}-{$id}' <!-- id='{$find_type}-{$func_type}-{$id}' --> src='{$img_src}' alt='' style='width:{$w}px !important; height: {$h}px !important;'></a>";
@@ -1393,41 +1410,45 @@ QUERY;
     $purchase_info = $this->db->get_where('shop_purchase', array('purchase_id' => $purchase_product->purchase_id))->row();
   
     if (empty($purchase_product) || empty($purchase_info)) {
-      $this->crud_model->alert_exit('잘못된 접근입니다.', base_url());
-    }
-    
-    // confirm user_id & session_id
-    if ($purchase_info->user_id > 0) {
-      if ($this->session->userdata('user_login') != 'yes') {
-        $this->crud_model->alert_exit('잘못된 접근입니다.', base_url());
-      }
-      $user_id = $this->session->userdata('user_id');
-      if ($purchase_info->user_id != $user_id) {
-        $this->crud_model->alert_exit('잘못된 접근입니다.', base_url());
-      }
-    } else if ($purchase_info->session_id > 0) {
-      if ($purchase_info->session_id != $auth_code) {
-        $this->crud_model->alert_exit('잘못된 접근입니다.', base_url());
-      }
-    } else {
-        $this->crud_model->alert_exit('잘못된 접근입니다.', base_url());
+      $this->alert_exit('잘못된 접근입니다.');
     }
 
-    // confirm shipping_status
-    if ($user_cancel == true && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_PREPARE && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_ORDER_COMPLETED) {
-      $status = $this->crud_model->get_shipping_status_str($purchase_product->shipping_status);
-      $this->crud_model->alert_exit('주문취소가 불가능한 상태입니다. 관리자에게 문의해주세요.(주문상태:'.$status.')',
-        base_url()."home/shop/order/detail?c={$purchase_info->purchase_code}&a={$auth_code}");
+    if ($user_cancel == true) {
+      // confirm user_id & session_id
+      if ($purchase_info->user_id > 0) {
+        if ($this->session->userdata('user_login') != 'yes') {
+          $this->alert_exit('잘못된 접근입니다.(1)');
+        }
+        $user_id = $this->session->userdata('user_id');
+        if ($purchase_info->user_id != $user_id) {
+          $this->alert_exit('잘못된 접근입니다.(2)');
+        }
+      } else if ($purchase_info->session_id != '0') {
+        if ($purchase_info->session_id != $auth_code) {
+          $this->alert_exit('잘못된 접근입니다.(3)');
+        }
+      } else {
+        $this->alert_exit('잘못된 접근입니다.(4)');
+      }
+      // confirm shipping_status
+      if ($purchase_product->shipping_status != SHOP_SHIPPING_STATUS_PREPARE &&
+        $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_ORDER_COMPLETED) {
+        $status = $this->get_shipping_status_str($purchase_product->shipping_status);
+        $this->alert_exit('주문취소가 불가능한 상태입니다. 관리자에게 문의해주세요.(주문상태:'.$status.')');
+      }
+    } else { // center cancel
+      // confirm shipping_status
+      if ($purchase_product->shipping_status != SHOP_SHIPPING_STATUS_PREPARE &&
+        $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_ORDER_COMPLETED &&
+        $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_PURCHASE_CANCELING) {
+        $status = $this->get_shipping_status_str($purchase_product->shipping_status);
+        $this->alert_exit('주문취소가 불가능한 상태입니다. 관리자에게 문의해주세요.(주문상태:'.$status.')');
+      }
     }
-    if ($user_cancel == false && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_PREPARE && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_ORDER_COMPLETED && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_PURCHASE_CANCELING) {
-      $status = $this->crud_model->get_shipping_status_str($purchase_product->shipping_status);
-      $this->crud_model->alert_exit('주문취소가 불가능한 상태입니다. 관리자에게 문의해주세요.(주문상태:'.$status.')',
-        base_url()."home/shop/order/detail?c={$purchase_info->purchase_code}&a={$auth_code}");
-    }
+
     if ($purchase_info->status == SHOP_PURCHASE_STATUS_ALL_CANCELED) {
-      $status = $this->crud_model->get_purchase_status_str($purchase_info->status);
-      $this->crud_model->alert_exit('주문취소가 불가능한 상태입니다. 관리자에게 문의해주세요.(결제상태:'.$status.')',
-        base_url()."home/shop/order/detail?c={$purchase_info->purchase_code}&a={$auth_code}");
+      $status = $this->get_purchase_status_str($purchase_info->status);
+      $this->alert_exit('주문취소가 불가능한 상태입니다. 관리자에게 문의해주세요.(결제상태:'.$status.')');
     }
   
     $url = 'https://api.bootpay.co.kr/request/token';
@@ -1453,7 +1474,7 @@ QUERY;
     $result = json_decode(curl_exec($ch));
   
     if ($result->status != 200) {
-      $this->crud_model->alert_exit('토큰에 문제가 발생했습니다. 관리자에게 문의바랍니다.(1)');
+      $this->alert_exit('토큰에 문제가 발생했습니다. 관리자에게 문의바랍니다.(1)');
     }
   
     $access_token = $result->data->token;
@@ -1482,7 +1503,7 @@ QUERY;
     curl_close($ch);
   
     if ($result->status != 200) {
-      $this->crud_model->alert_exit(json_encode($result));
+      $this->alert_exit(json_encode($result));
     }
   
     $request_cancel_price = $result->data->request_cancel_price;
@@ -1511,7 +1532,7 @@ QUERY;
       'cancel_reason' => json_encode($reason, JSON_UNESCAPED_UNICODE),
       'cancel_data' => json_encode($cancel_data, JSON_UNESCAPED_UNICODE),
       'status' => $status,
-      'status_code' => $this->crud_model->get_purchase_status_str($status),
+      'status_code' => $this->get_purchase_status_str($status),
     );
     $this->db->set('canceled_at', 'NOW()', false);
     $this->db->where('purchase_id', $purchase_info->purchase_id);
@@ -1523,7 +1544,7 @@ QUERY;
       'cancel_data' => json_encode($result, JSON_UNESCAPED_UNICODE),
       'cancel_reason' => $cancel_reason,
       'shipping_status' => $shipping_status,
-      'shipping_status_code' => $this->crud_model->get_shipping_status_str($shipping_status),
+      'shipping_status_code' => $this->get_shipping_status_str($shipping_status),
     );
     $this->db->set('canceled_at', 'NOW()', false);
     $this->db->where('purchase_product_id', $purchase_product_id);
@@ -1532,7 +1553,7 @@ QUERY;
     $ins = array(
       'purchase_product_id' => $purchase_product_id,
       'shipping_status' => $shipping_status,
-      'shipping_status_code' => $this->crud_model->get_shipping_status_str($shipping_status),
+      'shipping_status_code' => $this->get_shipping_status_str($shipping_status),
       'shipping_data' => json_encode($result, JSON_UNESCAPED_UNICODE),
     );
     $this->db->set('modified_at', 'NOW()', false);
@@ -1549,7 +1570,7 @@ QUERY;
       $redirect_url = base_url() . "home/shop/order/detail?c={$purchase_info->purchase_code}&a={$purchase_info->session_id}";
     }
     
-    $title = '구매취소';
+    $title = $this->get_shipping_status_str($shipping_status);
     if ($user_cancel) {
       $body = '주문하신 상품을 취소하였습니다. 주문내역을 확인해주세요.';
       $this->push->send_push_private($this->session, $title, $body, $redirect_url, null);
@@ -1567,13 +1588,25 @@ QUERY;
     $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
     $shop_info = $this->db->get_where('shop', array('shop_id' => $product_info->shop_id))->row();
     $this->email_model->get_user_shipping_status_data(
-      $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_CANCELED), $purchase_info->purchase_code,
+      $this->get_shipping_status_str($shipping_status), $purchase_info->purchase_code,
       $shop_info->shop_name, $product_info->item_name, $purchase_info->sender_email, $redirect_url);
     if ($user_cancel) {
-      $this->email_model->get_shop_shipping_status_data('구매취소', $purchase_info->purchase_code, $shop_info->shop_name,
-        $product_info->item_name, $shop_info->email);
+      $this->email_model->get_shop_shipping_status_data(
+        $this->get_shipping_status_str($shipping_status), $purchase_info->purchase_code,
+        $shop_info->shop_name, $product_info->item_name, $shop_info->email);
     }
   
+    // send kakao alim talk
+    if ($purchase_info->user_id > 0) {
+      $user_data = $this->db->get_where('user', array('user_id' => $purchase_info->user_id))->row();
+      $phone = $user_data->phone;
+    } else {
+      $phone = $purchase_info->sender_phone;
+    }
+    $payment_info =  json_decode($purchase_info->bootpay_done_data);
+    $this->mts_model->send_shop_order($phone, $shipping_status, $purchase_info->purchase_code,
+      $payment_info->item_name, $payment_info->purchased_at, $redirect_url);
+    
     return $purchase_info->purchase_code;
   }
   

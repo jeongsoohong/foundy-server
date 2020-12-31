@@ -1099,27 +1099,43 @@ QUERY;
       if ($para2 == 'ship') {
     
         $purchase_product_id = $_POST['purchase_product_id'];
-        $shipping_data = $_POST['shipping_data'];
-    
+        $shipping_data = json_decode($_POST['shipping_data']);
+  
+        $shipping_data->shipping_company_name = $this->db->get_where('shipping_company',
+          array('company_code' => $shipping_data->shipping_company))->row()->company_name;
         $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $purchase_product_id))->row();
         $ins = array(
           'purchase_product_id' => $purchase_product->purchase_product_id,
           'shipping_status' => $purchase_product->shipping_status,
           'shipping_status_code' => $this->crud_model->get_shipping_status_str($purchase_product->shipping_status),
-          'shipping_data' => $shipping_data,
+          'shipping_data' => json_encode($shipping_data),
         );
         $this->db->set('modified_at', 'NOW()', false);
         $this->db->insert('shop_purchase_product_status', $ins);
     
-        $this->db->set('shipping_data', $shipping_data);
+        $this->db->set('shipping_data', json_encode($shipping_data));
         $this->db->set('modified_at', 'NOW()', false);
         $this->db->where('purchase_product_id', $purchase_product_id);
         $this->db->update('shop_purchase_product');
-    
+ 
+        // 송장변경 알림톡이 필요함
+        // send kakao alim talk
+        $purchase_info = $this->db->get_where('shop_purchase',
+          array('purchase_code' => $purchase_product->purchase_code))->row();
+        if ($purchase_info->user_id > 0) {
+          $user_data = $this->db->get_where('user', array('user_id' => $purchase_info->user_id))->row();
+          $phone = $user_data->phone;
+        } else {
+          $phone = $purchase_info->sender_phone;
+        }
+        $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
+        $this->mts_model->send_shop_shipping($phone, SHOP_SHIPPING_STATUS_IN_PROGRESS,
+          $purchase_info->purchase_code, $product_info->item_name, $shipping_data->shipping_company_name, $shipping_data->shipping_code);
+        
         echo 'done';
-    
+  
       } else {
-    
+  
         $ship_status = $_POST['ship_status'];
         $next_status = $_POST['next_status'];
         $shipping_infos = json_decode($_POST['shipping_infos']);
@@ -1133,6 +1149,8 @@ QUERY;
             $shipping_data = new stdClass();
             $shipping_data->shipping_company = $info->shipping_company;
             $shipping_data->shipping_code = $info->shipping_code;
+            $shipping_data->shipping_company_name = $this->db->get_where('shipping_company', array('company_code' => $shipping_data->shipping_company))->row()->company_name;
+  
             $ins = array(
               'purchase_product_id' => $purchase_product->purchase_product_id,
               'shipping_status' => $next_status,
@@ -1148,6 +1166,19 @@ QUERY;
             $this->db->set('modified_at', 'NOW()', false);
             $this->db->where('purchase_product_id', $info->purchase_product_id);
             $this->db->update('shop_purchase_product');
+            
+            // send kakao alim talk
+            $purchase_info = $this->db->get_where('shop_purchase',
+              array('purchase_code' => $purchase_product->purchase_code))->row();
+            if ($purchase_info->user_id > 0) {
+              $user_data = $this->db->get_where('user', array('user_id' => $purchase_info->user_id))->row();
+              $phone = $user_data->phone;
+            } else {
+              $phone = $purchase_info->sender_phone;
+            }
+            $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
+            $this->mts_model->send_shop_shipping($phone, SHOP_SHIPPING_STATUS_IN_PROGRESS,
+              $purchase_info->purchase_code, $product_info->item_name, $shipping_data->shipping_company_name, $shipping_data->shipping_code);
           }
         } else if ($next_status == SHOP_SHIPPING_STATUS_PURCHASE_CANCELED) { // 결제 취소가 필요한 부분
           foreach ($shipping_infos as $info) {
@@ -1173,7 +1204,24 @@ QUERY;
             );
             $this->db->set('modified_at', 'NOW()', false);
             $this->db->insert('shop_purchase_product_status', $ins);
-    
+  
+            // send kakao alim talk
+            $purchase_info = $this->db->get_where('shop_purchase', array('purchase_code' => $purchase_product->purchase_code))->row();
+            if ($purchase_info->user_id > 0) {
+              $user_data = $this->db->get_where('user', array('user_id' => $purchase_info->user_id))->row();
+              $phone = $user_data->phone;
+            } else {
+              $phone = $purchase_info->sender_phone;
+            }
+            if ($purchase_info->user_id > 0) {
+              $redirect_url = base_url() . "home/shop/order/detail?c={$purchase_info->purchase_code}";
+            } else {
+              $redirect_url = base_url() . "home/shop/order/detail?c={$purchase_info->purchase_code}&a={$purchase_info->session_id}";
+            }
+            $payment_info =  json_decode($purchase_info->bootpay_done_data);
+            $this->mts_model->send_shop_order($phone, $next_status, $purchase_info->purchase_code,
+              $payment_info->item_name, $payment_info->purchased_at, $redirect_url);
+            
             $purchase_product_ids[] = $info->purchase_product_id;
           }
           if (count($purchase_product_ids) > 0) {
@@ -1250,8 +1298,25 @@ QUERY;
         $this->db->set('canceled_at', 'NOW()', false);
         $this->db->where('purchase_product_id', $purchase_product_id);
         $this->db->update('shop_purchase_product', $upd);
+        
+        // send kakao alim talk
+        $purchase_info = $this->db->get_where('shop_purchase', array('purchase_code' => $purchase_product->purchase_code))->row();
+        if ($purchase_info->user_id > 0) {
+          $user_data = $this->db->get_where('user', array('user_id' => $purchase_info->user_id))->row();
+          $phone = $user_data->phone;
+        } else {
+          $phone = $purchase_info->sender_phone;
+        }
+        if ($purchase_info->user_id > 0) {
+          $redirect_url = base_url() . "home/shop/order/detail?c={$purchase_info->purchase_code}";
+        } else {
+          $redirect_url = base_url() . "home/shop/order/detail?c={$purchase_info->purchase_code}&a={$purchase_info->session_id}";
+        }
+        $payment_info =  json_decode($purchase_info->bootpay_done_data);
+        $this->mts_model->send_shop_order($phone, $next_status, $purchase_info->purchase_code,
+          $payment_info->item_name, $payment_info->purchased_at, $redirect_url);
       }
-      
+  
       echo 'done';
   
     } else {
