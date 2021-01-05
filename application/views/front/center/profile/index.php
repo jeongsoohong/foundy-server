@@ -489,7 +489,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-12 widget schedule-detail" style="margin-top: 16px; padding: 0; border: 0;">
+                    <div class="col-md-12 widget schedule-detail" style="margin-top: 16px; padding: 0; border-top: 1px solid #eee;">
                     <!--  ajax schedule  -->
                     <!--  /ajax schedule  -->
                     </div>
@@ -646,6 +646,18 @@
   #choice2 select {
     color: #f9a825;
     border: 1px solid #f9a825;
+  }
+  #booking {
+    height: 302px;
+    margin-top: -151px;
+  }
+  #canceling {
+    height: 220px;
+    margin-top: -110px;
+  }
+  #canceling .popup_topic,
+  #booking .popup_topic {
+    text-align: center;
   }
 </style>
 <div class="popup-box" id="schedule_reserve_popup" style="display: none;">

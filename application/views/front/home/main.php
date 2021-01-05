@@ -123,13 +123,50 @@
       }
       #waitClass {
         position: absolute;
-        bottom: 8px;
+        bottom: 10px;
         right: 9px;
         margin: 0;
-        font-size: 11px;
+        font-size: 10.5px;
         font-weight: bold;
         color: #d32f2f;
         z-index: 2;
+      }
+      #coming .upcoming_schedule {
+        display: table;
+        width: 100%;
+        height: 80px;
+        padding: 0 12px;
+      }
+      #coming .schedule_type {
+        padding-right: 32px;
+        display: table-cell;
+        vertical-align: middle;
+      }
+      #coming .type_info {
+        margin: -4px 0 0 8px;
+        line-height: 1.5;
+        font-size: 12.5px;
+      }
+      #coming .type_name {
+        position: unset;
+        float: right;
+        width: 49%;
+        line-height: 1.5;
+      }
+      #coming .type_cancel {
+        margin: auto;
+        top: -16px;
+        bottom: 0;
+        right: 2px;
+      }
+      #coming .name_class {
+        text-align: right;
+        font-size: 11px;
+        line-height: 1.8;
+        padding: 1px 0 2px;
+      }
+      #coming .name_center {
+        text-align: right;
       }
     </style>
     <!-- UPCOMMING CLASS -->
@@ -153,7 +190,7 @@
         return ($time <= '12:00:00' ? substr($time, 0, 5) : substr(date('H:i:s', strtotime($time) - 12 * ONE_HOUR), 0, 5));
       }
       ?>
-      <div class="col-md-12 main-upcoming">
+      <div class="col-md-12 main-upcoming" id="coming">
         <div class="upcoming_tit">
           <p class="font-futura tit_txt">Upcoming Class</p>
         </div>
@@ -188,11 +225,11 @@
                       <?= get_time($class->schedule_info->end_time); ?>
                     </span>
                   </p>
-                  <div class="type_name">
-                    <p class="name_class" style="text-align: right;">
+                  <div class="type_name clearfix">
+                    <p class="name_class">
                       <?= $class->schedule_info->schedule_title; ?>
                     </p>
-                    <p class="name_center" style="text-align: right;">
+                    <p class="name_center">
                       <?= $class->center_info->title; ?>
                     </p>
                   </div>
@@ -228,11 +265,11 @@
                       <?= get_time($class->schedule_info->end_time); ?>
                     </span>
                   </p>
-                  <div class="type_name">
-                    <p class="name_class" style="text-align: right;">
+                  <div class="type_name clearfix">
+                    <p class="name_class">
                       <?= $class->schedule_info->schedule_title; ?>
                     </p>
-                    <p class="name_center" style="text-align: right;">
+                    <p class="name_center">
                       <?= $class->center_info->title; ?>
                     </p>
                   </div>
@@ -474,15 +511,27 @@
     color: #f9a825;
     border: 1px solid #f9a825;
   }
+  #booking {
+    height: 302px;
+    margin-top: -151px;
+  }
+  #canceling {
+    height: 220px;
+    margin-top: -110px;
+  }
+  #canceling .popup_topic,
+  #booking .popup_topic {
+    text-align: center;
+  }
 </style>
 <div class="popup-box" id="schedule_reserve_popup" style="display: none;">
 </div>
 <div class="popup-box" id="schedule_cancel_popup" style="display: none;">
 </div>
 <div class="popup-box" id="schedule_alert_popup" style="display: none;">
-  <div class="popup theme:alt_cancel_detail">
+  <div class="popup theme:alt_cancel_detail" style="height: 200px; margin-top: -100px;">
     <div class="popup_tit">
-      <div class="popup_topic">
+      <div class="popup_topic" style="text-align: center;">
         <div class="topic_icon" style="background-color: #d32f2f;">
           <img src="<?= base_url(); ?>template/icon/ic_exclamation.png" alt="" width="16" height="16">
         </div>
@@ -491,7 +540,7 @@
         </p>
       </div>
       <div>
-        <p class="popup_guide">
+        <p class="popup_guide" style="letter-spacing: -0.03em;">
           예약 취소는 수업 시작 00시간 전까지만 가능합니다.
           <br>센터로 직접 문의 주세요!
         </p>
@@ -503,9 +552,9 @@
   </div>
 </div>
 <div class="popup-box" id="schedule_notify_popup" style="display: none;">
-  <div class="popup theme:alt_cancel_detail">
+  <div class="popup theme:alt_cancel_detail" style="height: 200px; margin-top: -100px;">
     <div class="popup_tit">
-      <div class="popup_topic">
+      <div class="popup_topic" style="text-align: center;">
         <div class="topic_icon" style="background-color: #1ba9e4;">
           <img src="<?= base_url(); ?>template/icon/information_white.png" alt="" width="16" height="16">
         </div>
@@ -514,7 +563,7 @@
         </p>
       </div>
       <div>
-        <p class="popup_guide">
+        <p class="popup_guide" style="letter-spacing: -0.03em;">
           예약 취소는 수업 시작 00시간 전까지만 가능합니다.
           <br>센터로 직접 문의 주세요!
         </p>

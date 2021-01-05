@@ -36,31 +36,62 @@ if ($test || empty($schedules) == false) { ?>
     .disabled .calss_teacher {
       color: #9e9e9e;
     }
+    #card .card_class {
+      padding: 0 20px;
+      height: 80px;
+      display: table;
+      width: 100%;
+    }
+    #card .type_info {
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+    #card .type_class {
+      position: unset;
+      width: 50%;
+      margin-left: 12px;
+    }
+    #card .class_name {
+      font-size: 12px;
+      margin: 0 !important;
+    }
+    #card .class_box {
+      position: relative;
+      display: table-cell;
+      vertical-align: middle;
+    }
+    #card .type_btn {
+      margin: auto;
+      top: -13px;
+      bottom: 0;
+    }
   </style>
-  <div class="col-md-12 card_plan" style="padding: 0;">
+  <div class="col-md-12 card_plan" style="padding: 0;" id="card">
     <div class="card_wrap">
       <? foreach ($schedules as $schedule) { ?>
         <? if (empty($schedule->reserve_info) == false) { ?>
           <!-- 예약/대기중 -->
           <div class="card_class">
-            <p class="type_info">
+            <div class="class_box">
+              <p class="type_info">
               <span class="font-futura day_morning">
                 <?= get_ampm($schedule->start_time); ?>
               </span>
-              <span class="font-futura time_start">
+                <span class="font-futura time_start">
                 <?= get_time($schedule->start_time); ?>
               </span>
-              <br>~
-              <span class="font-futura day_afternoon">
+                <br>~
+                <span class="font-futura day_afternoon">
                 <?= get_ampm($schedule->end_time); ?>
               </span>
-              <span class="font-futura time_end">
+                <span class="font-futura time_end">
                 <?= get_time($schedule->end_time); ?>
               </span>
-            </p>
-            <div class="type_class">
-              <p class="class_name"><?= $schedule->schedule_title; ?></p>
-              <p class="class_teacher"><?= $schedule->teacher_name; ?></p>
+              </p>
+              <div class="type_class">
+                <p class="class_name"><?= $schedule->schedule_title; ?></p>
+                <p class="class_teacher"><?= $schedule->teacher_name; ?></p>
+              </div>
             </div>
             <button class="type_btn btn_off" onclick="open_cancel_popup(<?= $schedule->schedule_info_id; ?>)">
               <img src="<?= base_url(); ?>template/icon/ic_wait.png" width="40" height="40">
@@ -72,24 +103,26 @@ if ($test || empty($schedules) == false) { ?>
         <? } else if($schedule->reservable) { ?>
           <!-- 예약하기 -->
           <div class="card_class">
-            <p class="type_info">
+            <div class="class_box">
+              <p class="type_info">
               <span class="font-futura day_morning">
                 <?= get_ampm($schedule->start_time); ?>
               </span>
-              <span class="font-futura time_start">
+                <span class="font-futura time_start">
                 <?= get_time($schedule->start_time); ?>
               </span>
-              <br>~
-              <span class="font-futura day_afternoon">
+                <br>~
+                <span class="font-futura day_afternoon">
                 <?= get_ampm($schedule->end_time); ?>
               </span>
-              <span class="font-futura time_end">
+                <span class="font-futura time_end">
                 <?= get_time($schedule->end_time); ?>
               </span>
-            </p>
-            <div class="type_class">
-              <p class="class_name"><?= $schedule->schedule_title; ?></p>
-              <p class="class_teacher"><?= $schedule->teacher_name; ?></p>
+              </p>
+              <div class="type_class">
+                <p class="class_name"><?= $schedule->schedule_title; ?></p>
+                <p class="class_teacher"><?= $schedule->teacher_name; ?></p>
+              </div>
             </div>
             <button class="type_btn btn_on" onclick="open_reserve_popup(<?= $schedule->schedule_info_id; ?>)">
               <img src="<?= base_url(); ?>template/icon/ic_book.png" width="40" height="40">
@@ -98,24 +131,26 @@ if ($test || empty($schedules) == false) { ?>
         <? } else { ?>
           <!-- 예약불가 -->
           <div class="card_class disabled">
-            <p class="type_info">
+            <div class="class_box">
+              <p class="type_info">
               <span class="font-futura day_morning">
                 <?= get_ampm($schedule->start_time); ?>
               </span>
-              <span class="font-futura time_start">
+                <span class="font-futura time_start">
                 <?= get_time($schedule->start_time); ?>
               </span>
-              <br>~
-              <span class="font-futura day_afternoon">
+                <br>~
+                <span class="font-futura day_afternoon">
                 <?= get_ampm($schedule->end_time); ?>
               </span>
-              <span class="font-futura time_end">
+                <span class="font-futura time_end">
                 <?= get_time($schedule->end_time); ?>
               </span>
-            </p>
-            <div class="type_class">
-              <p class="class_name"><?= $schedule->schedule_title; ?></p>
-              <p class="class_teacher"><?= $schedule->teacher_name; ?></p>
+              </p>
+              <div class="type_class">
+                <p class="class_name"><?= $schedule->schedule_title; ?></p>
+                <p class="class_teacher"><?= $schedule->teacher_name; ?></p>
+              </div>
             </div>
             <button class="type_btn btn_on" onclick="unreservable_schedule()">
               <img src="<?= base_url(); ?>template/icon/ic_disabled.png" width="40" height="40">
