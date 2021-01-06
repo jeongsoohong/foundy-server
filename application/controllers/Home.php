@@ -288,7 +288,7 @@ QUERY;
       
           $code = rand(111111, 999999);
       
-          if ($this->email_model->get_user_approval_data($code, $email)) {
+          if ($this->email_model->get_user_approval_code_data($code, $email)) {
         
             $this->session->set_userdata('user_approval_email', $email);
             $this->session->set_userdata('user_approval_code', $code);
@@ -334,16 +334,12 @@ QUERY;
             $this->db->update('user', $data);
       
             if ($this->email_model->get_reset_pw_data($email, $password)) {
-              $this->response($result);
+              $this->response('done', '이메일에서 비밀번호 확인 후 로그인해주세요!');
             } else {
-              $result['status'] = 'fail';
-              $result['message'] = '이메일 전송에 실패하였습니다.';
-              $this->response($result);
+              $this->response('fail', '이메일 전송에 실패하였습니다.');
             }
           } else {
-            $result['status'] = 'fail';
-            $result['message'] = '유효하지 않은 이메일입니다.';
-            $this->response($result);
+            $this->response('fail', '유효하지 않은 이메일입니다.');
           }
         }
       } else if ($para2 == 'mobile') {
@@ -4636,14 +4632,9 @@ QUERY;
           $this->db->set('modified_at', 'NOW()', false);
           $this->db->insert('shop_purchase_product_status', $ins);
           
-//          $query = <<<QUERY
-//update shop_product_id set sell=sell+1 where product_id={$item->product_id}
-//QUERY;
-//          $this->db->query($query);
           $this->db->set('sell', 'sell+1', false);
           $this->db->where('product_id', $item->product_id);
           $this->db->update('shop_product_id');
-
 
           if ($this->db->affected_rows()) {
             $purchase_product_ids[] = $this->db->insert_id();
@@ -4651,14 +4642,25 @@ QUERY;
           }
   
           // send email
-          $title = '상품을 주문해주셔서 감사합니다. 주문내역을 확인해주세요.';
+          if ($this->is_login() == true) {
+            $user_id = $this->session->userdata('user_id');
+            $user_data = json_decode($this->session->userdata('user_data'));
+            $email = $user_data->email;
+            $redirect_url = base_url() . "home/shop/order/detail?c={$purchase_code}";
+//          $user_key = array('user_id' => $user_id);
+          } else {
+            $session_id = $this->crud_model->get_session_id();
+            $redirect_url = base_url() . "home/shop/order/detail?c={$purchase_code}&a={$session_id}";
+            $email = $purchase_info->sender_email;
+//          $user_key = array('session_id' => $session_id);
+          }
           $product_info = $this->db->get_where('shop_product', array('product_id' => $item->product_id))->row();
-          $shop_info = $this->db->get_where('shop', array('shop_id' => $product_info->shop_id))->row();
-          $this->email_model->get_user_shipping_status_data(
+          $this->email_model->get_user_order_status_data(
             $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_COMPLETED), $purchase_info->purchase_code,
-            $shop_info->shop_name, $product_info->item_name, $purchase_info->sender_email, $redirect_url);
-          $this->email_model->get_shop_shipping_status_data('신규', $purchase_code, $shop_info->shop_name,
-            $product_info->item_name, $shop_info->email);
+            $product_info->item_name, date('Y-m-d H:i:s'), $redirect_url, $product_info->item_image_url_0, $email);
+          $shop_info = $this->db->get_where('shop', array('shop_id' => $product_info->shop_id))->row();
+          $this->email_model->get_shop_shipping_status_data($shop_info->shop_name,
+            $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_COMPLETED), $shop_info->email);
   
         } // end of cart to shop_purchase_product
 
@@ -5953,7 +5955,7 @@ QUERY;
       $msg = '성공하였습니다!';
     }
     $result['message'] = $msg;
-    echo json_encode($result);
+    echo json_encode($result, JSON_UNESCAPED_UNICODE);
     exit;
   }
 }

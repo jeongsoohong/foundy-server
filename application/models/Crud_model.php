@@ -1585,24 +1585,25 @@ QUERY;
     }
   
     // send email
+    if ($purchase_info->user_id > 0) {
+      $user_data = $this->db->get_where('user', array('user_id' => $purchase_info->user_id))->row();
+      $email = $user_data->email;
+      $phone = $user_data->phone;
+    } else {
+      $email = $purchase_info->sender_email;
+      $phone = $purchase_info->sender_phone;
+    }
     $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
     $shop_info = $this->db->get_where('shop', array('shop_id' => $product_info->shop_id))->row();
-    $this->email_model->get_user_shipping_status_data(
+    $this->email_model->get_user_order_status_data(
       $this->get_shipping_status_str($shipping_status), $purchase_info->purchase_code,
-      $shop_info->shop_name, $product_info->item_name, $purchase_info->sender_email, $redirect_url);
+      $product_info->item_name, date('Y-m-d H:i:s'), $redirect_url, $product_info->item_image_url_0, $email);
     if ($user_cancel) {
-      $this->email_model->get_shop_shipping_status_data(
-        $this->get_shipping_status_str($shipping_status), $purchase_info->purchase_code,
-        $shop_info->shop_name, $product_info->item_name, $shop_info->email);
+      $this->email_model->get_shop_shipping_status_data($shop_info->shop_name,
+        $this->get_shipping_status_str($shipping_status), $shop_info->email);
     }
   
     // send kakao alim talk
-    if ($purchase_info->user_id > 0) {
-      $user_data = $this->db->get_where('user', array('user_id' => $purchase_info->user_id))->row();
-      $phone = $user_data->phone;
-    } else {
-      $phone = $purchase_info->sender_phone;
-    }
     $payment_info =  json_decode($purchase_info->bootpay_done_data);
     $this->mts_model->send_shop_order($phone, $shipping_status, $purchase_info->purchase_code,
       $payment_info->item_name, $payment_info->purchased_at, $redirect_url);

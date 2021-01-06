@@ -718,14 +718,14 @@
           msg = '본인인증이 완료되었습니다! ';
           $('#img_exam').hide();
           $('#img_info').show();
-          set_approval_msg(msg + data);
+          set_approval_msg(msg + res.message);
           notify('<strong>' + msg + '</strong>' + res.message,'success','bottom','right');
           setTimeout(function(){window.location.reload(true);}, 1000);
         } else {
           msg = '본인인증에 실패하였습니다! ';
           $('#img_exam').show();
           $('#img_info').hide();
-          set_approval_msg(msg + data,true);
+          set_approval_msg(msg + res.message,true);
           notify('<strong>' + msg + '</strong>' + res.message,'warning','bottom','right');
         }
       },

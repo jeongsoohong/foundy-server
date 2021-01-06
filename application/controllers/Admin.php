@@ -135,7 +135,7 @@ QUERY;
   
         $code = rand(111111, 999999);
   
-        if ($this->email_model->get_user_approval_data($code, $email)) {
+        if ($this->email_model->get_user_approval_code_data($code, $email)) {
     
           $this->session->set_userdata('shop_approval_email', $email);
           $this->session->set_userdata('shop_approval_code', $code);
@@ -1521,7 +1521,8 @@ QUERY;
       echo 'done';
       
     } elseif ($type == 'edit') {
-      
+  
+      log_message('debug', '[email] data['.json_encode($_POST).']');
       $email_id = $para2;
       $page_data['email'] = $this->db->get_where('server_email', array('email_id' => $email_id))->row();
       $this->load->view('back/admin/email_edit', $page_data);
@@ -1529,9 +1530,11 @@ QUERY;
     } elseif ($type == 'update') {
       
       $email_id = $para2;
+      
+      log_message('debug', '[email] data['.json_encode($_POST).']');
   
       $data['type'] = $this->input->post('type');
-      $data['type_desc'] = $this->db->get_where('category_email', array('type' => $data['type']))->row()->desc;
+//      $data['type_desc'] = $this->db->get_where('category_email', array('type' => $data['type']))->row()->desc;
       $data['subject'] = $this->input->post('subject');
       $data['from'] = $this->input->post('from');
       $data['from_name'] = $this->input->post('from_name');

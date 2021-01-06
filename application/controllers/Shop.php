@@ -117,7 +117,7 @@ QUERY;
     
           $code = rand(111111,999999);
           
-          if ($this->email_model->get_user_approval_data($code, $email)) {
+          if ($this->email_model->get_user_approval_code_data($code, $email)) {
            
             $this->session->set_userdata('shop_approval_email', $email);
             $this->session->set_userdata('shop_approval_code', $code);
@@ -1125,12 +1125,17 @@ QUERY;
         if ($purchase_info->user_id > 0) {
           $user_data = $this->db->get_where('user', array('user_id' => $purchase_info->user_id))->row();
           $phone = $user_data->phone;
+          $email = $user_data->email;
         } else {
           $phone = $purchase_info->sender_phone;
+          $email = $purchase_info->sender_email;
         }
         $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
         $this->mts_model->send_shop_shipping($phone, SHOP_SHIPPING_STATUS_IN_PROGRESS,
           $purchase_info->purchase_code, $product_info->item_name, $shipping_data->shipping_company_name, $shipping_data->shipping_code);
+        $this->email_model->get_user_shipping_status_data($this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_IN_PROGRESS),
+        $purchase_info->purchase_code, $product_info->item_name, $shipping_data->shipping_company_name, $shipping_data->shipping_code,
+        $product_info->item_image_url_0, $email);
         
         echo 'done';
   
@@ -1172,13 +1177,18 @@ QUERY;
               array('purchase_code' => $purchase_product->purchase_code))->row();
             if ($purchase_info->user_id > 0) {
               $user_data = $this->db->get_where('user', array('user_id' => $purchase_info->user_id))->row();
+              $email = $user_data->email;
               $phone = $user_data->phone;
             } else {
+              $email = $purchase_info->sender_email;
               $phone = $purchase_info->sender_phone;
             }
             $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
             $this->mts_model->send_shop_shipping($phone, SHOP_SHIPPING_STATUS_IN_PROGRESS,
               $purchase_info->purchase_code, $product_info->item_name, $shipping_data->shipping_company_name, $shipping_data->shipping_code);
+            $this->email_model->get_user_shipping_status_data($this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_IN_PROGRESS),
+              $purchase_info->purchase_code, $product_info->item_name, $shipping_data->shipping_company_name, $shipping_data->shipping_code,
+              $product_info->item_image_url_0, $email);
           }
         } else if ($next_status == SHOP_SHIPPING_STATUS_PURCHASE_CANCELED) { // 결제 취소가 필요한 부분
           foreach ($shipping_infos as $info) {
@@ -1209,8 +1219,10 @@ QUERY;
             $purchase_info = $this->db->get_where('shop_purchase', array('purchase_code' => $purchase_product->purchase_code))->row();
             if ($purchase_info->user_id > 0) {
               $user_data = $this->db->get_where('user', array('user_id' => $purchase_info->user_id))->row();
+              $email = $user_data->email;
               $phone = $user_data->phone;
             } else {
+              $email = $purchase_info->sender_email;
               $phone = $purchase_info->sender_phone;
             }
             if ($purchase_info->user_id > 0) {
@@ -1221,6 +1233,10 @@ QUERY;
             $payment_info =  json_decode($purchase_info->bootpay_done_data);
             $this->mts_model->send_shop_order($phone, $next_status, $purchase_info->purchase_code,
               $payment_info->item_name, $payment_info->purchased_at, $redirect_url);
+            $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
+            $this->email_model->get_user_order_status_data(
+              $this->crud_model->get_shipping_status_str($next_status), $purchase_info->purchase_code,
+              $product_info->item_name, date('Y-m-d H:i:s'), $redirect_url, $product_info->item_image_url_0, $email);
             
             $purchase_product_ids[] = $info->purchase_product_id;
           }
@@ -1303,8 +1319,10 @@ QUERY;
         $purchase_info = $this->db->get_where('shop_purchase', array('purchase_code' => $purchase_product->purchase_code))->row();
         if ($purchase_info->user_id > 0) {
           $user_data = $this->db->get_where('user', array('user_id' => $purchase_info->user_id))->row();
+          $email = $user_data->email;
           $phone = $user_data->phone;
         } else {
+          $email = $purchase_info->sender_email;
           $phone = $purchase_info->sender_phone;
         }
         if ($purchase_info->user_id > 0) {
@@ -1315,6 +1333,10 @@ QUERY;
         $payment_info =  json_decode($purchase_info->bootpay_done_data);
         $this->mts_model->send_shop_order($phone, $next_status, $purchase_info->purchase_code,
           $payment_info->item_name, $payment_info->purchased_at, $redirect_url);
+        $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
+        $this->email_model->get_user_order_status_data(
+          $this->crud_model->get_shipping_status_str($next_status), $purchase_info->purchase_code,
+          $product_info->item_name, date('Y-m-d H:i:s'), $redirect_url, $product_info->item_image_url_0, $email);
       }
   
       echo 'done';

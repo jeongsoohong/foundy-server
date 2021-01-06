@@ -266,7 +266,7 @@ MSG;
 -상품명 : #{제품명}
 MSG;
     $msg = str_replace('#{구매상태}', $this->crud_model->get_shipping_status_str($purchase_status), $msg);
-    $msg = str_replace('#{주문일자}', date('Y.m.d H:i:s', strtotime($purchase_date)), $msg);
+    $msg = str_replace('#{주문일자}', date('Y.m.d', strtotime($purchase_date)), $msg);
     $msg = str_replace('#{주문번호}', $purchase_code, $msg);
     $msg = str_replace('#{상품명}', '상품', $msg);
     $msg = str_replace('#{제품명}', $purchase_title, $msg);
@@ -345,7 +345,7 @@ MSG;
     if ($phone == null || $phone == '') {
       return 0;
     }
-    $expiration_date = date('Y.m.d H:i:s', strtotime($expiration_date));
+    $expiration_date = date('Y.m.d', strtotime($expiration_date));
     $msg = <<<MSG
 #{고객명} 고객님께 #{쿠폰명} 쿠폰이 지금 발급되었습니다!
 

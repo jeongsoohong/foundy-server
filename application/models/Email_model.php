@@ -21,6 +21,117 @@ class Email_model extends CI_Model
     $this->load->library('email');
   }
   
+  function get_user_shipping_status_data($shipping_status, $purchase_code, $purchase_title, $shipping_company, $shipping_code, $item_img_url, $email)
+  {
+    $data = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_USER_SHIPPING_STATUS, 'activate' => 1))->row();
+    if (isset($data) == false || empty($data) == true) {
+      return false;
+    }
+    log_message('debug', '[email] item_img_url['.$item_img_url.']');
+//    $data->subject = str_replace('{{SHIPPING_STATUS}}',$shipping_status, $data->subject);
+    $data->email_body = str_replace('{{SHIPPING_STATUS}}',$shipping_status, $data->email_body);
+    $data->email_body = str_replace('{{PURCHASE_CODE}}',$purchase_code, $data->email_body);
+    $data->email_body = str_replace('{{PURCHASE_TITLE}}',$purchase_title, $data->email_body);
+    $data->email_body = str_replace('{{SHIPPING_COMPANY}}',$shipping_company, $data->email_body);
+    $data->email_body = str_replace('{{SHIPPING_CODE}}',$shipping_code, $data->email_body);
+    $data->email_body = str_replace('{{ITEM_IMG_URL}}',$item_img_url, $data->email_body);
+  
+    log_message('debug', '[email] email_body['.$data->email_body.']');
+    
+    $data->to = $email;
+    $this->sendmail($data);
+    
+    return true;
+  }
+  function get_user_order_status_data($order_status, $purchase_code, $item_name, $purchase_date, $redirect_url, $item_img_url, $email)
+  {
+    $data = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_USER_ORDER_STATUS, 'activate' => 1))->row();
+    if (isset($data) == false || empty($data) == true) {
+      return false;
+    }
+    log_message('debug', '[email] item_img_url['.$item_img_url.']');
+//    $data->subject = str_replace('{{SHIPPING_STATUS}}',$shipping_status, $data->subject);
+    $data->email_body = str_replace('{{ORDER_STATUS}}',$order_status, $data->email_body);
+    $data->email_body = str_replace('{{PURCHASE_CODE}}',$purchase_code, $data->email_body);
+    $data->email_body = str_replace('{{ITEM_NAME}}',$item_name, $data->email_body);
+    $data->email_body = str_replace('{{PURCHASE_DATE}}',date('Y.m.d', strtotime($purchase_date)), $data->email_body);
+    $data->email_body = str_replace('{{REDIRECT_URL}}',$redirect_url, $data->email_body);
+    $data->email_body = str_replace('{{ITEM_IMG_URL}}',$item_img_url, $data->email_body);
+  
+    log_message('debug', '[email] email_body['.$data->email_body.']');
+    $data->to = $email;
+    $this->sendmail($data);
+    
+    return true;
+  }
+  function get_user_coupon_data($user_name, $coupon_name, $expiration_date, $email)
+  {
+    $data = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_USER_PROMOTION_COUPON, 'activate' => 1))->row();
+    if (isset($data) == false || empty($data) == true) {
+      return false;
+    }
+//    $data->subject = str_replace('{{SHIPPING_STATUS}}',$shipping_status, $data->subject);
+    $data->email_body = str_replace('{{USER_NAME}}',$user_name, $data->email_body);
+    $data->email_body = str_replace('{{COUPON_NAME}}',$coupon_name, $data->email_body);
+    $data->email_body = str_replace('{{EXPIRATION_DATE}}',date('Y.m.d', strtotime($expiration_date)), $data->email_body);
+    
+    $data->to = $email;
+    $this->sendmail($data);
+    
+    return true;
+  }
+  function get_user_approval_code_data($code, $email)
+  {
+    $data = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_USER_APPROVAL_CODE, 'activate' => 1))->row();
+    if (isset($data) == false || empty($data) == true) {
+      return false;
+    }
+    $data->email_body = str_replace('{{APPROVAL_CODE}}',$code, $data->email_body);
+    
+    $data->to = $email;
+    $this->sendmail($data);
+    
+    return true;
+  }
+  function get_reset_pw_data($email, $pw)
+  {
+    $data = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_RESET_PW, 'activate' => 1))->row();
+    if (isset($data) == false || empty($data) == true) {
+      return false;
+    }
+    $data->email_body = str_replace('{{EMAIL}}',$email, $data->email_body);
+    $data->email_body = str_replace('{{PW}}',$pw, $data->email_body);
+    
+    $data->to = $email;
+    $this->sendmail($data);
+    
+    return true;
+  }
+  
+  function get_teacher_approval_data($email)
+  {
+    $data = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_TEACHER_APPROVAL, 'activate' => 1))->row();
+    if (isset($data) == false || empty($data) == true) {
+      return false;
+    }
+    
+    $data->to = $email;
+    $this->sendmail($data);
+    
+    return true;
+  }
+  function get_teacher_reject_data($email)
+  {
+    $data = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_TEACHER_REJECT, 'activate' => 1))->row();
+    if (isset($data) == false || empty($data) == true) {
+      return false;
+    }
+    
+    $data->to = $email;
+    $this->sendmail($data);
+    
+    return true;
+  }
   function get_center_approval_data($email)
   {
     $data = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_CENTER_APPROVAL, 'activate' => 1))->row();
@@ -45,134 +156,21 @@ class Email_model extends CI_Model
   
     return true;
   }
-  function get_teacher_approval_data($email)
+  function get_shop_shipping_status_data($brand_name, $order_status, $email)
   {
-    $data = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_TEACHER_APPROVAL, 'activate' => 1))->row();
+  
+    $data = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_SHOP_ORDER_STATUS, 'activate' => 1))->row();
     if (isset($data) == false || empty($data) == true) {
       return false;
     }
+    $data->email_body = str_replace('{{BRAND_NAME}}', $brand_name, $data->email_body);
+    $data->email_body = str_replace('{{ORDER_STATUS}}', $order_status, $data->email_body);
   
     $data->to = $email;
     $this->sendmail($data);
   
     return true;
   }
-  function get_teacher_reject_data($email)
-  {
-    $data = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_TEACHER_REJECT, 'activate' => 1))->row();
-    if (isset($data) == false || empty($data) == true) {
-      return false;
-    }
-  
-    $data->to = $email;
-    $this->sendmail($data);
-  
-    return true;
-  }
-  function get_shop_approval_data($brand, $email)
-  {
-    $data = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_SHOP_APPROVAL, 'activate' => 1))->row();
-    if (isset($data) == false || empty($data) == true) {
-      return false;
-    }
-    $data->email_body = str_replace('{{BRAND}}',$brand, $data->email_body);
-    $data->email_body = str_replace('{{EMAIL}}',$email, $data->email_body);
-  
-    $data->to = $email;
-    $this->sendmail($data);
-  
-    return true;
-  }
-  function get_user_approval_data($code, $email)
-  {
-    $data = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_USER_APPROVAL, 'activate' => 1))->row();
-    if (isset($data) == false || empty($data) == true) {
-      return false;
-    }
-    $data->email_body = str_replace('{{APPROVAL_CODE}}',$code, $data->email_body);
-  
-    $data->to = $email;
-    $this->sendmail($data);
-  
-    return true;
-  }
-  function get_reset_pw_data($email, $pw)
-  {
-    $data = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_RESET_PW, 'activate' => 1))->row();
-    if (isset($data) == false || empty($data) == true) {
-      return false;
-    }
-    $data->email_body = str_replace('{{EMAIL}}',$email, $data->email_body);
-    $data->email_body = str_replace('{{PW}}',$pw, $data->email_body);
-  
-    $data->to = $email;
-    $this->sendmail($data);
-  
-    return true;
-  }
-  function get_user_qna_req_data($req, $email)
-  {
-    $data = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_USER_QNA_REQ, 'activate' => 1))->row();
-    if (isset($data) == false || empty($data) == true) {
-      return false;
-    }
-    $data->email_body = str_replace('{{REQ}}',$req, $data->email_body);
-    
-    $data->to = $email;
-    $this->sendmail($data);
-  
-    return true;
-  }
-  function get_user_qna_res_data($reply, $email)
-  {
-    $data = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_USER_QNA_RES, 'activate' => 1))->row();
-    if (isset($data) == false || empty($data) == true) {
-      return false;
-    }
-    $data->email_body = str_replace('{{REPLY}}',$reply, $data->email_body);
-    
-    $data->to = $email;
-    $this->sendmail($data);
-  
-    return true;
-  }
-  function get_shop_shipping_status_data($item_status, $purchase_code, $brand_name, $item_name, $email)
-  {
-  
-    $data = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_SHOP_SHIPPING_STATUS, 'activate' => 1))->row();
-    if (isset($data) == false || empty($data) == true) {
-      return false;
-    }
-    $data->subject = str_replace('{{ITEM_STATUS}}',$item_status, $data->subject);
-    $data->email_body = str_replace('{{ITEM_STATUS}}',$item_status, $data->email_body);
-    $data->email_body = str_replace('{{PURCHASE_CODE}}',$purchase_code, $data->email_body);
-    $data->email_body = str_replace('{{BRAND_NAME}}',$brand_name, $data->email_body);
-    $data->email_body = str_replace('{{ITEM_NAME}}',$item_name, $data->email_body);
-  
-    $data->to = $email;
-    $this->sendmail($data);
-  
-    return true;
-  }
-  function get_user_shipping_status_data($item_status, $purchase_code, $brand_name, $item_name, $email, $redirect_url)
-  {
-    $data = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_USER_SHIPPING_STATUS, 'activate' => 1))->row();
-    if (isset($data) == false || empty($data) == true) {
-      return false;
-    }
-    $purchase_code_link = "<a href=\"{$redirect_url}\">{$purchase_code}</a>";
-    $data->subject = str_replace('{{ITEM_STATUS}}',$item_status, $data->subject);
-    $data->email_body = str_replace('{{ITEM_STATUS}}',$item_status, $data->email_body);
-    $data->email_body = str_replace('{{PURCHASE_CODE}}',$purchase_code_link, $data->email_body);
-    $data->email_body = str_replace('{{BRAND_NAME}}',$brand_name, $data->email_body);
-    $data->email_body = str_replace('{{ITEM_NAME}}',$item_name, $data->email_body);
-   
-    $data->to = $email;
-    $this->sendmail($data);
-    
-    return true;
-  }
-  
   function sendmail($email_data)
   {
   

@@ -655,10 +655,10 @@
     return true;
   }
 
-  function change_shipping_info_tab(e) {
+  function change_shipping_info_tab(e, enforce = false) {
     let target = e.data('target');
 
-    if (check_shpping_info_tab(target) === false) {
+    if (enforce === false && check_shpping_info_tab(target) === false) {
       return false;
     }
 
@@ -848,7 +848,7 @@
           $("#shipping-new-info").html(loading_set);
           $('#shipping-new-info').load("<?php echo base_url().'home/shop/shipping/new';?>");
 
-          change_shipping_info_tab($('#shipping-base-tab'));
+          change_shipping_info_tab($('#shipping-base-tab'), true);
           // $('#shipping-new-info').hide();
           // $('#shipping-base-info').show();
           //

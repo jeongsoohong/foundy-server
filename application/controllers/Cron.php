@@ -32,7 +32,7 @@ class Cron extends CI_Controller
   
   public function unregister($para1 = '')
   {
-    // 30 23 * * * root /usr/bin/nohup /usr/bin/php -f /web/public_html/index.php cron unregister delete 2>&1 &
+    // 30 23 * * * nginx /usr/bin/nohup /usr/bin/php -f /web/public_html/index.php cron unregister delete 2>&1 &
     
     $date = date('Y-m-d', strtotime('-7 days'));
     echo $date;
@@ -56,9 +56,9 @@ QUERY;
       
       if ($para2 == 'reminder') {
         // 클래스 시작 시간 알림톡 전송
-        // 0 19 * * * root /usr/bin/php -f /web/public_html/index.php cron center class reminder 19 5 15
-        // 0 8 * * * root /usr/bin/php -f /web/public_html/index.php cron center class reminder 8 2 7
-        // 0 13 * * * root /usr/bin/php -f /web/public_html/index.php cron center class reminder 13 2 11
+        // 0 19 * * * nginx /usr/bin/php -f /web/public_html/index.php cron center class reminder 19 5 15
+        // 0 8 * * * nginx /usr/bin/php -f /web/public_html/index.php cron center class reminder 8 2 7
+        // 0 13 * * * nginx /usr/bin/php -f /web/public_html/index.php cron center class reminder 13 2 11
         
         $now = date('Y-m-d').' '.$para3.':00:00';
         $start_at = date('Y-m-d H:i:s', strtotime($now) + $para4 * ONE_HOUR);
@@ -98,7 +98,7 @@ QUERY;
         
       } else if ($para2 == 'update') {
         // 주기적으로 클래스 업데이트 될 때 알림톡 전송(일주일 이내 클래스에 대해서)
-        // */15 * * * * root /usr/bin/php -f /web/public_html/index.php cron center class update 15
+        // */15 * * * * nginx /usr/bin/php -f /web/public_html/index.php cron center class update 15
 
         $duration = $para3 * ONE_MINUTE; // minute * 60(sec)
         $now = time();
@@ -136,7 +136,7 @@ QUERY;
       
       } else if ($para2 == 'wait') {
         // 주기적으로 시작된 클래스에 대해서 대기자 취소
-        // */1 * * * * root /usr/bin/php -f /web/public_html/index.php cron center class wait 1
+        // */1 * * * * nginx /usr/bin/php -f /web/public_html/index.php cron center class wait 1
 
         $duration = $para3 * ONE_MINUTE; // minute * 60(sec)
         $now = time();

@@ -16,10 +16,6 @@ class Center extends CI_Controller
     parent::__construct();
     $this->load->database();
     
-    if (DEV_SERVER == false && $this->uri->segment(2) != 'error') {
-      $this->redirect_error();
-    }
-  
     defined('IMG_PATH_CENTER')   OR define('IMG_PATH_CENTER', '/web/public_html/uploads/center_image/');
     defined('IMG_WEB_PATH_CENTER')   OR define('IMG_WEB_PATH_CENTER', base_url().'uploads/center_image/');
     
@@ -125,7 +121,7 @@ class Center extends CI_Controller
           
           $code = rand(111111, 999999);
           
-          if ($this->email_model->get_user_approval_data($code, $email)) {
+          if ($this->email_model->get_user_approval_code_data($code, $email)) {
             
             $this->session->set_userdata('shop_approval_email', $email);
             $this->session->set_userdata('shop_approval_code', $code);
