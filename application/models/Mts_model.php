@@ -132,7 +132,7 @@ class Mts_model extends CI_Model
     $center_title = "<{$center_title}>";
     $schedule_title = "\"{$schedule_title}\"";
     $date = date('Y.m.d', strtotime($date));
-    $time = $this->get_ampm($start_time).' '.$this->get_time($start_time).' ~ '.$this->get_ampm($end_time).' '.$this->get_time($end_time);
+    $time = $this->get_ampm($start_time).' '.$this->get_time($start_time);
     $msg = <<<MSG
 [FOUNDY #{예약현황}]
 클래스 예약이 #{예약현황} 되었습니다.
@@ -209,7 +209,7 @@ MSG;
     $center_title = "<{$center_title}>";
     $schedule_title = "\"{$schedule_title}\"";
     $date = date('Y.m.d', strtotime($date));
-    $time = $this->get_ampm($start_time).' '.$this->get_time($start_time).' ~ '.$this->get_ampm($end_time).' '.$this->get_time($end_time);
+    $time = $this->get_ampm($start_time).' '.$this->get_time($start_time);
     $msg = <<<MSG
 [FOUNDY 예약알림]
 
