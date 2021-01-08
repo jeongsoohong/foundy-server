@@ -701,7 +701,7 @@
   <?php } ?>
 <?php } ?>
 <style>
-  .popup-box {
+  #star_favorite_popup.popup-box {
     /*display: none;*/
     background-color: rgba(0,0,0,0.3);
     width: 100%;
@@ -711,7 +711,7 @@
     left: 0;
     z-index: 10;
   }
-  div[class*='theme'] {
+  #star_favorite_popup div[class*='theme'] {
     font-size: 0;
     background-color: #fff;
     box-shadow: 0 5px 15px rgba(0,0,0,0.08);
@@ -725,26 +725,17 @@
     text-align: center;
   }
   
-  div[class*='theme'] p {
+  #star_favorite_popup div[class*='theme'] p {
     margin: 0;
   }
-  .theme\:book {
-    height: 212px;
-    margin-top: -106px;
-  }
-  .theme\:alt_cancel {
-    height: 184px;
-    margin-top: -92px;
-  }
-  .theme\:alt_cancel_detail {
+  #star_favorite_popup .theme\:alt_cancel_detail {
     height: 176px;
     margin-top: -88px;
   }
-  
-  .popup_tit {
+  #star_favorite_popup .popup_tit {
     padding-top: 32px;
   }
-  .topic_icon {
+  #star_favorite_popup .topic_icon {
     display: inline-block;
     width: 44px;
     height: 44px;
@@ -753,10 +744,10 @@
     margin-right: 16px;
     border-radius: 50%;
   }
-  .topic_icon img {
+  #star_favorite_popup .topic_icon img {
     margin-bottom: 2px;
   }
-  .topic_message {
+  #star_favorite_popup .topic_message {
     display: inline-block;
     color: #B0957A;
     font-size: 14px;
@@ -764,26 +755,26 @@
     vertical-align: top;
     
   }
-  .topic_message .font-futura {
+  #star_favorite_popup .topic_message .font-futura {
     font-size: 16px;
     font-weight: bold !important;
     line-height: 1.5;
   }
-  .popup_guide {
+  #star_favorite_popup .popup_guide {
     margin-top: 20px !important;
     color: #757575;
     font-size: 11px;
     line-height: 1.75;
   }
-  
-  .confirm_btn {
+
+  #star_favorite_popup .confirm_btn {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
     height: 48px;
   }
-  .confirm_btn button {
+  #star_favorite_popup .confirm_btn button {
     box-sizing: border-box;
     border-top: 1px solid #eee !important;
     border: 0;
@@ -795,56 +786,7 @@
     background-color: transparent;
     font-family: futura-pt !important;
   }
-  .btn_no {
-    width: calc(50% - 1px) !important;
-    border-right: 1px solid #eee !important;
-  }
-  
-  .btn_info {
-    padding: 0;
-    margin: 0;
-  }
-  .btn_fn {
-    float: left;
-    height: 30px;
-  }
-  .btn_fn:nth-child(2) {
-    margin: 0 12px;
-    height: 30px;
-  }
-  .btn_fn:nth-child(2) span {
-    display: inline-block;
-    width: 1px;
-    height: 20px;
-    margin: 5px 0;
-    background-color: #bdbdbd;
-  }
-  .btn_fn a, .btn_fn div {
-    text-align: center;
-  }
-  .btn_fn a {
-    float: left;
-    display: block;
-    width: 30px;
-    height: 30px;
-    margin-right: 8px;
-    line-height: 30px;
-    background-color: #F7D47C;
-    border-radius: 50%;
-  }
-  .btn_fn a:last-child {
-    margin-right: 0;
-  }
-  .btn_fn div {
-    font-size: 0;
-  }
-  .btn_fn div img {
-    margin-right: 8px;
-  }
-  .btn_fn div img:last-child {
-    margin: 0;
-  }
-  .favorite_close {
+  #star_favorite_popup .favorite_close {
     width: 44px;
     height: 44px;
     position: absolute;
