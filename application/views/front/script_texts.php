@@ -466,8 +466,8 @@
   }
 
   function sns_function(funcType, findType, id, elem) {
-    // console.log(elem.attr('data-action'));
-    var action = elem.attr('data-action');
+    console.log(elem.data('action'));
+    var action = elem.data('action');
 
     $.ajax({
       url: '<?php echo base_url(); ?>home/sns/'+findType+'/'+funcType+'/'+action+'?id='+id,
@@ -479,18 +479,24 @@
       //contentType: 'application/json',
       dataType : 'json', // 받을 데이터 방식
       success : function(res) {
-        // console.log(res.status);
+        let target = $('.' + findType + '-' + funcType + '-' + id);
         if (res.status === 'success') {
-          // console.log($('.' + funcType + '-img-'+id).attr('src'));
-          $('.' + findType + '-' + funcType + '-' + id).attr('src', get_sns_img(funcType, action));
+          target.attr('src', get_sns_img(funcType, action));
           if (action === 'do') {
-            $('.' + findType + '-' + funcType + '-' + id).closest('a').attr('data-action', 'undo');
-            // elem.attr('data-action', 'undo');
+            target.closest('a').data('action', 'undo');
+            if (findType === 'center') {
+              $('#star_favorite_type').text('센터');
+              $('#star_favorite_val').text(res.name);
+              open_star_favorite_popup();
+              reserve_schedule_bookmark = true;
+            }
           } else {
-            $('.' + findType + '-' + funcType + '-' + id).closest('a').attr('data-action', 'do');
-            // elem.attr('data-action', 'do');
+            target.closest('a').data('action', 'do');
+            if (findType === 'center') {
+              reserve_schedule_bookmark = false;
+            }
           }
-        } else if (res.status == 'not_login') {
+        } else if (res.status === 'not_login') {
           alert(res.message);
           window.location.href = res.redirect_url;
         } else {
@@ -635,10 +641,10 @@
               setTimeout(function(){location.href=rlt;}, 1000);
             }
           
-            if(rld == 'ok'){
+            if(rld === 'ok'){
               setTimeout(function(){location.reload();}, 1000);
             }
-            if(callback == 'order_tracing'){
+            if(callback === 'order_tracing'){
               // now.removeAttr('disabled');
               data = data.replace('done','');
               $('#trace_details').html(data);
@@ -1017,7 +1023,8 @@
     $('#schedule_reserve_popup').hide();
     $('body').css('overflow-y', 'auto');
   }
-  function reserve_schedule(id, mid) {
+  var reserve_schedule_bookmark = true;
+  function reserve_schedule(id, mid, redirect) {
     $('#loading_set').show();
     let formData = new FormData();
     formData.append('id', id);
@@ -1034,6 +1041,16 @@
         $("#loading_set").delay(500).fadeOut(500);
         close_reserve_popup();
         if(data.status === 'done') {
+          if (reserve_schedule_bookmark === false) {
+            close_notify_action = 'bookmark_center';
+            close_star_favorite_action = 'redirect';
+            close_star_favorite_redirect = redirect;
+            close_schedule_favorite_action = 'redirect';
+            close_schedule_favorite_redirect = redirect;
+          } else {
+            close_notify_action = 'redirect';
+            close_notify_redirect = redirect;
+          }
           open_notify_popup(data.message);
         } else {
           open_alert_popup(data.message);
@@ -1057,7 +1074,7 @@
       contentType: false,
       processData: false,
       success: function(data) {
-        console.log(data);
+        // console.log(data);
         $("#loading_set").fadeOut(500);
         if(IsJsonString(data) === true) {
           open_alert_popup(JSON.parse(data).message);
@@ -1078,7 +1095,7 @@
     $('#schedule_cancel_popup').hide();
     $('body').css('overflow-y', 'auto');
   }
-  function cancel_schedule(id) {
+  function cancel_schedule(id, redirect) {
     $('#loading_set').show();
     let formData = new FormData();
     formData.append('id', id);
@@ -1094,6 +1111,8 @@
         $("#loading_set").fadeOut(500);
         close_cancel_popup();
         if(data.status === 'done') {
+          close_notify_action = 'redirect';
+          close_notify_redirect = redirect;
           open_notify_popup(data.message);
         } else {
           open_alert_popup(data.message);
@@ -1118,10 +1137,18 @@
     $('#schedule_notify_popup').show();
     $('body').css('overflow-y', 'hidden');
   }
+  let close_notify_action = 'reload';
+  let close_notify_redirect = '<?= base_url(); ?>';
   function close_notify_popup() {
     $('#schedule_notify_popup').hide();
     $('body').css('overflow-y', 'auto');
-    setTimeout(function() {window.location.reload(); }, 300);
+    if (close_notify_action === 'reload') {
+      setTimeout(function() {window.location.reload(); }, 300);
+    } else if (close_notify_action === 'redirect') {
+      setTimeout(function() {window.location.href = close_notify_redirect; }, 300);
+    } else if (close_notify_action === 'bookmark_center') {
+      open_schedule_favorite_popup();
+    }
   }
   function unreservable_schedule() {
     $('#schedule_alert_popup .popup_guide').text('현재 예약이 불가능합니다!');

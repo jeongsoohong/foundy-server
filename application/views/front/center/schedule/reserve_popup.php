@@ -5,6 +5,7 @@ function get_ampm($time) {
 function get_time($time) {
   return ($time <= '12:00:00' ? substr($time, 0, 5) : substr(date('H:i:s', strtotime($time) - 12 * ONE_HOUR), 0, 5));
 }
+$redirect = base_url().'home/center/profile/'.$class->center_id.'?sdate='.$class->schedule_date;
 ?>
 <div class="popup theme:book" id="booking">
   <div class="popup_tit">
@@ -48,6 +49,6 @@ function get_time($time) {
   </div>
   <div class="confirm_btn">
     <button class="btn_no" onclick="close_reserve_popup()">CANCEL</button>
-    <button class="btn_yes" onclick="reserve_schedule(<?= $class->schedule_info_id; ?>, <?= $ticket->member_id; ?>)">OK</button>
+    <button class="btn_yes" onclick="reserve_schedule(<?= $class->schedule_info_id; ?>, <?= $ticket->member_id; ?>, '<?= $redirect; ?>')">OK</button>
   </div>
 </div>

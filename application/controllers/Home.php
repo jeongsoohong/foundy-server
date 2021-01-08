@@ -2152,8 +2152,6 @@ QUERY;
             echo "<script>alert('잘못된 접근입니다');location.href='{$base_url}'</script>";
             exit;
           }
-          
-          
         }
         
         if ($type == FIND_TYPE_CENTER) {
@@ -2250,6 +2248,11 @@ QUERY;
       if (isset($_GET['nav'])) {
         $nav = $_GET['nav'];
       }
+      $sdate = null;
+      if (isset($_GET['sdate'])) {
+        $sdate = date('Y-m-d', strtotime($_GET['sdate']));
+        $nav = 'schedule';
+      }
 
       $center_data = $this->db->get_where('center', array('center_id' => $center_id))->row();
       if ($center_data->activate == 0) {
@@ -2258,17 +2261,10 @@ QUERY;
       }
 
       $user_data = $this->db->get_where('user', array('user_id' => $center_data->user_id))->row();
-//      $user_data = json_decode($this->session->userdata('user_data'));
       if (!($user_data->user_type & USER_TYPE_CENTER)) {
         echo ("<script>alert('센터회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
         exit;
       }
-
-//      if ($user_data->user_id == $this->session->userdata('user_id')) {
-//        $iam_this_center = true;
-//      } else {
-//        $iam_this_center = false;
-//      }
 
       if ($center_data->teacher_cnt > 0) {
         $teacher_data = $this->db->get_where('center_teacher', array('center_id' => $center_data->center_id,'activate' => 1))->result();
@@ -2281,6 +2277,10 @@ QUERY;
       $start_date = date("Y-m-d", $start_time);
       $end_date = date("Y-m-d", $end_time);
       $week = date('w', $start_time);
+      
+      if ($sdate == null) {
+        $sdate = $start_date;
+      }
 
       $query = <<<QUERY
 select * from center_schedule
@@ -2313,10 +2313,10 @@ QUERY;
       $this->page_data['start_date'] = $start_date;
       $this->page_data['end_date'] = $end_date;
       $this->page_data['schedule_data'] = $schedule_data;
-//      $this->page_data['iam_this_center'] = $iam_this_center;
       $this->page_data['liked'] = $liked;
       $this->page_data['bookmarked'] = $bookmarked;
       $this->page_data['nav'] = $nav;
+      $this->page_data['sdate'] = $sdate;
       $this->load->view('front/index', $this->page_data);
 
     } else if ($para1 == 'edit_profile') {
@@ -3217,20 +3217,6 @@ QUERY;
           if ($reserve_id > 0) {
             $this->center_model->ticket_member_reserve($ticket->member_id, $ticket->ticket_id, $user_id, $schedule_info_id,
             $reserve_id, $action, $schedule_info->schedule_title, $schedule_info->schedule_date);
-//            $ins = array(
-//              'member_id' => $ticket->member_id,
-//              'ticket_id' => $ticket->ticket_id,
-//              'user_id' => $user_id,
-//              'schedule_info_id' => $schedule_info_id,
-//              'reserve_id' => $reserve_id,
-//              'action' => $action,
-//              'action_str' => $this->center_model->get_ticket_member_action_str($action),
-//              'action_duration' => 0,
-//              'action_data' => '<' . $schedule_info->schedule_title . '>, 일시 : ' . date('Y.m.d', strtotime($schedule_info->schedule_date)),
-//            );
-//            $this->db->set('history_at', 'NOW()', false);
-//            $this->db->insert('center_ticket_member_history', $ins);
- 
             if ($reserve) {
               $this->db->set('reserve', 'reserve+1', false);
             } else if ($wait) {
@@ -4154,6 +4140,10 @@ QUERY;
       if ($this->db->affected_rows()) {
         $this->db->query($upd);
         $result['status'] = 'success';
+        if ($cat_type == 'center' && $action == 'do') {
+          $center_data = $this->db->get_where('center', array('center_id' => $id))->row();
+          $result['name'] = $center_data->title;
+        }
       } else {
         $result['status'] = 'fail';
         $result['message'] = "affected_row: 0";

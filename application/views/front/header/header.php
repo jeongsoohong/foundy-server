@@ -700,8 +700,201 @@
     </header>
   <?php } ?>
 <?php } ?>
-
+<style>
+  .popup-box {
+    /*display: none;*/
+    background-color: rgba(0,0,0,0.3);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+  }
+  div[class*='theme'] {
+    font-size: 0;
+    background-color: #fff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    border-radius: 4px;
+    z-index: 11;
+    width: 268px;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    margin-left: -134px;
+    text-align: center;
+  }
+  
+  div[class*='theme'] p {
+    margin: 0;
+  }
+  .theme\:book {
+    height: 212px;
+    margin-top: -106px;
+  }
+  .theme\:alt_cancel {
+    height: 184px;
+    margin-top: -92px;
+  }
+  .theme\:alt_cancel_detail {
+    height: 176px;
+    margin-top: -88px;
+  }
+  
+  .popup_tit {
+    padding-top: 32px;
+  }
+  .topic_icon {
+    display: inline-block;
+    width: 44px;
+    height: 44px;
+    line-height: 44px;
+    background-color: #B0957A;
+    margin-right: 16px;
+    border-radius: 50%;
+  }
+  .topic_icon img {
+    margin-bottom: 2px;
+  }
+  .topic_message {
+    display: inline-block;
+    color: #B0957A;
+    font-size: 14px;
+    text-align: left;
+    vertical-align: top;
+    
+  }
+  .topic_message .font-futura {
+    font-size: 16px;
+    font-weight: bold !important;
+    line-height: 1.5;
+  }
+  .popup_guide {
+    margin-top: 20px !important;
+    color: #757575;
+    font-size: 11px;
+    line-height: 1.75;
+  }
+  
+  .confirm_btn {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 48px;
+  }
+  .confirm_btn button {
+    box-sizing: border-box;
+    border-top: 1px solid #eee !important;
+    border: 0;
+    color: #0091ea;
+    font-size: 16px;
+    width: 50%;
+    height: inherit;
+    padding: 0;
+    background-color: transparent;
+    font-family: futura-pt !important;
+  }
+  .btn_no {
+    width: calc(50% - 1px) !important;
+    border-right: 1px solid #eee !important;
+  }
+  
+  .btn_info {
+    padding: 0;
+    margin: 0;
+  }
+  .btn_fn {
+    float: left;
+    height: 30px;
+  }
+  .btn_fn:nth-child(2) {
+    margin: 0 12px;
+    height: 30px;
+  }
+  .btn_fn:nth-child(2) span {
+    display: inline-block;
+    width: 1px;
+    height: 20px;
+    margin: 5px 0;
+    background-color: #bdbdbd;
+  }
+  .btn_fn a, .btn_fn div {
+    text-align: center;
+  }
+  .btn_fn a {
+    float: left;
+    display: block;
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+    line-height: 30px;
+    background-color: #F7D47C;
+    border-radius: 50%;
+  }
+  .btn_fn a:last-child {
+    margin-right: 0;
+  }
+  .btn_fn div {
+    font-size: 0;
+  }
+  .btn_fn div img {
+    margin-right: 8px;
+  }
+  .btn_fn div img:last-child {
+    margin: 0;
+  }
+  .favorite_close {
+    width: 44px;
+    height: 44px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 0;
+    padding: 0;
+    background-color: transparent;
+  }
+</style>
+<div class="popup-box" id="star_favorite_popup" style="display: none;">
+  <div class="popup theme:alt_cancel_detail" style="height: 204px; margin-top: -102px;">
+    <div class="popup_tit">
+      <button class="favorite_close" onclick="close_star_favorite_popup();">
+        <img src="<?= base_url(); ?>template/back/center/imgs/icon_close_black.png" alt="" width="12" height="12" style="opacity: 0.5;">
+      </button>
+      <div class="popup_topic" style="text-align: center;">
+        <div class="topic_icon" style="background-color: #1ba9e4;">
+          <img src="<?= base_url(); ?>template/icon/information_white.png" alt="" width="16" height="16">
+        </div>
+        <p class="topic_message font-futura" style="font-weight: bold !important; color: #1ba9e4; margin: 0 !important; line-height: 44px;">
+          My Favorite !
+        </p>
+      </div>
+      <div>
+        <p class="popup_guide" style="letter-spacing: -0.05em; width: 226px; margin: 0 auto;">
+          <strong id="star_favorite_val"></strong> <span id="star_favorite_type"></span>의 스케줄 / 예약 및 관련 소식을 카카오톡과 문자로 받아보실 수 있습니다.</p>
+      </div>
+    </div>
+    <div class="confirm_btn" style="border-top: 1px solid #eee !important;">
+      <button class="btn_yes" style="border:none !important;" onclick="close_star_favorite_popup()">OK</button>
+    </div>
+  </div>
+</div>
 <script type="text/javascript">
+  let close_star_favorite_action = '';
+  let close_star_favorite_redirect = '<?= base_url(); ?>';
+  function close_star_favorite_popup() {
+    $('#star_favorite_popup').hide();
+    $('body').css('overflow-y', 'auto');
+    if (close_star_favorite_action === 'reload') {
+      setTimeout(function() {window.location.reload(); }, 300);
+    } else if (close_star_favorite_action === 'redirect') {
+      setTimeout(function() {window.location.href = close_star_favorite_redirect; }, 300);
+    }
+  }
+  function open_star_favorite_popup() {
+    $('#star_favorite_popup').show();
+    $('body').css('overflow-y', 'hidden');
+  }
   
   <?php if ($this->app_model->is_app()) { ?>
   <?php  if ($page_name == 'home') {  // only home ?>
