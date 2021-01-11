@@ -696,6 +696,23 @@ input:checked + .slider:before {
             </button>
           </div>
           <div class="type_btn">
+            <style type="text/css">
+              .type_btn button {
+                width: 40px;
+                font-size: 10px;
+              }
+              @media(min-width: 962px){
+                .type_btn button {
+                  width: 52px;
+                }
+              }
+              @media(min-width: 1025px){
+                .type_btn button {
+                  width: 64px;
+                  font-size: 12px;
+                }
+              }
+            </style>
             <? if ($ticket->ticket_type == CENTER_TICKET_TYPE_COUNT) { ?>
               <button class="btn_addition btn_val btn_rg">횟수추가</button>
             <? } ?>
@@ -797,7 +814,7 @@ input:checked + .slider:before {
               <input type="number" id="enroll_max_ticket_count" class="form_people form_person" style="width: 67%"> 명
             </p>
           </dd>
-          <dt>
+          <dt style="width: 93px; margin-right: 13px;">
             <!-- count_cancel 스타일 수정 -->
             <label class="count_cancel form-chk" id="count_cancel" style="float: none;">
               <p class="count_limit">
@@ -822,6 +839,41 @@ input:checked + .slider:before {
     </section>
   </div>
 </div>
+<style type="text/css">
+  #whole a {
+    text-decoration: none;
+    color: inherit;
+  }
+  #whole a:hover {
+    text-decoration: none;
+    font-weight: bold;
+  }
+  #whole .id_current {
+    border-bottom: 1px solid #f3efee;
+    box-sizing: border-box;
+  }
+  #whole .header h1 {
+    margin: 5px 16px 0 0;
+  }
+  #whole .header .logo_home {
+    text-align: center;
+  }
+  #whole .header .logo_home img {
+    padding: 0;
+  }
+  .btn_valid.change_info,
+  .btn_valid.view_info {
+    width: 27px;
+    height: 36px;
+  }
+  @media(min-width: 920px) {
+    .btn_valid.change_info,
+    .btn_valid.view_info {
+      width: 52px;
+      height: 32px;
+    }
+  }
+</style>
 <div class="popup-box">
   <div class="popup__member popup_layout shadow_sm" style="display: none;">
     <div class="member-party">
@@ -1020,7 +1072,7 @@ input:checked + .slider:before {
   </div>
   
   <!-- 활동내역 클릭 팝업 -->
-  <div class="popup theme:alert_history pop:history">
+  <div class="popup theme:alert_history pop:history" style="display: none; top: 60%;">
     <p class="history_tit">활동내역</p>
     <button class="history_close" onclick="fn_close();">
       <img src="https://dev.foundy.me/template/front/header/imgs/icon_close_black.png" width="12" height="12" alt="닫기" style="opacity: 0.2;">

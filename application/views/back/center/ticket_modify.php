@@ -76,7 +76,7 @@
         </div>
         <!-- cancel_option 이동 -->
       </dd><br>
-      <dt>
+      <dt style="width: 93px; margin-right: 13px;">
         <!-- count_cancel 스타일 수정 -->
         <label class="count_cancel form-chk" id="count_cancel2" style="float: none;">
           <p class="count_limit">

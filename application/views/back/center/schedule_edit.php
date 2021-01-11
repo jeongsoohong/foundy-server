@@ -96,7 +96,7 @@ function get_time($time)
           margin-top: -296px;
         }
         .theme\:schedule {
-          width: 750px;
+          width: 775px;
           margin-left: -375px;
         }
         .theme\:schedule .area_tit {
@@ -419,15 +419,18 @@ function get_time($time)
   })
 
   function open_popScheduleEdit(id) {
-    $('.popup-box').show();
+    // $('.popup-box').show();
     $('#popScheduleEdit').show();
   }
   function close_popScheduleEdit() {
-    $('.popup-box').hide();
+    // $('.popup-box').hide();
+    // $('#popSchedule').hide();
     $('#popScheduleEdit').hide();
   }
   function close_popSchedule() {
     $('.popup-box').hide();
+    $('#popSchedule').hide();
+    $('#popScheduleEdit').hide();
     $('div[class$=schedule]').hide();
   }
   function schedule_edit() {

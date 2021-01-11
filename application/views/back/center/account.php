@@ -115,14 +115,61 @@
                 <?php
                 }
                 ?>
-                <label class="form-chk col_sp">
-                  <input id="chkbox_yoga_etc" <?php if (empty($category_yoga_etc) == false) echo 'checked'; ?>
+                <label class="form-chk col_sp" id="chk_other">
+                    <input id="chkbox_yoga_etc" <?php if (empty($category_yoga_etc) == false) echo 'checked'; ?>
                     type="checkbox" name="number">
                   기타
                   <span class="write_padding">
                     <input type="text" class="chk_write" id="category_yoga_etc" name="category_yoga_etc"
                       value="<?php echo $category_yoga_etc; ?>"/>
-                    </span>
+                  </span>
+                  <style type="text/css">
+                    #whole a {
+                      text-decoration: none;
+                      color: inherit;
+                    }
+                    #whole a:hover {
+                      text-decoration: none;
+                      font-weight: bold;
+                    }
+                    #whole .id_current {
+                      border-bottom: 1px solid #f3efee;
+                      box-sizing: border-box;
+                    }
+                    #whole .header h1 {
+                      margin: 5px 16px 0 0;
+                    }
+                    #whole .header .logo_home {
+                      text-align: center;
+                    }
+                    #whole .header .logo_home img {
+                      padding: 0;
+                    }
+                    @media(min-width: 600px){
+                      .chkbox_line #chk_other {
+                        width: 144px;
+                      }
+                      .chk_write {
+                        width: 84px;
+                      }
+                    }
+                    @media(min-width: 928px){
+                      .chkbox_line #chk_other {
+                        width: 186px;
+                      }
+                      .chk_write {
+                        width: 124px;
+                      }
+                    }
+                    @media(min-width: 1025px){
+                      .chkbox_line #chk_other {
+                        width: 220px;
+                      }
+                      .chk_write {
+                        width: 140px;
+                      }
+                    }
+                  </style>
                   <!-- 체크박스 disabled 기능 필요 -->
                 </label>
               </div>

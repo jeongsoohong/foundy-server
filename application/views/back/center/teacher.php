@@ -211,6 +211,18 @@
                       </div>
                       <!-- 스타일 추가 -->
                       <style>
+                        #whole a {
+                          text-decoration: none;
+                          color: inherit;
+                        }
+                        #whole a:hover {
+                          text-decoration: none;
+                          font-weight: bold;
+                        }
+                        #whole .id_current {
+                          border-bottom: 1px solid #f3efee;
+                          box-sizing: border-box;
+                        }
                         #whole .header {
                           border-bottom: 0;
                         }
@@ -672,7 +684,7 @@
     </section>
   </div>
 </div>
-<div class="popup-box">
+<div class="popup-box" style="display: none">
   <div class="popup theme:alert_complete">
     <div class="popup_cnt">
       <button class="btn_close">
@@ -689,19 +701,19 @@
       </div>
     </div>
   </div>
-  <div class="popup theme:schedule" id="popSchedule" style="display: none;">
+  <div class="popup theme:schedule scroll-y" id="popSchedule" style="display: none; border-radius: 4px">
     <!-- schedule edit -->
   </div>
   
   <div class="popup theme:alert_remove_this" id="popScheduleRemove">
     <div class="popup_cnt">
-      <div class="guide_box confirm_box">
+      <div class="guide_box confirm_box" style="padding-top: 36px; margin-bottom: 16px;">
         <img src="<?php echo base_url(); ?>template/back/center/imgs/exclamation_mark.png" alt="" width="40" height="40" class="guide_icon">
         <p class="confirm_message" style="line-height: 40px">해당 스케줄을 <strong>취소</strong>하시겠습니까?</p>
-        <p class="confirm_message" style="line-height: 20px; padding: 10px 30px;">
-          현재 클래스 예약/대기를 포함해서 지난 클래스 참석이 취소될 수 있습니다!
-        </p>
       </div>
+      <p class="confirm_message" style="line-height: 1.75;width: 250px;font-size: 13px;margin: 0 auto;color: #9e9e9e; padding: 0;">
+        현재 클래스 예약/대기를 포함해서 지난 클래스 참석이 취소될 수 있습니다!
+      </p>
       <div class="confirm_btn">
         <button class="btn_cancel font-futura" onclick="close_schedule_remove_popup()">CANCEL</button>
         <button class="btn_ok font-futura" onclick="unregister_schedule()">OK</button>
@@ -710,15 +722,15 @@
   </div>
   <div class="popup theme:alert_remove_this" id="popScheduleEdit">
     <div class="popup_cnt">
-      <div class="guide_box confirm_box">
+      <div class="guide_box confirm_box" style="padding-top: 36px; margin-bottom: 16px;">
         <img src="<?php echo base_url(); ?>template/back/center/imgs/information_mark.png" alt="" width="40" height="40" class="guide_icon">
         <p class="confirm_message" style="line-height: 40px">해당 스케줄을 <strong>수정</strong>하시겠습니까?</p>
-        <p class="confirm_message" style="line-height: 20px; padding: 10px 30px;">
-          예약정원/대기인원 수정 시 예약현황이 변경될 수 있습니다!
-        </p>
       </div>
+      <p class="confirm_message" style="line-height: 1.75;width: 250px;font-size: 13px;margin: 0 auto;color: #9e9e9e; padding: 0;">
+        예약정원/대기인원 수정 시 예약현황이 변경될 수 있습니다!
+      </p>
       <div class="confirm_btn">
-        <button class="btn_cancel font-futura" onclick="close_schedule_remove_popup()">CANCEL</button>
+        <button class="btn_cancel font-futura" onclick="close_popScheduleEdit()">CANCEL</button>
         <button class="btn_ok font-futura" onclick="schedule_edit()">OK</button>
       </div>
     </div>
@@ -740,7 +752,7 @@
   </div>
   -->
   <!-- 예약현황 클릭 팝업 -->
-  <div class="popup theme:alert_situation pop:situation" id="schedule_status">
+  <div class="popup theme:alert_situation pop:situation scroll-y" id="schedule_status" style="display: none; height: 534px !important; margin-top: -267px !important;">
     <!-- schedule status -->
   </div>
 </div>
@@ -1169,31 +1181,26 @@
     })
     
     /* 팝업창 오픈이벤트 */
-    $('.popup-box').children().hide();
-    
-    // confirm_name 클릭시 아이디창 열람 / 팝업
-    $('.confirm_name').click(function(){
-    
-    })
+    // $('.popup-box').children().hide();
     
     /* 팝업창 닫기이벤트 */
     // 윈도우 ESC버튼 팝업닫기
-    $(window).keyup(function(e){
-      if(e.keyCode == 27){
-        $(".popup-box").fadeOut();
-        $('.popup-box').children().hide();
-      }
-    })
+    // $(window).keyup(function(e){
+    //   if(e.keyCode === 27){
+    //     $(".popup-box").fadeOut();
+    //     $('.popup-box').children().hide();
+    //   }
+    // })
     
     // 윈도우 클릭시 팝업닫기
-    $(window).click(function(e){
-      var target = e.target.className;
-      
-      if(target == 'popup-box'){
-        $('.popup-box').fadeOut();
-        $('.popup-box').children().hide();
-      }
-    })
+    // $(window).click(function(e){
+    //   var target = e.target.className;
+    //
+    //   if(target === 'popup-box'){
+    //     $('.popup-box').fadeOut();
+    //     $('.popup-box').children().hide();
+    //   }
+    // })
   
     // onoff-btn 애니메이션
     // $('.onoff').click(function(){
@@ -1382,24 +1389,24 @@
     })
   
     // btn_close 클릭 이벤트
-    $('.btn_close').click(function(){
-      $(this).closest('div[class$=_complete]').hide();
-      $('.popup-box').hide();
-    })
+    // $('.btn_close').click(function(){
+    //   $(this).closest('div[class$=_complete]').hide();
+    //   $('.popup-box').hide();
+    // })
   
     // btn_ok, cancel 클릭 이벤트
-    $('button[class^=btn_ok]').click(function(){
-      $(this).closest('div[class*=alert_]').hide();
-      $('div[class*=alert_]').hide();
-      $('div[class$=schedule]').hide();
-      $('.popup-box').hide();
-    })
-    $('button[class^=btn_cancel]').click(function(){
-      $(this).closest('div[class*=alert_]').hide();
-      $('div[class*=alert_]').hide();
-      $('div[class$=schedule]').hide();
-      $('.popup-box').hide();
-    })
+    // $('button[class^=btn_ok]').click(function(){
+    //   $(this).closest('div[class*=alert_]').hide();
+    //   $('div[class*=alert_]').hide();
+    //   $('div[class$=schedule]').hide();
+    //   $('.popup-box').hide();
+    // })
+    // $('button[class^=btn_cancel]').click(function(){
+    //   $(this).closest('div[class*=alert_]').hide();
+    //   $('div[class*=alert_]').hide();
+    //   $('div[class$=schedule]').hide();
+    //   $('.popup-box').hide();
+    // })
     
     $('#open-immediate, #open-wait').click(function() {
       let role = $(this).data('role');

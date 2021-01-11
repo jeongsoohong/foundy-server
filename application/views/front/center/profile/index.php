@@ -660,6 +660,16 @@
   #booking .popup_topic {
     text-align: center;
   }
+  .favorite_close {
+    width: 44px;
+    height: 44px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 0;
+    padding: 0;
+    background-color: transparent;
+  }
 </style>
 <div class="popup-box" id="schedule_reserve_popup" style="display: none;">
 </div>
