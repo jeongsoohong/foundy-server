@@ -108,6 +108,7 @@
   }
   .shop-item {
     padding: 0 10px 24px !important;
+    height: 320px;
   }
   .shop-best-items {
     border: 0;
