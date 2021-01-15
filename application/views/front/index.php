@@ -4,6 +4,18 @@
     <?php
     include 'includes/top/index.php';
     ?>
+  <? if (DEV_SERVER == false) { ?>
+    <!— Global site tag (gtag.js) - Google Analytics —>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-182268526-1">
+    </script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      
+      gtag('config', 'UA-182268526-1');
+    </script>
+  <? } ?>
 </head>
 <body id="home" class="wide">
 <!-- PRELOADER -->
@@ -222,18 +234,6 @@ if ($server_check == true &&
       // alert(_getCookie('enroll_app_time'))
       // alert(_getCookie('server_check_popup_time'))
     })
-  </script>
-<? } ?>
-<? if (DEV_SERVER == false) { ?>
-  <!— Global site tag (gtag.js) - Google Analytics —>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-182268526-1">
-  </script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    
-    gtag('config', 'UA-182268526-1');
   </script>
 <? } ?>
 </body>
