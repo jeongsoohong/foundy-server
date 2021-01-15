@@ -28,15 +28,23 @@ input:checked + .slider:before {
     transform: translateX(0px);
 }
   */
-  
+  .type\:active {
+    position: relative;
+  }
+  .agree_btn {
+    float: unset;
+    position: absolute !important;
+    height: 28px;
+    right: 0;
+    margin: auto;
+    top: 0;
+    bottom: 12px;
+  }
   .contents_tit {
     float: left;
     padding: 0 !important;
     border: 0 !important;
     margin: 0 !important;
-  }
-  .agree_btn {
-    float: right;
   }
   /* The switch - the box around the slider */
   .switch {
@@ -260,10 +268,16 @@ input:checked + .slider:before {
   }
   .card_contents {
     box-sizing: border-box;
-    height: 160px;
+    height: 200px;
   }
   .contents_tit {
     color: #111;
+    width: 68%;
+    word-break: break-all;
+    line-height: 1.75;
+    font-size: 13px;
+    height: 44px;
+    letter-spacing: -0.1em;
   }
   .info_tit, .info_data {
     float: left;
@@ -366,6 +380,9 @@ input:checked + .slider:before {
   }
   .member--guide .guide_id {
     font-size: 18px;
+  }
+  .progress_card, .stop_card {
+    height: 268px;
   }
 </style>
 <h2 class="boxwrap__type meaning">수강권 관리</h2>
@@ -814,7 +831,13 @@ input:checked + .slider:before {
               <input type="number" id="enroll_max_ticket_count" class="form_people form_person" style="width: 67%"> 명
             </p>
           </dd>
-          <dt style="width: 93px; margin-right: 13px;">
+          <style type="text/css">
+            .enroll_detail dt {
+              width: 93px;
+              margin-right: 13px;
+            }
+          </style>
+          <dt>
             <!-- count_cancel 스타일 수정 -->
             <label class="count_cancel form-chk" id="count_cancel" style="float: none;">
               <p class="count_limit">

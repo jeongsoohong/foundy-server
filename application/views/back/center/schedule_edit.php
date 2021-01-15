@@ -126,7 +126,7 @@ function get_time($time)
           width: 100%;
         }
         .theme\:schedule .book-function > div > p {
-          width: 30.3%;
+          width: 29%;
         }
         .theme\:schedule .book-function .book-limit p {
           width: 36.1%;

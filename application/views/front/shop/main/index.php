@@ -151,7 +151,9 @@
     margin: 12px 0 2px;
   }
   .item-title {
-    height: 20px !important;
+    height: auto !important;
+    line-height: 1.5 !important;
+    padding-bottom: 4px;
   }
   .item-price {
     height: 14px;
@@ -318,7 +320,6 @@
                     <div class="col-md-12 item-img">
                       <a href="<?php echo base_url().'home/shop/product?id='.$item->product_id; ?>">
                         <img class="img-responsive" src="<?php echo $item->item_image_url_0; ?>" alt=""/>
-<!--                        <img class="img-responsive item-banner" src="--><?php //echo base_url().'uploads/shop/best.png'; ?><!--" alt=""/>-->
                       </a>
                     </div>
                     <div class="col-md-12 brand-name">
@@ -327,9 +328,6 @@
                     <div class="col-md-12 item-title">
                       <?php echo $item->item_name; ?>
                     </div>
-                    <!--      <div class="col-md-12 item-summery">-->
-                    <!--        --><?php //echo $item->item_base_info; ?>
-                    <!--      </div>-->
                     <?php if ($item->item_discount_rate == 0) { ?>
                       <div class="col-md-12 item-price-bold">
                         <?php echo $this->crud_model->get_price_str($item->item_sell_price); ?>원
@@ -378,7 +376,6 @@
                     <div class="col-md-12 item-img">
                       <a href="<?php echo base_url().'home/shop/product?id='.$item->product_id; ?>">
                         <img class="img-responsive" src="<?php echo $item->item_image_url_0; ?>" alt=""/>
-<!--                        <img class="img-responsive item-banner" src="--><?php //echo base_url().'uploads/shop/new.png'; ?><!--" alt=""/>-->
                       </a>
                     </div>
                     <div class="col-md-12 brand-name">
@@ -387,9 +384,6 @@
                     <div class="col-md-12 item-title">
                       <?php echo $item->item_name; ?>
                     </div>
-                    <!--      <div class="col-md-12 item-summery">-->
-                    <!--        --><?php //echo $item->item_base_info; ?>
-                    <!--      </div>-->
                     <?php if ($item->item_discount_rate == 0) { ?>
                       <div class="col-md-12 item-price-bold">
                         <?php echo $this->crud_model->get_price_str($item->item_sell_price); ?>원
@@ -441,7 +435,6 @@
                         <?php if ($item->item_discount_rate > 0) { ?>
                           <img class="img-responsive item-banner" src="<?php echo base_url().'template/icon/ic_sale.png'; ?>" alt=""/>
                         <?php } else { ?>
-<!--                          <img class="img-responsive item-banner" src="--><?php //echo base_url().'uploads/shop/new.png'; ?><!--" alt=""/>-->
                         <?php } ?>
                       </a>
                     </div>
@@ -451,9 +444,6 @@
                     <div class="col-md-12 item-title">
                       <?php echo $item->item_name; ?>
                     </div>
-                    <!--      <div class="col-md-12 item-summery">-->
-                    <!--        --><?php //echo $item->item_base_info; ?>
-                    <!--      </div>-->
                     <?php if ($item->item_discount_rate == 0) { ?>
                       <div class="col-md-12 item-price-bold">
                         <?php echo $this->crud_model->get_price_str($item->item_sell_price); ?>원

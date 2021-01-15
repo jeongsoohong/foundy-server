@@ -67,14 +67,13 @@
       height: 100%;
       position: relative;
     }
-    
     /* login */
     #whole {
       background-color: #fff;
       height: 100%;
       min-width: 320px;
       box-sizing: border-box;
-      padding: 120px 24px 0;
+      padding: 60px 24px 0;
       text-align: center;
       
       position: relative;
@@ -124,7 +123,6 @@
       padding-top: 2px;
       box-sizing: border-box;
     }
-    
     .login_fn {
       float: left;
       width: 100%;
@@ -135,7 +133,6 @@
       height: inherit;
       line-height: inherit;
     }
-    
     .fn\:maintenance {
       float: left;
       font-size: 0;
@@ -144,7 +141,6 @@
       float: right;
       cursor: pointer;
     }
-    
     .maintenance_wrap {
       width: 108px;
       cursor: pointer;
@@ -166,7 +162,6 @@
       padding-top: 1px;
       color: #BDBDBD;
     }
-    
     .fn\:forget {
       color: #E9967A;
       font-size: 12px;
@@ -175,7 +170,6 @@
       box-sizing: border-box;
       padding-top: 1px;
     }
-    
     .page_data {
       position: absolute;
       left: 0;
@@ -197,11 +191,10 @@
       color: #604C48;
       font-size: 12px;
     }
-    
     /* 모바일 414 */
     @media(min-width: 414px) {
       #whole {
-        padding: 120px 0 0;
+        padding: 60px 0 0;
         width: 80%;
         margin: 0 auto;
       }
@@ -209,9 +202,8 @@
         padding: 0;
       }
     }
-    
     /* 태블릿 */
-    @media(min-width: 768px) {
+    @media(min-width: 600px) {
       .name_link img:first-child {
         display: none;
       }
@@ -225,8 +217,8 @@
         margin-bottom: 36px;
       }
       #whole {
-        padding: 148px 0 0;
-        width: 576px;
+        padding: 116px 0 0;
+        width: 496px;
         margin: 0 auto;
       }
       .page_data {
@@ -267,6 +259,11 @@
         text-align: left;
       }
     }
+    @media(min-width: 768px) {
+      #whole {
+        width: 576px;
+      }
+    }
     @media(min-width: 1025px) {
       #whole {
         width: 760px;
@@ -284,7 +281,6 @@
         width: 160px;
       }
     }
-    
     /* forget_password */
     .bg {
       display: none;
@@ -354,7 +350,6 @@
     .how_type .type_mail {
       border-right: 0;
     }
-    
     .active {
       background-color: #eee !important;
       font-weight: bold !important;
@@ -363,7 +358,6 @@
     .write_form, .verify_code {
       float: left;
     }
-    
     .write_tit, .verify_tit {
       width: 52px;
       font-size: 11px;
@@ -463,7 +457,6 @@
       height: 40px;
       line-height: 40px;
     }
-    
     .form\:phone_send {
       margin-top: 8px;
       width: 100%;
@@ -476,7 +469,6 @@
     .form\:write_lg {
       height: auto;
     }
-    
     .pw_reset {
       background-color: #fcfafa;
       height: 68px;
@@ -507,7 +499,6 @@
     .btn_cancel:hover {
       background-color: #d32f2f;
     }
-    
     .pw_advice {
       font-size: 0;
       height: 14px;
@@ -523,7 +514,6 @@
       vertical-align: top;
       margin-left: 4px;
     }
-    
     @media(min-width: 414px){
       .popup_center {
         max-width: 372px;
@@ -542,8 +532,7 @@
         margin: 0 0 0 12px;
       }
     }
-    
-    @media(min-width: 768px){
+    @media(min-width: 600px){
       .popup_center {
         max-width: 600px;
         margin-left: -300px;

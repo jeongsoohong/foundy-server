@@ -52,8 +52,9 @@ if ($test || empty($schedules) == false) { ?>
       margin-left: 12px;
     }
     #card .class_name {
-      font-size: 12px;
       margin: 0 !important;
+      font-size: 11px;
+      line-height: 1.8;
     }
     #card .class_box {
       position: relative;

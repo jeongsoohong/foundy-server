@@ -14,7 +14,6 @@ if (isset($shop_items)) {
             <?php } elseif ($item->item_discount_rate > 0) { ?>
               <img class="img-responsive item-banner" src="<?php echo base_url().'template/icon/ic_sale.png'; ?>" alt=""/>
             <?php } else { ?>
-<!--              <img class="img-responsive item-banner" src="--><?php //echo base_url().'uploads/shop/new.png'; ?><!--" alt=""/>-->
             <?php } ?>
           </a>
         </div>
@@ -24,9 +23,6 @@ if (isset($shop_items)) {
         <div class="col-md-12 item-title" style="height: auto !important; line-height: 1.5 !important; padding-bottom: 4px;">
           <?php echo $item->item_name; ?>
         </div>
-        <!--      <div class="col-md-12 item-summery">-->
-        <!--        --><?php //echo $item->item_base_info; ?>
-        <!--      </div>-->
         <?php if ($item->item_discount_rate == 0) { ?>
           <div class="col-md-12 item-price-bold">
             <?php echo $this->crud_model->get_price_str($item->item_sell_price); ?>원

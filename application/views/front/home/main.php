@@ -143,15 +143,17 @@
         vertical-align: middle;
       }
       #coming .type_info {
-        margin: -4px 0 0 8px;
         line-height: 1.5;
         font-size: 12.5px;
+        margin: -4px 0 0 6px;
+        letter-spacing: -0.06em;
       }
       #coming .type_name {
         position: unset;
         float: right;
-        width: 49%;
         line-height: 1.5;
+        width: 54%;
+        margin-top: -1px;
       }
       #coming .type_cancel {
         margin: auto;
@@ -161,9 +163,10 @@
       }
       #coming .name_class {
         text-align: right;
-        font-size: 11px;
-        line-height: 1.8;
         padding: 1px 0 2px;
+        font-size: 10.3px;
+        line-height: 1.85;
+        letter-spacing: -0.05em;
       }
       #coming .name_center {
         text-align: right;

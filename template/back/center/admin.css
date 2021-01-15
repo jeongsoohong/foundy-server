@@ -414,7 +414,7 @@ table {
 }
 .progress_card, .stop_card {
     width: 49%;
-    height: 228px;
+    height: 248px;
     float: left;
     box-sizing: border-box;
     border-radius: 4px;

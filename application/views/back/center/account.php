@@ -145,6 +145,12 @@
                     #whole .header .logo_home img {
                       padding: 0;
                     }
+                    .chkbox_line #chk_other {
+                      width: 140px;
+                    }
+                    .chk_write {
+                      width: 80px;
+                    }
                     @media(min-width: 600px){
                       .chkbox_line #chk_other {
                         width: 144px;

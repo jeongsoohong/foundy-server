@@ -224,5 +224,17 @@ if ($server_check == true &&
     })
   </script>
 <? } ?>
+<? if (DEV_SERVER == false) { ?>
+  <!— Global site tag (gtag.js) - Google Analytics —>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-182268526-1">
+  </script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    
+    gtag('config', 'UA-182268526-1');
+  </script>
+<? } ?>
 </body>
 </html>

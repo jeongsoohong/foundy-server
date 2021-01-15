@@ -224,7 +224,7 @@
                           box-sizing: border-box;
                         }
                         #whole .header {
-                          border-bottom: 0;
+                          border-bottom: 1px solid #f3efee;
                         }
                         #whole .header h1 {
                           margin: 5px 16px 0 0;
@@ -752,7 +752,7 @@
   </div>
   -->
   <!-- 예약현황 클릭 팝업 -->
-  <div class="popup theme:alert_situation pop:situation scroll-y" id="schedule_status" style="display: none; height: 534px !important; margin-top: -267px !important;">
+  <div class="popup theme:alert_situation pop:situation scroll-y" id="schedule_status" style="display: none; height: 534px !important; margin-top: -267px !important; width: 736px !important; margin-left: -368px !important;">
     <!-- schedule status -->
   </div>
 </div>
