@@ -5099,16 +5099,29 @@ QUERY;
           $user_info->address_1 = '';
           $user_info->address_2 = '';
         }
-        
+ 
         $coupons = array();
-        $now = date('Y-m-d H:i:s');
-        if ($this->is_login()) {
-          $query = <<<QUERY
-select * from user_coupon where user_id={$user_id} and used=0 and '{$now}' < use_at order by user_coupon_id desc
+        if ($user_id > 0) {
+          // 샵에서 구매페이지에 접속 시 shop period 타입의 쿠폰이 사용가능한게 없으면 발급
+          $coupon_type = COUPON_USER_TYPE_SHOP_PURCHASING;
+          $coupons = $this->coupon_model->get_server_coupons($coupon_type);
+          foreach ($coupons as $coupon) {
+            if ($coupon->coupon_count == 0) {
+              if ($this->coupon_model->check_shop_purchasing_coupon($user_id, $coupon->coupon_id) == COUPON_RECEIVABLE) {
+                $this->coupon_model->receive_coupon($user_id, $coupon->coupon_id);
+              }
+            }
+          }
+          
+          // 현재 발급받은 쿠폰
+          if ($this->is_login()) {
+            $query = <<<QUERY
+select * from user_coupon where user_id={$user_id} and used=0 and NOW()<use_at order by user_coupon_id desc
 QUERY;
-          $coupons = $this->db->query($query)->result();
+            $coupons = $this->db->query($query)->result();
+          }
         }
-
+        
         $this->page_data['coupons'] = $coupons;
         $this->page_data['user_info'] = $user_info;
         $this->page_data['purchase_info'] = $purchase_info;
@@ -5758,61 +5771,8 @@ QUERY;
       }
       
       $coupon_id = $_GET['id'];
-  
-      $now = date('Y-m-d H:i:s');
-      $coupon_data = $this->db->get_where('server_coupon', array('coupon_id' => $coupon_id))->row();
-      if ($coupon_data->start_at > $now || $now > $coupon_data->end_at) {
-        echo '발급 기간이 지났습니다.';
-        exit;
-      }
-      if ($coupon_data->activate == 0) {
-        echo '발급 중지된 쿠폰입니다.';
-        exit;
-      }
-      $received = $this->db->get_where('user_coupon', array('user_id' => $user_id, 'coupon_id' => $coupon_id))->row();
-      if (isset($received) == true && empty($received) == false) {
-        echo '이미 발급 받은 쿠폰입니다.';
-        exit;
-      }
-  
-      if ($coupon_data->user_type == COUPON_USER_TYPE_REGISTER) {
-        if ($coupon_data->coupon_count > 0) {
-          $query = <<<QUERY
-select user_id from user order by user_id asc limit 0,{$coupon_data->coupon_count}
-QUERY;
-          $user_ids = $this->db->query($query)->result();
-      
-          $where_in = false;
-          foreach ($user_ids as $u) {
-//            $this->crud_model->alert_exit(json_encode($u));
-            if ($u->user_id == $user_id) {
-              $where_in = true;
-            }
-          }
-          if ($where_in == false) {
-            echo '쿠폰 발급 대상자가 아닙니다.';
-            exit;
-          }
-        }
-      }
-  
-      $coupon_code = sprintf('%s%010d%010d', date('ymdHis'), $user_id, $coupon_id);
-      $ins = array(
-        'user_id' => $user_id,
-        'coupon_code' => $coupon_code,
-        'coupon_id' => $coupon_id,
-        'coupon_type' => $coupon_data->coupon_type,
-        'coupon_benefit' => $coupon_data->coupon_benefit,
-        'coupon_title' => $coupon_data->coupon_title,
-        'coupon_desc' => $coupon_data->coupon_desc,
-        'coupon_img_url' => $coupon_data->coupon_img_url,
-        'used' => 0,
-        'use_at' => $coupon_data->use_at,
-      );
-      $this->db->set('create_at', 'NOW()', false);
-      $this->db->set('used_at', 'NOW()', false);
-  
-      $this->db->insert('user_coupon', $ins);
+
+      $this->coupon_model->receive_coupon($user_id, $coupon_id);
   
       echo 'done';
   

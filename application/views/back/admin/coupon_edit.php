@@ -27,11 +27,13 @@
             <div class="form-group btm_border">
               <label class="col-sm-4 control-label" for="demo-hor-3">혜택회원</label>
               <div class="col-sm-6">
-                <select class="form-control required" name="user_type">
+                <select class="form-control required" name="user_type" id="user_type" onchange="set_coupon_desc();">
                   <option <?php if ($coupon->user_type == COUPON_USER_TYPE_DEFAULT) echo 'selected'; ?>
-                    value="<?php echo COUPON_USER_TYPE_DEFAULT; ?>"><?php echo $this->crud_model->get_coupon_user_type_str(COUPON_USER_TYPE_DEFAULT); ?></option>
+                    value="<?php echo COUPON_USER_TYPE_DEFAULT; ?>"><?php echo $this->coupon_model->get_coupon_user_type_str(COUPON_USER_TYPE_DEFAULT); ?></option>
                   <option <?php if ($coupon->user_type == COUPON_USER_TYPE_REGISTER) echo 'selected'; ?>
-                    value="<?php echo COUPON_USER_TYPE_REGISTER; ?>"><?php echo $this->crud_model->get_coupon_user_type_str(COUPON_USER_TYPE_REGISTER); ?></option>
+                    value="<?php echo COUPON_USER_TYPE_REGISTER; ?>"><?php echo $this->coupon_model->get_coupon_user_type_str(COUPON_USER_TYPE_REGISTER); ?></option>
+                  <option <?php if ($coupon->user_type == COUPON_USER_TYPE_SHOP_PURCHASING) echo 'selected'; ?>
+                    value="<?php echo COUPON_USER_TYPE_SHOP_PURCHASING; ?>"><?php echo $this->coupon_model->get_coupon_user_type_str(COUPON_USER_TYPE_SHOP_PURCHASING); ?></option>
                 </select>
               </div>
             </div>
@@ -47,11 +49,13 @@
               <div class="col-sm-6">
                 <select class="form-control required" name="coupon_type">
                   <option <?php if ($coupon->coupon_type == COUPON_TYPE_DEFAULT) echo 'selected'; ?>
-                    value="<?php echo COUPON_TYPE_DEFAULT; ?>"><?php echo $this->crud_model->get_coupon_user_type_str(COUPON_TYPE_DEFAULT); ?></option>
+                    value="<?php echo COUPON_TYPE_DEFAULT; ?>"><?php echo $this->coupon_model->get_coupon_type_str(COUPON_TYPE_DEFAULT); ?></option>
                   <option <?php if ($coupon->coupon_type == COUPON_TYPE_SHOP_DISCOUNT_PRICE) echo 'selected'; ?>
-                    value="<?php echo COUPON_TYPE_SHOP_DISCOUNT_PRICE; ?>"><?php echo $this->crud_model->get_coupon_type_str(COUPON_TYPE_SHOP_DISCOUNT_PRICE); ?></option>
+                    value="<?php echo COUPON_TYPE_SHOP_DISCOUNT_PRICE; ?>"><?php echo $this->coupon_model->get_coupon_type_str(COUPON_TYPE_SHOP_DISCOUNT_PRICE); ?></option>
                   <option <?php if ($coupon->coupon_type == COUPON_TYPE_SHOP_DISCOUNT_PERCENT) echo 'selected'; ?>
-                    value="<?php echo COUPON_TYPE_SHOP_DISCOUNT_PERCENT; ?>"><?php echo $this->crud_model->get_coupon_type_str(COUPON_TYPE_SHOP_DISCOUNT_PERCENT); ?></option>
+                    value="<?php echo COUPON_TYPE_SHOP_DISCOUNT_PERCENT; ?>"><?php echo $this->coupon_model->get_coupon_type_str(COUPON_TYPE_SHOP_DISCOUNT_PERCENT); ?></option>
+                  <option <?php if ($coupon->coupon_type == COUPON_TYPE_SHOP_FREE_SHIPPING) echo 'selected'; ?>
+                    value="<?php echo COUPON_TYPE_SHOP_FREE_SHIPPING; ?>"><?php echo $this->coupon_model->get_coupon_type_str(COUPON_TYPE_SHOP_FREE_SHIPPING); ?></option>
                 </select>
               </div>
             </div>
@@ -63,9 +67,9 @@
               </div>
             </div>
             <div class="form-group btm_border">
-              <label class="col-sm-4 control-label" for="demo-hor-5">쿠폰설명</label>
+              <label class="col-sm-4 control-label" for="coupon_desc">쿠폰설명</label>
               <div class="col-sm-6">
-                <input type="text" name="coupon_desc" id="demo-hor-5" placeholder="쿠폰설명"
+                <input type="text" name="coupon_desc" id="coupon_desc" placeholder="쿠폰설명"
                        class="form-control required" value="<?php echo $coupon->coupon_desc; ?>">
               </div>
             </div>
@@ -143,6 +147,16 @@
     });
   });
 
+  function set_coupon_desc() {
+    let coupon_type = parseInt($('#user_type').find('option:selected').val());
+    let target = $('#coupon_desc');
+    if (coupon_type === <?= COUPON_USER_TYPE_REGISTER?>) {
+      target.val('회원가입쿠폰(쿠폰수가 0인 경우 해당기간동안 회원가입한 모든 유저에게 지급, 0보다 큰 경우 해당 기간동안에 선착순 지급)')
+    } else if (coupon_type === <?= COUPON_USER_TYPE_SHOP_PURCHASING ?>) {
+      target.val('구매유도쿠폰(쿠폰수는 0만 세팅 가능, 구매페이지 접속 시 해당 쿠폰 지급)');
+    } else
+      target.val('쿠폰설명');
+  }
 </script>
 
 <style>

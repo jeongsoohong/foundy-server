@@ -547,8 +547,12 @@
             <option value="0">선택안함</option>
             <?php foreach ($coupons as $coupon) { ?>
               <option value="<?php echo $coupon->user_coupon_id; ?>">
-                <?php echo $coupon->coupon_benefit; ?><?php echo ($coupon->coupon_type == COUPON_TYPE_SHOP_DISCOUNT_PERCENT ? '%' : '원'); ?> 할인
-                (<?php echo $coupon->coupon_title; ?>)
+                <? if ($coupon->coupon_type == COUPON_TYPE_SHOP_FREE_SHIPPING) { ?>
+                  무료배송(<?php echo $coupon->coupon_title; ?>)
+                <? } else { ?>
+                  <?php echo $coupon->coupon_benefit; ?><?php echo ($coupon->coupon_type == COUPON_TYPE_SHOP_DISCOUNT_PERCENT ? '%' : '원'); ?> 할인
+                  (<?php echo $coupon->coupon_title; ?>)
+                <? } ?>
               </option>
             <?php } ?>
           </select>
@@ -599,8 +603,9 @@
 <script>
   //let total_balance = '<?php //echo $total_balance; ?>//';
   let address_cnt = <?php echo $shipping_info_cnt; ?>;
-  let total_balance = '<?php echo $purchase_info->total_balance; ?>';
+  let total_balance = <?php echo $purchase_info->total_balance; ?>;
   let purchase_code = '<?php echo $purchase_info->purchase_code; ?>';
+  let total_shipping_fee = <?php echo $total_shipping_fee; ?>;
   let is_canceled = false;
   let is_done = false;
   let discount_type = <?php echo COUPON_TYPE_DEFAULT; ?>;
@@ -990,6 +995,7 @@
     formData.append('address_1', user_address_1);
     formData.append('address_2', user_address_2);
     formData.append('user_save', user_save === true ? '1' : '0');
+    formData.append('discount_type', discount_type);
     formData.append('discount', discount);
     formData.append('user_coupon_id', user_coupon_id);
 
@@ -1048,6 +1054,7 @@
     let purchase_info = {
       purchase_code : purchase_code,
       total_balance : total_balance,
+      discount_type : discount_type,
       discount : discount,
       user_coupon_id : user_coupon_id
     }
@@ -1195,14 +1202,19 @@
       contentType: false,
       processData: false,
       success: function (msg) {
-        // console.log(msg);
+        console.log(msg);
         msg = JSON.parse(msg);
         if (msg.status === 'success') {
-          discount_type = msg.coupon.coupon_type;
-          if (discount_type === <?php echo COUPON_TYPE_SHOP_DISCOUNT_PRICE; ?>) {
-            discount = msg.coupon.coupon_benefit;
-          } else {
+          discount_type = parseInt(msg.coupon.coupon_type);
+          if (discount_type === <?= COUPON_TYPE_SHOP_DISCOUNT_PRICE; ?>) {
+            discount = parseInt(msg.coupon.coupon_benefit);
+          } else if (discount_type === <?= COUPON_TYPE_SHOP_DISCOUNT_PERCENT ?>) {
             discount = parseInt(parseInt(total_balance * msg.coupon.coupon_benefit / 100) / 10) * 10;
+          } else if (discount_type === <?= COUPON_TYPE_SHOP_FREE_SHIPPING ?>) {
+            discount = total_shipping_fee;
+          } else {
+            alert('잘못된 쿠폰 타입입니다!');
+            return false;
           }
           user_coupon_id = id;
           // console.log(discount_type);

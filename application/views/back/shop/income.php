@@ -81,7 +81,7 @@
             <th class="col-md-1 col-sm-1 col-xs-1">수량</th>
             <th class="col-md-1 col-sm-1 col-xs-1">실판매액</th>
             <th class="col-md-1 col-sm-1 col-xs-1">공급액</th>
-            <th class="col-md-1 col-sm-1 col-xs-1">수수표</th>
+            <th class="col-md-1 col-sm-1 col-xs-1">수수료</th>
             <th class="col-md-1 col-sm-1 col-xs-1">쿠폰/할인내역/부담율</th>
           </tr>
           </thead>
@@ -107,26 +107,43 @@
                 }
                 ?>
               </td>
+              <?
+              $total_price = $income->total_price + $income->total_additional_price;
+              $total_supply_price = (int)((int)($total_price * ((100-$income->item_margin)/100))/100)*100;
+              ?>
               <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_price_str($income->item_general_price); ?></td>
               <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_price_str($income->item_supply_price); ?></td>
               <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $income->total_purchase_cnt; ?></td>
-              <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_price_str($income->item_sell_price*$income->total_purchase_cnt); ?></td>
-              <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_price_str($income->item_supply_price*$income->total_purchase_cnt); ?></td>
-              <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_price_str($income->item_sell_price*$income->total_purchase_cnt - $income->item_supply_price*$income->total_purchase_cnt); ?></td>
-              <td class="col-md-1 col-sm-1 col-xs-1">-/-/-</td>
+              <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_price_str($total_price); ?></td>
+              <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_price_str($total_supply_price); ?></td>
+              <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_price_str($total_price - $total_supply_price); ?></td>
+              <? if ($income->user_coupon_id > 0) { ?>
+                <td class="col-md-1 col-sm-1 col-xs-1">
+                <?= $income->coupon->coupon_title; ?>/<?= $this->coupon_model->get_coupon_type_str($income->coupon->coupon_type); ?>/0원
+                </td>
+              <? } else { ?>
+                <td class="col-md-1 col-sm-1 col-xs-1">-/-/-</td>
+              <? } ?>
             </tr>
             <tr>
+              <?
+              if ($income->total_purchase_cnt % $income->bundle_shipping_cnt) {
+                $total_package_cnt = (int)($income->total_purchase_cnt / $income->bundle_shipping_cnt) + 1;
+              } else {
+                $total_package_cnt = (int)($income->total_purchase_cnt / $income->bundle_shipping_cnt);
+              }
+              ?>
               <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $income->purchase_code; ?></td>
               <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $income->email; ?></td>
               <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $income->receiver_name; ?></td>
               <td class="col-md-1 col-sm-1 col-xs-1">배송비</td>
               <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_product_shipping_free_str($income->free_shipping); ?></td>
+              <td class="col-md-1 col-sm-1 col-xs-1"><?= $this->crud_model->get_price_str($income->free_shipping_cond_price); ?></td>
+              <td class="col-md-1 col-sm-1 col-xs-1"><?= $this->crud_model->get_price_str($income->free_shipping_cond_price); ?></td>
+              <td class="col-md-1 col-sm-1 col-xs-1"><?= $total_package_cnt; ?></td>
+              <td class="col-md-1 col-sm-1 col-xs-1"><?= $this->crud_model->get_price_str($income->total_shipping_fee); ?></td>
+              <td class="col-md-1 col-sm-1 col-xs-1"><?= $this->crud_model->get_price_str($income->total_shipping_fee); ?></td>
               <td class="col-md-1 col-sm-1 col-xs-1">0</td>
-              <td class="col-md-1 col-sm-1 col-xs-1">0</td>
-              <td class="col-md-1 col-sm-1 col-xs-1">1</td>
-              <td class="col-md-1 col-sm-1 col-xs-1">0</td>
-              <td class="col-md-1 col-sm-1 col-xs-1">0</td>
-              <td class="col-md-1 col-sm-1 col-xs-1"></td>
               <td class="col-md-1 col-sm-1 col-xs-1"></td>
             </tr>
           <?php } ?>

@@ -345,7 +345,7 @@ MSG;
     if ($phone == null || $phone == '') {
       return 0;
     }
-    $expiration_date = date('Y.m.d', strtotime($expiration_date));
+//    $expiration_date = date('Y.m.d', strtotime($expiration_date));
     $msg = <<<MSG
 #{고객명} 고객님께 #{쿠폰명} 쿠폰이 지금 발급되었습니다!
 

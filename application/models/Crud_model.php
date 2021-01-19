@@ -165,19 +165,9 @@ class Crud_model extends CI_Model
     
     $this->mts_model->send_user_register($phone);
  
-//    $now = date('Y-m-d H:i:s');
-//    $coupon_type = COUPON_USER_TYPE_REGISTER;
-//    $query = <<<QUERY
-//select * from server_coupon where user_type={$coupon_type} and activate=1 and
-//start_at<='{$now}' and '{$now}'<=end_at
-//QUERY;
-//    $coupons = $this->db->query($query)->result();
-//    foreach ($coupons as $coupon) {
-//      if ($coupon->coupon_count == 0) {
-//        $this->mts_model->send_user_coupon($phone, $user_name, $coupon->coupon_title, $coupon->use_at);
-//      }
-//    }
-  
+    $coupon_user_type = COUPON_USER_TYPE_REGISTER;
+    $this->coupon_model->send_coupon_data($coupon_user_type, $phone, $user_name, $user_id, $email);
+    
     $result['status'] = 'success';
     $result['message'] = "첫 방문을 환영합니다.";
     return $result;
@@ -261,7 +251,10 @@ class Crud_model extends CI_Model
         $this->session->set_userdata('reg_account', '');
   
         $this->mts_model->send_user_register($phone);
-        
+  
+        $coupon_user_type = COUPON_USER_TYPE_REGISTER;
+        $this->coupon_model->send_coupon_data($coupon_user_type, $phone, $username, $user_data->user_id, $email);
+  
         $result['status'] = 'success';
         $result['message'] = "첫 방문을 환영합니다.";
   
@@ -1011,7 +1004,7 @@ QUERY;
       $query .= " and a.product_code like '{$category}'";
     }
     
-    if ($order_col == 'best' || $order_col == 'recommend') {
+    if ($order_col == 'best' || $order_col == 'new' || $order_col == 'recommend') {
       $query .= " and {$order_col} > 0";
     }
 
@@ -1228,7 +1221,7 @@ QUERY;
       case SHOP_SHIPPING_STATUS_PREPARE: return '배송준비중';
       case SHOP_SHIPPING_STATUS_IN_PROGRESS: return '배송중';
       case SHOP_SHIPPING_STATUS_COMPLETED: return '배송완료';
-      case SHOP_SHIPPING_STATUS_PURCHASE_COMPLETED: return '구매완료';
+      case SHOP_SHIPPING_STATUS_PURCHASE_COMPLETED: return '구매확정';
       case SHOP_SHIPPING_STATUS_PURCHASE_CANCELED: return '반품완료';
       case SHOP_SHIPPING_STATUS_PURCHASE_CANCELING: return '반품중';
       case SHOP_SHIPPING_STATUS_PURCHASE_CHANGED: return '교환완료';
@@ -1269,7 +1262,7 @@ QUERY;
     $this->db->update('center_teacher', $upd, $where);
 
     $teacher_name = $teacher_data->name;
-    if (activate != 1) {
+    if ($activate != 1) {
       $teacher_name = 'Unknown';
     }
     $upd = array(
@@ -1386,22 +1379,6 @@ QUERY;
     }
     
     return array(true, '');
-  }
-  
-  function get_coupon_user_type_str($type) {
-    switch ($type) {
-      case COUPON_USER_TYPE_DEFAULT: return '적용회원';
-      case COUPON_USER_TYPE_REGISTER: return '회원가입';
-    }
-    return '';
-  }
-  function get_coupon_type_str($type) {
-    switch ($type) {
-      case COUPON_TYPE_DEFAULT: return '쿠폰타입';
-      case COUPON_TYPE_SHOP_DISCOUNT_PRICE: return '샵할인금액';
-      case COUPON_TYPE_SHOP_DISCOUNT_PERCENT: return '샵할인율';
-    }
-    return '';
   }
   
   function cancel_payment($purchase_product_id, $cancel_reason, $shipping_status, $user_cancel, $auth_code)

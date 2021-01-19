@@ -13,11 +13,15 @@ foreach ($coupons as $coupon) {
         <td class="coupon-title <?php if ($usable == false) echo 'unusable'; ?>" style="width: 100% !important;"><?php echo $coupon->coupon_title; ?></td>
       </tr>
       <tr>
-        <td class="coupon-desc <?php if ($usable == false) echo 'unusable'; ?>" style="width: 100% !important;"><?php echo $coupon->coupon_desc; ?></td>
+<!--        <td class="coupon-desc --><?php //if ($usable == false) echo 'unusable'; ?><!--" style="width: 100% !important;">--><?php //echo $coupon->coupon_desc; ?><!--</td>-->
       </tr>
       <tr>
-        <td class="coupon-benefit <?php if ($usable == false) echo 'unusable'; ?>" style="width: 100% !important;">샵 구매시
-        <?php echo $coupon->coupon_benefit; ?><?php echo ($coupon->coupon_type == COUPON_TYPE_SHOP_DISCOUNT_PERCENT ? '%' : '원'); ?> 할인</td>
+        <? if ($coupon->coupon_type == COUPON_TYPE_SHOP_FREE_SHIPPING) { ?>
+          <td class="coupon-benefit">샵 구매시 무료배송</td>
+        <? } else { ?>
+          <td class="coupon-benefit">샵 구매시
+            <?php echo $coupon->coupon_benefit; ?><?php echo ($coupon->coupon_type == COUPON_TYPE_SHOP_DISCOUNT_PERCENT ? '%' : '원'); ?> 할인</td>
+        <? } ?>
       </tr>
       <tr>
         <?php if ($coupon->used == 0) { ?>

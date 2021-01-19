@@ -1148,7 +1148,7 @@
   let item_tax = <?php echo $product->item_tax; ?>;
   let item_margin = <?php echo $product->item_margin; ?>;
   let item_supply_price = <?php echo $product->item_supply_price; ?>;
-
+  
   function init_options() {
     $.each($('.item-option').find('.item-option-row'), function(idx, opt) {
       let select = $(opt).find('select');

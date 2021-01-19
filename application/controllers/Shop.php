@@ -1465,7 +1465,11 @@ QUERY;
       $end_date_kor = date('Y-m-d H:i:s', strtotime($_GET['end_date']));
     }
 
-    $ship_status = SHOP_SHIPPING_STATUS_ORDER_COMPLETED;
+    if (DEV_SERVER == true) {
+      $ship_status = implode(',', array(SHOP_SHIPPING_STATUS_ORDER_COMPLETED, SHOP_SHIPPING_STATUS_COMPLETED, SHOP_SHIPPING_STATUS_IN_PROGRESS));
+    } else {
+      $ship_status = SHOP_SHIPPING_STATUS_COMPLETED;
+    }
     $size = SHOP_ADMIN_ITEM_LIST_PAGE_SIZE;
     $offset = $size*($page - 1);
 
@@ -1476,7 +1480,7 @@ QUERY;
     $order_by = "order by purchase_product_id desc";
     $limit = "limit {$offset},{$size}";
 
-    $where = "where a.shop_id=d.shop_id and b.user_id=d.user_id and c.product_id=d.product_id and d.purchase_id=e.purchase_id and d.shop_id={$shop_data->shop_id} and shipping_status={$ship_status}";
+    $where = "where a.shop_id=d.shop_id and b.user_id=d.user_id and c.product_id=d.product_id and d.purchase_id=e.purchase_id and d.shop_id={$shop_data->shop_id} and shipping_status in ({$ship_status})";
     if (!empty($start_date) && !empty($end_date)) {
       $where .= " and '{$start_date_kor}' <= d.purchase_at and d.purchase_at <= '{$end_date_kor}'";
     } else {
@@ -1492,7 +1496,12 @@ QUERY;
     foreach ($income_data as $item) {
       $item->item_option_requires = json_decode($item->item_option_requires);
       $item->item_option_others = json_decode($item->item_option_others);
+      if ($item->user_coupon_id > 0) {
+        $item->coupon = $this->db->get_where('user_coupon', array('user_coupon_id' => $item->user_coupon_id))->row();
+      }
     }
+    
+//    log_message('debug', '[coupon] data['.json_encode($income_data).']');
 
     $select = "select count(*) as cnt";
     $query = $select . ' ' . $from . ' ' . $where . ' ';

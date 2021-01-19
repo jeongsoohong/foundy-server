@@ -1662,6 +1662,25 @@ QUERY;
         echo '유저 / 쿠폰 타입을 정확히 입력해 주세요.';
         exit;
       }
+      
+      if ($data['user_type'] == COUPON_USER_TYPE_SHOP_PURCHASING) {
+        if ($data['coupon_count'] > 0) {
+          echo $this->coupon_model->get_coupon_user_type_str(COUPON_USER_TYPE_SHOP_PURCHASING).
+            '은 쿠폰수 0(무제한 쿠폰)만 가능합니다.';
+          exit;
+        }
+        if ($data['coupon_type'] == COUPON_TYPE_SHOP_DISCOUNT_PERCENT || $data['coupon_type'] == COUPON_TYPE_SHOP_DISCOUNT_PRICE) {
+          echo $this->coupon_model->get_coupon_user_type_str(COUPON_USER_TYPE_SHOP_PURCHASING).
+            '은'.$this->coupon_model->get_coupon_type_str(COUPON_TYPE_SHOP_FREE_SHIPPING).' 타입만 가능합니다.';
+          exit;
+        }
+      } else if ($data['user_type'] == COUPON_USER_TYPE_REGISTER) {
+        if ($data['coupon_type'] == COUPON_TYPE_SHOP_FREE_SHIPPING) {
+          echo $this->coupon_model->get_coupon_user_type_str(COUPON_USER_TYPE_REGISTER).
+            '은'.$this->coupon_model->get_coupon_type_str(COUPON_TYPE_SHOP_FREE_SHIPPING).' 타입이 불가능합니다.';
+          exit;
+        }
+      }
 
       $where = array('coupon_id' => $coupon_id);
       $this->db->update('server_coupon', $data, $where);

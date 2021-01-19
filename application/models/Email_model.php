@@ -73,7 +73,8 @@ class Email_model extends CI_Model
 //    $data->subject = str_replace('{{SHIPPING_STATUS}}',$shipping_status, $data->subject);
     $data->email_body = str_replace('{{USER_NAME}}',$user_name, $data->email_body);
     $data->email_body = str_replace('{{COUPON_NAME}}',$coupon_name, $data->email_body);
-    $data->email_body = str_replace('{{EXPIRATION_DATE}}',date('Y.m.d', strtotime($expiration_date)), $data->email_body);
+//    $data->email_body = str_replace('{{EXPIRATION_DATE}}',date('Y.m.d', strtotime($expiration_date)), $data->email_body);
+    $data->email_body = str_replace('{{EXPIRATION_DATE}}', $expiration_date, $data->email_body);
     
     $data->to = $email;
     $this->sendmail($data);

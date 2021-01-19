@@ -20,7 +20,7 @@
       ?>
       <tr>
         <td><?php echo $coupon->coupon_title; ?></td>
-        <td><?php echo $this->crud_model->get_coupon_user_type_str($coupon->user_type); ?></td>
+        <td><?php echo $this->coupon_model->get_coupon_user_type_str($coupon->user_type); ?></td>
         <td><?php echo $coupon->coupon_count == 0 ? '무제한' : $coupon->coupon_count; ?></td>
         <td><?php echo $coupon->coupon_benefit; ?><?php echo ($coupon->coupon_type == COUPON_TYPE_SHOP_DISCOUNT_PRICE ? '원' : '%'); ?></td>
         <td><?php echo $coupon->start_at; ?> ~ <?php echo $coupon->end_at; ?></td>

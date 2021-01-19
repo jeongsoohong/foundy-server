@@ -25,7 +25,7 @@
           </tr>
           <tr>
             <th class="custom_td">적용회원</th>
-            <td class="custom_td"><?php echo $this->crud_model->get_coupon_user_type_str($coupon->user_type); ?></td>
+            <td class="custom_td"><?php echo $this->coupon_model->get_coupon_user_type_str($coupon->user_type); ?></td>
           </tr>
           <tr>
             <th class="custom_td">쿠폰수</th>
@@ -33,7 +33,11 @@
           </tr>
           <tr>
             <th class="custom_td">할인</th>
-            <td><?php echo $coupon->coupon_benefit; ?><?php echo ($coupon->coupon_type == COUPON_TYPE_SHOP_DISCOUNT_PRICE ? '원' : '%'); ?></td>
+            <? if ($coupon->coupon_type == COUPON_TYPE_SHOP_FREE_SHIPPING) { ?>
+              <td>무료배송</td>
+            <? } else { ?>
+              <td><?php echo $coupon->coupon_benefit; ?><?php echo ($coupon->coupon_type == COUPON_TYPE_SHOP_DISCOUNT_PERCENT ? '%' : '원'); ?></td>
+            <? } ?>
           </tr>
           <tr>
             <th class="custom_td">발급시간</th>
