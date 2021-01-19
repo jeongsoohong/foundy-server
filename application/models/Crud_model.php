@@ -963,7 +963,7 @@ QUERY;
     }
   }
 
-  function get_product_list($shop_id, $status, $item_name, $cat, $offset, $limit = 10, $order = 'desc', $order_col = 'product_id', $user_id = 0) {
+  function get_product_list($shop_id, $status, $item_name, $cat, $offset, $limit = 10, $order = 'desc', $order_col = 'product_id', $user_id = 0, $order_start = 0) {
     if ($cat == 'wish' || $cat == 'WISH') {
       $query = <<<QUERY
 select a.shop_id,a.status,a.brand_name,b.* from shop_product_id a,shop_product b
@@ -1005,7 +1005,7 @@ QUERY;
     }
     
     if ($order_col == 'best' || $order_col == 'new' || $order_col == 'recommend') {
-      $query .= " and {$order_col} > 0";
+      $query .= " and {$order_col} > ${order_start}";
     }
 
     if (isset($item_name) && strlen($item_name) > 0) {

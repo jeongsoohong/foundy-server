@@ -5598,20 +5598,21 @@ QUERY;
       
       if (strncmp($category, '01', 2) == 0) {
         $best_order_col = 'best';
+        $order_start = 10;
       } else {
         $best_order_col = 'sell';
+        $order_start = 0;
       }
 
       if ($category != 'all' && $category != 'ALL' && $category != 'wish' && $category != 'WISH') {
         $best_cat = sprintf('%s%s', substr($category, 0, 2), '0000');
         $best_items = $this->crud_model->get_product_list(0, SHOP_PRODUCT_STATUS_ON_SALE, '', $best_cat, 0,
-          SHOP_PRODUCT_BEST_LIST_PAGE_SIZE, 'asc', $best_order_col);
+          SHOP_PRODUCT_BEST_LIST_PAGE_SIZE, 'asc', $best_order_col, 0, $order_start);
         foreach ($best_items as $item) {
           $item->like = false;
           if ($this->is_login() == true) {
             $user_id = $this->session->userdata('user_id');
             $item->like = $this->crud_model->get_sns_mark('product', 'like', $user_id, $item->product_id);
-
           }
         }
         $this->page_data['best_items'] = $best_items;
