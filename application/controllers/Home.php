@@ -225,7 +225,7 @@ QUERY;
 
     }
 
-    $this->db->order_by('date', 'asc');
+    $this->db->order_by('slider_id', 'desc');
     $sliders = $this->db->get_where('main_slider', array('activate' => 1, 'type' => MAIN_SLIDER_TYPE_HOME))->result();
 
 //    $blog_category = $this->db->get_where('category_blog', array('name' => 'shop'))->row();
