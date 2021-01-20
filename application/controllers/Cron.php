@@ -50,7 +50,29 @@ QUERY;
     }
   }
   
-  public function center($para1 = '', $para2 = '', $para3 = '', $para4 = '', $para5 = '')
+  public function notice($para1 = '', $para2 = '', $para3 = '')
+  {
+    if ($para1 == 'coupon') {
+  
+      // 주기적으로 쿠폰 알림 전송
+      // */1 * * * * nginx /usr/bin/php -f /web/public_html/index.php cron notice coupon
+      
+      $notices = $this->notice_model->get(SERVER_NOTICE_TYPE_COUPON, SERVER_NOTICE_STATUS_REGISTER);
+      
+      log_message('debug', '[cron] notice, type['.$this->notice_model->get_notice_type_str(SERVER_NOTICE_TYPE_COUPON).'] '.
+      'count['.count($notices).'] result['.json_encode($notices).']');
+     
+      foreach ($notices as $notice) {
+        $this->notice_model->send_notice_coupon($notice);
+      }
+      
+    } else {
+      log_message('error', '[cron] invalid para1['.$para1.'] for notice');
+    }
+  
+}
+
+public function center($para1 = '', $para2 = '', $para3 = '', $para4 = '', $para5 = '')
   {
     if ($para1 == 'class') {
       

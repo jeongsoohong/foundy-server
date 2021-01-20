@@ -5108,7 +5108,8 @@ QUERY;
           foreach ($coupons as $coupon) {
             if ($coupon->coupon_count == 0) {
               if ($this->coupon_model->check_shop_purchasing_coupon($user_id, $coupon->coupon_id) == COUPON_RECEIVABLE) {
-                $this->coupon_model->receive_coupon($user_id, $coupon->coupon_id);
+                $user_data = json_decode($this->session->userdata('user_data'));
+                $this->coupon_model->receive_coupon($user_data, $coupon->coupon_id);
               }
             }
           }
@@ -5757,11 +5758,11 @@ QUERY;
         $limit = COUPON_LIST_PAGE_SIZE;
         $offset = $limit * ($page - 1);
         $query = <<<QUERY
-select * from server_coupon where activate=1 and start_at < NOW() and NOW() < end_at order by coupon_id desc limit {$offset},{$limit}
+select * from server_coupon
+where activate=1 and start_at < NOW() and NOW() < end_at order by coupon_id desc limit {$offset},{$limit}
 QUERY;
         $coupons = $this->db->query($query)->result();
         $this->page_data['coupons'] = $coupons;
-        $this->page_data['user_id'] = $user_id;
         $this->load->view('front/coupon/coupon_list', $this->page_data);
       }
   
@@ -5772,8 +5773,9 @@ QUERY;
       }
       
       $coupon_id = $_GET['id'];
-
-      $this->coupon_model->receive_coupon($user_id, $coupon_id);
+  
+      $user_data = json_decode($this->session->userdata('user_data'));
+      $this->coupon_model->receive_coupon($user_data, $coupon_id);
   
       echo 'done';
   

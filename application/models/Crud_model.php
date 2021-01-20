@@ -166,7 +166,7 @@ class Crud_model extends CI_Model
     $this->mts_model->send_user_register($phone);
  
     $coupon_user_type = COUPON_USER_TYPE_REGISTER;
-    $this->coupon_model->send_coupon_data($coupon_user_type, $phone, $user_name, $user_id, $email);
+    $this->coupon_model->send_coupon_data($coupon_user_type, $user_data);
     
     $result['status'] = 'success';
     $result['message'] = "첫 방문을 환영합니다.";
@@ -253,7 +253,7 @@ class Crud_model extends CI_Model
         $this->mts_model->send_user_register($phone);
   
         $coupon_user_type = COUPON_USER_TYPE_REGISTER;
-        $this->coupon_model->send_coupon_data($coupon_user_type, $phone, $username, $user_data->user_id, $email);
+        $this->coupon_model->send_coupon_data($coupon_user_type, $user_data);
   
         $result['status'] = 'success';
         $result['message'] = "첫 방문을 환영합니다.";

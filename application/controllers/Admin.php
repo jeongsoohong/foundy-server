@@ -731,6 +731,8 @@ QUERY;
         $user_id = $this->db->get_where('center', array('center_id' => $center_id))->row()->user_id;
         $email = $this->db->get_where('user', array('user_id' => $user_id))->row()->email;
         $this->email_model->get_center_approval_data($email);
+        $this->coupon_model->send_coupon_data(COUPON_USER_TYPE_CENTER, $user_data);
+//        $this->coupon_model->send_coupon_data(COUPON_USER_TYPE_CENTER_TEACHER, $user_data);
       } else if($activate == 2) {
         $user_id = $this->db->get_where('center', array('center_id' => $center_id))->row()->user_id;
         $email = $this->db->get_where('user', array('user_id' => $user_id))->row()->email;
@@ -819,6 +821,10 @@ QUERY;
         $user_id = $this->db->get_where('teacher', array('teacher_id' => $teacher_id))->row()->user_id;
         $email = $this->db->get_where('user', array('user_id' => $user_id))->row()->email;
         $this->email_model->get_teacher_approval_data($email);
+        
+        $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
+        $this->coupon_model->send_coupon_data(COUPON_USER_TYPE_TEACHER, $user_data);
+//        $this->coupon_model->send_coupon_data(COUPON_USER_TYPE_CENTER_TEACHER, $user_data);
       } else if($activate == 2) {
         $user_id = $this->db->get_where('teacher', array('teacher_id' => $teacher_id))->row()->user_id;
         $email = $this->db->get_where('user', array('user_id' => $user_id))->row()->email;
@@ -1674,21 +1680,45 @@ QUERY;
             '은'.$this->coupon_model->get_coupon_type_str(COUPON_TYPE_SHOP_FREE_SHIPPING).' 타입만 가능합니다.';
           exit;
         }
-      } else if ($data['user_type'] == COUPON_USER_TYPE_REGISTER) {
+      }
+      
+      if ($data['user_type'] == COUPON_USER_TYPE_REGISTER) {
         if ($data['coupon_type'] == COUPON_TYPE_SHOP_FREE_SHIPPING) {
           echo $this->coupon_model->get_coupon_user_type_str(COUPON_USER_TYPE_REGISTER).
             '은'.$this->coupon_model->get_coupon_type_str(COUPON_TYPE_SHOP_FREE_SHIPPING).' 타입이 불가능합니다.';
           exit;
         }
       }
-
+  
+      if ($data['user_type'] == COUPON_USER_TYPE_CENTER ||
+        $data['user_type'] == COUPON_USER_TYPE_TEACHER /* || $data['user_type'] == COUPON_USER_TYPE_CENTER_TEACHER */
+      ) {
+        if ($data['coupon_count'] > 0) {
+          echo $this->coupon_model->get_coupon_user_type_str($data['user_type']).
+            '은 쿠폰수 0(무제한 쿠폰)만 가능합니다.';
+          exit;
+        }
+        if ($data['coupon_type'] == COUPON_TYPE_SHOP_FREE_SHIPPING) {
+          echo $this->coupon_model->get_coupon_user_type_str($data['user_type']).
+            '은'.$this->coupon_model->get_coupon_type_str(COUPON_TYPE_SHOP_FREE_SHIPPING).' 타입이 불가능합니다.';
+          exit;
+        }
+      }
+  
       $where = array('coupon_id' => $coupon_id);
       $this->db->update('server_coupon', $data, $where);
       
 //      $coupon_desc= $this->input->post('coupon_desc');
 //      $files = 'coupon_'.$coupon_id.'_*.*';
 //      $this->crud_model->del_upload_image(IMG_WEB_PATH_SERVER, IMG_PATH_SERVER, $coupon_desc, $files);
-      
+  
+      // register server notice
+      if ($data['user_type'] == COUPON_USER_TYPE_CENTER ||
+        $data['user_type'] == COUPON_USER_TYPE_TEACHER /* || COUPON_USER_TYPE_CENTER_TEACHER */
+      ) {
+        $this->notice_model->register(SERVER_NOTICE_TYPE_COUPON, $coupon_id, $data['coupon_title']);
+      }
+  
       echo 'done';
       
 //    } else if ($type == 'approval') { // 안씀
@@ -1715,6 +1745,11 @@ UPDATE server_coupon set activate={$data['activate']} where coupon_id={$coupon_i
 QUERY;
       $this->db->query($query);
       
+      if ($this->db->affected_rows() <= 0) {
+        echo 'internal error';
+        exit;
+      }
+
       echo 'done';
       
     } elseif ($type == 'edit') {

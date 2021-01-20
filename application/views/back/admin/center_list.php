@@ -78,6 +78,7 @@
       <col width="150">
       <col width="150">
       <col width="150">
+      <col width="150">
     </colgroup>
     <thead>
     <tr>
@@ -85,7 +86,8 @@
       <th><?php echo ('센터명');?></th>
       <th><?php echo ('전화번호');?></th>
       <th><?php echo ('주소');?></th>
-      <th><?php echo ('이메일');?></th>
+      <th><?php echo ('상태');?></th>
+      <th><?php echo ('옵션');?></th>
     </tr>
     </thead>
     <tbody >
@@ -100,7 +102,7 @@
         <td><?php echo $row['phone']; ?></td>
         <td><?php echo $row['address']; ?></td>
         <td><?php echo $row['activate'] == 1 ? '승인' : ($row['activate'] == 2 ? '반려' : '신청'); ?></td>
-        <td><?php echo $row['email']; ?></td>
+        <td></td>
       </tr>
       <?php
     }

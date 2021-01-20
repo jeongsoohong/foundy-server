@@ -31,6 +31,9 @@
                   <option value="<?php echo COUPON_USER_TYPE_DEFAULT; ?>"><?php echo $this->coupon_model->get_coupon_user_type_str(COUPON_USER_TYPE_DEFAULT); ?></option>
                   <option value="<?php echo COUPON_USER_TYPE_REGISTER; ?>"><?php echo $this->coupon_model->get_coupon_user_type_str(COUPON_USER_TYPE_REGISTER); ?></option>
                   <option value="<?php echo COUPON_USER_TYPE_SHOP_PURCHASING; ?>"><?php echo $this->coupon_model->get_coupon_user_type_str(COUPON_USER_TYPE_SHOP_PURCHASING); ?></option>
+                  <option value="<?php echo COUPON_USER_TYPE_CENTER; ?>"><?php echo $this->coupon_model->get_coupon_user_type_str(COUPON_USER_TYPE_CENTER); ?></option>
+                  <option value="<?php echo COUPON_USER_TYPE_TEACHER; ?>"><?php echo $this->coupon_model->get_coupon_user_type_str(COUPON_USER_TYPE_TEACHER); ?></option>
+<!--                  <option value="--><?php //echo COUPON_USER_TYPE_CENTER_TEACHER; ?><!--">--><?php //echo $this->coupon_model->get_coupon_user_type_str(COUPON_USER_TYPE_CENTER_TEACHER); ?><!--</option>-->
                 </select>
               </div>
             </div>
@@ -140,6 +143,12 @@
       target.val('회원가입쿠폰(쿠폰수가 0인 경우 해당기간동안 회원가입한 모든 유저에게 지급, 0보다 큰 경우 해당 기간동안에 선착순 지급)')
     } else if (coupon_type === <?= COUPON_USER_TYPE_SHOP_PURCHASING ?>) {
       target.val('구매유도쿠폰(쿠폰수는 0만 세팅 가능, 구매페이지 접속 시 해당 쿠폰 지급)');
+    } else if (coupon_type === <?= COUPON_USER_TYPE_CENTER?>) {
+      target.val('센터회원쿠폰(쿠폰수는 0만 세팅 가능)');
+    } else if (coupon_type === <?= COUPON_USER_TYPE_TEACHER?>) {
+      target.val('강사회원쿠폰(쿠폰수는 0만 세팅 가능)');
+    //} else if (coupon_type === <?//= COUPON_USER_TYPE_CENTER_TEACHER?>//) {
+    //  target.val('센터/강사회원쿠폰(쿠폰수는 0만 세팅 가능, 신규 회원 승인 시 알림톡 전송, 기존 회원은 쿠폰박스에서 발급가능)');
     } else
       target.val('쿠폰설명');
   }

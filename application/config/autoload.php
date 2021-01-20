@@ -135,4 +135,4 @@ $autoload['language'] = array();
 */
 $autoload['model'] = array(
   'cookie_model', 'crud_model','center_model', 'email_model','html_model','apple_model',
-  'app_model', 'kakao_model', 'mts_model', 'coupon_model');
+  'app_model', 'kakao_model', 'mts_model', 'coupon_model', 'notice_model');

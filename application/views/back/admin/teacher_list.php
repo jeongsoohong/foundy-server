@@ -88,7 +88,7 @@
       <th><?php echo ('강사이름');?></th>
       <th><?php echo ('소개글');?></th>
       <th><?php echo ('승인상태');?></th>
-      <th><?php echo ('이메일');?></th>
+      <th><?php echo ('옵션');?></th>
     </tr>
     </thead>
     <tbody >
@@ -104,7 +104,7 @@
         <td><?php echo $row['name']; ?></td>
         <td><?php echo $row['about']; ?></td>
         <td><?php echo $row['activate'] ? '승인' : '미승인'; ?></td>
-        <td><?php echo $row['email']; ?></td>
+        <td></td>
       </tr>
       <?php
     }

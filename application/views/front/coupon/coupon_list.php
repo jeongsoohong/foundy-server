@@ -1,6 +1,8 @@
-<?php foreach ($coupons as $coupon) {
-  $received = $this->coupon_model->check_received($user_id, $coupon);
-  log_message('debug', '[coupon] coupon['.json_encode($coupon).'] received['.$received.']');
+<?php
+$user_data = json_decode($this->session->userdata('user_data'));
+foreach ($coupons as $coupon) {
+  $received = $this->coupon_model->check_received($user_data, $coupon);
+//  log_message('debug', '[coupon] coupon['.json_encode($coupon).'] received['.$received.']');
   if ($received == COUPON_UNRECEIVABLE) {
     continue;
   }

@@ -15,6 +15,7 @@
     <tbody >
     <?php
     $i=0;
+    $now = time();
     foreach($coupons as $coupon){
       $i++;
       ?>
@@ -22,13 +23,16 @@
         <td><?php echo $coupon->coupon_title; ?></td>
         <td><?php echo $this->coupon_model->get_coupon_user_type_str($coupon->user_type); ?></td>
         <td><?php echo $coupon->coupon_count == 0 ? '무제한' : $coupon->coupon_count; ?></td>
-        <td><?php echo $coupon->coupon_benefit; ?><?php echo ($coupon->coupon_type == COUPON_TYPE_SHOP_DISCOUNT_PRICE ? '원' : '%'); ?></td>
+        <? if ($coupon->coupon_type == COUPON_TYPE_SHOP_FREE_SHIPPING) { ?>
+          <td>무료배송</td>
+        <? } else { ?>
+          <td><?php echo $coupon->coupon_benefit; ?><?php echo ($coupon->coupon_type == COUPON_TYPE_SHOP_DISCOUNT_PERCENT ? '%' : '원'); ?></td>
+        <? } ?>
         <td><?php echo $coupon->start_at; ?> ~ <?php echo $coupon->end_at; ?></td>
         <td><?php echo $coupon->use_at; ?></td>
         <td>
-          <div id='status' class="label label-<?php if($coupon->activate == 1){ ?>purple<?php } else { ?>danger<?php }
-          ?>">
-            <?php echo $coupon->activate ? '발급중' : '발급중지'; ?>
+          <div id='status' class="label label-<?php echo $coupon->activate == 1 ? (strtotime($coupon->end_at) < $now ? 'dark' : 'purple') : 'danger'?>">
+            <?php echo $coupon->activate == 1 ? (strtotime($coupon->end_at) < $now ? '발급완료' : '발급중') : '발급중지'; ?>
           </div>
         </td>
         <td class="text-right">
