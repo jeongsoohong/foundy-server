@@ -15,6 +15,12 @@
     margin: 0;
     line-height: 40px;
   }
+  h3 {
+    text-align: center;
+  }
+  .panel-title {
+    color: white;
+  }
 </style>
 <div id="content-container">
   <div id="page-title">
@@ -23,7 +29,213 @@
   <div id="page-content">
     <div class="row">
       <div class="col-md-3 col-lg-3">
-        <div class="panel panel-bordered panel-grad2">
+        <div class="panel panel-bordered panel-dark">
+          <div class="panel-heading">
+            <h3 class="panel-title">오늘 가입자수</h3>
+          </div>
+          <div class="panel-body">
+            <div class="text-center">
+              <h3><?php echo $today_register; ?></h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-lg-3">
+        <div class="panel panel-bordered panel-dark">
+          <div class="panel-heading">
+            <h3 class="panel-title">금주 가입자수</h3>
+          </div>
+          <div class="panel-body">
+            <div class="text-center">
+              <h3>
+                <?php echo $this_week_register; ?>
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-lg-3">
+        <div class="panel panel-bordered panel-dark">
+          <div class="panel-heading">
+            <h3 class="panel-title">이번달 가입자수</h3>
+          </div>
+          <div class="panel-body">
+            <div class="text-center">
+              <h3><?php echo $this_month_register; ?></h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-lg-3">
+        <div class="panel panel-bordered panel-dark">
+          <div class="panel-heading">
+            <h3 class="panel-title">총 가입자수</h3>
+          </div>
+          <div class="panel-body">
+            <div class="text-center">
+              <h3>
+                <?php echo $total_register; ?>
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3 col-lg-3">
+        <div class="panel panel-bordered panel-dark">
+          <div class="panel-heading">
+            <h3 class="panel-title">오늘 회원 접속자수</h3>
+          </div>
+          <div class="panel-body">
+            <div class="text-center">
+              <h3><?php echo $today_member_au; ?></h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-lg-3">
+        <div class="panel panel-bordered panel-dark">
+          <div class="panel-heading">
+            <h3 class="panel-title">오늘 총 접속자수</h3>
+          </div>
+          <div class="panel-body">
+            <div class="text-center">
+              <h3>
+                <?php echo $today_au; ?>
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-lg-3">
+        <div class="panel panel-bordered panel-dark">
+          <div class="panel-heading">
+            <h3 class="panel-title">이번달 회원 접속자수</h3>
+          </div>
+          <div class="panel-body">
+            <div class="text-center">
+              <h3><?php echo $this_month_member_au; ?></h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-lg-3">
+        <div class="panel panel-bordered panel-dark">
+          <div class="panel-heading">
+            <h3 class="panel-title">이번달 총 접속자수</h3>
+          </div>
+          <div class="panel-body">
+            <div class="text-center">
+              <h3>
+                <?php echo $this_month_au; ?>
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-lg-6">
+        <div class="panel panel-bordered panel-dark">
+          <div class="panel-heading">
+            <h3 class="panel-title">주문완료/배송준비중 상품수/매출</h3>
+          </div>
+          <div class="panel-body">
+            <div class="text-center">
+              <h3>
+                <?= $shipping_status_1_count; ?>
+                /
+                <?= $this->crud_model->get_price_str($shipping_status_1_balance); ?>원
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-6">
+        <div class="panel panel-bordered panel-dark">
+          <div class="panel-heading">
+            <h3 class="panel-title">배송중 상품수/매출</h3>
+          </div>
+          <div class="panel-body">
+            <div class="text-center">
+              <h3>
+                <?= $shipping_status_2_count; ?>
+                /
+                <?= $this->crud_model->get_price_str($shipping_status_2_balance); ?>원
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-6">
+        <div class="panel panel-bordered panel-dark">
+          <div class="panel-heading">
+            <h3 class="panel-title">배송완료 상품수/매출</h3>
+          </div>
+          <div class="panel-body">
+            <div class="text-center">
+              <h3>
+                <?= $shipping_status_3_count; ?>
+                /
+                <?= $this->crud_model->get_price_str($shipping_status_3_balance); ?>원
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-6">
+        <div class="panel panel-bordered panel-dark">
+          <div class="panel-heading">
+            <h3 class="panel-title">구매확정/교환 상품수/매출</h3>
+          </div>
+          <div class="panel-body">
+            <div class="text-center">
+              <h3>
+                <?= $shipping_status_4_count; ?>
+                /
+                <?= $this->crud_model->get_price_str($shipping_status_4_balance); ?>원
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-6">
+        <div class="panel panel-bordered panel-dark">
+          <div class="panel-heading">
+            <h3 class="panel-title">주문취소 상품수/매출</h3>
+          </div>
+          <div class="panel-body">
+            <div class="text-center">
+              <h3>
+                <?= $shipping_status_5_count; ?>
+                /
+                <?= $this->crud_model->get_price_str($shipping_status_5_balance); ?>원
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-6">
+        <div class="panel panel-bordered panel-dark">
+          <div class="panel-heading">
+            <h3 class="panel-title">반품 상품수/매출</h3>
+          </div>
+          <div class="panel-body">
+            <div class="text-center">
+              <h3>
+                <?= $shipping_status_6_count; ?>
+                /
+                <?= $this->crud_model->get_price_str($shipping_status_6_balance); ?>원
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3 col-lg-3">
+        <div class="panel panel-bordered panel-dark">
           <div class="panel-heading">
             <h3 class="panel-title">전체 스튜디오</h3>
           </div>
@@ -49,7 +261,7 @@
         </div>
       </div>
       <div class="col-md-3 col-lg-3">
-        <div class="panel panel-bordered panel-grad2">
+        <div class="panel panel-bordered panel-dark">
           <div class="panel-heading">
             <h3 class="panel-title">전체 온라인 클래스</h3>
           </div>
@@ -75,7 +287,7 @@
     </div>
     <div class="row">
       <div class="col-md-3 col-lg-3">
-        <div class="panel panel-bordered panel-grad2">
+        <div class="panel panel-bordered panel-dark">
           <div class="panel-heading">
             <h3 class="panel-title">전체 샵</h3>
           </div>
@@ -99,7 +311,7 @@
         </div>
       </div>
       <div class="col-md-3 col-lg-3">
-        <div class="panel panel-bordered panel-grad2">
+        <div class="panel panel-bordered panel-dark">
           <div class="panel-heading">
             <h3 class="panel-title">판매중 상품</h3>
           </div>

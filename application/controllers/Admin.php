@@ -44,6 +44,137 @@ class Admin extends CI_Controller
     $page_data['control'] = "admin";
 
     if ($this->session->userdata('admin_login') == 'yes') {
+    
+      // 가입자수
+      $date = date('Y-m-d');
+      $query = <<<QUERY
+select count(*) as count from user where create_at>='{$date}' and unregister=0
+QUERY;
+      $today_register = $this->db->query($query)->row()->count;
+  
+      $week = date('w');
+      $date = date('Y-m-d', strtotime($date." -".$week."days"));
+      $query = <<<QUERY
+select count(*) as count from user where create_at>='{$date}' and unregister=0
+QUERY;
+      $this_week_register = $this->db->query($query)->row()->count;
+  
+      $date = date('Y-m').'-01';
+      $query = <<<QUERY
+select count(*) as count from user where create_at>='{$date}' and unregister=0
+QUERY;
+      $this_month_register = $this->db->query($query)->row()->count;
+  
+      $query = <<<QUERY
+select count(*) as count from user where unregister=0
+QUERY;
+      $total_register = $this->db->query($query)->row()->count;
+    
+      // 접속자수
+      $start = date('Y-m-d').' 00:00:00';
+      $end = date('Y-m-d').' 23:59:59';
+      $query = <<<QUERY
+select count(distinct(user_id)) as count from user_active
+where user_id is not null and '{$start}'<=active_at and active_at<='{$end}'
+QUERY;
+      $today_member_au= $this->db->query($query)->row()->count;
+  
+      $start = date('Y-m-d').' 00:00:00';
+      $end = date('Y-m-d').' 23:59:59';
+      $query = <<<QUERY
+select count(distinct(session_id)) as count from user_active
+where '{$start}'<=active_at and active_at<='{$end}'
+QUERY;
+      $today_au= $this->db->query($query)->row()->count;
+  
+      $start = date('Y-m').'-01 00:00:00';
+      $end = date('Y-m-d').' 23:59:59';
+      $query = <<<QUERY
+select count(distinct(user_id)) as count from user_active where user_id is not null and '{$start}'<=active_at and active_at<='{$end}'
+QUERY;
+      $this_month_member_au= $this->db->query($query)->row()->count;
+      log_message('error', 'query['.$query.']');
+  
+      $start = date('Y-m').'-01 00:00:00';
+      $end = date('Y-m-d').' 23:59:59';
+      $query = <<<QUERY
+select count(distinct(session_id)) as count from user_active where '{$start}'<=active_at and active_at<='{$end}'
+QUERY;
+      $this_month_au= $this->db->query($query)->row()->count;
+      log_message('error', 'query['.$query.']');
+      
+      // 샵 주문 / 매출
+      $shipping_status = SHOP_SHIPPING_STATUS_ORDER_COMPLETED;
+      $shipping_status2 = SHOP_SHIPPING_STATUS_PREPARE;
+      $query = <<<QUERY
+select count(*) as count from shop_purchase_product where shipping_status in ({$shipping_status},{$shipping_status2})
+QUERY;
+      $shipping_status_1_count = $this->db->query($query)->row()->count;
+      
+      $query = <<<QUERY
+select sum(total_balance) as count from shop_purchase_product where shipping_status in ({$shipping_status},{$shipping_status2})
+QUERY;
+      $shipping_status_1_balance = $this->db->query($query)->row()->count;
+  
+      $shipping_status = SHOP_SHIPPING_STATUS_IN_PROGRESS;
+      $query = <<<QUERY
+select count(*) as count from shop_purchase_product where shipping_status in ({$shipping_status})
+QUERY;
+      $shipping_status_2_count = $this->db->query($query)->row()->count;
+  
+      $query = <<<QUERY
+select sum(total_balance) as count from shop_purchase_product where shipping_status in ({$shipping_status})
+QUERY;
+      $shipping_status_2_balance = $this->db->query($query)->row()->count;
+  
+      $shipping_status = SHOP_SHIPPING_STATUS_COMPLETED;
+      $query = <<<QUERY
+select count(*) as count from shop_purchase_product where shipping_status in ({$shipping_status})
+QUERY;
+      $shipping_status_3_count = $this->db->query($query)->row()->count;
+  
+      $query = <<<QUERY
+select sum(total_balance) as count from shop_purchase_product where shipping_status in ({$shipping_status})
+QUERY;
+      $shipping_status_3_balance = $this->db->query($query)->row()->count;
+  
+      $shipping_status = SHOP_SHIPPING_STATUS_PURCHASE_COMPLETED;
+      $shipping_status2 = SHOP_SHIPPING_STATUS_PURCHASE_CHANGING;
+      $shipping_status3 = SHOP_SHIPPING_STATUS_PURCHASE_CHANGED;
+      $query = <<<QUERY
+select count(*) as count from shop_purchase_product where shipping_status in ({$shipping_status},{$shipping_status2},{$shipping_status3})
+QUERY;
+      $shipping_status_4_count = $this->db->query($query)->row()->count;
+  
+      $query = <<<QUERY
+select sum(total_balance) as count from shop_purchase_product where shipping_status in ({$shipping_status},{$shipping_status2},{$shipping_status3})
+QUERY;
+      $shipping_status_4_balance = $this->db->query($query)->row()->count;
+  
+      $shipping_status = SHOP_SHIPPING_STATUS_ORDER_CANCELED;
+      $query = <<<QUERY
+select count(*) as count from shop_purchase_product where shipping_status in ({$shipping_status})
+QUERY;
+      $shipping_status_5_count = $this->db->query($query)->row()->count;
+  
+      $query = <<<QUERY
+select sum(total_balance) as count from shop_purchase_product where shipping_status in ({$shipping_status})
+QUERY;
+      $shipping_status_5_balance = $this->db->query($query)->row()->count;
+  
+      $shipping_status = SHOP_SHIPPING_STATUS_PURCHASE_CANCELING;
+      $shipping_status2 = SHOP_SHIPPING_STATUS_PURCHASE_CANCELED;
+      $query = <<<QUERY
+select count(*) as count from shop_purchase_product where shipping_status in ({$shipping_status},{$shipping_status2})
+QUERY;
+      $shipping_status_6_count = $this->db->query($query)->row()->count;
+  
+      $query = <<<QUERY
+select sum(total_balance) as count from shop_purchase_product where shipping_status in ({$shipping_status},{$shipping_status2})
+QUERY;
+      $shipping_status_6_balance = $this->db->query($query)->row()->count;
+      
+      // 센터 / 강사
       $query = <<<QUERY
 select count(*) as count from center where activate=1
 QUERY;
@@ -64,6 +195,7 @@ select count(*) as count from teacher where activate=0
 QUERY;
       $unapproved_teacher = $this->db->query($query)->row()->count;
 
+      // 샵 / 상품
       $query = <<<QUERY
 select count(*) as count from shop where activate=1
 QUERY;
@@ -86,6 +218,26 @@ select count(*) as count from shop_product_id where status={$status}
 QUERY;
       $product_on_sale = $this->db->query($query)->row()->count;
 
+      $page_data['today_register'] = $today_register;
+      $page_data['this_week_register'] = $this_week_register;
+      $page_data['this_month_register'] = $this_month_register;
+      $page_data['total_register'] = $total_register;
+      $page_data['today_member_au'] = $today_member_au;
+      $page_data['today_au'] = $today_au;
+      $page_data['this_month_member_au'] = $this_month_member_au;
+      $page_data['this_month_au'] = $this_month_au;
+      $page_data['shipping_status_1_count'] = $shipping_status_1_count;
+      $page_data['shipping_status_1_balance'] = $shipping_status_1_balance;
+      $page_data['shipping_status_2_count'] = $shipping_status_2_count;
+      $page_data['shipping_status_2_balance'] = $shipping_status_2_balance;
+      $page_data['shipping_status_3_count'] = $shipping_status_3_count;
+      $page_data['shipping_status_3_balance'] = $shipping_status_3_balance;
+      $page_data['shipping_status_4_count'] = $shipping_status_4_count;
+      $page_data['shipping_status_4_balance'] = $shipping_status_4_balance;
+      $page_data['shipping_status_5_count'] = $shipping_status_5_count;
+      $page_data['shipping_status_5_balance'] = $shipping_status_5_balance;
+      $page_data['shipping_status_6_count'] = $shipping_status_6_count;
+      $page_data['shipping_status_6_balance'] = $shipping_status_6_balance;
       $page_data['total_center'] = $total_center;
       $page_data['unapproved_center'] = $unapproved_center;
       $page_data['total_teacher'] = $total_teacher;

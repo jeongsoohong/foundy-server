@@ -419,7 +419,8 @@ input:checked + .slider:before {
           <li class="admin_progress clearfix">
             <?php foreach ($tickets[1] as $ticket) { ?>
               <div class="progress_card">
-                <div class="card_contents" data-id="<?php echo $ticket->ticket_id; ?>" data-target="<?php echo $ticket->ticket_title; ?>">
+                <div class="card_contents" data-id="<?php echo $ticket->ticket_id; ?>"
+                     data-type="<?= $ticket->ticket_type; ?>" data-target="<?php echo $ticket->ticket_title; ?>">
                   <div class="type:active clearfix">
                     <p class="contents_tit tit-md"><?php echo $ticket->ticket_title; ?></p>
                     <div class="agree_btn">
@@ -563,7 +564,8 @@ input:checked + .slider:before {
           <li class="admin_stop clearfix">
             <?php foreach ($tickets[0] as $ticket) { ?>
               <div class="stop_card">
-                <div class="card_contents" data-id="<?php echo $ticket->ticket_id; ?>" data-target="<?php echo $ticket->ticket_title; ?>">
+                <div class="card_contents" data-id="<?php echo $ticket->ticket_id; ?>"
+                     data-type="<?= $ticket->ticket_type; ?>" data-target="<?php echo $ticket->ticket_title; ?>">
                   <div class="type:disabled clearfix">
                     <p class="contents_tit tit-md"><?php echo $ticket->ticket_title; ?></p>
                     <div class="agree_btn">
@@ -730,9 +732,7 @@ input:checked + .slider:before {
                 }
               }
             </style>
-            <? if ($ticket->ticket_type == CENTER_TICKET_TYPE_COUNT) { ?>
-              <button class="btn_addition btn_val btn_rg">횟수추가</button>
-            <? } ?>
+            <button class="btn_addition btn_val btn_rg" id="btn_addition">횟수추가</button>
             <button class="btn_stop btn_val btn_rg">정지설정</button>
             <button class="btn_extend btn_val btn_rg">기간연장</button>
             <button class="btn_change btn_val btn_rg">회원환불</button>
@@ -1229,6 +1229,9 @@ input:checked + .slider:before {
   function get_ticket_title(target) {
     return target.closest('.card_contents').data('target');
   }
+  function get_ticket_type(target) {
+    return parseInt(target.closest('.card_contents').data('type'));
+  }
   function get_ticket_modify(target) {
     $('.tit_theme').removeClass('reverse_color');
     $('.theme_modify').show();
@@ -1347,12 +1350,21 @@ input:checked + .slider:before {
     $('.stop_card .contents_info .edit_btn').not('.plusMember').click(function(){
       get_ticket_modify($(this))
     })
+    function set_addition_btn(ticket_type) {
+      if (ticket_type === <?= CENTER_TICKET_TYPE_COUNT ?>) {
+        $('#btn_addition').show();
+      } else {
+        $('#btn_addition').hide();
+      }
+    }
     $('.progress_card .contents_info .info_btn').not('.plusMember').click(function(){
       $('#ticket_current_title').text(get_ticket_title($(this)));
+      set_addition_btn(get_ticket_type($(this)));
       get_list(get_ticket_id($(this)), 1);
     })
     $('.stop_card .contents_info .info_btn').not('.plusMember').click(function(){
       $('#ticket_current_title').text(get_ticket_title($(this)));
+      set_addition_btn(get_ticket_type($(this)));
       get_list(get_ticket_id($(this)), 1);
     })
     // plusMember 호버이벤트

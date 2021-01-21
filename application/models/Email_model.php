@@ -172,6 +172,22 @@ class Email_model extends CI_Model
   
     return true;
   }
+  function send_shop_unconfirmed_order_mail($brand_name, $confirm_status, $count, $email)
+  {
+    
+    $data = $this->db->get_where('server_email', array('type' => SERVER_EMAIL_TYPE_SHOP_UNCONFIRMED, 'activate' => 1))->row();
+    if (isset($data) == false || empty($data) == true) {
+      return false;
+    }
+    $data->email_body = str_replace('{{BRAND_NAME}}', $brand_name, $data->email_body);
+    $data->email_body = str_replace('{{CONFIRM_STATUS}}', $confirm_status, $data->email_body);
+    $data->email_body = str_replace('{{COUNT}}', $count, $data->email_body);
+  
+    $data->to = $email;
+    $this->sendmail($data);
+    
+    return true;
+  }
   function sendmail($email_data)
   {
   

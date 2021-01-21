@@ -70,9 +70,9 @@ QUERY;
       log_message('error', '[cron] invalid para1['.$para1.'] for notice');
     }
   
-}
-
-public function center($para1 = '', $para2 = '', $para3 = '', $para4 = '', $para5 = '')
+  }
+  
+  public function center($para1 = '', $para2 = '', $para3 = '', $para4 = '', $para5 = '')
   {
     if ($para1 == 'class') {
       
@@ -193,6 +193,57 @@ QUERY;
       
     } else {
       log_message('error', '[cron] invalid para1['.$para1.'] for center');
+    }
+  }
+  
+  public function shop($para1 = '', $para2 = '', $para3 = '', $para4 = '', $para5 = '')
+  {
+    if ($para1 == 'unconfirmed') {
+      // 주기적으로 미확인 주문 안내 메일
+      // 30 8 * * * nginx /usr/bin/php -f /web/public_html/index.php cron shop unconfirmed
+  
+      $confirm_status='미확인 주문';
+      $modified_at = date('Y-m-d', time() - $this->shop_model::CONFIRM_DELAY_DAYS * ONE_DAY);
+      $shipping_status = SHOP_SHIPPING_STATUS_ORDER_COMPLETED;
+      $shop_ids = $this->shop_model->get_shop_ids_for_purchase_product($shipping_status, $modified_at);
+      $count = count($shop_ids);
+      
+      log_message('debug', '[cron] shop/unconfirmed, status['.$confirm_status.'] shop_ids_count['.$count.'] '
+        .'shop_ids['.json_encode($shop_ids).']');
+      
+      foreach ($shop_ids as $s) {
+        $shop_id = $s->shop_id;
+        $count = $this->shop_model->get_count_of_purchase_product($shipping_status, $modified_at, $shop_id);
+        if ($count > 0) {
+          $shop = $this->shop_model->get($shop_id);
+          $this->email_model->send_shop_unconfirmed_order_mail($shop->shop_name, $confirm_status, $count, $shop->email);
+        }
+      }
+    
+    } else if ($para1 == 'delay') {
+      // 주기적으로 배송지연 안내 메일
+      // 30 8 * * * nginx /usr/bin/php -f /web/public_html/index.php cron shop delay
+
+      $confirm_status='배송지연';
+      $modified_at = date('Y-m-d', time() - $this->shop_model::CONFIRM_DELAY_DAYS * ONE_DAY);
+      $shipping_status = SHOP_SHIPPING_STATUS_PREPARE;
+      $shop_ids = $this->shop_model->get_shop_ids_for_purchase_product($shipping_status, $modified_at);
+      $count = count($shop_ids);
+     
+      log_message('debug', '[cron] shop/delay, status['.$confirm_status.'] shop_ids_count['.$count.'] '
+        .'shop_ids['.json_encode($shop_ids).']');
+  
+      foreach ($shop_ids as $s) {
+        $shop_id = $s->shop_id;
+        $count = $this->shop_model->get_count_of_purchase_product($shipping_status, $modified_at, $shop_id);
+        if ($count > 0) {
+          $shop = $this->shop_model->get($shop_id);
+          $this->email_model->send_shop_unconfirmed_order_mail($shop->shop_name, $confirm_status, $count, $shop->email);
+        }
+      }
+      
+    } else {
+      log_message('error', '[cron] invalid para1['.$para1.'] for shop');
     }
   }
 }

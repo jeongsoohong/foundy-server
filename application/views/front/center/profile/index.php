@@ -676,7 +676,7 @@
 <div class="popup-box" id="schedule_cancel_popup" style="display: none;">
 </div>
 <div class="popup-box" id="schedule_alert_popup" style="display: none;">
-  <div class="popup theme:alt_cancel_detail">
+  <div class="popup theme:alt_cancel_detail" style="height: 200px; margin-top: -100px;">
     <div class="popup_tit">
       <div class="popup_topic">
         <div class="topic_icon" style="background-color: #d32f2f;">
@@ -699,7 +699,7 @@
   </div>
 </div>
 <div class="popup-box" id="schedule_notify_popup" style="display: none;">
-  <div class="popup theme:alt_cancel_detail">
+  <div class="popup theme:alt_cancel_detail" style="height: 200px; margin-top: -100px;">
     <div class="popup_tit">
       <div class="popup_topic">
         <div class="topic_icon" style="background-color: #1ba9e4;">
