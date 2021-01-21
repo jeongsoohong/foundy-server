@@ -93,7 +93,6 @@ QUERY;
 select count(distinct(user_id)) as count from user_active where user_id is not null and '{$start}'<=active_at and active_at<='{$end}'
 QUERY;
       $this_month_member_au= $this->db->query($query)->row()->count;
-      log_message('error', 'query['.$query.']');
   
       $start = date('Y-m').'-01 00:00:00';
       $end = date('Y-m-d').' 23:59:59';
@@ -101,7 +100,6 @@ QUERY;
 select count(distinct(session_id)) as count from user_active where '{$start}'<=active_at and active_at<='{$end}'
 QUERY;
       $this_month_au= $this->db->query($query)->row()->count;
-      log_message('error', 'query['.$query.']');
       
       // 샵 주문 / 매출
       $shipping_status = SHOP_SHIPPING_STATUS_ORDER_COMPLETED;
