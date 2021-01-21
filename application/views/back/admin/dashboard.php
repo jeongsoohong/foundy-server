@@ -20,6 +20,7 @@
   }
   .panel-title {
     color: white;
+    font-weight: 700;
   }
 </style>
 <div id="content-container">
