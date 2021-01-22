@@ -1380,7 +1380,7 @@ QUERY;
       $limit = "limit {$offset},{$size}";
       $where = "where a.shop_id=d.shop_id and c.product_id=d.product_id and d.shop_id={$shop_data->shop_id} and d.shipping_status={$ship_status}";
       if (($ship_status == SHOP_SHIPPING_STATUS_ORDER_COMPLETED || $ship_status == SHOP_SHIPPING_STATUS_PREPARE) && $confirm_delay == true) {
-        $purchase_date = date('Y-m-d', strtotime('-2 days'));
+        $purchase_date = date('Y-m-d', strtotime('-'.$this->shop_model::CONFIRM_DELAY_DAYS.' days'));
 //      $this->crud_model->alert_exit($purchase_date);
         $where .= " and d.purchase_at <= '{$purchase_date}'";
       } else if (!empty($start_date) && !empty($end_date)) {

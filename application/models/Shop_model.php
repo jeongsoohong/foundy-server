@@ -6,7 +6,7 @@ if (!defined('BASEPATH'))
 class Shop_model extends CI_Model
 {
  
-  const CONFIRM_DELAY_DAYS = 2;
+  const CONFIRM_DELAY_DAYS = 1;
   
   function __construct()
   {

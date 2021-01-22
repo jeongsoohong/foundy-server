@@ -678,7 +678,7 @@
 <div class="popup-box" id="schedule_alert_popup" style="display: none;">
   <div class="popup theme:alt_cancel_detail" style="height: 200px; margin-top: -100px;">
     <div class="popup_tit">
-      <div class="popup_topic">
+      <div class="popup_topic" style="text-align: center;">
         <div class="topic_icon" style="background-color: #d32f2f;">
           <img src="<?= base_url(); ?>template/icon/ic_exclamation.png" alt="" width="16" height="16">
         </div>
@@ -701,7 +701,7 @@
 <div class="popup-box" id="schedule_notify_popup" style="display: none;">
   <div class="popup theme:alt_cancel_detail" style="height: 200px; margin-top: -100px;">
     <div class="popup_tit">
-      <div class="popup_topic">
+      <div class="popup_topic" style="text-align: center;">
         <div class="topic_icon" style="background-color: #1ba9e4;">
           <img src="<?= base_url(); ?>template/icon/information_white.png" alt="" width="16" height="16">
         </div>
