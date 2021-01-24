@@ -48,7 +48,7 @@
     <td class="shipping-new-req">
         <select class="form-control" id="shipping-new-req" onchange="check_direct_input_new($(this))">
         <?php for ($i = SHOP_SHIPPING_REQ_DEFAULT; $i <= SHOP_SHIPPING_REQ_DIRECT_INPUT; $i++) { ?>
-          <option value="<?php echo $i; ?>"><?php echo $this->crud_model->get_shipping_req_str($i); ?></option>
+          <option value="<?php echo $i; ?>"><?php echo $this->shop_model->get_shipping_req_str($i); ?></option>
         <?php } ?>
       </select>
     </td>

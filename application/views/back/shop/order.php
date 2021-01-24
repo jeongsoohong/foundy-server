@@ -52,49 +52,49 @@
                 <optgroup label="배송관련">
 <!--                  <option --><?php //if ($ship_status == SHOP_SHIPPING_STATUS_WAIT) echo 'selected'; ?>
 <!--                    value="--><?php //echo SHOP_SHIPPING_STATUS_WAIT; ?><!--">-->
-<!--                  --><?php //echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_WAIT); ?>
+<!--                  --><?php //echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_WAIT); ?>
                   </option>
                   <option <?php if ($ship_status == SHOP_SHIPPING_STATUS_ORDER_COMPLETED) echo 'selected'; ?>
                     value="<?php echo SHOP_SHIPPING_STATUS_ORDER_COMPLETED; ?>">
-                    <?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_COMPLETED); ?>
+                    <?php echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_COMPLETED); ?>
                   </option>
                   <option <?php if ($ship_status == SHOP_SHIPPING_STATUS_PREPARE) echo 'selected'; ?>
                     value="<?php echo SHOP_SHIPPING_STATUS_PREPARE; ?>">
-                    <?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PREPARE); ?>
+                    <?php echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PREPARE); ?>
                   </option>
                   <option <?php if ($ship_status == SHOP_SHIPPING_STATUS_IN_PROGRESS) echo 'selected'; ?>
                     value="<?php echo SHOP_SHIPPING_STATUS_IN_PROGRESS; ?>">
-                    <?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_IN_PROGRESS); ?>
+                    <?php echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_IN_PROGRESS); ?>
                   </option>
                   <option <?php if ($ship_status == SHOP_SHIPPING_STATUS_COMPLETED) echo 'selected'; ?>
                     value="<?php echo SHOP_SHIPPING_STATUS_COMPLETED; ?>">
-                    <?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_COMPLETED); ?>
+                    <?php echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_COMPLETED); ?>
                   </option>
                   <option <?php if ($ship_status == SHOP_SHIPPING_STATUS_PURCHASE_COMPLETED) echo 'selected'; ?>
                     value="<?php echo SHOP_SHIPPING_STATUS_PURCHASE_COMPLETED; ?>">
-                    <?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PURCHASE_COMPLETED); ?>
+                    <?php echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PURCHASE_COMPLETED); ?>
                   </option>
                 </optgroup>
                 <optgroup label="클레임관련">
                   <option <?php if ($ship_status == SHOP_SHIPPING_STATUS_ORDER_CANCELED) echo 'selected'; ?>
                     value="<?php echo SHOP_SHIPPING_STATUS_ORDER_CANCELED; ?>">
-                    <?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_CANCELED); ?>
+                    <?php echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_CANCELED); ?>
                   </option>
                   <option <?php if ($ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CANCELING) echo 'selected'; ?>
                     value="<?php echo SHOP_SHIPPING_STATUS_PURCHASE_CANCELING; ?>">
-                    <?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PURCHASE_CANCELING); ?>
+                    <?php echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PURCHASE_CANCELING); ?>
                   </option>
                   <option <?php if ($ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CANCELED) echo 'selected'; ?>
                     value="<?php echo SHOP_SHIPPING_STATUS_PURCHASE_CANCELED; ?>">
-                    <?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PURCHASE_CANCELED); ?>
+                    <?php echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PURCHASE_CANCELED); ?>
                   </option>
                   <option <?php if ($ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CHANGING) echo 'selected'; ?>
                     value="<?php echo SHOP_SHIPPING_STATUS_PURCHASE_CHANGING; ?>">
-                    <?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PURCHASE_CHANGING); ?>
+                    <?php echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PURCHASE_CHANGING); ?>
                   </option>
                   <option <?php if ($ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CHANGED) echo 'selected'; ?>
                     value="<?php echo SHOP_SHIPPING_STATUS_PURCHASE_CHANGED; ?>">
-                    <?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PURCHASE_CHANGED); ?>
+                    <?php echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PURCHASE_CHANGED); ?>
                   </option>
                 </optgroup>
               </select>
@@ -172,23 +172,23 @@
           <div class="col-md-2 col-sm-2 col-xs-2">
             <?php if ($ship_status == SHOP_SHIPPING_STATUS_ORDER_COMPLETED) { ?>
               <button class="order-change-status btn-dark" disabled id="order-status-change-btn" onclick="change_status();">
-                <<?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PREPARE); ?>>으로 변경
+                <<?php echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PREPARE); ?>>으로 변경
               </button>
             <?php } else if ($ship_status == SHOP_SHIPPING_STATUS_PREPARE) { ?>
               <button class="order-change-status btn-dark" disabled id="order-status-change-btn" onclick="change_status();">
-                <<?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_IN_PROGRESS); ?>>으로 변경
+                <<?php echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_IN_PROGRESS); ?>>으로 변경
               </button>
             <?php } else if ($ship_status == SHOP_SHIPPING_STATUS_IN_PROGRESS) { ?>
               <button class="order-change-status btn-dark" disabled id="order-status-change-btn" onclick="change_status();">
-                <<?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_COMPLETED); ?>>으로 변경
+                <<?php echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_COMPLETED); ?>>으로 변경
               </button>
             <?php } else if ($ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CANCELING) { ?>
               <button class="order-change-status btn-dark" disabled id="order-status-change-btn" onclick="change_status();">
-                <<?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PURCHASE_CANCELED); ?>>으로 변경
+                <<?php echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PURCHASE_CANCELED); ?>>으로 변경
               </button>
             <?php } else if ($ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CHANGING) { ?>
               <button class="order-change-status btn-dark" disabled id="order-status-change-btn" onclick="change_status();">
-                <<?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PURCHASE_CHANGED); ?>>으로 변경
+                <<?php echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PURCHASE_CHANGED); ?>>으로 변경
               </button>
             <?php } else { ?>
             <?php } ?>
@@ -233,13 +233,13 @@
                 </td>
                 <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $order->item_name; ?></td>
                 <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->total_purchase_cnt; ?></td>
-                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->shop_model->get_shipping_status_str($order->shipping_status); ?></td>
                 <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_product_shipping_free_str($order->free_shipping); ?></td>
                 <td class="col-md-2 col-sm-2 col-xs-2" style="width: 100%; margin: auto">
                   <button class="btn btn-info" onclick="get_info(<?php echo $order->purchase_product_id; ?>)"
                           style="font-size: 10px; width: auto; height: 30px; margin: auto">정보</button>
                   <button class="btn btn-danger" onclick="open_req_order_modal(<?php echo $order->purchase_product_id; ?>, <?php echo SHOP_ORDER_REQ_TYPE_CANCEL; ?>)"
-                          style="font-size: 10px; width: auto; height: 30px; margin: auto"><?php echo $this->crud_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CANCEL); ?></button>
+                          style="font-size: 10px; width: auto; height: 30px; margin: auto"><?php echo $this->shop_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CANCEL); ?></button>
                 </td>
               </tr>
             <?php }?>
@@ -282,7 +282,7 @@
                 </td>
                 <td class="col-md-2 col-sm-1 col-xs-1"><?php echo $order->item_name; ?></td>
                 <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->total_purchase_cnt; ?></td>
-                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->shop_model->get_shipping_status_str($order->shipping_status); ?></td>
                 <td class="col-md-1 col-sm-1 col-xs-1 "><?php echo $this->crud_model->get_product_shipping_free_str($order->free_shipping); ?></td>
                 <td class="col-md-1 col-sm-1 col-xs-1">
                   <select class="form-control shipping-company">
@@ -299,7 +299,7 @@
                   <button class="btn btn-info" onclick="get_info(<?php echo $order->purchase_product_id; ?>)"
                           style="font-size: 10px; width: auto; height: 30px; margin: auto">정보</button>
                   <button class="btn btn-danger" onclick="open_req_order_modal(<?php echo $order->purchase_product_id; ?>, <?php echo SHOP_ORDER_REQ_TYPE_CANCEL; ?>)"
-                          style="font-size: 10px; width: auto; height: 30px; margin: auto"><?php echo $this->crud_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CANCEL); ?></button>
+                          style="font-size: 10px; width: auto; height: 30px; margin: auto"><?php echo $this->shop_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CANCEL); ?></button>
                 </td>
               </tr>
             <?php }?>
@@ -344,7 +344,7 @@
               </td>
               <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $order->item_name; ?></td>
               <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->total_purchase_cnt; ?></td>
-              <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
+              <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->shop_model->get_shipping_status_str($order->shipping_status); ?></td>
               <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_product_shipping_free_str($order->free_shipping); ?></td>
               <td class="col-md-1 col-sm-1 col-xs-1">
                 <select class="form-control shipping-company">
@@ -409,7 +409,7 @@
                 </td>
                 <td class="col-md-2 col-sm-1 col-xs-1"><?php echo $order->item_name; ?></td>
                 <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->total_purchase_cnt; ?></td>
-                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->shop_model->get_shipping_status_str($order->shipping_status); ?></td>
                 <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_product_shipping_free_str($order->free_shipping); ?></td>
                 <td class="col-md-1 col-sm-1 col-xs-1">
                   <select disabled class="form-control shipping-company">
@@ -429,9 +429,9 @@
                           style="font-size: 10px; width: auto; height: 30px; margin: auto">정보</button>
                   <? if ($ship_status == SHOP_SHIPPING_STATUS_COMPLETED) { ?>
                     <button class="btn btn-mint" onclick="open_req_order_modal(<?php echo $order->purchase_product_id; ?>, <?php echo SHOP_ORDER_REQ_TYPE_CHANGE; ?>)"
-                            style="font-size: 10px; width: auto; height: 30px; margin: auto"><?php echo $this->crud_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CHANGE); ?></button>
+                            style="font-size: 10px; width: auto; height: 30px; margin: auto"><?php echo $this->shop_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CHANGE); ?></button>
                     <button class="btn btn-danger" onclick="open_req_order_modal(<?php echo $order->purchase_product_id; ?>, <?php echo SHOP_ORDER_REQ_TYPE_RETURN; ?>)"
-                            style="font-size: 10px; width: auto; height: 30px; margin: auto"><?php echo $this->crud_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_RETURN); ?></button>
+                            style="font-size: 10px; width: auto; height: 30px; margin: auto"><?php echo $this->shop_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_RETURN); ?></button>
                   <? } ?>
                 </td>
               </tr>
@@ -460,8 +460,8 @@
               <th class="col-md-2 col-sm-2 col-xs-2">상품명/옵션</th>
               <th class="col-md-1 col-sm-1 col-xs-1">수량</th>
               <th class="col-md-1 col-sm-1 col-xs-1">주문상태</th>
-              <th class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_order_req_type_str($req_type); ?> 일자</th>
-              <th class="col-md-2 col-sm-2 col-xs-2"><?php echo $this->crud_model->get_order_req_type_str($req_type); ?> 사유</th>
+              <th class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->shop_model->get_order_req_type_str($req_type); ?> 일자</th>
+              <th class="col-md-2 col-sm-2 col-xs-2"><?php echo $this->shop_model->get_order_req_type_str($req_type); ?> 사유</th>
               <th class="col-md-1 col-sm-1 col-xs-1">기타</th>
             </tr>
             </thead>
@@ -488,7 +488,7 @@
                 </td>
                 <td class="col-md-2 col-sm-2 col-xs-2"><?php echo $order->item_name; ?></td>
                 <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $order->total_purchase_cnt; ?></td>
-                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->crud_model->get_shipping_status_str($order->shipping_status); ?></td>
+                <td class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->shop_model->get_shipping_status_str($order->shipping_status); ?></td>
                 <td class="col-md-1 col-sm-1 col-xs-1">
                   <?php echo $order->canceled_at; ?>
                 </td>
@@ -813,11 +813,11 @@
     req_type = type;
     
     if (type === <?php echo SHOP_ORDER_REQ_TYPE_CANCEL; ?>) {
-      $('#req-title').text('<?php echo $this->crud_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CANCEL); ?> 신청')
+      $('#req-title').text('<?php echo $this->shop_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CANCEL); ?> 신청')
     } else if (type === <?php echo SHOP_ORDER_REQ_TYPE_CHANGE; ?>) {
-      $('#req-title').text('<?php echo $this->crud_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CHANGE); ?> 신청')
+      $('#req-title').text('<?php echo $this->shop_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CHANGE); ?> 신청')
     } else if (type === <?php echo SHOP_ORDER_REQ_TYPE_RETURN; ?>) {
-      $('#req-title').text('<?php echo $this->crud_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_RETURN); ?> 신청')
+      $('#req-title').text('<?php echo $this->shop_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_RETURN); ?> 신청')
     } else {
       return false;
     }

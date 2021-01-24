@@ -1107,7 +1107,7 @@ QUERY;
         $ins = array(
           'purchase_product_id' => $purchase_product->purchase_product_id,
           'shipping_status' => $purchase_product->shipping_status,
-          'shipping_status_code' => $this->crud_model->get_shipping_status_str($purchase_product->shipping_status),
+          'shipping_status_code' => $this->shop_model->get_shipping_status_str($purchase_product->shipping_status),
           'shipping_data' => json_encode($shipping_data),
         );
         $this->db->set('modified_at', 'NOW()', false);
@@ -1133,7 +1133,7 @@ QUERY;
         $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
         $this->mts_model->send_shop_shipping($phone, SHOP_SHIPPING_STATUS_IN_PROGRESS,
           $purchase_info->purchase_code, $product_info->item_name, $shipping_data->shipping_company_name, $shipping_data->shipping_code);
-        $this->email_model->get_user_shipping_status_data($this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_IN_PROGRESS),
+        $this->email_model->get_user_shipping_status_data($this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_IN_PROGRESS),
         $purchase_info->purchase_code, $product_info->item_name, $shipping_data->shipping_company_name, $shipping_data->shipping_code,
         $product_info->item_image_url_0, $email);
         
@@ -1159,14 +1159,14 @@ QUERY;
             $ins = array(
               'purchase_product_id' => $purchase_product->purchase_product_id,
               'shipping_status' => $next_status,
-              'shipping_status_code' => $this->crud_model->get_shipping_status_str($next_status),
+              'shipping_status_code' => $this->shop_model->get_shipping_status_str($next_status),
               'shipping_data' => json_encode($shipping_data),
             );
             $this->db->set('modified_at', 'NOW()', false);
             $this->db->insert('shop_purchase_product_status', $ins);
     
             $this->db->set('shipping_status', $next_status);
-            $this->db->set('shipping_status_code', $this->crud_model->get_shipping_status_str($next_status));
+            $this->db->set('shipping_status_code', $this->shop_model->get_shipping_status_str($next_status));
             $this->db->set('shipping_data', json_encode($shipping_data));
             $this->db->set('modified_at', 'NOW()', false);
             $this->db->where('purchase_product_id', $info->purchase_product_id);
@@ -1186,7 +1186,7 @@ QUERY;
             $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
             $this->mts_model->send_shop_shipping($phone, SHOP_SHIPPING_STATUS_IN_PROGRESS,
               $purchase_info->purchase_code, $product_info->item_name, $shipping_data->shipping_company_name, $shipping_data->shipping_code);
-            $this->email_model->get_user_shipping_status_data($this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_IN_PROGRESS),
+            $this->email_model->get_user_shipping_status_data($this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_IN_PROGRESS),
               $purchase_info->purchase_code, $product_info->item_name, $shipping_data->shipping_company_name, $shipping_data->shipping_code,
               $product_info->item_image_url_0, $email);
           }
@@ -1196,7 +1196,7 @@ QUERY;
             if ($purchase_product->shipping_status != $ship_status) {
               continue;
             }
-            $this->crud_model->cancel_payment($purchase_product->purchase_product_id, $purchase_product->cancel_reason,
+            $this->shop_model->cancel_payment($purchase_product->purchase_product_id, $purchase_product->cancel_reason,
               SHOP_SHIPPING_STATUS_PURCHASE_CANCELED, false, null);
           }
         } else {
@@ -1210,7 +1210,7 @@ QUERY;
             $ins = array(
               'purchase_product_id' => $purchase_product->purchase_product_id,
               'shipping_status' => $next_status,
-              'shipping_status_code' => $this->crud_model->get_shipping_status_str($next_status),
+              'shipping_status_code' => $this->shop_model->get_shipping_status_str($next_status),
             );
             $this->db->set('modified_at', 'NOW()', false);
             $this->db->insert('shop_purchase_product_status', $ins);
@@ -1235,7 +1235,7 @@ QUERY;
               $payment_info->item_name, $payment_info->purchased_at, $redirect_url);
             $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
             $this->email_model->get_user_order_status_data(
-              $this->crud_model->get_shipping_status_str($next_status), $purchase_info->purchase_code,
+              $this->shop_model->get_shipping_status_str($next_status), $purchase_info->purchase_code,
               $product_info->item_name, date('Y-m-d H:i:s'), $redirect_url, $product_info->item_image_url_0, $email);
             
             $purchase_product_ids[] = $info->purchase_product_id;
@@ -1243,7 +1243,7 @@ QUERY;
           if (count($purchase_product_ids) > 0) {
             $this->db->where_in('purchase_product_id', $purchase_product_ids);
             $this->db->set('shipping_status', $next_status);
-            $this->db->set('shipping_status_code', $this->crud_model->get_shipping_status_str($next_status));
+            $this->db->set('shipping_status_code', $this->shop_model->get_shipping_status_str($next_status));
             $this->db->set('modified_at', 'NOW()', false);
             $this->db->update('shop_purchase_product');
           }
@@ -1293,13 +1293,13 @@ QUERY;
       }
       
       if ($req_type == SHOP_ORDER_REQ_TYPE_CANCEL) { // 결제 취소가 필요한 부분
-        $this->crud_model->cancel_payment($purchase_product->purchase_product_id, $req_reason,
+        $this->shop_model->cancel_payment($purchase_product->purchase_product_id, $req_reason,
           SHOP_SHIPPING_STATUS_ORDER_CANCELED, false, null);
       } else {
         $ins = array(
           'purchase_product_id' => $purchase_product_id,
           'shipping_status' => $next_status,
-          'shipping_status_code' => $this->crud_model->get_shipping_status_str($next_status),
+          'shipping_status_code' => $this->shop_model->get_shipping_status_str($next_status),
           'shipping_data' => $req_reason,
         );
         $this->db->set('modified_at', 'NOW()', false);
@@ -1307,7 +1307,7 @@ QUERY;
   
         $upd = array(
           'shipping_status' => $next_status,
-          'shipping_status_code' => $this->crud_model->get_shipping_status_str($next_status),
+          'shipping_status_code' => $this->shop_model->get_shipping_status_str($next_status),
           'canceled' => $canceled,
           'cancel_reason' => $req_reason,
         );
@@ -1335,7 +1335,7 @@ QUERY;
           $payment_info->item_name, $payment_info->purchased_at, $redirect_url);
         $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
         $this->email_model->get_user_order_status_data(
-          $this->crud_model->get_shipping_status_str($next_status), $purchase_info->purchase_code,
+          $this->shop_model->get_shipping_status_str($next_status), $purchase_info->purchase_code,
           $product_info->item_name, date('Y-m-d H:i:s'), $redirect_url, $product_info->item_image_url_0, $email);
       }
   

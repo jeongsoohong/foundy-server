@@ -142,13 +142,19 @@
                 ?>
               </div>
               <div class="item-status">
-                주문상태 : <?php echo $this->crud_model->get_shipping_status_str($item->shipping_status); ?>
+                주문상태 : <?php echo $this->shop_model->get_shipping_status_str($item->shipping_status); ?>
               </div>
               <div class="item-btn" style="display: flex; width: 100%; padding: 10px 0;">
                 <?php if ($item->shipping_status == SHOP_SHIPPING_STATUS_ORDER_COMPLETED || $item->shipping_status == SHOP_SHIPPING_STATUS_PREPARE) { ?>
                   <div class="item-cancel-order" style="width: 30%; background-color: black; height: 30px; margin-right: 10px; line-height: 30px; text-align: center">
                     <a href="javascript:void(0)" onclick="open_cancel_order(<?php echo $item->purchase_product_id; ?>)" style="font-size: 12px; color: white;">
                       주문취소
+                    </a>
+                  </div>
+                <?php }  else if ($item->shipping_status == SHOP_SHIPPING_STATUS_COMPLETED) { ?>
+                  <div class="item-complete-ship" style="width: 30%; background-color: black; height: 30px; margin-right: 10px; line-height: 30px; text-align: center">
+                    <a href="javascript:void(0)" onclick="open_purchase_complete(<?= $item->purchase_product_id; ?>,<?= $item->product->product_id; ?>)" style="font-size: 12px; color: white;">
+                      구매확정
                     </a>
                   </div>
                 <?php } ?>
@@ -181,7 +187,7 @@
           </tr>
           <tr>
             <th>주문상태</th>
-            <td><?php echo $this->crud_model->get_purchase_status_str($purchase_info->status); ?></td>
+            <td><?php echo $this->shop_model->get_purchase_status_str($purchase_info->status); ?></td>
           </tr>
           <tr>
             <th>주문접수일시</th>
@@ -281,8 +287,55 @@
         </div>
       </div>
       <div class="modal-footer" style="display: block;">
-        <button type="button" class="btn btn-theme btn-theme-sm" style="text-transform: none; background-color: black; color:white; width:20%; font-weight: 400; border: none"
+        <button type="button" class="btn btn-dark btn-theme-sm" style="background-color: black; color:white; width:20%;"
                 onclick="purchase_product_cancel();">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="completePurchaseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="width: 5px; padding: 0 15px">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="req-title">구매확정</h4>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+          <div>구매를 확정하겠습니까?
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="display: block;">
+        <button type="button" class="btn btn-dark btn-theme-sm" data-dismiss="modal" style="background-color: black; color: white; width: 20%"
+                onclick="purchase_complete();">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="reviewPurchaseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="width: 5px; padding: 0 15px">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="req-title">리뷰</h4>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+          <div>구매가 확정되었습니다!<br>
+            리뷰를 쓰시겠습니까?
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="display: block;">
+        <button type="button" class="btn btn-danger btn-theme-sm" data-dismiss="modal" style="color:white; width:20%;"
+                onclick="set_reload()">아니요</button>
+        <button type="button" class="btn btn-dark btn-theme-sm" data-dismiss="modal" style="background-color: black; color:white; width:20%;"
+                onclick="go_review();">네</button>
       </div>
     </div>
   </div>
@@ -297,7 +350,7 @@
     cancel_id = id;
     $('#cancelOrderModal').modal('show');
   }
-  function purchase_product_cancel(id) {
+  function purchase_product_cancel() {
     let cancel_reason = $('#cancel-reason').val();
     let auth_code = '<?php echo $auth_code; ?>';
     // console.log(id);
@@ -337,5 +390,57 @@
         console.log(e)
       }
     });
+  }
+  let purchase_product_id = 0;
+  let product_id = 0;
+  function open_purchase_complete(id, pid) {
+    purchase_product_id = id;
+    product_id = pid;
+    $('#completePurchaseModal').modal('show');
+  }
+  function purchase_complete() {
+    let auth_code = '<?php echo $auth_code; ?>';
+    // console.log(id);
+    // console.log(cancel_reason);
+  
+    $('#loading_set').show();
+  
+    let formData = new FormData();
+    formData.append('id', purchase_product_id);
+    formData.append('auth_code', auth_code);
+    $.ajax({
+      url: '<?php echo base_url(); ?>home/shop/purchase/final', // form action url
+      type: 'POST', // form submit method get/post
+      dataType: 'html', // request type html/json/xml
+      data: formData, // serialize form data
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function (data) {
+        $("#loading_set").fadeOut(500);
+        if (data === 'done' || data.search('done') !== -1) {
+          let text = '<strong>성공하였습니다</strong>';
+          notify(text,'success','bottom','right');
+          open_review(product_id);
+        } else {
+          var text = '<strong>실패하였습니다</strong>' + data;
+          notify(text,'warning','bottom','right');
+        }
+      },
+      error: function (e) {
+        console.log(e)
+      }
+    });
+  }
+  let review_id = 0;
+  function open_review(id) {
+    review_id = id;
+    $('#reviewPurchaseModal').modal('show');
+  }
+  function go_review() {
+    window.location = '<?= base_url().'home/shop/product?tab=review&id='; ?>' + review_id;
+  }
+  function set_reload() {
+    setTimeout(function() {location.reload();}, 500);
   }
 </script>

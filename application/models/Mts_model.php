@@ -265,7 +265,7 @@ MSG;
 -주문번호 : #{주문번호}
 -상품명 : #{제품명}
 MSG;
-    $msg = str_replace('#{구매상태}', $this->crud_model->get_shipping_status_str($purchase_status), $msg);
+    $msg = str_replace('#{구매상태}', $this->shop_model->get_shipping_status_str($purchase_status), $msg);
     $msg = str_replace('#{주문일자}', date('Y.m.d', strtotime($purchase_date)), $msg);
     $msg = str_replace('#{주문번호}', $purchase_code, $msg);
     $msg = str_replace('#{상품명}', '상품', $msg);
@@ -307,7 +307,7 @@ MSG;
 -택배사 : #{택배사}
 -송장번호 : #{송장번호}
 MSG;
-    $msg = str_replace('#{배송상태}', $this->crud_model->get_shipping_status_str($shipping_status), $msg);
+    $msg = str_replace('#{배송상태}', $this->shop_model->get_shipping_status_str($shipping_status), $msg);
     $msg = str_replace('#{주문번호}', $purchase_code, $msg);
     $msg = str_replace('#{추가메세지}', '', $msg);
     $msg = str_replace('#{제품명}', $purchase_title, $msg);

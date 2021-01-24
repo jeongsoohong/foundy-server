@@ -41,7 +41,7 @@
                     if ($i == SHOP_SHIPPING_STATUS_ORDER_CANCELED) continue;
                     ?>
                     <th class="col-md-2 col-sm-2 col-xs-2">
-                      <?php echo $this->crud_model->get_shipping_status_str($i); ?>
+                      <?php echo $this->shop_model->get_shipping_status_str($i); ?>
                     </th>
                   <?php } ?>
                 </tr>
@@ -74,11 +74,11 @@
                 <thead>
                 <tr>
                   <th class="col-md-2 col-sm-2 col-xs-2">
-                    <?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_CANCELED); ?>
+                    <?php echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_CANCELED); ?>
                   </th>
                   <?php for ($i = SHOP_SHIPPING_STATUS_PURCHASE_CANCELED; $i <= SHOP_SHIPPING_STATUS_PURCHASE_CHANGING; $i++) { ?>
                     <th class="col-md-2 col-sm-2 col-xs-2">
-                      <?php echo $this->crud_model->get_shipping_status_str($i); ?>
+                      <?php echo $this->shop_model->get_shipping_status_str($i); ?>
                     </th>
                   <?php } ?>
                 </tr>

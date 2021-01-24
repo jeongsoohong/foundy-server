@@ -1,5 +1,5 @@
 <?php
-$status_str = $this->crud_model->get_shipping_status_str($purchase_product->shipping_status);
+$status_str = $this->shop_model->get_shipping_status_str($purchase_product->shipping_status);
 ?>
 <style>
   table tbody tr th {

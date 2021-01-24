@@ -572,22 +572,22 @@
           </table>
         </div>
         <div class="col-md-12 item-nav-tab" id="item-nav-tab">
-          <a href="javascript:void(0);" onclick="change_item_nav_tab($(this))" data-target="info">
+          <a href="javascript:void(0);" id="item-nav-info" onclick="change_item_nav_tab($(this))" data-target="info">
             <div class="col-md-3 item-nav-info">
               상품설명
             </div>
           </a>
-          <a href="javascript:void(0);" onclick="change_item_nav_tab($(this))" data-target="review">
+          <a href="javascript:void(0);" id="item-nav-review" onclick="change_item_nav_tab($(this))" data-target="review">
             <div class="col-md-3 item-nav-review">
               리뷰(<?php echo $product->review; ?>)
             </div>
           </a>
-          <a href="javascript:void(0);" onclick="change_item_nav_tab($(this))" data-target="question">
+          <a href="javascript:void(0);" id="item-nav-question" onclick="change_item_nav_tab($(this))" data-target="question">
             <div class="col-md-3 item-nav-question">
               상품문의(<?php echo $product->qna; ?>)
             </div>
           </a>
-          <a href="javascript:void(0);" onclick="change_item_nav_tab($(this))" data-target="shipping">
+          <a href="javascript:void(0);" id="item-nav-shipping" onclick="change_item_nav_tab($(this))" data-target="shipping">
             <div class="col-md-3 item-nav-shipping">
               배송/환불
             </div>
@@ -1069,7 +1069,7 @@
 
   function change_item_nav_tab(elem) {
     var target = elem.data('target');
-    // console.log(target);
+    console.log(target);
     $('.item-nav-tab').find('.active').removeClass('active');
     $('.item-nav-'+target).addClass('active');
 
@@ -1765,6 +1765,10 @@
     $('.item-nav-info').addClass('active');
     init_item_sticky();
     init_options();
+    
+    <? if (isset($tab)) { ?>
+    change_item_nav_tab($('<?= '#item-nav-'.$tab; ?>'));
+    <? } ?>
   });
 
 </script>

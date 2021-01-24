@@ -4170,6 +4170,11 @@ QUERY;
     $type = $para2;
     
     if ($view == 'product') {
+      
+      $tab = null;
+      if (isset($_GET['tab'])) {
+        $tab = $_GET['tab'];
+      }
 
       $product_id = $_GET['id'];
       $query = <<<QUERY
@@ -4225,6 +4230,7 @@ select review_img_url_1 as url from shop_product_review where product_id={$produ
 QUERY;
       $review_images = $this->db->query($query)->result();
 
+      $this->page_data['tab'] = $tab;
       $this->page_data['product'] = $product;
       $this->page_data['shop_shipping'] = $shop_shipping;
       $this->page_data['brand_info'] = $brand_info;
@@ -4540,8 +4546,35 @@ QUERY;
       }
 
     } elseif ($view == 'purchase') {
-
-      if ($type === 'complete') {
+  
+      if ($type == 'final') { // 구매 확정
+    
+        $purchase_product_id = $this->input->post('id');
+        $auth_code = $this->input->post('auth_code');
+  
+        $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $purchase_product_id))->row();
+        $purchase_info = $this->db->get_where('shop_purchase', array('purchase_id' => $purchase_product->purchase_id))->row();
+  
+        if (empty($purchase_product) || empty($purchase_info)) {
+          $this->crud_model->alert_exit('잘못된 접근입니다.');
+        }
+  
+        if ($purchase_info->session_id != '0' && $purchase_info->session_id != $auth_code) {
+          $this->crud_model->alert_exit('잘못된 접근입니다.(invalid authorization code)');
+        }
+  
+        $next_status = SHOP_SHIPPING_STATUS_PURCHASE_COMPLETED;
+        $this->shop_model->preprocess_shop_shipping_status_set($purchase_product, $next_status);
+  
+        $this->db->where('purchase_product_id', $purchase_product_id);
+        $this->db->set('shipping_status', $next_status);
+        $this->db->set('shipping_status_code', $this->shop_model->get_shipping_status_str($next_status));
+        $this->db->set('modified_at', 'now()', false);
+        $this->db->update('shop_purchase_product');
+  
+        echo 'done';
+    
+      } else if ($type === 'complete') {
 
         // 구매 완료 페이지
 
@@ -4607,7 +4640,7 @@ QUERY;
             'item_option_others_cnt' => $item->item_option_others_cnt,
             'item_option_others' => $item->item_option_others,
             'shipping_status' => SHOP_SHIPPING_STATUS_ORDER_COMPLETED,
-            'shipping_status_code' => $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_COMPLETED),
+            'shipping_status_code' => $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_COMPLETED),
             'shipping_data' => '',
             'reviewed' => 0,
             'canceled' => 0,
@@ -4624,7 +4657,7 @@ QUERY;
           $ins = array(
             'purchase_product_id' => $purchase_product_id,
             'shipping_status' => SHOP_SHIPPING_STATUS_ORDER_COMPLETED,
-            'shipping_status_code' => $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_COMPLETED),
+            'shipping_status_code' => $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_COMPLETED),
             'shipping_data' => '',
           );
           $this->db->set('modified_at', 'NOW()', false);
@@ -4654,17 +4687,17 @@ QUERY;
           }
           $product_info = $this->db->get_where('shop_product', array('product_id' => $item->product_id))->row();
           $this->email_model->get_user_order_status_data(
-            $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_COMPLETED), $purchase_info->purchase_code,
+            $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_COMPLETED), $purchase_info->purchase_code,
             $product_info->item_name, date('Y-m-d H:i:s'), $redirect_url, $product_info->item_image_url_0, $email);
           $shop_info = $this->db->get_where('shop', array('shop_id' => $product_info->shop_id))->row();
           $this->email_model->get_shop_shipping_status_data($shop_info->shop_name,
-            $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_COMPLETED), $shop_info->email);
+            $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_COMPLETED), $shop_info->email);
   
         } // end of cart to shop_purchase_product
 
         $upd = array(
           'status' => SHOP_PURCHASE_STATUS_COMPLETED,
-          'status_code' => $this->crud_model->get_purchase_status_str(SHOP_PURCHASE_STATUS_COMPLETED),
+          'status_code' => $this->shop_model->get_purchase_status_str(SHOP_PURCHASE_STATUS_COMPLETED),
           'purchase_product_ids' => json_encode($purchase_product_ids),
         );
         $this->db->set('done_at', 'NOW()', false);
@@ -4688,7 +4721,7 @@ QUERY;
 //        }
         
         // send push
-        $title = $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_COMPLETED);
+        $title = $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_COMPLETED);
         $body = '상품을 주문해주셔서 감사합니다. 주문내역을 확인해주세요.';
         $this->push->send_push_private($this->session, $title, $body, $redirect_url, null);
         
@@ -4726,7 +4759,7 @@ QUERY;
 
         $upd = array(
           'status' => SHOP_PURCHASE_STATUS_DONE_SUCCESS,
-          'status_code' => $this->crud_model->get_purchase_status_str(SHOP_PURCHASE_STATUS_DONE_SUCCESS),
+          'status_code' => $this->shop_model->get_purchase_status_str(SHOP_PURCHASE_STATUS_DONE_SUCCESS),
           'receipt_id' => $data->receipt_id,
 //          'receipt_url' => $data->receipt_url, // 페이앱에서 안나옴, 이니시스에서는 나옴
           'bootpay_done_data' => $bootpay_done_json_data,
@@ -4775,7 +4808,7 @@ QUERY;
 
             $upd = array(
               'status' => SHOP_PURCHASE_STATUS_CONFIRM_SUCCESS,
-              'status_code' => $this->crud_model->get_purchase_status_str(SHOP_PURCHASE_STATUS_CONFIRM_SUCCESS),
+              'status_code' => $this->shop_model->get_purchase_status_str(SHOP_PURCHASE_STATUS_CONFIRM_SUCCESS),
               'receipt_id' => $data->receipt_id,
               'bootpay_confirmed_data' => $bootpay_confirmed_json_data,
             );
@@ -4789,7 +4822,7 @@ QUERY;
             $fail_reason = "not matched total_balance, {$data->params->purchase_info->total_balance} != {$purchase_info->total_balance}";
             $upd = array(
               'status' => SHOP_PURCHASE_STATUS_CONFIRM_FAIL,
-              'status_code' => $this->crud_model->get_purchase_status_str(SHOP_PURCHASE_STATUS_CONFIRM_FAIL),
+              'status_code' => $this->shop_model->get_purchase_status_str(SHOP_PURCHASE_STATUS_CONFIRM_FAIL),
               'receipt_id' => $data->receipt_id,
               'bootpay_confirmed_data' => $bootpay_confirmed_json_data,
               'fail_reason' => $fail_reason,
@@ -4806,7 +4839,7 @@ QUERY;
           $fail_reason = "not matched purchase_code, {$data->params->purchase_code} != {$purchase_code}";
           $upd = array(
             'status' => SHOP_PURCHASE_STATUS_CONFIRM_FAIL,
-            'status_code' => $this->crud_model->get_purchase_status_str(SHOP_PURCHASE_STATUS_CONFIRM_FAIL),
+            'status_code' => $this->shop_model->get_purchase_status_str(SHOP_PURCHASE_STATUS_CONFIRM_FAIL),
             'receipt_id' => $data->receipt_id,
             'bootpay_confirmed_data' => $bootpay_confirmed_json_data,
             'fail_reason' => $fail_reason,
@@ -4823,7 +4856,7 @@ QUERY;
         $purchase_code = $this->input->post('purchase_code');
         $upd = array(
           'status' => SHOP_PURCHASE_STATUS_PAYING_CANCELED,
-          'status_code' => $this->crud_model->get_purchase_status_str(SHOP_PURCHASE_STATUS_PAYING_CANCELED),
+          'status_code' => $this->shop_model->get_purchase_status_str(SHOP_PURCHASE_STATUS_PAYING_CANCELED),
         );
         $this->db->set('canceled_at', 'NOW()', false);
         $this->db->update('shop_purchase', $upd, array('purchase_code' => $purchase_code));
@@ -4836,7 +4869,7 @@ QUERY;
         $cancel_reason = $this->input->post('reason');
         $auth_code = $this->input->post('auth_code');
         
-        $this->crud_model->cancel_payment($purchase_product_id, $cancel_reason, SHOP_SHIPPING_STATUS_ORDER_CANCELED,
+        $this->shop_model->cancel_payment($purchase_product_id, $cancel_reason, SHOP_SHIPPING_STATUS_ORDER_CANCELED,
           true, $auth_code);
  
         echo 'done';
@@ -4862,7 +4895,7 @@ QUERY;
 
         $upd = array(
           'status' => SHOP_PURCHASE_STATUS_PAYING,
-          'status_code' => $this->crud_model->get_purchase_status_str(SHOP_PURCHASE_STATUS_PAYING),
+          'status_code' => $this->shop_model->get_purchase_status_str(SHOP_PURCHASE_STATUS_PAYING),
           'discount' => $discount,
           'user_coupon_id' => $user_coupon_id,
         );
@@ -5052,7 +5085,7 @@ QUERY;
 
         $purchase_info->purchase_code = sprintf('%s%010d', date('ymd'), $purchase_info->purchase_id);
         $purchase_info->status = SHOP_PURCHASE_STATUS_PURCHASING;
-        $purchase_info->status_code = $this->crud_model->get_purchase_status_str($purchase_info->status);
+        $purchase_info->status_code = $this->shop_model->get_purchase_status_str($purchase_info->status);
         $purchase_info->user_id = $user_id;
         $purchase_info->session_id = $session_id;
         $purchase_info->cart_ids = json_encode($cart_ids);
@@ -5387,7 +5420,7 @@ QUERY;
 
         $purchase_product_id = $_GET['id'];
 
-        $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $purchase_product_id, 'canceled' => 0))->row();
+        $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $purchase_product_id, 'canceled' => 0, 'reviewed' => 0))->row();
         if (empty($purchase_product)) {
           $this->crud_model->alert_exit('구매내역이 존재하지 않습니다.');
         }
@@ -5398,7 +5431,7 @@ QUERY;
 
         $user_id = $this->session->userdata('user_id');
         if ($user_id != $purchase_product->user_id) {
-          $this->crud_model->alert_exit('본인만 확인 가능합니다.');
+          $this->crud_model->alert_exit('본인만 리뷰쓰기가 가능합니다.');
         }
 
         $this->load->library('form_validation');

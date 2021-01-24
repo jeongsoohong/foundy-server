@@ -244,7 +244,7 @@ QUERY;
   
     } else if ($para1 == 'shipping') {
       // 배송완료 체크
-      // 0 22 * * * nginx /usr/bin/php -f /web/public_html/index.php cron shop shipping
+      // 0 7 * * * nginx /usr/bin/php -f /web/public_html/index.php cron shop shipping
   
       $modified_at = date('Y-m-d');
       $shipping_status = SHOP_SHIPPING_STATUS_IN_PROGRESS;
@@ -252,7 +252,7 @@ QUERY;
       $purchase_products = $this->shop_model->get_purchase_products($shipping_status, $modified_at);
       $count = count($purchase_products);
   
-      log_message('debug', '[cron] shop/shipping, status[' . $this->crud_model->get_shipping_status_str($shipping_status). '] '
+      log_message('debug', '[cron] shop/shipping, status[' . $this->shop_model->get_shipping_status_str($shipping_status). '] '
         .'purchase_products_count[' . $count . ']');
   
       $purchase_product_ids = array();
@@ -281,14 +281,14 @@ QUERY;
       if (count($purchase_product_ids) > 0) {
         $this->db->where_in('purchase_product_id', $purchase_product_ids);
         $this->db->set('shipping_status', $next_status);
-        $this->db->set('shipping_status_code', $this->crud_model->get_shipping_status_str($next_status));
+        $this->db->set('shipping_status_code', $this->shop_model->get_shipping_status_str($next_status));
         $this->db->set('modified_at', 'NOW()', false);
         $this->db->update('shop_purchase_product');
       }
   
     } else if ($para1 == 'purchase') {
       // 구매확정 체크
-      // 0 7 * * * nginx /usr/bin/php -f /web/public_html/index.php cron shop purchase
+      // 30 7 * * * nginx /usr/bin/php -f /web/public_html/index.php cron shop purchase
   
       $modified_at = date('Y-m-d', strtotime('-6 days'));
       $shipping_status = SHOP_SHIPPING_STATUS_COMPLETED;
@@ -296,7 +296,7 @@ QUERY;
       $purchase_products = $this->shop_model->get_purchase_products($shipping_status, $modified_at);
       $count = count($purchase_products);
   
-      log_message('debug', '[cron] shop/purchase, status[' . $this->crud_model->get_shipping_status_str($shipping_status). '] '
+      log_message('debug', '[cron] shop/purchase, status[' . $this->shop_model->get_shipping_status_str($shipping_status). '] '
         .'purchase_products_count[' . $count . ']');
   
       $purchase_product_ids = array();
@@ -309,8 +309,8 @@ QUERY;
       if (count($purchase_product_ids) > 0) {
         $this->db->where_in('purchase_product_id', $purchase_product_ids);
         $this->db->set('shipping_status', $next_status);
-        $this->db->set('shipping_status_code', $this->crud_model->get_shipping_status_str($next_status));
-        $this->db->set('modified_at', 'NOW()', false);
+        $this->db->set('shipping_status_code', $this->shop_model->get_shipping_status_str($next_status));
+        $this->db->set('modified_at', 'now()', false);
         $this->db->update('shop_purchase_product');
       }
   

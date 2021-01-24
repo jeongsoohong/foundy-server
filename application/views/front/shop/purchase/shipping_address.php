@@ -16,7 +16,7 @@
       <div class="shipping-req">
         <select <?php if ($info->shipping_req_code == SHOP_SHIPPING_REQ_DIRECT_INPUT) echo 'disabled';?> class="form-control" onchange="check_direct_input($(this))">
           <?php for ($i = SHOP_SHIPPING_REQ_DEFAULT; $i <= SHOP_SHIPPING_REQ_DIRECT_INPUT; $i++) { ?>
-            <option <?php if ($i == $info->shipping_req_code) { echo 'selected';} ?> value="<?php echo $i; ?>"><?php echo $this->crud_model->get_shipping_req_str($i); ?></option>
+            <option <?php if ($i == $info->shipping_req_code) { echo 'selected';} ?> value="<?php echo $i; ?>"><?php echo $this->shop_model->get_shipping_req_str($i); ?></option>
           <?php } ?>
         </select>
       </div>
