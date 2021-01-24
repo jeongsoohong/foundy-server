@@ -281,7 +281,7 @@ MSG;
       $button->url_mobile = $url;
     } else {
       $button->scheme_ios = "foundy://web?url={$url}";
-      $button->scheme_android = "foundy-dev://web?url={$url}";
+      $button->scheme_android = "foundy://web?url={$url}";
       $button->url_pc = $url;
       $button->url_mobile = $url;
     }

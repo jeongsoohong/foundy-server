@@ -57,12 +57,19 @@ if (isset($_SERVER['SERVER_NAME'])) {
   define('DEV_SERVER', strstr($_SERVER['SERVER_NAME'], 'dev') != NULL ? true: false);
   define('ENVIRONMENT', DEV_SERVER == false ? 'production' : 'development');
 } else { // crontab
+  define('DEV_SERVER', strstr(getenv('CRONTAB_URL'), 'dev') != NULL ? true: false);
   define('ENVIRONMENT', 'cron');
+ 
+  if (DEV_SERVER) {
+    $_SERVER['HTTP_HOST'] = 'dev.foundy.me';
+  } else {
+    $_SERVER['HTTP_HOST'] = 'www.foundy.me';
+  }
+  $_SERVER['SCRIPT_NAME'] = '';
+  $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 }
 //define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
 
-isset($_SERVER['REMOTE_ADDR']) || $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-isset($_SERVER['HTTP_HOST']) ||  $_SERVER['HTTP_HOST'] = 'localhost';
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING

@@ -223,15 +223,15 @@ QUERY;
     } else if ($para1 == 'delay') {
       // 주기적으로 배송지연 안내 메일
       // 30 8 * * * nginx /usr/bin/php -f /web/public_html/index.php cron shop delay
-
-      $confirm_status='배송지연';
+  
+      $confirm_status = '배송지연';
       $modified_at = date('Y-m-d', time() - $this->shop_model::CONFIRM_DELAY_DAYS * ONE_DAY);
       $shipping_status = SHOP_SHIPPING_STATUS_PREPARE;
       $shop_ids = $this->shop_model->get_shop_ids_for_purchase_product($shipping_status, $modified_at);
       $count = count($shop_ids);
-     
-      log_message('debug', '[cron] shop/delay, status['.$confirm_status.'] shop_ids_count['.$count.'] '
-        .'shop_ids['.json_encode($shop_ids).']');
+  
+      log_message('debug', '[cron] shop/delay, status[' . $confirm_status . '] shop_ids_count[' . $count . '] '
+        . 'shop_ids[' . json_encode($shop_ids) . ']');
   
       foreach ($shop_ids as $s) {
         $shop_id = $s->shop_id;
@@ -241,7 +241,79 @@ QUERY;
           $this->email_model->send_shop_unconfirmed_order_mail($shop->shop_name, $confirm_status, $count, $shop->email);
         }
       }
+  
+    } else if ($para1 == 'shipping') {
+      // 배송완료 체크
+      // 0 22 * * * nginx /usr/bin/php -f /web/public_html/index.php cron shop shipping
+  
+      $modified_at = date('Y-m-d');
+      $shipping_status = SHOP_SHIPPING_STATUS_IN_PROGRESS;
+      $next_status = SHOP_SHIPPING_STATUS_COMPLETED;
+      $purchase_products = $this->shop_model->get_purchase_products($shipping_status, $modified_at);
+      $count = count($purchase_products);
+  
+      log_message('debug', '[cron] shop/shipping, status[' . $this->crud_model->get_shipping_status_str($shipping_status). '] '
+        .'purchase_products_count[' . $count . ']');
+  
+      $purchase_product_ids = array();
+      foreach ($purchase_products as $product) {
+        $shipping_data = json_decode($product->shipping_data);
+        
+        $result = $this->shop_model->get_shipping_data($shipping_data);
+        if (isset($result->status) && $result->status == false) {
+          log_message('error', '[cron] no shipping data result['.$result->msg.', code : '.$result->code.'] for purchase_product_id['.
+            $product->purchase_product_id.'] shipping_data['.json_encode($shipping_data).']');
+          continue;
+        }
+  
+        if ($result->complete) {
+          $this->shop_model->preprocess_shop_shipping_status_set($product, $next_status);
+          $purchase_product_ids[] = $product->purchase_product_id;
+          log_message('debug', '[cron] set shipping status to 배송완료 for purchase_product_id['.
+            $product->purchase_product_id.'] shipping_data['.json_encode($shipping_data).']');
+        } else {
+          log_message('debug', '[cron] shipping in progress for purchase_product_id['.
+            $product->purchase_product_id.'] shipping_data['.json_encode($shipping_data).']');
+        }
+
+      }
       
+      if (count($purchase_product_ids) > 0) {
+        $this->db->where_in('purchase_product_id', $purchase_product_ids);
+        $this->db->set('shipping_status', $next_status);
+        $this->db->set('shipping_status_code', $this->crud_model->get_shipping_status_str($next_status));
+        $this->db->set('modified_at', 'NOW()', false);
+        $this->db->update('shop_purchase_product');
+      }
+  
+    } else if ($para1 == 'purchase') {
+      // 구매확정 체크
+      // 0 7 * * * nginx /usr/bin/php -f /web/public_html/index.php cron shop purchase
+  
+      $modified_at = date('Y-m-d', strtotime('-6 days'));
+      $shipping_status = SHOP_SHIPPING_STATUS_COMPLETED;
+      $next_status = SHOP_SHIPPING_STATUS_PURCHASE_COMPLETED;
+      $purchase_products = $this->shop_model->get_purchase_products($shipping_status, $modified_at);
+      $count = count($purchase_products);
+  
+      log_message('debug', '[cron] shop/purchase, status[' . $this->crud_model->get_shipping_status_str($shipping_status). '] '
+        .'purchase_products_count[' . $count . ']');
+  
+      $purchase_product_ids = array();
+      foreach ($purchase_products as $product) {
+        log_message('debug', '[cron] set shipping status to 구매확정 for purchase_product_id['.$product->purchase_product_id.']');
+        $this->shop_model->preprocess_shop_shipping_status_set($product, $next_status);
+        $purchase_product_ids[] = $product->purchase_product_id;
+      }
+      
+      if (count($purchase_product_ids) > 0) {
+        $this->db->where_in('purchase_product_id', $purchase_product_ids);
+        $this->db->set('shipping_status', $next_status);
+        $this->db->set('shipping_status_code', $this->crud_model->get_shipping_status_str($next_status));
+        $this->db->set('modified_at', 'NOW()', false);
+        $this->db->update('shop_purchase_product');
+      }
+  
     } else {
       log_message('error', '[cron] invalid para1['.$para1.'] for shop');
     }

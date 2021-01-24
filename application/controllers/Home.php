@@ -1184,6 +1184,10 @@ QUERY;
     $type = $para1;
 
     if ($type == 'list') {
+      
+      if (isset($_GET['page']) == false || isset($_GET['category']) == false) {
+        $this->redirect_error('접근 오류가 발생하였습니다!');
+      }
 
       $page = $_GET['page'];
       $category = $_GET['category'];
@@ -1207,7 +1211,11 @@ QUERY;
       $this->load->view('front/blog/ajax_list', $this->page_data);
 
     } else if ($type == 'view') {
-
+  
+      if (isset($_GET['id']) == false) {
+        $this->redirect_error('접근 오류가 발생하였습니다!');
+      }
+      
       $blog_id = $_GET['id'];
 
       $blog = $this->db->get_where('blog', array('blog_id' => $blog_id))->row();
@@ -5228,28 +5236,13 @@ QUERY;
           $this->crud_model->alert_exit('잘못된 접근입니다.');
         }
   
-        $url = sprintf('https://info.sweettracker.co.kr/api/v1/trackingInfo?t_key=%s&t_code=%s&t_invoice=%s',
-          APIKEY_SWEET_TRACKER, $shipping_data->shipping_company, $shipping_data->shipping_code);
-        
-        $opts = array(
-          CURLOPT_URL => $url,
-          CURLOPT_SSL_VERIFYPEER => false,
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_HEADER => false,
-        );
-        $ch = curl_init();
-        curl_setopt_array($ch, $opts);
-        $result = json_decode(curl_exec($ch));
-//        $this->crud_model->alert_exit(json_encode($result));
+        $result = $this->shop_model->get_shipping_data($shipping_data);
         if (isset($result->status) && $result->status == false) {
           $this->crud_model->alert_exit($result->msg.' code : '.$result->code);
         }
         
         $shipping_data->shipping_company_name = $this->db->get_where('shipping_company', array('company_code' => $shipping_data->shipping_company))->row()->company_name;
-        
         $shipping_data->data = $result->trackingDetails;
-        
-        curl_close($ch);
         
         $this->page_data['shipping_data'] = $shipping_data;
         $this->load->view('front/shop/shipping/search', $this->page_data);

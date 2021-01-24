@@ -70,6 +70,10 @@
                     value="<?php echo SHOP_SHIPPING_STATUS_COMPLETED; ?>">
                     <?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_COMPLETED); ?>
                   </option>
+                  <option <?php if ($ship_status == SHOP_SHIPPING_STATUS_PURCHASE_COMPLETED) echo 'selected'; ?>
+                    value="<?php echo SHOP_SHIPPING_STATUS_PURCHASE_COMPLETED; ?>">
+                    <?php echo $this->crud_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PURCHASE_COMPLETED); ?>
+                  </option>
                 </optgroup>
                 <optgroup label="클레임관련">
                   <option <?php if ($ship_status == SHOP_SHIPPING_STATUS_ORDER_CANCELED) echo 'selected'; ?>
@@ -365,7 +369,7 @@
             </tr>
           <?php }?>
           </tbody>
-          <?php } else if ($ship_status == SHOP_SHIPPING_STATUS_COMPLETED) { ?>
+          <?php } else if ($ship_status == SHOP_SHIPPING_STATUS_COMPLETED || $ship_status == SHOP_SHIPPING_STATUS_PURCHASE_COMPLETED) { ?>
             <thead>
             <tr>
               <th class="col-md-1 col-sm-1 col-xs-1">
@@ -423,10 +427,12 @@
                 <td class="col-md-1 col-sm-1 col-xs-1" style="width: 100%; margin: auto">
                   <button class="btn btn-info" onclick="get_info(<?php echo $order->purchase_product_id; ?>)"
                           style="font-size: 10px; width: auto; height: 30px; margin: auto">정보</button>
-                  <button class="btn btn-mint" onclick="open_req_order_modal(<?php echo $order->purchase_product_id; ?>, <?php echo SHOP_ORDER_REQ_TYPE_CHANGE; ?>)"
-                          style="font-size: 10px; width: auto; height: 30px; margin: auto"><?php echo $this->crud_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CHANGE); ?></button>
-                  <button class="btn btn-danger" onclick="open_req_order_modal(<?php echo $order->purchase_product_id; ?>, <?php echo SHOP_ORDER_REQ_TYPE_RETURN; ?>)"
-                          style="font-size: 10px; width: auto; height: 30px; margin: auto"><?php echo $this->crud_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_RETURN); ?></button>
+                  <? if ($ship_status == SHOP_SHIPPING_STATUS_COMPLETED) { ?>
+                    <button class="btn btn-mint" onclick="open_req_order_modal(<?php echo $order->purchase_product_id; ?>, <?php echo SHOP_ORDER_REQ_TYPE_CHANGE; ?>)"
+                            style="font-size: 10px; width: auto; height: 30px; margin: auto"><?php echo $this->crud_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CHANGE); ?></button>
+                    <button class="btn btn-danger" onclick="open_req_order_modal(<?php echo $order->purchase_product_id; ?>, <?php echo SHOP_ORDER_REQ_TYPE_RETURN; ?>)"
+                            style="font-size: 10px; width: auto; height: 30px; margin: auto"><?php echo $this->crud_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_RETURN); ?></button>
+                  <? } ?>
                 </td>
               </tr>
             <?php }?>

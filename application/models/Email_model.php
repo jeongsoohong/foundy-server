@@ -27,7 +27,6 @@ class Email_model extends CI_Model
     if (isset($data) == false || empty($data) == true) {
       return false;
     }
-    log_message('debug', '[email] item_img_url['.$item_img_url.']');
 //    $data->subject = str_replace('{{SHIPPING_STATUS}}',$shipping_status, $data->subject);
     $data->email_body = str_replace('{{SHIPPING_STATUS}}',$shipping_status, $data->email_body);
     $data->email_body = str_replace('{{PURCHASE_CODE}}',$purchase_code, $data->email_body);
@@ -36,8 +35,6 @@ class Email_model extends CI_Model
     $data->email_body = str_replace('{{SHIPPING_CODE}}',$shipping_code, $data->email_body);
     $data->email_body = str_replace('{{ITEM_IMG_URL}}',$item_img_url, $data->email_body);
   
-    log_message('debug', '[email] email_body['.$data->email_body.']');
-    
     $data->to = $email;
     $this->sendmail($data);
     
@@ -49,7 +46,6 @@ class Email_model extends CI_Model
     if (isset($data) == false || empty($data) == true) {
       return false;
     }
-    log_message('debug', '[email] item_img_url['.$item_img_url.']');
 //    $data->subject = str_replace('{{SHIPPING_STATUS}}',$shipping_status, $data->subject);
     $data->email_body = str_replace('{{ORDER_STATUS}}',$order_status, $data->email_body);
     $data->email_body = str_replace('{{PURCHASE_CODE}}',$purchase_code, $data->email_body);
@@ -58,7 +54,6 @@ class Email_model extends CI_Model
     $data->email_body = str_replace('{{REDIRECT_URL}}',$redirect_url, $data->email_body);
     $data->email_body = str_replace('{{ITEM_IMG_URL}}',$item_img_url, $data->email_body);
   
-    log_message('debug', '[email] email_body['.$data->email_body.']');
     $data->to = $email;
     $this->sendmail($data);
     
