@@ -175,7 +175,8 @@ QUERY;
     $result = json_decode(curl_exec($ch));
     
     if ($result->status != 200) {
-      $this->crud_model->alert_exit('토큰에 문제가 발생했습니다. 관리자에게 문의바랍니다.(1)');
+      $this->crud_model->alert_exit('토큰에 문제가 발생했습니다. 관리자에게 문의바랍니다.'.
+        '(status:'.$result->status.',code:'.$result->code.',message:'.$result->message.')');
     }
     
     $access_token = $result->data->token;
