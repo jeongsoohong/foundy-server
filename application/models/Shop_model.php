@@ -11,7 +11,6 @@ class Shop_model extends CI_Model
   function __construct()
   {
     parent::__construct();
-    
   }
   
   function get($shop_id) {
@@ -312,7 +311,7 @@ QUERY;
     
     return $purchase_info->purchase_code;
   }
-  
+ 
   function get_shipping_req_str($type) {
     switch($type) {
       case SHOP_SHIPPING_REQ_DEFAULT : return '배송시 요청 사항을 선택해 주세요.';

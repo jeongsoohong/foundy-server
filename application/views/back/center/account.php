@@ -61,10 +61,6 @@
             <dt>전화번호</dt>
             <dd class="detail_phone">
               <input class="name_space" id="center-phone" type="text" style="height: 32px;" value="<?php echo $center->phone; ?>">
-              <!--              <p>-</p>-->
-              <!--              <input class="name_space" type="text" style="height: 32px;">-->
-              <!--              <p>-</p>-->
-              <!--              <input class="name_space" type="text" style="height: 32px;">-->
             </dd><br>
             <dt>기본 주소</dt>
             <dd class="detail_address">
@@ -276,7 +272,7 @@
     </section>
   </div>
 </div>
-<script src="//stackpath.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=<?= APIKEY_KAKAO_JAVASCRIPT; ?>&libraries=services"></script>
 <script type="text/javascript">
   function open_kakao_map() {

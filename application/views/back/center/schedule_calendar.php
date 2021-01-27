@@ -41,7 +41,6 @@
   <?php
   for ($day = 1, $i = 0; $i < $total_week; $i++) { ?>
     <tr>
-      <!-- 1일부터 7일 (한 주) -->
       <?php for ($week = 0; $week < 7; $week++) { ?>
         <td>
           <div class="days-wrap clearfix">

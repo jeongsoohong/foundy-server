@@ -1512,8 +1512,7 @@
     // let weekly = [0,0,0,0,0,0,0];
     let weekly = [];
     $.each($('#weekly').find('input[type=checkbox]:checked'), function(i,v){
-      console.log($(v).data('target'));
-      // weekly[$('v').data('target')] = 1;
+      // console.log($(v).data('target'));
       weekly[i] = $(v).data('target');
     });
     
@@ -1527,7 +1526,7 @@
     data['teacher_name'] = $('#selboxDirect').val();
     data['schedule_title'] = $('#schedule_title').val();
     data['reservable'] = $('#schedule-reservable').prop('checked') ? 1 : 0;
-    data['reservable_number'] = parseInt($('#reservable_number').val());
+    data['reservable_number'] = parseInt($('#reservable_number').val() === '' ? 0 : $('#reservable_number').val());
     data['tickets'] = JSON.stringify(tickets);
     data['open_immediate'] = $('#open-immediate').prop('checked') ? 1 : 0;
     if (data['open_immediate']) {

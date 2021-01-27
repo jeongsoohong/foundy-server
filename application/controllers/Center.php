@@ -123,8 +123,8 @@ class Center extends CI_Controller
           
           if ($this->email_model->get_user_approval_code_data($code, $email)) {
             
-            $this->session->set_userdata('shop_approval_email', $email);
-            $this->session->set_userdata('shop_approval_code', $code);
+            $this->session->set_userdata('center_approval_email', $email);
+            $this->session->set_userdata('center_approval_code', $code);
             echo 'done';
           } else {
             echo '이메일 전송에 문제가 발생했습니다!';
@@ -152,8 +152,8 @@ class Center extends CI_Controller
         $email = $this->input->post('email');
         $code = $this->input->post('approval_code');
   
-        $approval_email = $this->session->userdata('shop_approval_email');
-        $approval_code = $this->session->userdata('shop_approval_code');
+        $approval_email = $this->session->userdata('center_approval_email');
+        $approval_code = $this->session->userdata('center_approval_code');
   
         if ($email != $approval_email) {
           $result['status'] = 'fail';
@@ -296,7 +296,7 @@ class Center extends CI_Controller
     echo 'done';
   }
   
-  function account($para1 = '', $para2 = '', $para3 = '')
+  public function account($para1 = '', $para2 = '', $para3 = '')
   {
     if ($this->is_logged() == false) {
       redirect(base_url() . 'center', 'refresh');
@@ -483,6 +483,8 @@ class Center extends CI_Controller
           echo "done";
         }
       
+      } else {
+        $this->error();
       }
       
     } else if ($para1 == 'info') {
@@ -1238,15 +1240,15 @@ QUERY;
         $this->form_validation->set_rules('weeklys', 'weeklys', 'trim|required|max_length[100]');
         $this->form_validation->set_rules('teacher_id', 'teacher_id', 'trim|required|max_length[10]');
         $this->form_validation->set_rules('reservable', 'reservable', 'trim|required|is_natural|less_than_equal_to[1]');
-        $this->form_validation->set_rules('reservable_number', 'reservable_number', 'trim|required|is_natural|max_length[5]');
-        $this->form_validation->set_rules('tickets', 'tickets', 'trim|required|max_length[100]');
-        $this->form_validation->set_rules('open_immediate', 'open_immediate', 'trim|required|is_natural|less_than_equal_to[1]');
-        $this->form_validation->set_rules('reserve_open_hour', 'reserve_open_hour', 'trim|required|is_natural|max_length[5]');
-        $this->form_validation->set_rules('reserve_close_hour', 'reserve_close_hour', 'trim|required|is_natural|max_length[5]');
-        $this->form_validation->set_rules('reserve_cancel_open_hour', 'reserve_cancel_open_hour', 'trim|required|is_natural|max_length[5]');
-        $this->form_validation->set_rules('reserve_cancel_close_hour', 'reserve_cancel_close_hour', 'trim|required|is_natural|max_length[5]');
-        $this->form_validation->set_rules('waitable', 'waitable', 'trim|required|is_natural|less_than_equal_to[1]');
-        $this->form_validation->set_rules('waitable_number', 'waitable_number', 'trim|required|is_natural|max_length[5]');
+        $this->form_validation->set_rules('reservable_number', 'reservable_number', 'trim|is_natural|max_length[5]');
+        $this->form_validation->set_rules('tickets', 'tickets', 'trim|max_length[100]');
+        $this->form_validation->set_rules('open_immediate', 'open_immediate', 'trim|is_natural|less_than_equal_to[1]');
+        $this->form_validation->set_rules('reserve_open_hour', 'reserve_open_hour', 'trim|is_natural|max_length[5]');
+        $this->form_validation->set_rules('reserve_close_hour', 'reserve_close_hour', 'trim|is_natural|max_length[5]');
+        $this->form_validation->set_rules('reserve_cancel_open_hour', 'reserve_cancel_open_hour', 'trim|is_natural|max_length[5]');
+        $this->form_validation->set_rules('reserve_cancel_close_hour', 'reserve_cancel_close_hour', 'trim|is_natural|max_length[5]');
+        $this->form_validation->set_rules('waitable', 'waitable', 'trim|is_natural|less_than_equal_to[1]');
+        $this->form_validation->set_rules('waitable_number', 'waitable_number', 'trim|is_natural|max_length[5]');
 
         if ($this->form_validation->run() == FALSE) {
           echo '<br>' . validation_errors();

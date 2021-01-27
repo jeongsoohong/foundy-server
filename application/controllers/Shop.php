@@ -1094,6 +1094,7 @@ QUERY;
       $page_data['product_info'] = $product_info;
       $page_data['product_id_info'] = $product_id_info;
       $this->load->view('back/shop/order_view', $page_data);
+      
     } elseif ($para1 == 'update') {
   
       if ($para2 == 'ship') {
