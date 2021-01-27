@@ -137,6 +137,11 @@
     padding: 0 10px 24px !important;
     height: 340px;
   }
+  @media(min-width: 428px) {
+    .shop-item {
+      height: auto;
+    }
+  }
   .shop-best-items {
     border: 0 !important;
   }
