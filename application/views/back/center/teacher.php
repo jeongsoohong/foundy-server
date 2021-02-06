@@ -996,7 +996,13 @@
     
     // selbox-wrap 이벤트
     $(function(){
+      <? if (count($teachers) == 0) { ?>
+      $("#selboxDirect").show();
+      $("#teach").css("margin-bottom", "48px");
+      <? } else { ?>
       $("#selboxDirect").hide();
+      $("#teach").css("margin-bottom", "24px");
+      <? } ?>
       $("#selbox").change(function() {
         if($("#selbox").val() === "-1") {
           // $("#selboxDirect").val('');
