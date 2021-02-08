@@ -45,6 +45,10 @@ foreach($center_data as $row)
               <td class="custom_td"><?php echo $row['title'];?></td>
             </tr>
             <tr>
+              <th class="custom_td"><?php echo ('아이디');?></th>
+              <td class="custom_td"><?php echo $user_data->email;?></td>
+            </tr>
+            <tr>
               <th class="custom_td"><?php echo ('전화번호');?></th>
               <td class="custom_td"><?php echo $row['phone']; ?></td>
             </tr>

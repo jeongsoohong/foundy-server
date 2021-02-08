@@ -815,7 +815,9 @@ QUERY;
 
     } else if ($para1 == 'view') {
 
-      $page_data['center_data'] = $this->db->get_where('center', array('center_id' => $para2))->result_array();
+      $center_data = $this->db->get_where('center', array('center_id' => $para2))->result_array();
+      $page_data['user_data'] = $this->db->get_where('user', array('user_id' => $center_data[0]['user_id']))->row();
+      $page_data['center_data'] = $center_data;
       $this->load->view('back/admin/center_view', $page_data);
 
     } else if ($para1 == 'delete') {
@@ -907,7 +909,120 @@ QUERY;
       $this->load->view('back/index', $page_data);
     }
   }
-
+  
+  /* studio Management */
+  function studio($para1 = '', $para2 = '', $para3 = '')
+  {
+    // for login
+    $page_data['control'] = "admin";
+    
+    if ($this->is_logged() == false) {
+      redirect(base_url() . 'admin');
+    }
+    
+    if ($para1 == 'list') {
+      
+      if ($para2 == 'approval') {
+        $query = <<<QUERY
+select * from studio where activate=0 or activate=2 order by studio_id desc
+QUERY;
+        $page_data['all_studios'] = $this->db->query($query)->result_array();
+      } else {
+        $this->db->order_by('studio_id', 'desc');
+        $page_data['all_studios'] = $this->db->get_where('studio', array('activate' => 1))->result_array();
+      }
+      $this->load->view('back/admin/studio_list', $page_data);
+      
+    } else if ($para1 == 'view') {
+      
+      $page_data['studio_data'] = $this->db->get_where('studio', array('studio_id' => $para2))->result_array();
+      $this->load->view('back/admin/studio_view', $page_data);
+      
+    } else if ($para1 == 'delete') {
+      
+      $this->db->where('studio_id', $para2);
+      $this->db->delete('studio');
+      echo 'done';
+      
+    } else if ($para1 == 'approval') {
+      
+      $page_data['studio_id'] = $para2;
+      $row = $this->db->get_where('studio', array('studio_id' => $para2))->row();
+      $page_data['activate'] = $row->activate;
+      $page_data['user_id'] = $row->user_id;
+      $this->load->view('back/admin/studio_approval', $page_data);
+      
+    } else if ($para1 == 'approval_set') {
+      
+      $studio_id = $para2;
+      $user_id = $para3;
+      
+      $approval = $this->input->post('approval');
+      if ($approval == '0') {
+        $activate = 0;
+      } else if ($approval == '1') {
+        $activate = 1;
+      } else {
+        $activate = 2;
+      }
+      
+      $query = <<<QUERY
+UPDATE studio set activate={$activate},approval_at=NOW() where studio_id={$studio_id}
+QUERY;
+      $this->db->query($query);
+      
+      $query = <<<QUERY
+UPDATE studio_category set activate={$activate} where studio_id={$studio_id}
+QUERY;
+      $this->db->query($query);
+      
+      $query = <<<QUERY
+select count(*) as cnt from studio where user_id={$user_id} and activate=1
+QUERY;
+      $studio_cnt = $this->db->query($query)->row()->cnt;
+      
+      $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
+      
+      if ($studio_cnt > 0) {
+        $user_type = ($user_data->user_type | USER_TYPE_STUDIO);
+        $query = <<<QUERY
+UPDATE user set user_type={$user_type} where user_id={$user_id}
+QUERY;
+        $this->db->query($query);
+      } else {
+        $user_type = ($user_data->user_type & ~USER_TYPE_STUDIO);
+        $query = <<<QUERY
+UPDATE user set user_type={$user_type} where user_id={$user_id}
+QUERY;
+        $this->db->query($query);
+      }
+      
+      if ($activate == 1) {
+        $user_id = $this->db->get_where('studio', array('studio_id' => $studio_id))->row()->user_id;
+        $email = $this->db->get_where('user', array('user_id' => $user_id))->row()->email;
+        $this->email_model->get_center_approval_data($email);
+//        $this->coupon_model->send_coupon_data(COUPON_USER_TYPE_CENTER, $user_data);
+      } else if($activate == 2) {
+        $user_id = $this->db->get_where('studio', array('studio_id' => $studio_id))->row()->user_id;
+        $email = $this->db->get_where('user', array('user_id' => $user_id))->row()->email;
+        $this->email_model->get_center_reject_data($email);
+      }
+      
+      echo 'done';
+      
+    }else {
+      
+      if ($para1 == 'approval_list') {
+        $page_data['page_name'] = "studio";
+        $page_data['list_type'] = "approval";
+      } else {
+        $page_data['page_name'] = "studio";
+        $page_data['list_type'] = "";
+      }
+      
+      $this->load->view('back/index', $page_data);
+    }
+  }
   /* teacher Management */
   function teacher($para1 = '', $para2 = '', $para3 = '')
   {
