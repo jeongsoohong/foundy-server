@@ -74,7 +74,7 @@ if ($server_check == true &&
   ?>
 <? } else if ($this->app_model->is_app() == false && $this->agent->is_mobile()) {
   $enroll_app_cookie = $this->cookie_model->get_cookie('enroll_app_time');
-  if (empty($enroll_app_cookie) == true || $enroll_app_cookie < strtotime('-1 day')) {
+  if ($page_name == 'shop/cart' || empty($enroll_app_cookie) == true || $enroll_app_cookie < strtotime('-1 day')) {
     ?>
 <style>
   #enroll_app {
@@ -97,7 +97,7 @@ if ($server_check == true &&
     <div style="width: 240px; height: 180px; text-align: center; position: absolute; left: 50%; top: 50%; margin-left: -120px; margin-top: -90px;">
       <p style="color: #fff; font-size: 14px; font-weight: bold; line-height: 1.5; margin-bottom: 20px;">
         파운디 앱을 설치하시면,
-        <br>더욱 편리하게 보실 수 있습니다!
+        <br>쇼핑 간편결제까지<br> 더욱 편리하게 사용하실 수 있습니다.
       </p>
       <h1 style="width: 100%; height: 60px; border-radius: 30px; background-color: #ad796d; line-height: 60px;">
         <a href="javascript:void(0)" onclick="appLinkAndInstall('<?php echo build_url($this->uri, $_GET); ?>')" style="display: block; height: inherit; line-height: inherit; text-decoration: none; color: #fff; font-size: 18px; font-weight: bold;">

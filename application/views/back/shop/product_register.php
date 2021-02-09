@@ -1469,56 +1469,64 @@
     ret = true;
     if (item_option_checked === true) {
       $.each($('#item-option-row').find('tbody').find('tr'), function(index,item) {
-        if ($(item).find('.item-option-name').val() === '') {
-          alert('옵션명을 정확히 입력해 주세요.');
-          $('.item-option-header').addClass('header-required');
-          ret = false;
+
+        // console.log(index);
+        // console.log($(item).css('display'));
+  
+        if (index >= item_option_count) {
           return false;
-        }
-        if ($(item).find('.item-require').is(':checked') === true) {
-          item_option_requires[item_option_requires_cnt] = Object();
-          item_option_requires[item_option_requires_cnt].idx = item_option_requires_cnt;
-          item_option_requires[item_option_requires_cnt].item_option_require = $(item).find('.item-require').is(':checked');
-          item_option_requires[item_option_requires_cnt].item_option_name = $(item).find('.item-option-name').val();
-          item_option_requires[item_option_requires_cnt].item_option_vals = Array();
-          $.each($(item).find('.item-option-val-detail'), function(idx, val) {
-            if ($(val).find('.item-option-value').val() === '') {
-              alert('옵션값을 정확히 입력해 주세요.');
-              $('.item-option-header').addClass('header-required');
-              ret = false;
-              return false;
-            }
-            item_option_requires[item_option_requires_cnt].item_option_vals[idx] = Object();
-            item_option_requires[item_option_requires_cnt].item_option_vals[idx].idx = idx;
-            item_option_requires[item_option_requires_cnt].item_option_vals[idx].value = $(val).find('.item-option-value').val();
-            item_option_requires[item_option_requires_cnt].item_option_vals[idx].price = $(val).find('.item-option-price').val();
-            if (item_option_requires[item_option_requires_cnt].item_option_vals[idx].price === '') {
-              item_option_requires[item_option_requires_cnt].item_option_vals[idx].price = 0;
-            }
-          });
-          item_option_requires_cnt += 1;
         } else {
-          item_option_others[item_option_others_cnt] = Object();
-          item_option_others[item_option_others_cnt].idx = item_option_others_cnt;
-          item_option_others[item_option_others_cnt].item_option_require = $(item).find('.item-require').is(':checked');
-          item_option_others[item_option_others_cnt].item_option_name = $(item).find('.item-option-name').val();
-          item_option_others[item_option_others_cnt].item_option_vals = Array();
-          $.each($(item).find('.item-option-val-detail'), function(idx, val) {
-            if ($(val).find('.item-option-value').val() === '') {
-              alert('옵션값을 정확히 입력해 주세요.');
-              $('.item-option-header').addClass('header-required');
-              ret = false;
-              return false;
-            }
-            item_option_others[item_option_others_cnt].item_option_vals[idx] = Object();
-            item_option_others[item_option_others_cnt].item_option_vals[idx].idx = idx;
-            item_option_others[item_option_others_cnt].item_option_vals[idx].value = $(val).find('.item-option-value').val();
-            item_option_others[item_option_others_cnt].item_option_vals[idx].price = $(val).find('.item-option-price').val();
-            if (item_option_others[item_option_others_cnt].item_option_vals[idx].price === '') {
-              item_option_others[item_option_others_cnt].item_option_vals[idx].price = 0;
-            }
-          });
-          item_option_others_cnt += 1;
+          if ($(item).find('.item-option-name').val() === '') {
+            alert('옵션명을 정확히 입력해 주세요.');
+            $('.item-option-header').addClass('header-required');
+            ret = false;
+            return false;
+          }
+          if ($(item).find('.item-require').is(':checked') === true) {
+            item_option_requires[item_option_requires_cnt] = Object();
+            item_option_requires[item_option_requires_cnt].idx = item_option_requires_cnt;
+            item_option_requires[item_option_requires_cnt].item_option_require = $(item).find('.item-require').is(':checked');
+            item_option_requires[item_option_requires_cnt].item_option_name = $(item).find('.item-option-name').val();
+            item_option_requires[item_option_requires_cnt].item_option_vals = Array();
+            $.each($(item).find('.item-option-val-detail'), function(idx, val) {
+              if ($(val).find('.item-option-value').val() === '') {
+                alert('옵션값을 정확히 입력해 주세요.');
+                $('.item-option-header').addClass('header-required');
+                ret = false;
+                return false;
+              }
+              item_option_requires[item_option_requires_cnt].item_option_vals[idx] = Object();
+              item_option_requires[item_option_requires_cnt].item_option_vals[idx].idx = idx;
+              item_option_requires[item_option_requires_cnt].item_option_vals[idx].value = $(val).find('.item-option-value').val();
+              item_option_requires[item_option_requires_cnt].item_option_vals[idx].price = $(val).find('.item-option-price').val();
+              if (item_option_requires[item_option_requires_cnt].item_option_vals[idx].price === '') {
+                item_option_requires[item_option_requires_cnt].item_option_vals[idx].price = 0;
+              }
+            });
+            item_option_requires_cnt += 1;
+          } else {
+            item_option_others[item_option_others_cnt] = Object();
+            item_option_others[item_option_others_cnt].idx = item_option_others_cnt;
+            item_option_others[item_option_others_cnt].item_option_require = $(item).find('.item-require').is(':checked');
+            item_option_others[item_option_others_cnt].item_option_name = $(item).find('.item-option-name').val();
+            item_option_others[item_option_others_cnt].item_option_vals = Array();
+            $.each($(item).find('.item-option-val-detail'), function(idx, val) {
+              if ($(val).find('.item-option-value').val() === '') {
+                alert('옵션값을 정확히 입력해 주세요.');
+                $('.item-option-header').addClass('header-required');
+                ret = false;
+                return false;
+              }
+              item_option_others[item_option_others_cnt].item_option_vals[idx] = Object();
+              item_option_others[item_option_others_cnt].item_option_vals[idx].idx = idx;
+              item_option_others[item_option_others_cnt].item_option_vals[idx].value = $(val).find('.item-option-value').val();
+              item_option_others[item_option_others_cnt].item_option_vals[idx].price = $(val).find('.item-option-price').val();
+              if (item_option_others[item_option_others_cnt].item_option_vals[idx].price === '') {
+                item_option_others[item_option_others_cnt].item_option_vals[idx].price = 0;
+              }
+            });
+            item_option_others_cnt += 1;
+          }
         }
       });
     }
@@ -1602,6 +1610,14 @@
     formData.append('item_desc', item_desc);
     formData.append('purchase_max_cnt', purchase_max_cnt);
     formData.append('bundle_shipping_cnt', bundle_shipping_cnt);
+    
+    // console.log(item_option_requires_cnt);
+    // console.log(item_option_requires);
+    // console.log(item_option_others_cnt);
+    // console.log(item_option_others);
+  
+    // $("#loading_set").fadeOut(500);
+    // return false;
 
     $.ajax({
       url: '<?php echo base_url()."shop/product/do_register/$edit"; ?>', // form action url

@@ -894,7 +894,7 @@
     let user_save = $('#purchase-user-save').prop('checked');
     let user_address = '';
 
-    console.log(user_save);
+    // console.log(user_save);
     if (user_postcode !== '' && user_address_1 !== '') {
       user_address = '(' + user_postcode + ')' + ' ' + user_address_1 + ' ' + user_address_2;
     }
@@ -1069,7 +1069,11 @@
       application_id: "<?= APIKEY_BOOTPAY_WEB; ?>",
       name: '<?php echo $cart_items[0]->product->item_name.' 등 '.count($cart_items).' 건'; ?>',
       pg: 'payapp',
+      <? if ($this->app_model->is_app()) { ?>
       method: '', //결제수단, 입력하지 않으면 결제수단 선택부터 화면이 시작합니다.
+      <? } else { ?>
+      method: 'card', //결제수단, 입력하지 않으면 결제수단 선택부터 화면이 시작합니다.
+      <? } ?>
       show_agree_window: 1, // 부트페이 정보 동의 창 보이기 여부
       items: items,
       user_info: user_info,
@@ -1077,6 +1081,7 @@
       params: {purchase_info: purchase_info, receiver_info: receiver_info, sender_info: sender_info},
       account_expire_at: '', // 가상계좌 입금기간 제한 ( yyyy-mm-dd 포멧으로 입력해주세요. 가상계좌만 적용됩니다. )
       extra: {
+        popup: false,
         start_at: '', // 정기 결제 시작일 - 시작일을 지정하지 않으면 그 날 당일로부터 결제가 가능한 Billing key 지급
         end_at: '', // 정기결제 만료일 -  기간 없음 - 무제한
         vbank_result: 0, // 가상계좌 사용시 사용, 가상계좌 결과창을 볼지(1), 말지(0), 미설정시 봄(1)
@@ -1087,14 +1092,14 @@
       }
     }).error(function (data) {
       $("#loading_set").fadeOut(500);
-      alert('문제가 발생했습니다 - ' + data);
-      console.log('error : ' + data);
+      alert('문제가 발생했습니다 - ' + JSON.stringify(data));
+      console.log('error : ' + JSON.stringify(data));
     }).cancel(function (data) {
       $("#loading_set").fadeOut(500);
-      console.log('cancel : ' + data);
+      console.log('cancel : ' + JSON.stringify(data));
       purchase_cancel();
     }).ready(function (data) {
-      console.log('ready :' + data);
+      console.log('ready :' + JSON.stringify(data));
     }).confirm(function (data) {
 
       //결제가 실행되기 전에 수행되며, 주로 재고를 확인하는 로직이 들어갑니다.
@@ -1110,7 +1115,7 @@
         enable = false;
       }
 
-      console.log('confirm : ' + data);
+      console.log('confirm : ' + JSON.stringify(data));
 
       if (enable) {
 
@@ -1150,7 +1155,7 @@
     }).close(function (data) {
       // 결제창이 닫힐때 수행됩니다. (성공,실패,취소에 상관없이 모두 수행됨)
       $("#loading_set").fadeOut(500);
-      console.log('close : ' + data);
+      console.log('close : ' + JSON.stringify(data));
       if (is_done === false) {
         purchase_cancel();
       }
