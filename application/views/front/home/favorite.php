@@ -58,7 +58,7 @@
           <br><span style="display: block; font-size: 13px; color: #333;"><?php echo $teacher->name; ?></span>
         </td>
         <td style="width: 32px; text-align: right;">
-          <a href="<?php echo base_url().'home/teacher/profile/'.$teacher->user_id.'?nav=schedule'; ?>">
+          <a href="<?php echo base_url().'home/teacher/profile/'.$teacher->teacher_id.'?nav=schedule'; ?>">
             <div style="width: 32px; height: 32px; border-radius: 50%; background-color: #8B5949; line-height: 32px; text-align: center;">
               <img src="<?php echo base_url(); ?>template/icon/ic_calendar.png" width="16" height="16" style="margin-bottom: 6px;">
             </div>

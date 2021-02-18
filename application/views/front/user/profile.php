@@ -210,7 +210,7 @@
           <table class="col-md-12" style="width: 100%;">
             <tbody>
             <tr style="height: 20px">
-              <td rowspan="3" style="text-align: center">
+              <td rowspan="3" style="text-align: center; vertical-align: top;">
                 <div class="media-object img-bg" id="blah" style="margin: auto; border-radius: 50%;
                   background-size: cover; background-position-x: center; background-position-y: center;
                   width: 60px; height: 60px; background-image: url('<?php
@@ -227,12 +227,68 @@
               </td>
               <td style="width: 10%; text-align: center;">
                 <a href="javascript:void(0);">
-                  <span class="profile-edit" data-target='profile-edit' style="color: grey; padding-right: 20px">
-                    <img src="<?php echo base_url(); ?>uploads/icon/dots.png" alt="" style="width: 10px; height: 10px">
-                  </span>
+<!--                  <span class="profile-edit" data-target='profile-edit' style="color: grey; padding-right: 20px">-->
+<!--                    <img src="--><?php //echo base_url(); ?><!--uploads/icon/dots.png" alt="" style="width: 10px; height: 10px">-->
+<!--                  </span>-->
+                  <button class="post__more">
+                    <img src="<?= base_url();?>template/icon/ic_more_horizon.png" width="20" height="5" class="more--icon">
+                    <script>
+                      $(function(){
+                        // console.log(1);
+                        $('.post__more').click(function(){
+                          $('.post__edit').toggle();
+                        })
+                      })
+                    </script>
+                  </button>
+                  <div class="post__edit">
+                    <button class="edit--modify" onclick="go_edit_profile()">수정</button>
+                    <!--                                      <button class="edit--remove" onclick="open_del_video()">삭제</button>-->
+                  </div>
+                  <style type="text/css">
+                    .more-icon, .edit--modify, .edit--remove{
+                      outline: none;
+                      border: 0;
+                      background: transparent;
+                      padding: 0;
+                    }
+                    .post__more {
+                      background: transparent;
+                      padding: 0;
+                      position: absolute;
+                      width: 40px;
+                      height: 40px;
+                      margin-top: -8px;
+                      right: 16px;
+                      /*top: 20px;*/
+                      text-align: right;
+                      border : none;
+                    }
+                    .more--icon {
+                      opacity: 0.3;
+                    }
+                    .post__edit {
+                      display: none;
+                      position: absolute;
+                      top: 38px;
+                      right: 15px;
+                      height: 28px;
+                    }
+                    .post__edit button {
+                      position: relative;
+                      width: 40px;
+                      height: 24px;
+                      background-color: #333;
+                      color: #fff;
+                      font-size: 11px;
+                      font-weight: bold;
+                      box-sizing: border-box;
+                      border-radius: 4px;
+                    }
+                  </style>
                 </a>
-                <div id="profile-edit">
-                </div>
+<!--                <div id="profile-edit">-->
+<!--                </div>-->
               </td>
             </tr>
             <tr style="height: 20px">
@@ -263,6 +319,35 @@
             </tr>
             <tr style="height: 20px">
               <td style="width: 70%">
+                <? if (($user_type & USER_TYPE_TEACHER) && !($user_type & USER_TYPE_STUDIO)) { ?>
+                  <a href="#profile_content" class="enroll_studio pnav_studio_register">온라인 스튜디오 신청하기</a>
+                  <style type="text/css">
+                    .enroll_studio {
+                      display: block;
+                      width: 150px;
+                      height: 32px;
+                      background-color: #2d8cff;
+                      margin: 10px 0 0 10px;
+                      color: #fff;
+                      font-size: 12px;
+                      font-weight: bold;
+                      letter-spacing: -0.09em;
+                      line-height: 32px;
+                      text-align: center;
+                      border-radius: 4px;
+                    }
+                  </style>
+                  <script>
+                    $(function() {
+                      $('.pnav_studio_register').on('click',function(){
+                        $("#profile_content").html(loading_set);
+                        $("#profile_content").load("<?php echo base_url()?>home/user/studio_register");
+                        $(".pleft_nav").find("li").removeClass("active");
+                        $(".pnav_studio_register").find("li").addClass("active");
+                      });
+                    })
+                  </script>
+                <? } ?>
               </td>
               <td style="width: 10%">
               </td>
@@ -309,7 +394,7 @@
           <div class="widget">
             <ul class="profile_ul" style="padding-left: 30px !important; padding-right: 30px !important;">
               <li>
-                <a href="<?php echo base_url(); ?>home/teacher/profile/<?php echo $user_id ?>" style="position: inherit;">
+                <a href="<?php echo base_url(); ?>home/teacher/profile/<?php echo $my_teacher->teacher_id; ?>" style="position: inherit;">
                   <?php echo $my_teacher->name; ?>&nbsp;강사님 페이지 바로가기
                   <span class="pull-right" style="color: grey;">
                     <i class="fa fa-angle-right"></i>
@@ -387,7 +472,7 @@
                           </span>
                         </td>
                         <td style="width: 32px; text-align: right;">
-                          <a href="<?php echo base_url().'home/teacher/profile/'.$teacher->user_id; ?>">
+                          <a href="<?php echo base_url().'home/teacher/profile/'.$teacher->teacher_id; ?>">
                             <div style="width: 32px; height: 32px; border-radius: 50%; background-color: #8B5949; line-height: 32px; text-align: center;">
                               <img src="<?= base_url(); ?>template/icon/ic_calendar.png" width="16" height="16" style="margin-bottom: 7px;">
                             </div>
@@ -563,6 +648,10 @@
   }
   function closePop() {
     $('#profile-edit').hide();
+  }
+  
+  function go_edit_profile() {
+    $('.pnav_edit_profile').click();
   }
   
   $(document).ready(function() {

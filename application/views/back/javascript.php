@@ -7,7 +7,42 @@
     }
     return true;
   }
+
+  function isValidEmailAddress(emailAddress) {
+    var pattern = new RegExp(/^(("[\w-+\s]+")|([\w-+]+(?:\.[\w-+]+)*)|("[\w-+\s]+")([\w-+]+(?:\.[\w-+]+)*))(@((?:[\w-+]+\.)*\w[\w-+]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][\d]\.|1[\d]{2}\.|[\d]{1,2}\.))((25[0-5]|2[0-4][\d]|1[\d]{2}|[\d]{1,2})\.){2}(25[0-5]|2[0-4][\d]|1[\d]{2}|[\d]{1,2})\]?$)/i);
+    return pattern.test(emailAddress);
+  }
+
+  function isValidHttpUrl(string) {
+    let url;
+    try {
+      url = new URL(string);
+    } catch (_) {
+      return false;
+    }
   
+    return url.protocol === "http:" || url.protocol === "https:";
+  }
+  
+ function preview_img(input, target) {
+    if (input.files && input.files[0]) {
+      $("#" + target).html('');
+      $(input.files).each(function () {
+        var reader = new FileReader();
+        reader.readAsDataURL(this);
+        reader.onload = function (e) {
+          $("#" + target).append("<img class='thumb_img' alt='' src='" + e.target.result + "'>");
+        }
+      });
+      $('#' + target).show();
+    }
+  }
+
+  function move(id, target, delay) {
+    let offset = document.querySelector('#'+target).scrollHeight - document.querySelector('#'+id).scrollHeight;
+    $('#' + target).animate({scrollTop : offset}, delay); // target : 움직일 요소, delay : 속도
+  }
+
   function send_post(dataArr, url, reload = true, relocation = '', callback = null) {
     let formData = new FormData();
     for (let key in dataArr) {
@@ -40,10 +75,13 @@
               exit: 'animated lightSpeedOut'
             }
           });
+          console.log(reload);
+          console.log(relocation);
+          console.log(callback);
           if (reload === true) {
             setTimeout(function(){location.reload()}, 1000);
           } else if (relocation !== '') {
-            setTimeout(function(){location.location = relocation;}, 1000);
+            setTimeout(function(){location.href = relocation;}, 1000);
           } else if (callback !== null) {
             setTimeout(function(){callback(data)}, 1000);
           }

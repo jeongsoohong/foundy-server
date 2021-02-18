@@ -59,7 +59,7 @@ class Auth extends CI_Controller
   
       if ($for == 'forget_passwd' || $for == 'mobile_approval' || $for == 'register') {
         $domain_type = 'home';
-      } else if ($for == 'center_forget_passwd' || $for == 'shop_forget_passwd' || $for == 'admin_forget_passwd') {
+      } else if ($for == 'studio_forget_passwd' || $for == 'center_forget_passwd' || $for == 'shop_forget_passwd' || $for == 'admin_forget_passwd') {
         $domain_type = substr($for, 0, strlen($for) - 14);
       }
   
@@ -194,7 +194,7 @@ class Auth extends CI_Controller
   
       if ($for == 'forget_passwd' || $for == 'mobile_approval' || $for == 'register') {
         $domain_type = 'home';
-      } else if ($for == 'center_forget_passwd' || $for == 'shop_forget_passwd' || $for == 'admin_forget_passwd') {
+      } else if ($for == 'studio_forget_passwd' || $for == 'center_forget_passwd' || $for == 'shop_forget_passwd' || $for == 'admin_forget_passwd') {
         $domain_type = substr($for, 0, strlen($for) - 14);
       }
 
@@ -272,7 +272,7 @@ class Auth extends CI_Controller
       
       if ($for == 'forget_passwd' || $for == 'mobile_approval' || $for == 'register') {
         $domain_type = 'home';
-      } else if ($for == 'center_forget_passwd' || $for == 'shop_forget_passwd' || $for == 'admin_forget_passwd') {
+      } else if ($for == 'studio_forget_passwd' || $for == 'center_forget_passwd' || $for == 'shop_forget_passwd' || $for == 'admin_forget_passwd') {
         $domain_type = substr($for, 0, strlen($for) - 14);
       }
       

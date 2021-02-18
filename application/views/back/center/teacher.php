@@ -954,7 +954,7 @@
       $('.id_list').toggle();
       var display = $('.arrow_up').css('display');
       // console.log(display);
-      if(display == 'none'){
+      if(display === 'none'){
         $('.arrow_up').show().prev().hide();
       }
       else {

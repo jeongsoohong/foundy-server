@@ -52,7 +52,7 @@
     // console.log(email);
   
     if (validateEmail(email) === false) {
-      alert('옵바른 이메일 주소를 입력바랍니다');
+      alert('올바른 이메일 주소를 입력바랍니다');
       return false;
     }
     

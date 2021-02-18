@@ -1155,4 +1155,59 @@
     $('#schedule_alert_popup').show();
     $('body').css('overflow-y', 'hidden');
   }
+  function open_link_popup(id) {
+    $('#loading_set').show();
+    let formData = new FormData();
+    formData.append('id', id);
+    $.ajax({
+      url: "<?php echo base_url().'home/studio/schedule/reserve/link'; ?>",
+      type: 'POST', // form submit method get/post
+      dataType: 'html', // request type html/json/xml
+      data: formData, // serialize form data
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function(data) {
+        $("#loading_set").fadeOut(500);
+        if(IsJsonString(data) === true) {
+          open_alert_popup(JSON.parse(data).message);
+        } else {
+          $('#confirmed_linked').html(data);
+          $('#confirmed_linked').show();
+          $('body').css('overflow-y', 'hidden');
+        }
+      },
+      error: function(e) {
+        console.log(e);
+        alert(e);
+      }
+    });
+  }
+  function close_link_popup() {
+    $('#confirmed_linked').hide();
+    $('body').css('overflow-y', 'auto');
+  }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+<script>
+  function init_clipboard(id, callback = null) {
+    let btn = document.getElementById(id);
+    let clipboard = new Clipboard(btn);
+    clipboard.on('success', function(e) {
+      // console.info('Action:', e.action);
+      // console.info('Text:', e.text);
+      // console.info('Trigger:', e.trigger);
+      e.clearSelection();
+      if (callback !== null) {
+        callback(e);
+      }
+    });
+    clipboard.on('error', function(e) {
+      // console.error('Action:', e.action);
+      // console.error('Trigger:', e.trigger);
+      if (callback !== null) {
+        callback(e);
+      }
+    });
+  }
 </script>

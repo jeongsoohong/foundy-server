@@ -1232,13 +1232,9 @@ QUERY;
         exit;
       }
 
-//      $where = array('blog_id' => $blog_id);
-//      $upd = array('number_of_view' => 'number_of_view + 1');
-//      $this->db->update('blog', $upd, $where);
-      $query = <<<QUERY
-update blog set number_of_view=number_of_view+1 where blog_id={$blog_id}
-QUERY;
-      $this->db->query($query);
+      $this->db->where('blog_id', $blog_id);
+      $this->db->set('number_of_view', 'number_of_view + 1', false);
+      $this->db->update('blog');
 
       $this->page_data['blog'] = $blog;
       $this->page_data['category'] =  $category;
@@ -1368,6 +1364,7 @@ QUERY;
         $view_type != 'privacy' &&
         $view_type != 'center' &&
         $view_type != 'teacher' &&
+        $view_type != 'studio' &&
         $view_type != 'edit' &&
         $view_type != 'notify' &&
         $view_type != 'introduce' &&
@@ -1567,17 +1564,25 @@ QUERY;
 
     } elseif ($view_type == "center_register") {
 
-//      $user_id = $this->session->userdata('user_id');
-//      $query = <<<QUERY
-//SELECT center_id FROM user WHERE user_id={$user_id}
-//QUERY;
-//      $row = $this->db->query($query)->row();
-
-//      if ($row->center_id > 0) {
-//        echo ("<script>alert('이미신청하셨습니다'); window.location.href='{$base_url}home/user'</script>");
-//        exit;
-//      }
       $this->load->view('front/user/center_register');
+    
+    } elseif ($view_type == "studio_register") {
+  
+      $user_id = $this->session->userdata('user_id');
+      $query = <<<QUERY
+SELECT * FROM user WHERE user_id={$user_id}
+QUERY;
+      $user = $this->db->query($query)->row();
+      if ($user->user_type & USER_TYPE_STUDIO) {
+        echo ("<script>alert('이미신청하셨습니다'); window.location.href='{$base_url}home/user'</script>");
+        exit;
+      }
+      if (!($user->user_type & USER_TYPE_TEACHER)) {
+        echo ("<script>alert('강사 회원이 아닙니다!'); window.location.href='{$base_url}home/user'</script>");
+        exit;
+      }
+      
+      $this->load->view('front/user/studio_register');
 
     } elseif ($view_type == "teacher_register") {
 
@@ -1738,7 +1743,93 @@ QUERY;
 
         echo "done";
       }
+  
+    } elseif ($view_type == "do_studio_register") {
+  
+      $this->load->library('form_validation');
+      $this->form_validation->set_rules('title', 'studio-title', 'trim|required|max_length[32]');
+      $this->form_validation->set_rules('email', 'email', 'trim|required|valid_email|max_length[128]');
+      $this->form_validation->set_rules('about', 'about', 'trim|required|max_length[64]');
+      $this->form_validation->set_rules('instagram', 'instagram', 'trim|valid_url|max_length[256]');
+      $this->form_validation->set_rules('youtube', 'youtube', 'trim|valid_url|max_length[256]');
+  
+      if ($this->form_validation->run() == FALSE) {
+        echo '<br>' . validation_errors();
+      } else {
+        $user_id = $this->session->userdata('user_id');
+        $title = $this->input->post('title');
+        $email = $this->input->post('email');
+        $about = $this->input->post('about');
+        $instagram = $this->input->post('instagram');
+        $youtube = $this->input->post('youtube');
+        $categories_yoga = $this->input->post('category_yoga');
+        $categories_pilates = $this->input->post('category_pilates');
+    
+        if (!empty(($this->input->post('category_yoga_etc')))) {
+          if (isset($categories_yoga) && count($categories_yoga)) {
+            $categories_yoga = array_merge($categories_yoga, explode(' ', trim($this->input->post('category_yoga_etc'))));
+          } else {
+            $categories_yoga = explode(' ', trim($this->input->post('category_yoga_etc')));
+          }
+        }
+    
+        if (!empty($categories_yoga) && count($categories_yoga)) {
+          $categories_yoga = array_filter(array_map('trim', $categories_yoga));
+        }
+    
+        if (!empty(($this->input->post('category_pilates_etc')))) {
+          if (isset($categories_pilates) && count($categories_pilates)) {
+            $categories_pilates = array_merge($categories_pilates, explode(' ', trim($this->input->post('category_pilates_etc'))));
+          } else {
+            $categories_pilates = explode(' ', trim($this->input->post('category_pilates_etc')));
+          }
+        }
+    
+        if (!empty($categories_pilates) && count($categories_pilates)) {
+          $categories_pilates = array_filter(array_map('trim', $categories_pilates));
+        }
+    
+        if ((empty($categories_yoga) && empty($categories_pilates)) || (count($categories_yoga) == 0 && count($categories_pilates) == 0)) {
+          echo ("<script>alert('최소 하나의 분류를 선택해주세요');</script>");
+          exit;
+        }
+    
+        if (isset($instagram) == false || empty($instagram) == true) {
+          $instagram = null;
+        }
+        if (isset($youtube) == false || empty($youtube) == true) {
+          $youtube = null;
+        }
+    
+        $data = array(
+          'user_id' => $user_id,
+          'title' => $title,
+          'email' => $email,
+          'about' => $about,
+          'instagram' => $instagram,
+          'youtube' => $youtube,
+          'activate' => 0,
+        );
+        $this->db->set($data);
+        $this->db->set('create_at', 'NOW()', false);
+        $this->db->set('approval_at', 'NOW()', false);
+        $this->db->insert('studio');
+    
+        $studio_id = $this->db->insert_id();
+    
+        foreach ($categories_yoga as $cat) {
+          $cat = trim($cat);
+          $this->db->insert('studio_category', array('studio_id' => $studio_id, 'category' => $cat, 'type' => STUDIO_TYPE_YOGA, 'activate' => 0));
+        }
+    
+        foreach ($categories_pilates as $cat) {
+          $cat = trim($cat);
+          $this->db->insert('studio_category', array('studio_id' => $studio_id, 'category' => $cat, 'type' => STUDIO_TYPE_PILATES, 'activate' => 0));
+        }
 
+        echo "done";
+      }
+  
     } elseif ($view_type == "do_teacher_register") {
 
       $this->load->library('form_validation');
@@ -1895,6 +1986,8 @@ QUERY;
         $this->page_data['part'] = 'center_register';
       } else if ($view_type == 'teacher') {
         $this->page_data['part'] = 'teacher_register';
+      } else if ($view_type == 'studio') {
+        $this->page_data['part'] = 'studio_register';
       } else if ($view_type == 'edit') {
         $this->page_data['part'] = 'edit_profile';
       } else if ($view_type == 'notify') {
@@ -1943,20 +2036,27 @@ QUERY;
         $page = $_GET['page'];
         $filter = $_GET['filter'];
         $limit = 10;
-        $offset = 10 * ($page - 1);
+        if (isset($_GET['limit'])) {
+          $limit = $_GET['limit'];
+        }
+        $type = 'list';
+        if (isset($_GET['type'])) {
+          $type = $_GET['type'];
+        };
+        $offset = $limit * ($page - 1);
 
 //        echo "<script>alert('{$page}, {$limit}, {$offset}')</script>";
         
         if ($filter == 'ALL') {
           $this->db->where('activate', 1);
-          $video_data = $this->db->order_by('video_id', 'desc')->get('teacher_video', $limit, $offset)->result();
+          $youtube_classes = $this->db->order_by('video_id', 'desc')->get('teacher_video', $limit, $offset)->result();
         } else {
           $query = <<<QUERU
 select a.* from teacher_video a, teacher_video_category b
 where a.video_id=b.video_id and a.activate=1 and b.category='{$filter}'
 order by video_id desc limit {$offset},{$limit}
 QUERU;
-          $video_data = $this->db->query($query)->result();
+          $youtube_classes = $this->db->query($query)->result();
 
 //          $this->db->order_by('video_id', 'desc');
 //          $video_list = $this->db->get_where('teacher_video_category', array('category' => $filter), $limit, $offset)->result();
@@ -1972,7 +2072,8 @@ QUERU;
 //          }
         }
         
-        $this->page_data['video_data'] = $video_data;
+        $this->page_data['type'] = $type;
+        $this->page_data['youtube_classes'] = $youtube_classes;
         $this->load->view('front/find/class/list', $this->page_data);
         
       } else {
@@ -2002,7 +2103,158 @@ QUERU;
         $this->load->view('front/index', $this->page_data);
         
       }
+    
+    } else if ($view == 'teacher') {
+  
+      $type = $para2;
+      if ($type == 'list') {
+
+        if (isset($_GET['page']) == false || isset($_GET['filter']) == false) {
+          $this->crud_model->alert_exit('잘못된 접근입니다', base_url());
+        }
+        $page = $_GET['page'];
+        $filter = $_GET['filter'];
+        
+        $limit = $this->teacher_model::FIND_TEACHER_PAGE_SIZE;
+        $offset = $limit * ($page - 1);
+        
+        $search = '';
+        if (isset($_GET['search'])) {
+          $search = $_GET['search'];
+        }
+        
+        if (empty($search)) {
+          if ($filter == 'ALL') {
+            $where = array(
+              'activate' => 1
+            );
+            $teachers = $this->teacher_model->get_list($limit, $offset, 'teacher_id', 'desc', $where);
+          } else {
+            $query = <<<QUERY
+select distinct(teacher_id) from teacher_category where category='{$filter}'
+order by teacher_id desc limit {$offset},{$limit}
+QUERY;
+            $teachers = $this->db->query($query)->result();
+            if (count($teachers)) {
+              $teacher_ids = array();
+              foreach ($teachers as $teacher) {
+                $teacher_ids[] = $teacher->teacher_id;
+              }
+              $teachers = $this->db->where_in('teacher_id', $teacher_ids)->get('teacher')->result();
+            }
+          }
+        } else {
+          $where = array(
+            'activate' => 1,
+          );
+          $this->db->like('name', $search, 'both');
+          $teachers = $this->teacher_model->get_list($limit, $offset, 'teacher_id', 'desc', $where);
+        }
+  
+        foreach ($teachers as $teacher) {
+          if ($this->is_login()) {
+            $user_id = $this->session->userdata('user_id');
+            $teacher->bookmark = $this->teacher_model->get_bookmarked($user_id, $teacher->teacher_id);
+          } else {
+            $teacher->bookmark = false;
+          }
+        }
+        
+//        log_message('debug', '[studio] teachehrs['.json_encode($teachers).']');
+        
+        $this->page_data['teachers'] = $teachers;
+        $this->load->view('front/find/teacher/list', $this->page_data);
+        
+      } else {
+ 
+        $filter = 'ALL';
+        if (isset($_GET['filter'])) {
+          $filter = $_GET['filter'];
+        }
+        
+        $search = '';
+        if (isset($_GET['search'])) {
+          $search = $_GET['search'];
+        }
+  
+        $this->page_data['filter'] = $filter;
+        $this->page_data['search'] = $search;
+        $this->page_data['page_name'] = "find/teacher";
+        $this->page_data['asset_page'] = "class";
+        $this->page_data['page_title'] = "class";
+        $this->load->view('front/index', $this->page_data);
       
+      }
+  
+    } else if ($view == 'studio') {
+  
+      $type = $para2;
+      if ($type == 'list') {
+  
+        if (!isset($_GET['page'])) {
+          echo "<script>alert('잘못된 접근입니다')</script>";
+          exit;
+        }
+  
+        $page = $_GET['page'];
+        $limit = $this->studio_model::FIND_UPCOMING_CLASS_PAGE_SIZE;
+        $offset = $limit * ($page - 1);
+
+        $upcoming_classes = $this->studio_model->get_upcoming_class_list($limit, $offset);
+        foreach ($upcoming_classes as $class) {
+          $class->teacher = $this->teacher_model->get($class->teacher_id);
+          $this->studio_model->check_ticketing($class);
+//          if ($this->is_login()) {
+//            $user_id = $this->session->userdata('user_id');
+//            $class->bookmarked = $this->teacher_model->get_bookmarked($user_id, $class->teacher_id);
+//          } else {
+//            $class->bookmarked = false;
+//          }
+        }
+  
+        $this->page_data['page'] = $page;
+        $this->page_data['upcoming_classes'] = $upcoming_classes;
+        $this->load->view('front/find/studio/list', $this->page_data);
+        
+//        log_message('debug', '[studio] upcoming class['.json_encode($upcoming_classes).']');
+      
+      } else {
+  
+        $limit = $this->teacher_model::FIND_TEACHER_PAGE_SIZE;
+        $offset = 0;
+        $where = array(
+          'recommend >=' => 0
+        );
+        $teachers = $this->teacher_model->get_list($limit, $offset, 'recommend', 'asc', $where);
+  
+        $limit = $this->studio_model::FIND_UPCOMING_CLASS_PAGE_SIZE;
+        $offset = 0;
+        $upcoming_classes = $this->studio_model->get_upcoming_class_list($limit, $offset);
+        foreach ($upcoming_classes as $class) {
+          $class->teacher = $this->teacher_model->get($class->teacher_id);
+          $this->studio_model->check_ticketing($class);
+          if ($this->is_login()) {
+            $user_id = $this->session->userdata('user_id');
+            $class->bookmarked = $this->teacher_model->get_bookmarked($user_id, $class->teacher_id);
+          } else {
+            $class->bookmarked = false;
+          }
+        }
+  
+//        log_message('debug', '[studio] upcoming class['.json_encode($upcoming_classes).']');
+
+        $youtube_classes = $this->db->limit(3,0)->order_by('video_id', 'desc')->get_where('teacher_video')->result();
+  
+        $this->page_data['upcoming_classes'] = $upcoming_classes;
+        $this->page_data['youtube_classes'] = $youtube_classes;
+        $this->page_data['teachers'] = $teachers;
+        $this->page_data['page_name'] = "find/studio";
+        $this->page_data['asset_page'] = "class";
+        $this->page_data['page_title'] = "class";
+        $this->load->view('front/index', $this->page_data);
+      
+      }
+  
     } else if ($view == 'center') {
   
       $type = $para2;
@@ -2284,25 +2536,25 @@ QUERY;
       $end_time = strtotime("+90 day");
       $start_date = date("Y-m-d", $start_time);
       $end_date = date("Y-m-d", $end_time);
-      $week = date('w', $start_time);
+//      $week = date('w', $start_time);
       
       if ($sdate == null) {
         $sdate = $start_date;
       }
 
-      $query = <<<QUERY
-select * from center_schedule
-where center_id={$center_data->center_id} and start_date<='{$start_date}' and '{$start_date}'<=end_date order by start_time asc
-QUERY;
-      $schedules = $this->db->query($query)->result();
-
-      $schedule_data = array();
-      $w = "weekly_" . $week;
-      foreach ($schedules as $schedule) {
-        if ($schedule->{$w} == 1 or $schedule->weekly_none == 1) {
-          $schedule_data[] = $schedule;
-        }
-      }
+//      $query = <<<QUERY
+//select * from center_schedule
+//where center_id={$center_data->center_id} and start_date<='{$start_date}' and '{$start_date}'<=end_date order by start_time asc
+//QUERY;
+//      $schedules = $this->db->query($query)->result();
+//
+//      $schedule_data = array();
+//      $w = "weekly_" . $week;
+//      foreach ($schedules as $schedule) {
+//        if ($schedule->{$w} == 1 or $schedule->weekly_none == 1) {
+//          $schedule_data[] = $schedule;
+//        }
+//      }
 
       $liked = false;
       $bookmarked = false;
@@ -2320,7 +2572,7 @@ QUERY;
       $this->page_data['teacher_data'] = $teacher_data;
       $this->page_data['start_date'] = $start_date;
       $this->page_data['end_date'] = $end_date;
-      $this->page_data['schedule_data'] = $schedule_data;
+//      $this->page_data['schedule_data'] = $schedule_data;
       $this->page_data['liked'] = $liked;
       $this->page_data['bookmarked'] = $bookmarked;
       $this->page_data['nav'] = $nav;
@@ -3508,26 +3760,40 @@ QUERY;
 
     if ($para1 == "profile") {
 
-      $teacher_user_id = $para2;
-
-      if ($teacher_user_id == $this->session->userdata('user_id')) {
-        $iam_this_teacher = true;
-      } else {
-        $iam_this_teacher = false;
+      $teacher_id = $para2;
+  
+      $nav = null;
+      if (isset($_GET['nav'])) {
+        $nav = $_GET['nav'];
       }
-
-      $user_data = $this->db->get_where('user', array('user_id' => $teacher_user_id))->row();
-//      if (!($user_data->user_type & USER_TYPE_TEACHER)) {
-//        echo ("<script>alert('강사회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
-//        exit;
-//      }
-//
-      $teacher_data = $this->db->get_where('teacher', array('user_id' => $teacher_user_id))->row();
+      $sdate = null;
+      $popid = 0;
+      if (isset($_GET['sdate'])) {
+        $sdate = date('Y-m-d', strtotime($_GET['sdate']));
+        $nav = 'schedule';
+        if (isset($_GET['popid'])) {
+          $popid = $_GET['popid'];
+        }
+      }
+      
+      $teacher_data = $this->db->get_where('teacher', array('teacher_id' => $teacher_id))->row();
       if ($teacher_data->activate == 0) {
         echo ("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
         exit;
       }
+  
+      $user_data = $this->db->get_where('user', array('user_id' => $teacher_data->user_id))->row();
+      if (!($user_data->user_type & USER_TYPE_TEACHER)) {
+        echo ("<script>alert('강사회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
+        exit;
+      }
 
+      if ($teacher_data->user_id == $this->session->userdata('user_id')) {
+        $iam_this_teacher = true;
+      } else {
+        $iam_this_teacher = false;
+      }
+  
       $liked = false;
       $bookmarked = false;
       if ($this->is_login() == true) {
@@ -3542,6 +3808,25 @@ QUERY;
       );
 
       $video_data = $this->db->order_by('video_id', 'desc')->get_where('teacher_video', $where)->result();
+     
+      $studio_ids = json_decode($teacher_data->studio_ids);
+      if (isset($studio_ids) == true && count($studio_ids) > 0) {
+        $studio_id = $studio_ids[0];
+        $studio_data = $this->studio_model->get($studio_id);
+        
+        $start_time = time();
+        $end_time = strtotime("+90 day");
+        $start_date = date("Y-m-d", $start_time);
+        $end_date = date("Y-m-d", $end_time);
+        
+        if ($sdate == null) {
+          $sdate = $start_date;
+        }
+        
+        $this->page_data['studio_data'] = $studio_data;
+        $this->page_data['start_date'] = $start_date;
+        $this->page_data['end_date'] = $end_date;
+      }
 
       $this->page_data['page_name'] = "teacher/profile";
       $this->page_data['asset_page'] = "teacher_profile";
@@ -3552,6 +3837,9 @@ QUERY;
       $this->page_data['iam_this_teacher'] = $iam_this_teacher;
       $this->page_data['liked'] = $liked;
       $this->page_data['bookmarked'] = $bookmarked;
+      $this->page_data['nav'] = $nav;
+      $this->page_data['popid'] = $popid;
+      $this->page_data['sdate'] = $sdate;
       $this->load->view('front/index', $this->page_data);
 
     } else if ($para1 == 'edit_profile') {
@@ -3579,24 +3867,10 @@ QUERY;
         echo("<script>alert('승인 대기 중입니다'); window.location.href='{$base_url}home/user'</script>");
         exit;
       }
-
-      $category_data = array();
-      $categories = $this->db->get_where('teacher_category', array('teacher_id' => $teacher_id))->result();
-      foreach ($categories as $c) {
-        $category_data[] = $c->category;
-      }
-
-      $categories = array();
-      $category_class = $this->db->get_where('category_class', array('activate' => 1))->result();
-      foreach ($category_class as $c) {
-        $categories[] = $c->name;
-      }
-
-      $category_etc = '';
-      $categories = array_values(array_diff($category_data, $categories));
-      foreach ($categories as $c) {
-        $category_etc .= $c.' ';
-      }
+      
+      $result = $this->teacher_model->get_categories($teacher_data->teacher_id);
+      $category_data = $result[0];
+      $category_etc = $result[1];
 
       $this->page_data['page_name'] = "teacher/profile/edit";
       $this->page_data['asset_page'] = "teacher_profile_edit";
@@ -3610,10 +3884,10 @@ QUERY;
     } else if ($para1 == 'do_edit_profile') {
 
       $teacher_id = $para2;
-      $user_id = $this->session->userdata('user_id');
+//      $user_id = $this->session->userdata('user_id');
 
       $this->load->library('form_validation');
-      $this->form_validation->set_rules('teacher_name', 'teacher_name', 'trim|required|max_length[32]');
+//      $this->form_validation->set_rules('teacher_name', 'teacher_name', 'trim|required|max_length[32]');
       $this->form_validation->set_rules('about', 'about', 'trim|required|max_length[64]');
       $this->form_validation->set_rules('youtube', 'youtube', 'trim|valid_url|max_length[256]');
       $this->form_validation->set_rules('instagram_', 'instagram', 'trim|valid_url|max_length[256]');
@@ -3622,76 +3896,24 @@ QUERY;
       if ($this->form_validation->run() == FALSE) {
         echo '<br>' . validation_errors();
       } else {
-        $name = $this->input->post('teacher_name');
+//        $name = $this->input->post('teacher_name');
         $about = $this->input->post('about');
         $youtube = $this->input->post('youtube');
         $instagram = $this->input->post('instagram');
 //        $homepage = $this->input->post('homepage');
         $categories = $this->input->post('category');
-
-        if (empty($youtube) && empty($instagram)) {
-          echo ("<script>alert('유튜브와 인스타그램 중 최소 하나는 입력해주세요');</script>");
-          exit;
+        $category_etc = $this->input->post('category_etc');
+  
+        $profile_image_url = null;
+        $teacher = $this->teacher_model->get($teacher_id);
+        if (isset($teacher->profile_image_url) == true && empty($teacher->profile_image_url) == false) {
+          $no_profile_image = false;
+        } else {
+          $no_profile_image = true;
         }
-
-        if (!empty(($this->input->post('category_etc')))) {
-          if (isset($categories) && count($categories)) {
-            $categories = array_merge($categories, explode(' ', trim($this->input->post('category_etc'))));
-          } else {
-            $categories = explode(' ', trim($this->input->post('category_etc')));
-          }
-        }
-
-        if (!empty($categories) && count($categories)) {
-          $categories = array_filter(array_map('trim', $categories));
-        }
-
-        if (empty($categories) || count($categories) == 0) {
-          echo ("<script>alert('최소 하나의 분류를 선택해주세요');</script>");
-          exit;
-        }
-
-        $cats = $this->db->get_where('teacher_category', array('teacher_id' => $teacher_id))->result();
-        $already_categories = array();
-        foreach ($cats as $c) {
-          $already_categories[] = $c->category;
-        }
-
-        // insert category
-        $diff_cats = array_diff($categories, $already_categories);
-//        $diff_cats = json_encode($diff_cats);
-//        echo("<script>alert('{$diff_cats}');</script>");
-//        exit;
-
-        foreach ($diff_cats as $c) {
-          $ins = array(
-            'teacher_id' => $teacher_id,
-            'category' => $c
-          );
-          $this->db->insert('teacher_category', $ins);
-        }
-
-        // del category
-        $diff_cats = array_diff($already_categories, $categories);
-        foreach ($diff_cats as $c) {
-          $del = array(
-            'teacher_id' => $teacher_id,
-            'category' => $c
-          );
-          $this->db->delete('teacher_category', $del);
-        }
-
-        $upd = array(
-          'name' => $name,
-          'user_id' => $user_id,
-          'about' => $about,
-          'youtube' => $youtube,
-          'instagram' => $instagram,
-        );
-        $where = array (
-          'teacher_id' => $teacher_id
-        );
-        $this->db->update('teacher', $upd, $where);
+  
+        $this->teacher_model->update($teacher_id, $name = '', $about, $youtube, $instagram, $category_etc, $categories,
+          $profile_image_url, $no_profile_image);
 
         echo "done";
       }
@@ -3860,7 +4082,7 @@ QUERY;
       }
 
       $this->load->library('form_validation');
-      $this->form_validation->set_rules('title', 'title', 'trim|required|max_length[32]');
+      $this->form_validation->set_rules('title', 'title', 'trim|required|max_length[40]');
       $this->form_validation->set_rules('description', 'description', 'trim|required|max_length[256]');
 
       if ($this->form_validation->run() == FALSE) {
@@ -3884,6 +4106,10 @@ QUERY;
 
         if (empty($categories) || count($categories) == 0) {
           echo("<script>alert('최소 하나의 분류를 선택해주세요');</script>");
+          exit;
+        }
+        if (count($categories) > 3) {
+          echo("<script>alert('수업 분류는 최대 3가지만 선택 가능합니다');</script>");
           exit;
         }
 
@@ -3978,7 +4204,7 @@ QUERY;
       }
 
       $this->load->library('form_validation');
-      $this->form_validation->set_rules('title', 'title', 'trim|required|max_length[32]');
+      $this->form_validation->set_rules('title', 'title', 'trim|required|max_length[40]');
       $this->form_validation->set_rules('description', 'description', 'trim|required|max_length[256]');
       $this->form_validation->set_rules('video_url', 'video_url', 'trim|required|valid_url|max_length[256]');
 
@@ -4012,6 +4238,10 @@ QUERY;
           echo ("<script>alert('최소 하나의 분류를 선택해주세요');</script>");
           exit;
         }
+        if (count($categories) > 3) {
+          echo("<script>alert('수업 분류는 최대 3가지만 선택 가능합니다');</script>");
+          exit;
+        }
 
         /* parsing to extract youtube video id from video url */
         $reg_exp = '/^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/';
@@ -4022,6 +4252,8 @@ QUERY;
         $content = file_get_contents("https://youtube.com/get_video_info?video_id=".$youtube_id);
         parse_str($content, $data);
         $result = json_decode($data['player_response']);
+        
+        log_message('debug', '[youtube] register data['.json_encode($result->videoDetails->thumbnail).']');
 
 //        echo "아이디 : ".$result->videoDetails->videoId;
 //        echo "채널아이디: ".$result->videoDetails->channelId;
@@ -4044,7 +4276,7 @@ QUERY;
           'title' => $title,
           'video_url' => $youtube_url,
           'desc' => $desc,
-          'thumbnail_image_url' => $result->videoDetails->thumbnail->thumbnails[1]->url,
+          'thumbnail_image_url' => $result->videoDetails->thumbnail->thumbnails[3]->url,
           'playtime' => $result->videoDetails->lengthSeconds,
           'activate' => 1,
           'yt_info' => $data['player_response']
@@ -4064,7 +4296,337 @@ QUERY;
 
     }
   }
+  
+  public function studio($para1 = "", $para2 = "", $para3 = "")
+  {
+  
+    if ($para1 == 'schedule') {
+  
+      $type = $para2;
+  
+      if ($type == 'info') {
+        
+        if (isset($_GET['sid']) == false || isset($_GET['date']) == false) {
+          $this->response('fail', '비정상적인 접근입니다!');
+        }
+    
+        $studio_id = $_GET['sid'];
+        $date = $_GET['date'];
+    
+        $studio_data = $this->db->get_where('studio', array('studio_id' => $studio_id))->row();
+        if ($studio_data->activate == 0) {
+          echo("<script>alert('승인 대기 중입니다');'</script>");
+          exit;
+        }
+    
+        $studio_user_data = $this->db->get_where('user', array('user_id' => $studio_data->user_id))->row();
+        if (!($studio_user_data->user_type & USER_TYPE_CENTER)) {
+          echo("<script>alert('스튜디오 회원이 아닙니다');'</script>");
+          exit;
+        }
+    
+        $schedules = $this->studio_model->get_schedules($studio_id, $date);
+    
+        $this->page_data['schedules'] = $schedules;
+        $this->page_data['studio_data'] = $studio_data;
+        $this->load->view('front/studio/schedule/info/index', $this->page_data);
+    
+      } else if ($type == 'reserve') {
+  
+        if ($para3 == 'info') {
+    
+          if ($this->is_login() == false) {
+            $this->response('fail', '클래스 예약은 로그인이 필요합니다!');
+          }
+    
+          if (isset($_POST['id']) == false) {
+            $this->response('fail', '비정상적인 접근입니다!');
+          }
 
+//          $user_id = $this->session->userdata('user_id');
+          $schedule_info_id = $this->input->post('id');
+          
+          $schedule_info = $this->studio_model->get_schedule_info($schedule_info_id);
+          if ($schedule_info->activate == false) {
+            $this->response('fail', '삭제된 클래스입니다!');
+          }
+    
+          if ($schedule_info->ticketing == false) {
+            $this->response('fail', '예약이 오픈되지 않았습니다!');
+          }
+    
+          $now = time();
+          $start = strtotime($schedule_info->schedule_date . ' ' . $schedule_info->start_time);
+          $end = strtotime($schedule_info->schedule_date . ' ' . $schedule_info->end_time);
+          if ($start <= $now && $now <= $end) {
+            $this->response('fail', '클래스가 진행중입니다!');
+          }
+    
+          $reserve_open_time = strtotime($schedule_info->reserve_open_at);
+          $reserve_close_time = strtotime($schedule_info->reserve_close_at);
+          if ($now < $reserve_open_time) {
+            $this->response('fail', '예약이 오픈되지 않았습니다!');
+          }
+          if ($now > $reserve_close_time) {
+            $this->response('fail', '예약이 마감되었습니다!');
+          }
+    
+          $studio_data = $this->studio_model->get($schedule_info->studio_id);
+          if ($studio_data->activate != 1) {
+            $this->response('fail', '스튜디오가 승인 대기중입니다!');
+          }
+    
+          $this->page_data['class'] = $schedule_info;
+          $this->page_data['studio_data'] = $studio_data;
+          $this->load->view('front/studio/schedule/reserve_popup', $this->page_data);
+  
+        } else if ($para3 == 'wait') {
+  
+          if ($this->is_login() == false) {
+            $this->response('fail', '로그인이 필요합니다!');
+          }
+  
+          if (isset($_POST['id']) == false) {
+            $this->response('fail', '비정상적인 접근입니다!');
+          }
+          
+          $schedule_info_id = $this->input->post('id');
+          $schedule_info = $this->studio_model->get_schedule_info($schedule_info_id);
+          if ($schedule_info->activate == false) {
+            $this->response('fail', '삭제된 클래스입니다!');
+          }
+  
+          if ($schedule_info->ticketing == false) {
+            $this->response('fail', '예약이 오픈되지 않았습니다!');
+          }
+  
+          $user_id = $this->session->userdata('user_id');
+          $reserve_info = $this->studio_model->get_reserve_info_user($schedule_info_id, $user_id);
+          
+          if (isset($reserve_info) == false || empty($reserve_info) == true) {
+            $this->response('fail', '예약 내역이 존재하지 않습니다!');
+          }
+          
+//          log_message('debug', '[studio] wait popup, reserve_info['.json_encode($reserve_info).']');
+  
+          $this->page_data['class'] = $schedule_info;
+          $this->page_data['reserve'] = $reserve_info;
+          $this->load->view('front/studio/schedule/wait_popup', $this->page_data);
+  
+        } else if ($para3 == 'final') {
+  
+          if ($this->is_login() == false) {
+            $this->response('fail', '클래스 예약은 로그인이 필요합니다!');
+          }
+  
+          if (isset($_POST['id']) == false) {
+            $this->response('fail', '비정상적인 접근입니다!');
+          }
+  
+          $redirect = $this->input->post('redirect');
+          
+          $schedule_info_id = $this->input->post('id');
+          $schedule_info = $this->studio_model->get_schedule_info($schedule_info_id);
+          if ($schedule_info->activate == false) {
+            $this->response('fail', '삭제된 클래스입니다!');
+          }
+  
+          if ($schedule_info->ticketing == false) {
+            $this->response('fail', '예약이 오픈되지 않았습니다!');
+          }
+  
+          $user_id = $this->session->userdata('user_id');
+          $reserve_info = $this->studio_model->get_reserve_info_user($schedule_info_id, $user_id);
+          
+          $this->page_data['redirect'] = $redirect;
+          $this->page_data['class'] = $schedule_info;
+          $this->page_data['reserve'] = $reserve_info;
+          $this->load->view('front/studio/schedule/reserve_final_popup', $this->page_data);
+  
+        } else if ($para3 == 'do') {
+    
+          if ($this->is_login() == false) {
+            $this->response('fail', '클래스 예약은 로그인이 필요합니다!');
+          }
+    
+          if (isset($_POST['id']) == false) {
+            $this->response('fail', '비정상적인 접근입니다!');
+          }
+    
+          $user_id = $this->session->userdata('user_id');
+          $schedule_info_id = $this->input->post('id');
+  
+          $payer_info = null;
+          if (isset($_POST['payer_info'])) {
+            $payer_info = $this->input->post('payer_info');
+          }
+  
+          $query = <<<QUERY
+select * from studio_schedule_reserve where schedule_info_id={$schedule_info_id} and user_id={$user_id}
+and (wait=1 or reserve=1)
+QUERY;
+          $reserve_info = $this->db->query($query)->row();
+          if (empty($reserve_info) == false) {
+            if ($reserve_info->reserve == 1) {
+              $status = '예약완료';
+            } else if ($reserve_info->wait == 1) {
+              $status = '입금대기';
+            } else {
+              $status = '오류'; // unreachable
+            }
+            $this->response('fail', '이미 신청된 클래스입니다!<상태:' . $status . '>');
+          }
+    
+          $result = $this->studio_model->lock_schedule_info($schedule_info_id);
+          if (empty($result) == true || $result == false) {
+            $this->response('fail', '클래스 예약 요청이 많습니다! 잠시 후 다시 시도해주세요!');
+          }
+    
+          $schedule_info = $this->studio_model->get_schedule_info($schedule_info_id);
+          if ($schedule_info->activate == false) {
+            $this->studio_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '삭제된 클래스입니다!');
+          }
+    
+          $studio_info = $this->studio_model->get($schedule_info->studio_id);
+          if (empty($studio_info) == true || $studio_info->activate == 0) {
+            $this->studio_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '스튜디오가 오픈되지 않았습니다!');
+          }
+    
+          if ($schedule_info->ticketing == 0) {
+            $this->studio_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '예약이 오픈되지 않았습니다!');
+          }
+    
+          $now = time();
+          $start = strtotime($schedule_info->schedule_date . ' ' . $schedule_info->start_time);
+          $end = strtotime($schedule_info->schedule_date . ' ' . $schedule_info->end_time);
+          if ($start <= $now && $now <= $end) {
+            $this->studio_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '클래스가 진행중입니다!');
+          }
+    
+          $reserve_open_time = strtotime($schedule_info->reserve_open_at);
+          $reserve_close_time = strtotime($schedule_info->reserve_close_at);
+          if ($now < $reserve_open_time) {
+            $this->studio_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '예약이 오픈되지 않았습니다!');
+          }
+          if ($now > $reserve_close_time) {
+            $this->studio_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '예약이 마감되었습니다!');
+          }
+    
+          if ($schedule_info->waitable) {
+            $wait_cnt = $this->studio_model->get_schedule_wait_cnt($schedule_info_id);
+            if ($wait_cnt >= $schedule_info->waitable_number) {
+              $this->studio_model->unlock_schedule_info($schedule_info_id);
+              $this->response('fail', '입금대기 정원이 초과되었습니다!');
+            }
+          }
+  
+          if (mb_strlen($payer_info) > 10) {
+            $this->studio_model->unlock_schedule_info($schedule_info_id);
+            if ($schedule_info->use_bank == 1) {
+              $this->response('fail', '입금자명은 10자를 초과할 수 없습니다!');
+            } else {
+              $this->response('fail', '결제자정보는 10자를 초과할 수 없습니다!');
+            }
+          }
+          
+          $schedule_date = $schedule_info->schedule_date . ' ' . $schedule_info->start_time;
+    
+          $ins = array(
+            'user_id' => $user_id,
+            'schedule_info_id' => $schedule_info_id,
+            'ticket_id' => 0,
+            'member_id' => 0,
+            'payer_info' => $payer_info,
+            'reserve' => 0,
+            'wait' => 1,
+            'cancel' => 0,
+            'fail' => 0,
+            'schedule_at' => $schedule_date,
+          );
+          $this->db->set('register_at', 'NOW()', false);
+          $this->db->set('cancel_at', 'NOW()', false);
+          $this->db->insert('studio_schedule_reserve', $ins);
+          $reserve_id = $this->db->insert_id();
+    
+          $this->studio_model->unlock_schedule_info($schedule_info_id);
+    
+          if ($reserve_id > 0) {
+            $user_data = json_decode($this->session->userdata('user_data'));
+            $studio_user_data = $this->db->get_where('user', array('user_id' => $studio_info->user_id))->row();
+            // send studio
+            $this->email_model->send_online_class_confirm((isset($studio_info->email) ? $studio_info->email : $studio_user_data->email),
+              $schedule_info->schedule_title, $schedule_info->schedule_date, $schedule_info->start_time,
+            $this->studio_model->get_schedule_wait_cnt($schedule_info_id));
+            $this->mts_model->send_studio_class_confirm($studio_user_data->phone, $schedule_info->schedule_title,
+              $schedule_info->schedule_date, $schedule_info->start_time);
+            
+            // send user
+            if ($schedule_info->use_bank) {
+              $pay_info = "{$schedule_info->bank_name}은행 {$schedule_info->bank_account_number} {$schedule_info->bank_depositor}";
+            } else {
+              $pay_info = "<a href='{$schedule_info->payment_page}' target='_blank'>결제페이지 바로가기</a>";
+            }
+            $this->email_model->send_online_class_register($user_data->email, $schedule_info->teacher_name, $schedule_info->schedule_title,
+              $schedule_info->schedule_date, $schedule_info->start_time, $pay_info, $schedule_info->reserve_popup,
+              (isset($studio_info->email) ? $studio_info->email : $studio_user_data->email));
+            $this->mts_model->send_studio_class_wait($user_data, $studio_user_data, $studio_info, $schedule_info);
+            
+            $this->response('done', '예약이 완료되었습니다!');
+          } else {
+            $this->response('fail', '클래스 예약 불가 상태입니다! 잠시 후 다시 시도해주세요!');
+          }
+  
+        } else if ($para3 == 'link') {
+  
+          if ($this->is_login() == false) {
+            $this->response('fail', '로그인이 필요합니다!');
+          }
+  
+          if (isset($_POST['id']) == false) {
+            $this->response('fail', '비정상적인 접근입니다!');
+          }
+  
+//          $user_id = $this->session->userdata('user_id');
+          $schedule_info_id = $this->input->post('id');
+  
+          $schedule_info = $this->studio_model->get_schedule_info($schedule_info_id);
+          if ($schedule_info->activate == false) {
+            $this->response('fail', '삭제된 클래스입니다!');
+          }
+  
+          if ($schedule_info->ticketing == false) {
+            $this->response('fail', '예약이 오픈되지 않았습니다!');
+          }
+  
+          $studio_data = $this->studio_model->get($schedule_info->studio_id);
+          if ($studio_data->activate != 1) {
+            $this->response('fail', '스튜디오가 승인 대기중입니다!');
+            if (isset($studio_data->email) == false || empty($studio_data->email) == true) {
+              $studio_data->email = $this->db->get_where('user', array('user_id' => $studio_data->user_id))->row()->email;
+            }
+          }
+          
+          $this->page_data['class'] = $schedule_info;
+          $this->page_data['studio_data'] = $studio_data;
+          $this->load->view('front/studio/schedule/link_popup', $this->page_data);
+  
+        } else {
+          $this->response('fail', '접근오류!');
+        }
+  
+      } else { // unreachable
+        $this->error();
+      }
+    }
+  
+  }
+  
   private function get_center_data(array $center_list)
   {
     $center_data = array();
@@ -4079,7 +4641,7 @@ QUERY;
       $center_id_list = implode(',', $center_id_list);
       $query = <<<QUERY
 select center_id,user_id,title,phone,about,address,address_detail,longitude,latitude,activate 
-from center where center_id in ({$center_id_list}) and activate=1
+from center where center_id in ({$center_id_list}) and activate=1 order by view desc
 QUERY;
       $center_data = $this->db->query($query)->result();
 
@@ -4861,9 +5423,13 @@ QUERY;
         $this->db->set('canceled_at', 'NOW()', false);
         $this->db->update('shop_purchase', $upd, array('purchase_code' => $purchase_code));
   
+        log_message('debug', '[bootpay] user canceled purchase_code['.$purchase_code.']');
+        
         echo 'done';
   
       } elseif ($type == 'cancel') { // 유저가 주문 취소 요청
+  
+        log_message('debug', '[bootpay] user cancel data['.json_encode($_POST).']');
         
         $purchase_product_id = $this->input->post('id');
         $cancel_reason = $this->input->post('reason');
@@ -4875,6 +5441,8 @@ QUERY;
         echo 'done';
   
       } elseif ($type == 'paying') {
+        
+        log_message('debug', '[bootpay] paying data['.json_encode($_POST).']');
 
         $purchase_code = $this->input->post('purchase_code');
         $username = $this->input->post('username');
@@ -4898,6 +5466,12 @@ QUERY;
           'status_code' => $this->shop_model->get_purchase_status_str(SHOP_PURCHASE_STATUS_PAYING),
           'discount' => $discount,
           'user_coupon_id' => $user_coupon_id,
+          'sender_name' => $username,
+          'sender_email' => $email,
+          'sender_phone' => $phone,
+          'sender_postcode' => $postcode,
+          'sender_address_1' => $address_1,
+          'sender_address_2' => $address_2,
         );
         $this->db->set('request_at', 'NOW()', false);
         $this->db->update('shop_purchase', $upd, array('purchase_code' => $purchase_code));
@@ -5623,14 +6197,16 @@ QUERY;
       $order_col = $_GET['col'];
       $order = $_GET['order'];
       
-      if (strncmp($category, '01', 2) == 0) {
-        $best_order_col = 'best';
-        $order_start = 10;
-      } else {
-        $best_order_col = 'sell';
-        $order_start = 0;
-      }
-
+//      if (strncmp($category, '01', 2) == 0) {
+//        $best_order_col = 'best';
+//        $order_start = 10;
+//      } else {
+//        $best_order_col = 'sell';
+//        $order_start = 0;
+//      }
+      $best_order_col = 'best2';
+      $order_start = 0;
+  
       if ($category != 'all' && $category != 'ALL' && $category != 'wish' && $category != 'WISH') {
         $best_cat = sprintf('%s%s', substr($category, 0, 2), '0000');
         $best_items = $this->crud_model->get_product_list(0, SHOP_PRODUCT_STATUS_ON_SALE, '', $best_cat, 0,

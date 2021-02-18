@@ -244,7 +244,7 @@ QUERY;
   
     } else if ($para1 == 'shipping') {
       // 배송완료 체크
-      // 0 7 * * * nginx /usr/bin/php -f /web/public_html/index.php cron shop shipping
+      // 0 22 * * * nginx /usr/bin/php -f /web/public_html/index.php cron shop shipping
   
       $modified_at = date('Y-m-d');
       $shipping_status = SHOP_SHIPPING_STATUS_IN_PROGRESS;

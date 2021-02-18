@@ -885,10 +885,12 @@ QUERY;
         $this->email_model->get_center_approval_data($email);
         $this->coupon_model->send_coupon_data(COUPON_USER_TYPE_CENTER, $user_data);
 //        $this->coupon_model->send_coupon_data(COUPON_USER_TYPE_CENTER_TEACHER, $user_data);
+        $this->mts_model->send_center_approval($user_data->phone);
       } else if($activate == 2) {
         $user_id = $this->db->get_where('center', array('center_id' => $center_id))->row()->user_id;
         $email = $this->db->get_where('user', array('user_id' => $user_id))->row()->email;
         $this->email_model->get_center_reject_data($email);
+        $this->mts_model->send_reject_approval($user_data->phone, USER_TYPE_CENTER);
       }
 
       echo 'done';
@@ -1000,12 +1002,14 @@ QUERY;
       if ($activate == 1) {
         $user_id = $this->db->get_where('studio', array('studio_id' => $studio_id))->row()->user_id;
         $email = $this->db->get_where('user', array('user_id' => $user_id))->row()->email;
-        $this->email_model->get_center_approval_data($email);
+        $this->email_model->get_studio_approval_data($email);
+        $this->mts_model->send_studio_approval($user_data->phone);
 //        $this->coupon_model->send_coupon_data(COUPON_USER_TYPE_CENTER, $user_data);
       } else if($activate == 2) {
         $user_id = $this->db->get_where('studio', array('studio_id' => $studio_id))->row()->user_id;
         $email = $this->db->get_where('user', array('user_id' => $user_id))->row()->email;
-        $this->email_model->get_center_reject_data($email);
+        $this->email_model->get_studio_reject_data($email);
+        $this->mts_model->send_reject_approval($user_data->phone, USER_TYPE_STUDIO);
       }
       
       echo 'done';
@@ -1050,7 +1054,9 @@ QUERY;
 
     } else if ($para1 == 'view') {
 
-      $page_data['teacher_data'] = $this->db->get_where('teacher', array('teacher_id' => $para2))->result_array();
+      $teacher_data = $this->db->get_where('teacher', array('teacher_id' => $para2))->result_array();
+      $page_data['user_data'] = $this->db->get_where('user', array('user_id' => $teacher_data[0]['user_id']))->row();
+      $page_data['teacher_data'] = $teacher_data;
       $this->load->view('back/admin/teacher_view', $page_data);
 
     } else if ($para1 == 'delete') {
@@ -1081,19 +1087,21 @@ QUERY;
       }
 
       $this->crud_model->do_teacher_activate($teacher_id, $user_id, $activate);
-      
+  
+      $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
       if ($activate == 1) {
         $user_id = $this->db->get_where('teacher', array('teacher_id' => $teacher_id))->row()->user_id;
         $email = $this->db->get_where('user', array('user_id' => $user_id))->row()->email;
         $this->email_model->get_teacher_approval_data($email);
         
-        $user_data = $this->db->get_where('user', array('user_id' => $user_id))->row();
         $this->coupon_model->send_coupon_data(COUPON_USER_TYPE_TEACHER, $user_data);
+        $this->mts_model->send_teacher_approval($user_data->phone);
 //        $this->coupon_model->send_coupon_data(COUPON_USER_TYPE_CENTER_TEACHER, $user_data);
       } else if($activate == 2) {
         $user_id = $this->db->get_where('teacher', array('teacher_id' => $teacher_id))->row()->user_id;
         $email = $this->db->get_where('user', array('user_id' => $user_id))->row()->email;
         $this->email_model->get_teacher_reject_data($email);
+        $this->mts_model->send_reject_approval($user_data->phone, USER_TYPE_TEACHER);
       }
 
       echo 'done';
@@ -1150,8 +1158,10 @@ QUERY;
 
       $time = time();
       $file_name = 'slider_'.$slider_id.'.jpg';
-      $slider_image_url = base_url().'uploads/slider_image/slider_'.$slider_id.'_thumb.jpg?id='.$time;
-      $this->crud_model->upload_image(IMG_PATH_SLIDER, $file_name, $_FILES["img"], 400, 250, true, false);
+//      $slider_image_url = base_url().'uploads/slider_image/slider_'.$slider_id.'_thumb.jpg?id='.$time;
+//      $this->crud_model->upload_image(IMG_PATH_SLIDER, $file_name, $_FILES["img"], 400, 250, true, false);
+      $slider_image_url = base_url().'uploads/slider_image/slider_'.$slider_id.'.jpg?id='.$time;
+      $this->crud_model->upload_image(IMG_PATH_SLIDER, $file_name, $_FILES["img"], 1000, 0, false, true);
 
       $upd['slider_image_url'] = $slider_image_url;
       $this->db->where('slider_id', $slider_id);
@@ -1201,8 +1211,10 @@ QUERY;
         if ($error == UPLOAD_ERR_OK) {
           $time = time();
           $file_name = 'slider_'.$slider_id.'.jpg';
-          $slider_image_url = base_url().'uploads/slider_image/slider_'.$slider_id.'_thumb.jpg?id='.$time;
-          $this->crud_model->upload_image(IMG_PATH_SLIDER, $file_name, $_FILES["img"], 400, 250, true, false);
+//          $slider_image_url = base_url().'uploads/slider_image/slider_'.$slider_id.'_thumb.jpg?id='.$time;
+//          $this->crud_model->upload_image(IMG_PATH_SLIDER, $file_name, $_FILES["img"], 400, 250, true, false);
+          $slider_image_url = base_url().'uploads/slider_image/slider_'.$slider_id.'.jpg?id='.$time;
+          $this->crud_model->upload_image(IMG_PATH_SLIDER, $file_name, $_FILES["img"], 1000, 0, false, true);
           $data['slider_image_url'] = $slider_image_url;
         }
       }

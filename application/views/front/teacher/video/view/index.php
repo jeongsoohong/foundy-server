@@ -77,22 +77,6 @@
     font-size: 12px;
     padding-right: 10px
   }
-  #video-edit {
-    background-color: white;
-    height: 60px;
-    width: 50px;
-    position: absolute;
-    z-index: 10;
-    top: -30px;
-    left: 80%;
-    display: none;
-    text-align: center;
-  }
-  #video-edit a {
-    color: grey;
-    font-size: 12px;
-    line-height: 30px;
-  }
   .post-title {
     font-size: 18px !important;
   }
@@ -130,7 +114,7 @@
             </span>
             <div class="media-body" style="padding-right: 10px; padding-top: 10px;">
               <div class="col-md-12" style="margin: 10px 0 10px 0 !important; padding-left: 0 !important; text-align: left !important; font-size: 12px !important;">
-                <a href="<?php echo base_url(); ?>home/teacher/profile/<?php echo $user_data->user_id; ?>">
+                <a href="<?php echo base_url(); ?>home/teacher/profile/<?php echo $teacher_data->teacher_id; ?>">
                   <p>
                     <?php echo $teacher_data->name; ?>
                   </p>
@@ -149,6 +133,68 @@
             </iframe>
           </div>
           <div class="post-body" style="margin: 0 !important; padding: 20px 16px 24px; position: unset; box-sizing: border-box; height: auto !important;">
+            <? if ($iam_this_video) { ?>
+              <button class="post__more">
+                <img src="<?= base_url();?>template/icon/ic_more_horizon.png" width="20" height="5" class="more--icon">
+                <script>
+                  $(function(){
+                    // console.log(1);
+                    $('.post__more').click(function(){
+                      $('.post__edit').toggle();
+                    })
+                  })
+                </script>
+              </button>
+              <div class="post__edit">
+                <button class="edit--modify" onclick="go_edit_video()">수정</button>
+                <button class="edit--remove" onclick="open_del_video()">삭제</button>
+              </div>
+              <style type="text/css">
+                .post-body {
+                  position: relative !important;
+                }
+                .post-title {
+                  width: 70%;
+                  word-break: break-all;
+                }
+                .post-body button {
+                  outline: none;
+                  border: 0;
+                  background: transparent;
+                  padding: 0;
+                }
+                .post__more {
+                  position: absolute;
+                  width: 40px;
+                  height: 40px;
+      
+                  margin-top: -8px;
+                  right: 16px;
+                  text-align: right;
+                }
+                .more--icon {
+                  opacity: 0.3;
+                }
+                .post__edit {
+                  display: none;
+                  position: absolute;
+                  top: 48px;
+                  right: 15px;
+                  height: 28px;
+                }
+                .post__edit button {
+                  position: relative;
+                  width: 40px;
+                  height: 24px;
+                  background-color: #333;
+                  color: #fff;
+                  font-size: 11px;
+                  font-weight: bold;
+                  box-sizing: border-box;
+                  border-radius: 4px;
+                }
+              </style>
+            <? } ?>
             <h2 class="post-title" style="color: #111; font-size: 16px !important; font-weight: bold !important; margin: 0; padding-bottom: 16px; line-height: 1.5;">
               <?php echo $video_data->title; ?>
             </h2>
@@ -216,22 +262,8 @@
   </div>
 </div>
 <script type="text/javascript">
-  function openPop() {
-    if ($('#video-edit').css('display') === 'none') {
-      var video_edit = '<?php echo base_url().'home/teacher/video_edit/'.$video_data->video_id.'/'.$user_data->user_id; ?>';
-      var html = "<a href=\"" + video_edit + "\">수정</a><br>" +
-        "<a href=\"javascript:void(0);\" onclick=\"$(\'.open_modal.video-delete\').click();\">삭제</a>";
-      $('#video-edit').empty().append(html);
-      $('#video-edit').show();
-    } else {
-      $('#video-edit').hide();
-    }
-  }
   $(document).ready(function() {
     active_menu_bar('find');
-    $('.video-edit').click(function(e) {
-      openPop();
-    });
     $('.video_delete_confirm').click(function(e) {
       $('.video_delete_close').click();
       // e.preventDefault();
@@ -240,11 +272,11 @@
         url: '<?php echo base_url().'home/teacher/do_del_video/'.$video_data->video_id.'/'.$user_data->user_id; ?>',
         success: function(data) {
           $("#loading_set").fadeOut(500);
-          if(data == 'done' || data.search('done') !== -1){
+          if(data === 'done' || data.search('done') !== -1){
             notify('신청에 성공했습니다.','success','bottom','right');
             setTimeout(function(){
-              location.href='<?php echo base_url().'home/teacher/profile/'.$user_data->user_id; ?>', 3000
-            });
+              location.href='<?php echo base_url().'home/teacher/profile/'.$teacher_data->teacher_id; ?>';
+            }, 3000);
           } else {
             var text = '<div>신청에 실패했습니다.</div>'+data;
             notify(text,'warning','bottom','right');
@@ -256,4 +288,11 @@
       });
     });
   });
+  
+  function open_del_video() {
+    $('.open_modal.video-delete').click();
+  }
+  function go_edit_video() {
+    location.href = '<?php echo base_url().'home/teacher/video_edit/'.$video_data->video_id.'/'.$user_data->user_id; ?>';
+  }
 </script>

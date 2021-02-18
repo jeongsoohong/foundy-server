@@ -24,13 +24,12 @@ include 'preloader.php';
 ?>
 <!-- WRAPPER -->
 <div class="wrapper" style="overflow-x: hidden;">
-
+  
   <!-- HEADER -->
   <?php
   include 'header/header.php';
   ?>
   <!-- /HEADER -->
-  
   <!-- CONTENT AREA -->
   <div class="content-area" page_name="<?= $page_name?>">
     <?php

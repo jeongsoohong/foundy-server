@@ -91,7 +91,7 @@
           exit: 'animated lightSpeedOut'
         }
       });
-      console.log(remove_date);
+      // console.log(remove_date);
       let _y = remove_date.substr(0, 4);
       let _m = remove_date.substr(5, 2);
       let _d = remove_date.substr(8, 2);

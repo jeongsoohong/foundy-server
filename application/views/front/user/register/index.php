@@ -70,7 +70,7 @@
     let password2 = $('#user-password-2').val();
     
     if (validateEmail(email) === false) {
-      let text = '<strong>옵바른 이메일 주소를 입력바랍니다.</strong>';
+      let text = '<strong>올바른 이메일 주소를 입력바랍니다.</strong>';
       notify(text,'warning','bottom','right');
       return false;
     }

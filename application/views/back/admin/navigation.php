@@ -118,6 +118,30 @@
                 </li>
               </ul>
             </li>
+            <li <?php if($page_name=="studio"){ ?> class="active-sub"<?php } ?>>
+              <a href="#">
+                <i class="fa fa-spotify"></i>
+                <span class="menu-title">
+                  스튜디오 관리
+                </span>
+                <i class="fa arrow"></i>
+              </a>
+              <ul class="collapse <?php if($page_name=="studio") { echo'in'; } ?>">
+                <!--Menu list item-->
+                <li <?php if($page_name == 'studio' && $list_type == "approval"){?> class="active-link"<?php } ?>>
+                  <a href="<?php echo base_url(); ?>admin/studio/approval_list">
+                    <i class="fa fa-circle fs_i"></i>
+                    스튜디오 승인
+                  </a>
+                </li>
+                <li <?php if($page_name == 'studio' && $list_type == ""){?> class="active-link"<?php } ?>>
+                  <a href="<?php echo base_url(); ?>admin/studio">
+                    <i class="fa fa-circle fs_i"></i>
+                    스튜디오 보기
+                  </a>
+                </li>
+              </ul>
+            </li>
             <li <?php if($page_name=="teacher"){?> class="active-sub"<?php } ?>>
               <a href="#">
                 <i class="fa fa-book"></i>

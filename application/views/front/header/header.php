@@ -776,7 +776,7 @@
   }
   #star_favorite_popup .confirm_btn button {
     box-sizing: border-box;
-    border-top: 1px solid #eee !important;
+    /*border-top: 1px solid #eee !important;*/
     border: 0;
     color: #0091ea;
     font-size: 16px;
@@ -785,6 +785,17 @@
     padding: 0;
     background-color: transparent;
     font-family: futura-pt !important;
+  }
+  button[class^="btn_cancel"] {
+    color: #d32f2f !important;
+    border: 0 !important;
+    border-bottom-left-radius: 4px;
+  }
+  button[class^="btn_ok"] {
+    color: #0091ea;
+    border: 1px solid #eee !important;
+    border-width: 0 0 0 1px !important;
+    border-bottom-right-radius: 4px;
   }
   #star_favorite_popup .favorite_close {
     width: 44px;

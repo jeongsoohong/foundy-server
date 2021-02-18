@@ -40,7 +40,11 @@
         <div class="col-sm-12">
             <div class="panel-body">
                 <table class="table table-striped" style="border-radius:3px;">
-                    <tr>
+                  <tr>
+                    <th class="custom_td"><?php echo ('강사아이디');?></th>
+                    <td class="custom_td"><?php echo $user_data->email;?></td>
+                  </tr>
+                  <tr>
                         <th class="custom_td"><?php echo ('소개글');?></th>
                         <td class="custom_td"><?php echo $row['about'];?></td>
                     </tr>

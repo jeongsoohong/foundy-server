@@ -1004,7 +1004,7 @@ QUERY;
       $query .= " and a.product_code like '{$category}'";
     }
     
-    if ($order_col == 'best' || $order_col == 'new' || $order_col == 'recommend') {
+    if ($order_col == 'best' || $order_col == 'best2' || $order_col == 'new' || $order_col == 'recommend') {
       $query .= " and {$order_col} > ${order_start}";
     }
 

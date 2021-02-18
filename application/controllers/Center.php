@@ -834,7 +834,7 @@ QUERY;
           $this->form_validation->set_rules('id', 'id', 'trim|required|is_natural|max_length[10]');
           $this->form_validation->set_rules('start_time', 'start_time', 'trim|required|max_length[8]');
           $this->form_validation->set_rules('end_time', 'end_time', 'trim|required|max_length[8]');
-          $this->form_validation->set_rules('schedule_title', 'schedule_title', 'trim|required|max_length[25]');
+          $this->form_validation->set_rules('schedule_title', 'schedule_title', 'trim|required|max_length[32]');
           $this->form_validation->set_rules('teacher_id', 'teacher_id', 'trim|required|max_length[10]');
           $this->form_validation->set_rules('reservable', 'reservable', 'trim|required|is_natural|less_than_equal_to[1]');
           $this->form_validation->set_rules('reservable_number', 'reservable_number', 'trim|required|is_natural|max_length[5]');
@@ -1194,7 +1194,7 @@ QUERY;
         }
 
         $this->db->set('updated_at', 'NOW()', false);
-        $this->db->set('deleted_at', 'NOW()', false);
+//        $this->db->set('deleted_at', 'NOW()', false);
         $this->db->update('center_schedule_info', array('activate' => 0), array('schedule_info_id' => $schedule_info_id));
         if ($this->db->affected_rows() <= 0) {
           $this->center_model->unlock_schedule_info($schedule_info_id);
@@ -1236,7 +1236,7 @@ QUERY;
         $this->form_validation->set_rules('end_date', 'end_date', 'trim|required|max_length[10]');
         $this->form_validation->set_rules('start_time', 'start_time', 'trim|required|max_length[8]');
         $this->form_validation->set_rules('end_time', 'end_time', 'trim|required|max_length[8]');
-        $this->form_validation->set_rules('schedule_title', 'schedule_title', 'trim|required|max_length[25]');
+        $this->form_validation->set_rules('schedule_title', 'schedule_title', 'trim|required|max_length[32]');
         $this->form_validation->set_rules('weeklys', 'weeklys', 'trim|required|max_length[100]');
         $this->form_validation->set_rules('teacher_id', 'teacher_id', 'trim|required|max_length[10]');
         $this->form_validation->set_rules('reservable', 'reservable', 'trim|required|is_natural|less_than_equal_to[1]');

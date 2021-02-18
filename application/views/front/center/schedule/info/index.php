@@ -1,12 +1,4 @@
-<?
-function get_ampm($time) {
-  return ($time < '12:00:00' ? 'am' : 'pm');
-}
-function get_time($time) {
-  return ($time <= '12:00:00' ? substr($time, 0, 5) : substr(date('H:i:s', strtotime($time) - 12 * ONE_HOUR), 0, 5));
-}
-$test = true;
-if ($test || empty($schedules) == false) { ?>
+<?php if (empty($schedules) == false) { ?>
   <style>
     .type_info {
       margin: 0 !important;
@@ -76,17 +68,17 @@ if ($test || empty($schedules) == false) { ?>
             <div class="class_box">
               <p class="type_info">
               <span class="font-futura day_morning">
-                <?= get_ampm($schedule->start_time); ?>
+                <?= $this->center_model->get_ampm($schedule->start_time); ?>
               </span>
                 <span class="font-futura time_start">
-                <?= get_time($schedule->start_time); ?>
+                <?= $this->center_model->get_time($schedule->start_time); ?>
               </span>
                 <br>~
                 <span class="font-futura day_afternoon">
-                <?= get_ampm($schedule->end_time); ?>
+                <?= $this->center_model->get_ampm($schedule->end_time); ?>
               </span>
                 <span class="font-futura time_end">
-                <?= get_time($schedule->end_time); ?>
+                <?= $this->center_model->get_time($schedule->end_time); ?>
               </span>
               </p>
               <div class="type_class">
@@ -107,17 +99,17 @@ if ($test || empty($schedules) == false) { ?>
             <div class="class_box">
               <p class="type_info">
               <span class="font-futura day_morning">
-                <?= get_ampm($schedule->start_time); ?>
+                <?= $this->center_model->get_ampm($schedule->start_time); ?>
               </span>
                 <span class="font-futura time_start">
-                <?= get_time($schedule->start_time); ?>
+                <?= $this->center_model->get_time($schedule->start_time); ?>
               </span>
                 <br>~
                 <span class="font-futura day_afternoon">
-                <?= get_ampm($schedule->end_time); ?>
+                <?= $this->center_model->get_ampm($schedule->end_time); ?>
               </span>
                 <span class="font-futura time_end">
-                <?= get_time($schedule->end_time); ?>
+                <?= $this->center_model->get_time($schedule->end_time); ?>
               </span>
               </p>
               <div class="type_class">
@@ -135,17 +127,17 @@ if ($test || empty($schedules) == false) { ?>
             <div class="class_box">
               <p class="type_info">
               <span class="font-futura day_morning">
-                <?= get_ampm($schedule->start_time); ?>
+                <?= $this->center_model->get_ampm($schedule->start_time); ?>
               </span>
                 <span class="font-futura time_start">
-                <?= get_time($schedule->start_time); ?>
+                <?= $this->center_model->get_time($schedule->start_time); ?>
               </span>
                 <br>~
                 <span class="font-futura day_afternoon">
-                <?= get_ampm($schedule->end_time); ?>
+                <?= $this->center_model->get_ampm($schedule->end_time); ?>
               </span>
                 <span class="font-futura time_end">
-                <?= get_time($schedule->end_time); ?>
+                <?= $this->center_model->get_time($schedule->end_time); ?>
               </span>
               </p>
               <div class="type_class">

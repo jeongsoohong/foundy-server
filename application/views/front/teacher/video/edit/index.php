@@ -84,7 +84,7 @@
                               <button type="button" class="btn btn-theme pull-right open_modal edit-video-req" data-toggle="modal" data-target="#editVideoReq">
                                 확인
                               </button>
-                              <button type="button" class="hidden btn btn-theme pull-right btn_dis signup_btn" data-relocation='<?php echo base_url().'home/teacher/profile/'.$user_data->user_id; ?>' data-unsuccessful='신청에 실패했습니다.' data-success='신청에 성공했습니다.' data-ing='진행중'>
+                              <button type="button" class="hidden btn btn-theme pull-right btn_dis signup_btn" data-relocation='<?php echo base_url().'home/teacher/profile/'.$video_data->teacher_id; ?>' data-unsuccessful='신청에 실패했습니다.' data-success='신청에 성공했습니다.' data-ing='진행중'>
                                 확인
                               </button>
                             </div>

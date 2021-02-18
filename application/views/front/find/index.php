@@ -85,7 +85,23 @@
     <div class="col-md-6 col-sm-6 col-xs-6 find-left">
       <div class="thumbnail my-2 no-scale no-border no-padding thumbnail-banner">
         <div class="media">
-          <a class="media-link" href="<?php echo base_url().'home/find/class/'; ?>">
+         <?
+         if (STUDIO_OPEN) {
+           if (DEV_SERVER) {
+             $online_link = base_url().'home/find/studio';
+           } else {
+             $online_link = base_url().'home/find/studio';
+           }
+         } else {
+           if (DEV_SERVER) {
+//             $online_link = base_url().'home/find/studio';
+             $online_link = base_url().'home/find/class';
+           } else {
+             $online_link = base_url().'home/find/class';
+           }
+         }
+         ?>
+          <a class="media-link" href="<?= $online_link; ?>">
             <div class="col-md-6 img-bg image_delay" data-src="<?php echo base_url(); ?>uploads/icon_0604/online.png"
                  style="background-image: url('<?php echo base_url(); ?>uploads/icon_0604/online.png');">
             </div>

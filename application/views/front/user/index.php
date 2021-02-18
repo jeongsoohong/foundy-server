@@ -5,6 +5,12 @@
       width: 1290px;
     }
   }
+  #stu #stu_tit {
+    font-size: 16px;
+  }
+  #stu .text-success {
+    letter-spacing: -0.08em;
+  }
 </style>
 <section class="page-section" style="padding-top: 0 !important;">
   <div class="wrap container">
@@ -40,6 +46,9 @@
           <ul class="pleft_nav">
             <a class="pnav_center_register" href="#profile_content"><li>센터 신청</li></a>
             <a class="pnav_teacher_register" href="#profile_content"><li>강사 신청</li></a>
+            <? if (($user_data->user_type & USER_TYPE_TEACHER) && !($user_data->user_type & USER_TYPE_STUDIO)) { ?>
+              <a class="pnav_studio_register" href="#profile_content"><li>온라인 스튜디오 신청</li></a>
+            <? } ?>
 <!--            <a class="pnav_shop_register" href="#profile_content"><li>샵 브랜드 신청</li></a>-->
           </ul>
           <div class="information-title" style="margin-bottom: 0px; margin-top: 0px;">계정</div>
@@ -65,6 +74,30 @@
       <div class="modal-body">
         <div class="text-center">
           <div>센터 승인까지는 3-4일정도 소요되며, 완료 후 연락드리겠습니다
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger post_confirm_close" data-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-theme btn-theme-sm post_confirm" style="text-transform: none;
+                font-weight: 400;">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal For C-C Post confirm -->
+
+<!-- Modal For C-C Post confirm -->
+<div class="modal fade" id="studioRegisterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">온라인 스튜디오 신청</h4>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+          <div>온라인 스튜디오 승인까지는 3-4일정도 소요되며, 완료 후 연락드리겠습니다
           </div>
         </div>
       </div>
@@ -232,6 +265,7 @@
   </div>
 </div>
 
+<?php if (false) { ?>
 <div class="modal fade" id="qnaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -260,6 +294,7 @@
     </div>
   </div>
 </div>
+<?php } ?>
 
 <style type="text/css">
   .pagination_box a{
@@ -396,6 +431,13 @@
     $("#profile_content").load("<?php echo base_url()?>home/user/teacher_register");
     $(".pleft_nav").find("li").removeClass("active");
     $(".pnav_teacher_register").find("li").addClass("active");
+  });
+
+  $('.pnav_studio_register').on('click',function(){
+    $("#profile_content").html(loading_set);
+    $("#profile_content").load("<?php echo base_url()?>home/user/studio_register");
+    $(".pleft_nav").find("li").removeClass("active");
+    $(".pnav_studio_register").find("li").addClass("active");
   });
 
   $('.pnav_shop_register').on('click',function(){

@@ -15,6 +15,16 @@
       margin-top: 10px;
       margin-bottom: 0 !important;
     }
+    .slick_anchor {
+      display: block;
+      width: 100%;
+      padding-bottom: 62.5%;
+  
+      background-position: top center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-attachment: scroll;
+    }
   </style>
   <div class="col-md-12" style="height: auto; padding: 0;">
     <div class="slider-nav">
@@ -27,7 +37,8 @@
           <?php if (empty($slider->link) == false && strlen($slider->link) > 0) { ?>
           <a href="<?php echo $slider->link; ?>">
             <?php } ?>
-            <img class="slide-<?php echo $i; ?> slider-img" src="<?php echo $slider->slider_image_url; ?>" alt="">
+            <div class="slick_anchor" style="background-image: url(<?php echo $slider->slider_image_url; ?>)"></div>
+<!--            <img class="slide---><?php //echo $i; ?><!-- slider-img" src="--><?php //echo $slider->slider_image_url; ?><!--" alt="">-->
             <?php if (empty($slider->link) == false && strlen($slider->link) > 0) { ?>
           </a>
         <?php } ?>

@@ -520,7 +520,8 @@
                     <div class="recent-post" style="background: #fff;/* border: 1px solid #e0e0e0; */">
                       <div class="media">
                         <?php
-                        if ($center_data->teacher_cnt > 0) {
+//                        if ($center_data->teacher_cnt > 0) {
+                        if (isset($teacher_data) == true && empty($teacher_data) == false) {
                           ?>
                           <div class="instructor slick" style="height: 100px; /* padding-bottom: 10px; */">
                             <?php
@@ -571,7 +572,7 @@
                       </tbody>
                     </table>
                   </div>
-                  <div class="col-md-12" style="padding: 10px 0px 0px 0px !important; border: none;">
+                  <div class="col-md-12" style="padding: 10px 0px 10px 0px !important; border: none;">
                     <div class="recent-post" style="background: #fff;/* border: 1px solid #e0e0e0; */">
                       <div class="media">
                         <div>
@@ -871,8 +872,8 @@
 </style>
 
 <!--<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>-->
-<script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
 <script>
 
@@ -997,7 +998,8 @@
 </script>
 
 <?php
-if ($center_data->teacher_cnt > 0) {
+//if ($center_data->teacher_cnt > 0) {
+if (isset($teacher_data) == true && empty($teacher_data) == false) {
   ?>
   <script type="text/javascript">
     // $(function() {

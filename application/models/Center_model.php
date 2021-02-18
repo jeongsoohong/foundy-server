@@ -546,4 +546,10 @@ QUERY;
     $this->db->set('update_at', 'NOW()', false);
     $this->db->update('center_ticket_member', array(), array('member_id' => $reserve_info->member_id));
   }
+  function get_ampm($time) {
+    return ($time < '12:00:00' ? 'am' : 'pm');
+  }
+  function get_time($time) {
+    return ($time <= '12:00:00' ? substr($time, 0, 5) : substr(date('H:i:s', strtotime($time) - 12 * ONE_HOUR), 0, 5));
+  }
 }

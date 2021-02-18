@@ -77,7 +77,23 @@
         <a href="<?php echo base_url().'home/find/center/'.CENTER_TYPE_PILATES; ?>" style="margin:auto;">
           <img class="img-responsive" src="<?php echo base_url(); ?>uploads/icon_0604/find03.png" alt="" />
         </a>
-        <a href="<?php echo base_url().'home/find/class'; ?>" style="margin:auto;">
+        <?
+        if (STUDIO_OPEN) {
+          if (DEV_SERVER) {
+            $online_link = base_url().'home/find/studio';
+          } else {
+            $online_link = base_url().'home/find/studio';
+          }
+        } else {
+          if (DEV_SERVER) {
+//            $online_link = base_url().'home/find/studio';
+            $online_link = base_url().'home/find/class';
+          } else {
+            $online_link = base_url().'home/find/class';
+          }
+        }
+        ?>
+        <a href="<?= $online_link; ?>" style="margin:auto;">
           <img class="img-responsive" src="<?php echo base_url(); ?>uploads/icon_0604/find04.png" alt="" />
         </a>
       </div>
@@ -523,8 +539,285 @@
     margin-top: -110px;
   }
   #canceling .popup_topic,
-  #booking .popup_topic {
+  #booking .popup_topic,
+  #online .popup_topic {
     text-align: center;
+  }
+  #online {
+    height: 460px;
+    margin-top: -230px;
+  }
+
+  .online_box {
+    width: 228px;
+    height: 96px;
+    margin: 16px auto 0;
+    position: relative;
+    border: 1px solid #B0957A;
+    border-radius: 0 12px 0 12px;
+    box-sizing: border-box;
+  }
+  .online_price {
+    color: #B0957A;
+    font-size: 16px;
+    position: absolute;
+    width: 100%;
+    height: 34px;
+    line-height: 34px;
+    margin: auto !important;
+    left: 0;
+    right: 0;
+    top: 14px;
+  }
+  #price {
+    font-size: 24px;
+    font-weight: bold !important;
+  }
+  .online_talk {
+    position: absolute;
+    bottom: 8px;
+    color: #9e9e9e;
+    font-size: 10px;
+    text-align: center;
+    width: 83%;
+    word-break: keep-all;
+    margin: auto !important;
+    left: 0;
+    right: 0;
+    bottom: 22px;
+    font-weight: bold;
+    line-height: 1.75;
+  }
+
+  .online_data {
+    margin: 20px auto 0;
+    width: 228px;
+  }
+  #online .clearfix::after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+  .data_name, .user_info {
+    margin-bottom: 8px;
+  }
+  .data_name {
+    float: left;
+    width: 80px;
+    color: #616161;
+    font-size: 12px;
+    font-weight: bold;
+    height: 32px;
+    line-height: 32px;
+    text-align: left;
+    padding-left: 4px;
+  }
+  .user_info {
+    box-sizing: border-box;
+    padding-left: 80px;
+    height: 32px;
+    line-height: 32px;
+    border-radius: 4px;
+  }
+  .info_box {
+    background-color: #f5f5f5;
+    box-sizing: border-box;
+    border: 0;
+    height: inherit;
+    line-height: inherit;
+    padding: 0 10px;
+    color: #9e9e9e;
+    font-size: 12px;
+    font-weight: normal;
+    border-radius: inherit;
+  }
+
+  .announce {
+    width: 228px;
+    margin: 20px auto;
+  }
+  .announce_tit {
+    height: 36px;
+    line-height: 36px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: -0.03em;
+    background-color: #B0957A;
+    border-radius: 4px 4px 0 0;
+  }
+  .announce_cnt {
+    color: #757575;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 1.75;
+    box-sizing: border-box;
+    padding: 12px;
+    height: 152px;
+    width: 228px;
+    margin: 0 auto;
+    text-align: left;
+    word-break: break-all;
+    border: 1px solid #eee;
+    border-radius: 0 0 4px 4px;
+  }
+  #online .popup_guide {
+    text-align: left;
+    width: 228px;
+    margin: 20px auto 0 !important;
+    padding-top: 16px;
+    border-top: 1px dashed #eee;
+  }
+  .online_pop {
+    position: relative;
+    height: inherit;
+    overflow-y: scroll;
+  }
+
+  .favorite_close {
+    width: 44px;
+    height: 44px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 0;
+    padding: 0;
+    background-color: transparent;
+  }
+
+  /* popup 스타일 수정 및 줌 관련 팝업 */
+  .popup-box {
+    z-index: 200;
+  }
+  div[class*=':book'],
+  div[class*='alt_cancel'] {
+    font-size: 0;
+    background-color: #fff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    border-radius: 4px;
+    z-index: 11;
+    width: 268px;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    margin-left: -134px;
+    text-align: center;
+  }
+  .zoom\:wrap .popup_tit {
+    width: 216px;
+    margin: 0 auto;
+  }
+  .zoom\:wrap .topic_icon {
+    display: block;
+    margin: 0 auto;
+  }
+  .zoom\:wrap .topic_message {
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold !important;
+    color: #2D8CFF;
+    margin: 8px 0 0 !important;
+  }
+  .zoom\:wrap .popup_topic {
+    width: 100%;
+  }
+  .zoom\:wrap .popup_guide  {
+    color: #2d8cff;
+    font-size: 13.5px;
+    font-weight: bold;
+    width: 100%;
+    margin: 0 auto 20px;
+  }
+  .zoom\:wrap .popup_detail {
+    word-break: keep-all;
+    color: #9e9e9e;
+    font-size: 11px;
+    font-weight: normal;
+    line-height: 1.75;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px dashed #eee;
+  }
+  .zoom\:wrap .query_studio {
+    border: 0;
+    padding: 0;
+    background-color: #edecf9;
+    color: #616161;
+    font-size: 12px;
+    font-weight: bold;
+    width: 100%;
+    height: 36px;
+    line-height: 36px;
+    border-radius: 4px;
+  }
+  .zoom\:wrap .zoom_link {
+    display: block;
+    padding: 0;
+    margin: 16px auto 20px;
+    background-color: #005ac6;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    height: 48px;
+    line-height: 48px;
+    border-radius: 4px;
+  }
+  .zoom\:wait {
+    position: relative;
+  }
+  .zoom\:wait .popup_detail {
+    padding: 0;
+    border: 0;
+    margin: 0;
+  }
+
+  .zoom\:wrap .copy-linkBtn {
+    background-color: #fff;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px dashed #eee;
+    position: relative;
+    box-sizing: border-box;
+    border: 1px solid #2D8CFF;
+  }
+  .linkIcon {
+    display: block;
+    width: 23px;
+    height: 23px;
+    background-color: #2D8CFF;
+    border-radius: 50%;
+    position: absolute;
+    top: 5.5px;
+    right: 6px;
+  }
+  .copy-txt {
+    text-align: center;
+    width: 92%;
+    position: relative;
+    color: #2D8CFF;
+  }
+  .linkIcon img {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+  }
+
+  .changeCancel {
+    margin: 12px auto 0 !important;
+    width: 80%;
+    color: #d32f2f;
+    word-break: keep-all;
+    font-size: 10px;
+    font-weight: normal;
+  }
+
+  .stripe {
+    display: block;
+    border-top: 1px dashed #eee;
+    margin: 0 0 20px;
   }
 </style>
 <div class="popup-box" id="schedule_reserve_popup" style="display: none;">
