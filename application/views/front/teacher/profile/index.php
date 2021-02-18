@@ -734,7 +734,7 @@
               </div>
             </div>
             <!-- 센터 프로필에 있는 schedule 넣어주세요 -->
-            <? if ((STUDIO_OPEN == true || $iam_this_teacher == true) && isset($studio_data) == true) { ?>
+            <? if ((DEV_SERVER == true || STUDIO_OPEN == true || $iam_this_teacher == true) && isset($studio_data) == true) { ?>
               <div class="col-md-12" id="schedule">
                 <div class="row">
                   <div class="col-md-12">
@@ -811,7 +811,7 @@
                   </div>
                 </div>
               </div>
-              <? if ((STUDIO_OPEN == true || $iam_this_teacher == true) && isset($studio_data->info) == true && empty($studio_data->info) == false) {?>
+              <? if ((DEV_SERVER == true || STUDIO_OPEN == true || $iam_this_teacher == true) && isset($studio_data->info) == true && empty($studio_data->info) == false) {?>
                 <div class="col-md-12" id="info">
                   <div class="row">
                     <div class="col-md-12">
@@ -1070,7 +1070,7 @@
   }
 </style>
 
-<?php if ((STUDIO_OPEN == true || $iam_this_teacher == true) && isset($studio_data) == true) { ?>
+<?php if ((DEV_SERVER == true || STUDIO_OPEN == true || $iam_this_teacher == true) && isset($studio_data) == true) { ?>
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
   
@@ -2112,7 +2112,7 @@
       contentType: false,
       processData: false,
       success: function(data) {
-        console.log(data);
+        // console.log(data);
         $("#loading_set").delay(500).fadeOut(500);
         close_reserve_popup_online();
         if(data.status === 'done') {

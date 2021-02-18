@@ -94,8 +94,8 @@
            }
          } else {
            if (DEV_SERVER) {
-//             $online_link = base_url().'home/find/studio';
-             $online_link = base_url().'home/find/class';
+             $online_link = base_url().'home/find/studio';
+//             $online_link = base_url().'home/find/class';
            } else {
              $online_link = base_url().'home/find/class';
            }

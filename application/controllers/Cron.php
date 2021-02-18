@@ -71,6 +71,41 @@ QUERY;
     }
   
   }
+  public function studio($para1 = '', $para2 = '', $para3 = '', $para4 = '', $para5 = '')
+  {
+    if ($para1 == 'link') {
+      // 클래스 시작 시간 전 링크 발송
+      // */5 * * * * nginx /usr/bin/php -f /web/public_html/index.php cron studio link 5
+  
+      $duration = $para2 * ONE_MINUTE; // minute * 60(sec)
+      $now = time();
+      $now = $now - $now % $duration;
+      $start_at = date('Y-m-d H:i:s', $now - $duration);
+      $end_at = date('Y-m-d H:i:s', $now - 1);
+      $send_classes= $this->db->where(array('send_link_at >=' => $start_at, 'send_link_at <=' => $end_at))->get('studio_schedule_info')->result();
+  
+      log_message('info', '[cron] studio/link, start_at['.$start_at.'] end_at['.$end_at.'] count['.count($send_classes).
+        '] send_classes['.json_encode($send_classes).']');
+  
+      if (count($send_classes) > 0) {
+        foreach ($send_classes as $schedule_info) {
+          $studio_info = $this->studio_model->get($schedule_info->schedule_info->studio_id);
+          $studio_user_data = $this->db->get_where('user', array('user_id' => $studio_info->user_id))->row();
+          $reserves = $this->db->get_where('studio_schedule_reserve', array('schedule_info_id' => $schedule_info->schedule_info_id))->result();
+          foreach ($reserves as $reserve) {
+            $user_data = $this->db->get_where('user', array('user_id' => $reserve->user_id))->row();
+            $this->email_model->send_online_class_link($user_data->email, $schedule_info->teacher_name, $schedule_info->schedule_title,
+              $schedule_info->schedule_date, $schedule_info->start_time, $schedule_info->class_link, $schedule_info->class_id,
+              $schedule_info->class_pw, (isset($studio_info->email) ? $studio_info->email : $studio_user_data->email));
+            $this->mts_model->send_studio_class_reserve($user_data, $studio_user_data, $studio_info, $schedule_info);
+          }
+        }
+      }
+  
+    } else {
+      log_message('error', '[cron] invalid para1['.$para1.'] for studio');
+    }
+  }
   
   public function center($para1 = '', $para2 = '', $para3 = '', $para4 = '', $para5 = '')
   {

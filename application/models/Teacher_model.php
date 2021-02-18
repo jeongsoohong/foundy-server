@@ -320,5 +320,5 @@ class Teacher_model extends CI_Model
   {
     return $this->db->get_where('teacher_video', array('teacher_id' => $teacher_id, 'video_id' => $video_id, 'activate' => 1))->row();
   }
-  
+
 }

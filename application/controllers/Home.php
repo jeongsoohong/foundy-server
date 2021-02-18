@@ -2128,11 +2128,11 @@ QUERU;
             $where = array(
               'activate' => 1
             );
-            $teachers = $this->teacher_model->get_list($limit, $offset, 'teacher_id', 'desc', $where);
+            $teachers = $this->teacher_model->get_list($limit, $offset, 'updated_at', 'desc', $where);
           } else {
             $query = <<<QUERY
 select distinct(teacher_id) from teacher_category where category='{$filter}'
-order by teacher_id desc limit {$offset},{$limit}
+order by updated_at desc limit {$offset},{$limit}
 QUERY;
             $teachers = $this->db->query($query)->result();
             if (count($teachers)) {
@@ -2140,7 +2140,8 @@ QUERY;
               foreach ($teachers as $teacher) {
                 $teacher_ids[] = $teacher->teacher_id;
               }
-              $teachers = $this->db->where_in('teacher_id', $teacher_ids)->get('teacher')->result();
+              $teachers = $this->db->order_by('updated_at', 'desc')->
+              where_in('teacher_id', $teacher_ids)->get('teacher')->result();
             }
           }
         } else {
@@ -2148,7 +2149,7 @@ QUERY;
             'activate' => 1,
           );
           $this->db->like('name', $search, 'both');
-          $teachers = $this->teacher_model->get_list($limit, $offset, 'teacher_id', 'desc', $where);
+          $teachers = $this->teacher_model->get_list($limit, $offset, 'updated_at', 'desc', $where);
         }
   
         foreach ($teachers as $teacher) {
@@ -2222,10 +2223,16 @@ QUERY;
   
         $limit = $this->teacher_model::FIND_TEACHER_PAGE_SIZE;
         $offset = 0;
+//        $where = array(
+//          'activate' => 1,
+//          'recommend >=' => 0
+//        );
+//        $teachers = $this->teacher_model->get_list($limit, $offset, 'recommend', 'asc', $where);
+  
         $where = array(
-          'recommend >=' => 0
+          'activate' => 1
         );
-        $teachers = $this->teacher_model->get_list($limit, $offset, 'recommend', 'asc', $where);
+        $teachers = $this->teacher_model->get_list($limit, $offset, 'updated_at', 'desc', $where);
   
         $limit = $this->studio_model::FIND_UPCOMING_CLASS_PAGE_SIZE;
         $offset = 0;

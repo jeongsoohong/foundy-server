@@ -424,7 +424,7 @@
         let prevCnt = $(".teacher__data .data--profile").length;
         $('.teacher__data').append(data);
         let listCnt = $(".teacher__data .data--profile").length;
-        if ( listCnt === 0 || listCnt % 1 !== 0 || prevCnt === listCnt) {
+        if ( listCnt === 0 || listCnt % <?= $this->teacher_model::FIND_TEACHER_PAGE_SIZE; ?> !== 0 || prevCnt === listCnt) {
           $('#view_more').hide();
         } else {
           $('#view_more').show();

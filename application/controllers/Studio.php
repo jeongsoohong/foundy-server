@@ -824,9 +824,16 @@ class Studio extends CI_Controller
           $send_link_hour = 0;
         }
         
+        $send_link_at = null;
+        if ($send_link_immediate == 0) {
+          $schedule_start = $schedule_info->schedule_date.' '.$schedule_info->start_time;
+          $send_link_at = date('Y-m-d H:i:s', strtotime($schedule_start) - $send_link_hour*ONE_HOUR);
+        }
+        
         $data = array(
           'send_link_immediate' => $send_link_immediate,
           'send_link_hour' => $send_link_hour,
+          'send_link_at' => $send_link_at,
           'class_link' => $class_link,
           'class_id' => $class_id,
           'class_pw' => $class_pw,
@@ -1426,6 +1433,15 @@ class Studio extends CI_Controller
             }
           }
         }
+      }
+    
+      if ($ticketing) {
+        $this->db->where('teacher_id', $this->teacher_id);
+        $this->db->set('updated_at', 'NOW()', false);
+        $this->db->update('teacher');
+        $this->db->where('teacher_id', $this->teacher_id);
+        $this->db->set('updated_at', 'NOW()', false);
+        $this->db->update('teacher_category');
       }
   
       $this->response($result);
