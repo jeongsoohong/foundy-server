@@ -80,8 +80,8 @@ QUERY;
       $duration = $para2 * ONE_MINUTE; // minute * 60(sec)
       $now = time();
       $now = $now - $now % $duration;
-      $start_at = date('Y-m-d H:i:s', $now - $duration);
-      $end_at = date('Y-m-d H:i:s', $now - 1);
+      $start_at = date('Y-m-d H:i:s', $now - $duration + 1);
+      $end_at = date('Y-m-d H:i:s', $now);
       $send_classes= $this->db->where(array('send_link_at >=' => $start_at, 'send_link_at <=' => $end_at))->get('studio_schedule_info')->result();
   
       log_message('info', '[cron] studio/link, start_at['.$start_at.'] end_at['.$end_at.'] count['.count($send_classes).
