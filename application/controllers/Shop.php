@@ -1654,7 +1654,7 @@ QUERY;
         $this->form_validation->set_rules('send_info_postcode', 'send_info_postcode', 'trim|required|numeric|max_length[8]');
         $this->form_validation->set_rules('send_info_address_1', 'send_info_address_1', 'trim|required|max_length[128]');
         $this->form_validation->set_rules('send_info_address_2', 'send_info_address_2', 'trim|required|max_length[128]');
-        $this->form_validation->set_rules('send_info_phone', 'send_info_phone', 'trim|required|numeric|min_length[9]|max_length[16]');
+        $this->form_validation->set_rules('send_info_phone', 'send_info_phone', 'trim|required|numeric|min_length[8]|max_length[16]');
         $this->form_validation->set_rules('free_shipping', 'free_shipping', 'trim|required|is_natural|less_than_equal_to[1]');
         $this->form_validation->set_rules('free_shipping_total_price', 'free_shipping_total_price', 'trim|is_natural|less_than_equal_to[999999]');
         $this->form_validation->set_rules('free_shipping_cond_price', 'free_shipping_cond_price', 'trim|is_natural|less_than_equal_to[999999]');
