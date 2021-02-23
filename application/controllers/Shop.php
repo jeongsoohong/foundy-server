@@ -1549,7 +1549,7 @@ QUERY;
         $this->load->library('form_validation');
         $this->form_validation->set_rules('worker_category', 'worker_category', 'trim|required|numeric|max_length[10]');
         $this->form_validation->set_rules('worker_name', 'worker_name', 'trim|required|max_length[32]');
-        $this->form_validation->set_rules('phone', 'phone', 'trim|numeric|min_length[9]|max_length[32]');
+        $this->form_validation->set_rules('phone', 'phone', 'trim|numeric|min_length[8]|max_length[32]');
         $this->form_validation->set_rules('mobile', 'mobile', 'trim|required|numeric|max_length[32]');
         $this->form_validation->set_rules('email', 'email', 'trim|valid_email|max_length[128]');
 
@@ -1584,7 +1584,7 @@ QUERY;
         $this->form_validation->set_rules('worker_id', 'worker_id', 'trim|required|numeric|max_length[10]');
         $this->form_validation->set_rules('worker_category', 'worker_category', 'trim|required|numeric|max_length[10]');
         $this->form_validation->set_rules('worker_name', 'worker_name', 'trim|required|max_length[32]');
-        $this->form_validation->set_rules('phone', 'phone', 'trim|numeric|min_length[9]|max_length[16]');
+        $this->form_validation->set_rules('phone', 'phone', 'trim|numeric|min_length[8]|max_length[16]');
         $this->form_validation->set_rules('mobile', 'mobile', 'trim|required|numeric|max_length[32]');
         $this->form_validation->set_rules('email', 'email', 'trim|valid_email|max_length[128]');
 
@@ -1747,7 +1747,7 @@ QUERY;
         $this->form_validation->set_rules('return_info_postcode', 'return_info_postcode', 'trim|required|numeric|max_length[8]');
         $this->form_validation->set_rules('return_info_address_1', 'return_info_address_1', 'trim|required|max_length[128]');
         $this->form_validation->set_rules('return_info_address_2', 'return_info_address_2', 'trim|required|max_length[128]');
-        $this->form_validation->set_rules('return_info_phone', 'return_info_phone', 'trim|required|numeric|min_length[9]|max_length[16]');
+        $this->form_validation->set_rules('return_info_phone', 'return_info_phone', 'trim|required|numeric|min_length[8]|max_length[16]');
         $this->form_validation->set_rules('return_shipping_price', 'return_shipping_price', 'trim|is_natural|less_than_equal_to[999999]');
         $this->form_validation->set_rules('return_send_shipping_price', 'return_send_shipping_price', 'trim|is_natural|less_than_equal_to[999999]');
 

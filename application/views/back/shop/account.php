@@ -256,7 +256,7 @@
       processData: false,
       success: function (data) {
         $("#loading_set").fadeOut(500);
-        if (data == 'done' || data.search('done') !== -1) {
+        if (data === 'done' || data.search('done') !== -1) {
           $.notify({
             message: msg,
             icon: 'fa fa-check'
