@@ -4343,7 +4343,7 @@ QUERY;
         }
     
         $studio_user_data = $this->db->get_where('user', array('user_id' => $studio_data->user_id))->row();
-        if (!($studio_user_data->user_type & USER_TYPE_CENTER)) {
+        if (!($studio_user_data->user_type & USER_TYPE_STUDIO)) {
           echo("<script>alert('스튜디오 회원이 아닙니다');'</script>");
           exit;
         }
