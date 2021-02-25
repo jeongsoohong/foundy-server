@@ -1,3 +1,10 @@
+<?php
+$user_type = USER_TYPE_DEFAULT;
+if ($this->session->userdata('user_login') == 'yes') {
+  $user_data = json_decode($this->session->userdata('user_data'));
+  $user_type = $user_data->user_type;
+}
+?>
 <script src="https://checkout.stripe.com/checkout.js"></script>
 <style>
   @media (min-width: 1200px){
@@ -734,7 +741,7 @@
               </div>
             </div>
             <!-- 센터 프로필에 있는 schedule 넣어주세요 -->
-            <? if ((DEV_SERVER == true || STUDIO_OPEN == true || $iam_this_teacher == true) && isset($studio_data) == true) { ?>
+            <? if ((STUDIO_OPEN == true || ($user_type & USER_TYPE_ADMIN) || $iam_this_teacher == true) && isset($studio_data) == true) { ?>
               <div class="col-md-12" id="schedule">
                 <div class="row">
                   <div class="col-md-12">
@@ -811,7 +818,7 @@
                   </div>
                 </div>
               </div>
-              <? if ((DEV_SERVER == true || STUDIO_OPEN == true || $iam_this_teacher == true) && isset($studio_data->info) == true && empty($studio_data->info) == false) {?>
+              <? if ((($user_type & USER_TYPE_ADMIN) || $iam_this_teacher == true) && isset($studio_data->info) == true && empty($studio_data->info) == false) {?>
                 <div class="col-md-12" id="info">
                   <div class="row">
                     <div class="col-md-12">
@@ -1070,7 +1077,7 @@
   }
 </style>
 
-<?php if ((DEV_SERVER == true || STUDIO_OPEN == true || $iam_this_teacher == true) && isset($studio_data) == true) { ?>
+<?php if ((STUDIO_OPEN == true || ($user_type & USER_TYPE_ADMIN) || $iam_this_teacher == true) && isset($studio_data) == true) { ?>
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
   

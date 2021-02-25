@@ -176,6 +176,7 @@ class Home extends CI_Controller
     $bookmark_centers = array();
     $bookmark_teachers = array();
     $upcoming_class = array();
+    $upcoming_class2 = array();
     if ($this->is_login()) {
       $user_id = $this->session->userdata('user_id');
 
@@ -222,7 +223,21 @@ QUERY;
           $class->wait_number = $this->db->query($query)->row()->cnt;
         }
       }
+      
+//      log_message('debug', '[center] upcoming class['.json_encode($upcoming_class).']');
 
+      $query = <<<QUERY
+select * from studio_schedule_reserve
+where user_id={$user_id} and reserve=1
+and '{$start_date}'<= schedule_at and  schedule_at<='{$end_date}' order by schedule_at asc
+QUERY;
+      $upcoming_class2 = $this->db->query($query)->result();
+      foreach ($upcoming_class2 as $class) {
+        $class->schedule_info = $this->db->get_where('studio_schedule_info', array('schedule_info_id' => $class->schedule_info_id))->row();
+        $class->studio_info = $this->db->get_where('studio', array('studio_id' => $class->schedule_info->studio_id))->row();
+      }
+      
+//      log_message('debug', '[studio] upcoming class['.json_encode($upcoming_class2).']');
     }
 
     $this->db->order_by('slider_id', 'desc');
@@ -236,6 +251,7 @@ QUERY;
     $this->page_data['bookmark_centers'] = $bookmark_centers;
     $this->page_data['bookmark_teachers'] = $bookmark_teachers;
     $this->page_data['upcoming_class'] = $upcoming_class;
+    $this->page_data['upcoming_class2'] = $upcoming_class2;
     $this->page_data['blogs'] = $blogs;
     $this->page_data['page_name'] = "home";
     $this->page_data['asset_page'] = "home";
@@ -1834,7 +1850,7 @@ QUERY;
 
       $this->load->library('form_validation');
       $this->form_validation->set_rules('teacher_name', 'teacher_name', 'trim|required|max_length[32]');
-      $this->form_validation->set_rules('about', 'about', 'trim|required|max_length[64]');
+      $this->form_validation->set_rules('about', 'about', 'trim|required|max_length[1000]');
       $this->form_validation->set_rules('youtube', 'youtube', 'trim|valid_url|max_length[256]');
       $this->form_validation->set_rules('instagram', 'instagram', 'trim|valid_url|max_length[256]');
 //      $this->form_validation->set_rules('homepage', 'homepage', 'trim|valid_url|max_length[256]');
@@ -3895,7 +3911,7 @@ QUERY;
 
       $this->load->library('form_validation');
 //      $this->form_validation->set_rules('teacher_name', 'teacher_name', 'trim|required|max_length[32]');
-      $this->form_validation->set_rules('about', 'about', 'trim|required|max_length[64]');
+      $this->form_validation->set_rules('about', 'about', 'trim|required|max_length[1000]');
       $this->form_validation->set_rules('youtube', 'youtube', 'trim|valid_url|max_length[256]');
       $this->form_validation->set_rules('instagram_', 'instagram', 'trim|valid_url|max_length[256]');
 //      $this->form_validation->set_rules('homepage', 'homepage', 'trim|valid_url|max_length[256]');

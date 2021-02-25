@@ -409,7 +409,7 @@ class Studio extends CI_Controller
   
       $this->load->library('form_validation');
 //      $this->form_validation->set_rules('teacher_name', 'teacher_name', 'trim|required|max_length[32]');
-      $this->form_validation->set_rules('about', 'about', 'trim|required|max_length[64]');
+      $this->form_validation->set_rules('about', 'about', 'trim|required|max_length[1000]');
       $this->form_validation->set_rules('youtube', 'youtube', 'trim|valid_url|max_length[256]');
       $this->form_validation->set_rules('instagram_', 'instagram', 'trim|valid_url|max_length[256]');
       $this->form_validation->set_rules('no_profile_image', 'no_profile_image', 'trim|required|is_natural|less_than_equal_to[1]');
@@ -933,28 +933,31 @@ class Studio extends CI_Controller
         $this->response($result);
       }
   
-//      $reserve_list = $this->studio_model->get_schedule_reserve_list($schedule_info_id);
-//      foreach ($reserve_list as $reserve_info) {
-//        $this->center_model->schedule_cancel($reserve_info, $schedule_info->schedule_title, $schedule_info->schedule_date);
-//        $user_info = $this->db->get_where('user', array('user_id' => $reserve_info->user_id))->row();
-//        $this->mts_model->send_class_reserve_by_center($user_info->phone, CENTER_TICKET_MEMBER_ACTION_RESERVE_CANCEL,
-//          $schedule_info->schedule_title, $schedule_info->schedule_date, $this->center->title,
-//          $schedule_info->start_time,$schedule_info->end_time);
-//          $this->mts_model->send_class_cancel($user_info->phone, $user_info->username, $schedule_info->schedule_title,
-//          date('Y.m.d', strtotime($schedule_info->schedule_date)));
-//      }
-//      $wait_list = $this->studio_model->get_schedule_wait_list($schedule_info_id);
-//      foreach ($wait_list as $reserve_info) {
-//        $this->center_model->schedule_cancel($reserve_info, $schedule_info->schedule_title, $schedule_info->schedule_date);
-//        $user_info = $this->db->get_where('user', array('user_id' => $reserve_info->user_id))->row();
-//        $this->mts_model->send_class_reserve_by_center($user_info->phone, CENTER_TICKET_MEMBER_ACTION_RESERVE_CANCEL,
-//          $schedule_info->schedule_title, $schedule_info->schedule_date, $this->center->title,
-//          $schedule_info->start_time,$schedule_info->end_time);
-//          $this->mts_model->send_class_cancel($user_info->phone, $user_info->username, $schedule_info->schedule_title,
-//            date('Y.m.d', strtotime($schedule_info->schedule_date)));
-//      }
   
-      $this->center_model->unlock_schedule_info($schedule_info_id);
+      $reserve_list = $this->studio_model->get_schedule_reserve_list($schedule_info_id);
+      foreach ($reserve_list as $reserve_info) {
+        $res = $this->studio_model->update_schedule_status($reserve_info->reserve_id, $this->studio_model::TICKETING_STATUS_CANCEL);
+        if ($res) {
+          $user_info = $this->db->get_where('user', array('user_id' => $reserve_info->user_id))->row();
+          $this->email_model->send_online_class_cancel($user_info->email, $schedule_info->teacher_name, $schedule_info->schedule_title,
+            $schedule_info->schedule_date, $schedule_info->start_time);
+          $this->mts_model->send_studio_class_cancel($user_info->phone, $schedule_info->teacher_name, $schedule_info->schedule_title,
+            $schedule_info->schedule_date, $schedule_info->start_time);
+        }
+      }
+      $wait_list = $this->studio_model->get_schedule_wait_list($schedule_info_id);
+      foreach ($wait_list as $wait_info) {
+        $res = $this->studio_model->update_schedule_status($wait_info->reserve_id, $this->studio_model::TICKETING_STATUS_CANCEL);
+        if ($res) {
+          $user_info = $this->db->get_where('user', array('user_id' => $wait_info->user_id))->row();
+          $this->email_model->send_online_class_cancel($user_info->email, $schedule_info->teacher_name, $schedule_info->schedule_title,
+            $schedule_info->schedule_date, $schedule_info->start_time);
+          $this->mts_model->send_studio_class_cancel($user_info->phone, $schedule_info->teacher_name, $schedule_info->schedule_title,
+            $schedule_info->schedule_date, $schedule_info->start_time);
+        }
+      }
+
+      $this->studio_model->unlock_schedule_info($schedule_info_id);
       $this->response($result);
   
     } else if ($para1 == 'register') {
@@ -1840,6 +1843,8 @@ class Studio extends CI_Controller
         $cat = trim($cat);
         $this->db->insert('studio_class_category', array('schedule_info_id' => $schedule_info_id, 'category' => $cat, 'type' => STUDIO_TYPE_PILATES, 'activate' => 1));
       }
+      
+      // 예약자 / 대기자 인원 조절은 어드민에서 직접 해야하는 함
   
       $this->response($result);
   

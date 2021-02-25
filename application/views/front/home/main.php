@@ -1,4 +1,23 @@
-<!-- PAGE -->
+<?php
+function get_week_str($week) {
+  switch($week) {
+    case 0 : return 'SUN';
+    case 1 : return 'MON';
+    case 2 : return 'TUE';
+    case 3 : return 'WED';
+    case 4 : return 'THU';
+    case 5 : return 'FRI';
+    case 6 : return 'SAT';
+  }
+  return '';
+}
+function get_ampm($time) {
+  return ($time < '12:00:00' ? 'am' : 'pm');
+}
+function get_time($time) {
+  return ($time <= '12:00:00' ? substr($time, 0, 5) : substr(date('H:i:s', strtotime($time) - 12 * ONE_HOUR), 0, 5));
+}
+?>
 <style>
   .main-header {
     text-align: center;
@@ -85,11 +104,15 @@
             $online_link = base_url().'home/find/studio';
           }
         } else {
-          if (DEV_SERVER) {
-            $online_link = base_url().'home/find/studio';
-//            $online_link = base_url().'home/find/class';
+          if ($this->session->userdata('user_login') == 'yes') {
+            $user_data = json_decode($this->session->userdata('user_data'));
+            if ($user_data->user_type & USER_TYPE_ADMIN) {
+              $online_link = base_url() . 'home/find/studio';
+            } else {
+              $online_link = base_url() . 'home/find/class';
+            }
           } else {
-            $online_link = base_url().'home/find/class';
+            $online_link = base_url() . 'home/find/class';
           }
         }
         ?>
@@ -189,26 +212,7 @@
       }
     </style>
     <!-- UPCOMMING CLASS -->
-    <? if (count($upcoming_class) > 0) {
-      function get_week_str($week) {
-        switch($week) {
-          case 0 : return 'SUN';
-          case 1 : return 'MON';
-          case 2 : return 'TUE';
-          case 3 : return 'WED';
-          case 4 : return 'THU';
-          case 5 : return 'FRI';
-          case 6 : return 'SAT';
-        }
-        return '';
-      }
-      function get_ampm($time) {
-        return ($time < '12:00:00' ? 'am' : 'pm');
-      }
-      function get_time($time) {
-        return ($time <= '12:00:00' ? substr($time, 0, 5) : substr(date('H:i:s', strtotime($time) - 12 * ONE_HOUR), 0, 5));
-      }
-      ?>
+    <? if (count($upcoming_class) > 0) { ?>
       <div class="col-md-12 main-upcoming" id="coming">
         <div class="upcoming_tit">
           <p class="font-futura tit_txt">Upcoming Class</p>
@@ -299,6 +303,63 @@
                 <p id="waitClass">대기 <span><?= $class->wait_number; ?></span></p>
               </div>
             <? } ?>
+          <? } ?>
+        </div>
+        <!--      <button class="font-futura btn_more" style="font-weight: bold !important;">MORE</button>-->
+      </div>
+    <? } ?>
+    <? if (count($upcoming_class2) > 0) { ?>
+      <div class="col-md-12 main-upcoming" id="coming">
+        <div class="upcoming_tit">
+          <p class="font-futura tit_txt">Upcoming Class</p>
+        </div>
+        <div class="upcoming_wrap">
+          <? foreach ($upcoming_class2 as $class) { ?>
+              <div class="upcoming_schedule">
+                <div class="schedule_type">
+                  <div class="type_today" style="background-color: #000 !important;">
+                    <!-- 요일 축약어는 지금처럼 '세글자'로 부탁드립니다. -->
+                    <!-- 일 단위가 한 자릿수이면 '1일' 처럼 표기 부탁드립니다. -->
+                    <p class="font-futura today_date">
+                      <?= get_week_str($class->schedule_info->week); ?>
+                      <br>
+                      <span class="date_no">
+                        <?= date('j', strtotime($class->schedule_info->schedule_date)); ?>
+                      </span>일
+                    </p>
+                  </div>
+                  <p class="type_info">
+                    <span class="font-futura day_morning">
+                      <?= get_ampm($class->schedule_info->start_time); ?>
+                    </span>
+                    <span class="font-futura time_start">
+                      <?= get_time($class->schedule_info->start_time); ?>
+                    </span>
+                    <br>~
+                    <span class="font-futura day_afternoon">
+                      <?= get_ampm($class->schedule_info->end_time); ?>
+                    </span>
+                    <span class="font-futura time_end">
+                      <?= get_time($class->schedule_info->end_time); ?>
+                    </span>
+                  </p>
+                  <div class="type_name clearfix">
+                    <p class="name_class">
+                      <?= $class->schedule_info->schedule_title; ?>
+                    </p>
+                    <p class="name_center">
+                      <?= $class->studio_info->title; ?>
+                    </p>
+                  </div>
+                </div>
+                <button class="type_cancel" onclick="open_link_popup(<?= $class->schedule_info->schedule_info_id; ?>)">
+                  <? if (isset($class->schedule_info->class_link) && empty($class->schedule_info->class_link) == false) { ?>
+                    <img src="<?= base_url(); ?>template/icon/ic_upcoming_linked.png" width="40" height="40">
+                  <? } else { ?>
+                    <img src="<?= base_url(); ?>template/icon/ic_upcoming_confirmed.png" width="40" height="40">
+                  <? } ?>
+                </button>
+              </div>
           <? } ?>
         </div>
         <!--      <button class="font-futura btn_more" style="font-weight: bold !important;">MORE</button>-->
@@ -869,4 +930,7 @@
       </div>
     </div>
   </div>
+</div>
+<!-- 온라인 '티켓팅 확정' 클릭 팝업(ZOOM 링크 생성 후) -->
+<div class="popup-box" id="confirmed_linked" style="display: none;">
 </div>

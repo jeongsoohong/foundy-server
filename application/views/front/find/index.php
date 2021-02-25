@@ -93,11 +93,15 @@
              $online_link = base_url().'home/find/studio';
            }
          } else {
-           if (DEV_SERVER) {
-             $online_link = base_url().'home/find/studio';
-//             $online_link = base_url().'home/find/class';
+           if ($this->session->userdata('user_login') == 'yes') {
+             $user_data = json_decode($this->session->userdata('user_data'));
+             if ($user_data->user_type & USER_TYPE_ADMIN) {
+               $online_link = base_url() . 'home/find/studio';
+             } else {
+               $online_link = base_url() . 'home/find/class';
+             }
            } else {
-             $online_link = base_url().'home/find/class';
+             $online_link = base_url() . 'home/find/class';
            }
          }
          ?>
