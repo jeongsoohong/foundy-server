@@ -209,8 +209,8 @@
       profile_image = target[0].files[0];
     } else {
       if (no_profile_image === 0) {
-        alert('프로필 이미지 사용을 위해서는 사진파일을 등록해주십시요!!')
-        return false;
+        // alert('프로필 이미지 사용을 위해서는 사진파일을 등록해주십시요!!')
+        // return false;
       }
     }
   
