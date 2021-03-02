@@ -59,7 +59,7 @@ if ($type == FIND_TYPE_CENTER) {
           <tbody>
           <tr style="height: 25px">
             <td style="width: 85%">
-              <a href="<?php echo base_url(); ?>home/teacher/profile/<?php echo $teacher->user_id; ?>">
+              <a href="<?php echo base_url(); ?>home/teacher/profile/<?php echo $teacher->teacher_id; ?>">
                 <h5 class="center-title"><?php echo $teacher->name; ?></h5>
               </a>
             </td>
