@@ -24,7 +24,7 @@ class Studio_model extends CI_Model
   }
   
   function get_studios($teacher_id) {
-    return $this->db->get_where('studio', array('teacher_id' => $teacher_id))->result();
+    return $this->db->get_where('studio', array('teacher_id' => $teacher_id, 'activate' => 1))->result();
   }
   
   function get_categories($studio_id, $type)

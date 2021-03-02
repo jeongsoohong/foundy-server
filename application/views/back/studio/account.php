@@ -80,7 +80,7 @@
           <dl class="type_detail stu_detail clearfix">
             <dt class="area_tit stu_name">스튜디오 이름</dt>
             <dd class="area_data name_data" style="margin-bottom: 10px;">
-              <input class="data_name gray_bg" type="text" value="<?=  $teacher->name; ?>" disabled>
+              <input class="data_name gray_bg" type="text" value="<?=  $studio->name; ?>" disabled>
               <span class="read">스튜디오 이름 변경시 담당자에게 연락주시기 바랍니다.</span>
             </dd>
           </dl>
