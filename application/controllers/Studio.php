@@ -349,16 +349,19 @@ class Studio extends CI_Controller
 //      log_message('debug', '[studio] studios['.json_encode($this->studios).']');
 
       if (empty($this->teacher)) {
+        $this->logout();
         echo ("<script>alert('강사 회원이 아닙니다');</script>");
         exit;
       }
       
       if (!($this->user->user_type & USER_TYPE_TEACHER)) {
+        $this->logout();
         echo ("<script>alert('강사 회원이 아닙니다');</script>");
         exit;
       }
       
       if ($this->teacher->activate == 0) {
+        $this->logout();
         echo ("<script>alert('승인 대기 중입니다');</script>");
         exit;
       }

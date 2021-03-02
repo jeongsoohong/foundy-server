@@ -59,22 +59,26 @@ class Center extends CI_Controller
       $this->page_data['centers'] = $this->centers;
       
       if (empty($this->center)) {
+        $this->logout();
         echo ("<script>alert('센터회원이 아닙니다');</script>");
         exit;
       }
   
       $user_data = $this->db->get_where('user', array('user_id' => $this->center->user_id))->row();
       if (!($user_data->user_type & USER_TYPE_CENTER)) {
+        $this->logout();
         echo ("<script>alert('센터회원이 아닙니다');</script>");
         exit;
       }
   
-      if ($user_data->user_id != $this->session->userdata('user_id')) {
-        echo ("<script>alert('권한이 없습니다.');</script>");
-        exit;
-      }
+//      if ($user_data->user_id != $this->session->userdata('user_id')) {
+//        $this->logout();
+//        echo ("<script>alert('권한이 없습니다.');</script>");
+//        exit;
+//      }
   
       if ($this->center->activate == 0) {
+        $this->logout();
         echo ("<script>alert('승인 대기 중입니다');</script>");
         exit;
       }
