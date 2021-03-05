@@ -1,5 +1,5 @@
 <div class="main-shop__tit">
-  <p class="font-futura">BEST ITEM</p>
+  <p class="font-futura" style="font-size: 15px;">BEST ITEM</p>
   <ul class="clearfix" style="margin: 0;">
     <li class="tit--detail titActive" data-id="yoga">YOGA</li>
     <li class="tit--detail" data-id="vegan">VEGAN</li>
