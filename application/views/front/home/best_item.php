@@ -16,7 +16,7 @@
           </div>
           <div class="thumb-price">
             <p class="price-name"><?= $item->brand_name; ?></p>
-            <p class="price-detail"><?= $this->crud_model->get_price_str($item->item_general_price); ?><span>원</span></p>
+            <p class="price-detail"><?= $this->crud_model->get_price_str($item->item_sell_price); ?><span>원</span></p>
           </div>
         </a>
       </div>
@@ -33,7 +33,7 @@
           </div>
           <div class="thumb-price">
             <p class="price-name"><?= $item->brand_name; ?></p>
-            <p class="price-detail"><?= $this->crud_model->get_price_str($item->item_general_price); ?><span>원</span></p>
+            <p class="price-detail"><?= $this->crud_model->get_price_str($item->item_sell_price); ?><span>원</span></p>
           </div>
         </a>
       </div>
@@ -50,7 +50,7 @@
           </div>
           <div class="thumb-price">
             <p class="price-name"><?= $item->brand_name; ?></p>
-            <p class="price-detail"><?= $this->crud_model->get_price_str($item->item_general_price); ?><span>원</span></p>
+            <p class="price-detail"><?= $this->crud_model->get_price_str($item->item_sell_price); ?><span>원</span></p>
           </div>
         </a>
       </div>
