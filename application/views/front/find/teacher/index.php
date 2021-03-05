@@ -253,7 +253,7 @@
     position: relative;
     border-radius: 50%;
     background-repeat: no-repeat;
-    background-position: top center;
+    background-position: center;
     background-size: cover;
     background-attachment: scroll;
   }

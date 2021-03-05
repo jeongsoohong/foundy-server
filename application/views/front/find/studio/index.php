@@ -339,7 +339,7 @@
                   padding-bottom: 100%;
                   border-radius: 50%;
                   background-repeat: no-repeat;
-                  background-position: top center;
+                  background-position: center;
                   background-size: cover;
                   background-attachment: scroll;
                 }
@@ -375,6 +375,9 @@
                   position: relative;
                   padding-bottom: 62.5%;
                 }
+                .yourClass a {
+                  display: block;
+                }
                 .yourClass .teacher_thumb {
                   position: absolute;
                   width: 100%;
@@ -397,7 +400,7 @@
                   height: 100%;
                   border-right: inherit;
                   background-repeat: no-repeat;
-                  background-position: top center;
+                  background-position: center;
                   background-size: cover;
                   background-attachment: scroll;
                 }
@@ -519,14 +522,7 @@
                                 <div class="type_today">
                                   <!-- 요일 축약어는 지금처럼 '세글자'로 부탁드립니다. -->
                                   <!-- 일 단위가 한 자릿수이면 '1일' 처럼 표기 부탁드립니다. -->
-                                  <p class="font-futura today_date">
-                                    <?= $this->studio_model->get_week_str(date('w', strtotime($class->schedule_date))); ?>
-                                    <br>
-                                    <span class="date_no">
-                                  <?= date('d', strtotime($class->schedule_date)); ?>
-                                </span>
-                                    일
-                                  </p>
+                                  <p class="font-futura today_date"><?= $this->studio_model->get_week_str(date('w', strtotime($class->schedule_date))); ?><br><span class="date_no"><?= date('d', strtotime($class->schedule_date)); ?></span>일</p>
                                 </div>
                                 <p class="type_info">
                                 <span class="font-futura day_morning">
@@ -565,7 +561,7 @@
                                     <?= $class->schedule_title; ?>
                                   </p>
                                   <p class="name_center">
-                                    <?= $class->teacher_name; ?>
+                                    <?= $class->studio->title; ?>
                                   </p>
                                 </div>
                               </div>
@@ -775,7 +771,7 @@
                   width: 100%;
                   height: 100%;
                   background-repeat: no-repeat;
-                  background-position: top center;
+                  background-position: center;
                   background-size: cover;
                   background-attachment: scroll;
                   border-radius: inherit;
@@ -893,14 +889,7 @@
                         <div class="type_today" style="background-color: #000 !important;">
                           <!-- 요일 축약어는 지금처럼 '세글자'로 부탁드립니다. -->
                           <!-- 일 단위가 한 자릿수이면 '1일' 처럼 표기 부탁드립니다. -->
-                          <p class="font-futura today_date">
-                            <?= $this->studio_model->get_week_str(date('w', strtotime($class->schedule_date))); ?>
-                            <br>
-                            <span class="date_no">
-                                <?= date('d', strtotime($class->schedule_date)); ?>
-                              </span>
-                            일
-                          </p>
+                          <p class="font-futura today_date"><?= $this->studio_model->get_week_str(date('w', strtotime($class->schedule_date))); ?><br><span class="date_no"><?= date('d', strtotime($class->schedule_date)); ?></span>일</p>
                         </div>
                         <p class="type_info">
                             <span class="font-futura day_morning">
@@ -924,7 +913,7 @@
                         <div class="type_name clearfix">
                           <p class="name_class">
                             <!-- 강사이름 최대 10자 -->
-                            <?= $class->teacher_name; ?>
+                            <?= $class->studio->title; ?>
                           </p>
                         </div>
                       </div>

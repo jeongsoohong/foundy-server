@@ -1,10 +1,10 @@
-<style>
-  .img-youtube img, .img-insta img {
-    width : 20px !important;
-    height: 20px !important;
-    margin-right: 5px;
-  }
-</style>
+<!--<style>-->
+<!--  .img-youtube img, .img-insta img {-->
+<!--    width : 20px !important;-->
+<!--    height: 20px !important;-->
+<!--    margin-right: 5px;-->
+<!--  }-->
+<!--</style>-->
 <?php
 if ($type == FIND_TYPE_CENTER) {
   foreach ($center_data as $center) {
@@ -17,26 +17,28 @@ if ($type == FIND_TYPE_CENTER) {
     ?>
     <li style="padding: 10px 0 10px 0 !important;">
       <a href="<?php echo base_url(); ?>home/center/profile/<?php echo $center->center_id; ?>">
-        <div class="col-md-12 " style="padding: 0 10px 0 10px !important;">
+        <div class="col-md-12 " style="padding: 0 20px 0 20px !important; height: 75px">
           <table class="col-md-12" style="background-color: white; width: 100%">
             <tbody>
             <tr style="height: 25px">
               <td style="width: 85%">
-                <h5 class="center-title"><?php echo $center->title; ?></h5>
+                <h5 class="center-title" style="margin: 0 !important;"><b><?= $center->title; ?></b></h5>
               </td>
-              <td rowspan="3" style="text-align: center">
+              <td style="text-align: right">
                 <?php echo $this->crud_model->sns_func_html('bookmark', 'center', $center->bookmark, $center->center_id, 20, 20); ?>
               </td>
             </tr>
-            <tr style="height: 25px">
-              <td style="width: 85%">
+            <tr style="height: 23px">
+              <td style="width: 85%; padding-top: 8px;">
                 <?php echo "{$center->address} {$center->address_detail}"; ?>
               </td>
+              <td></td>
             </tr>
-            <tr style="height: 25px">
+            <tr style="height: 23px">
               <td style="width: 85%">
                 <span style="color: saddlebrown;"><?php echo $cat; ?></span><br>
               </td>
+              <td></td>
             </tr>
             </tbody>
           </table>
@@ -53,46 +55,23 @@ if ($type == FIND_TYPE_CENTER) {
     }
     $cat[strlen($cat) - 1] = "\0";
     ?>
-    <li style="padding: 10px 0 10px 0 !important;">
-      <div class="col-md-12 " style="padding: 0 10px 0 10px !important;">
-        <table class="col-md-12" style="background-color: white; width: 100%">
-          <tbody>
-          <tr style="height: 25px">
-            <td style="width: 85%">
-              <a href="<?php echo base_url(); ?>home/teacher/profile/<?php echo $teacher->teacher_id; ?>">
-                <h5 class="center-title"><?php echo $teacher->name; ?></h5>
-              </a>
-            </td>
-            <td rowspan="3" style="text-align: center">
-              <?php echo $this->crud_model->sns_func_html('bookmark', 'center', $teacher->bookmark, $teacher->teacher_id, 20, 20); ?>
-            </td>
-          </tr>
-          <tr style="height: 25px">
-            <td style="width: 85%">
-              <span style="color: saddlebrown;"><?php echo $cat; ?></span><br>
-            </td>
-          </tr>
-          <tr style="height: 25px">
-            <td style="width: 85%">
-              <?php
-              if (isset($teacher->youtube) && strlen($teacher->youtube) > 0) {
-                ?>
-                <a href="<?php echo $teacher->youtube; ?>" onclick="window.open(this.href, '_blank'); return false;">
-                  <span class="img-youtube"><img src="<?php echo base_url(); ?>uploads/icon/youtube_icon.png"></span>
-                </a>
-                <?php
-              }
-              if (isset($teacher->instagram) && strlen($teacher->instagram) > 0) {
-                ?>
-                <a href="<?php echo $teacher->instagram; ?>" onclick="window.open(this.href, '_blank'); return false;">
-                  <span class="img-insta"><img src="<?php echo base_url(); ?>uploads/icon/insta_icon.png"></span>
-                </a>
-              <?php } ?>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    </li>
+    <div class="data--profile detail--profile clearfix">
+      <a href="<?php echo base_url(); ?>home/teacher/profile/<?php echo $teacher->teacher_id; ?>" class="clearfix">
+        <div class="profile_info">
+          <? if (isset($teacher->profile_image_url) && !empty($teacher->profile_image_url)) { ?>
+            <div class="profile_circle info_photo" style="background-image: url(<?= $teacher->profile_image_url; ?>)"></div>
+          <? } else { ?>
+            <div class="profile_circle info_photo" style="background-image: url(<?= $this->teacher_model->get_teacher_image(); ?>)"></div>
+          <? } ?>
+          <div class="info_teacher">
+            <p class="teacher-name"><?= $teacher->name; ?></p>
+            <p class="teacher-class"><?= $cat; ?></p>
+          </div>
+        </div>
+      </a>
+      <button class="profile_favorite">
+        <?php echo $this->crud_model->sns_func_html('bookmark', 'center', $teacher->bookmark, $teacher->teacher_id, 20, 20); ?>
+      </button>
+    </div>
   <?php }
 } ?>

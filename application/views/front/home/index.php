@@ -1,10 +1,10 @@
 <style type="text/css">
   /* 업커밍 클래스 센터 어드민 관련 UI */
   .main-upcoming {
-    margin-bottom: 24px;
+    margin-bottom: 8px;
   }
   .upcoming_wrap {
-    margin-bottom: 28px;
+    margin-bottom: 0;
   }
   
   .btn_more {
@@ -140,9 +140,11 @@
   .main-discovery, .main-fav {
     margin: 0 0 16px 0 !important;
   }
+  /*
   .carousel-inner>.item>a>img, .carousel-inner>.item>img, .img-responsive, .thumbnail a>img, .thumbnail>img {
     max-width: 96%;
   }
+  */
   .footer {
     width: 100%;
     height: auto !important;

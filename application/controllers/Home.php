@@ -204,11 +204,11 @@ class Home extends CI_Controller
 
       $now = time();
       $start_date = date('Y-m-d H:i:s', $now);
-      $end_date = date('Y-m-d H:i:s', $now + ONE_WEEK);
+//      $end_date = date('Y-m-d H:i:s', $now + ONE_WEEK);
       $query = <<<QUERY
 select * from center_schedule_reserve
 where user_id={$user_id} and (reserve=1 or wait=1)
-and '{$start_date}'<= schedule_at and  schedule_at<='{$end_date}' order by schedule_at asc
+and '{$start_date}'<= schedule_at order by schedule_at asc limit 0,3
 QUERY;
       $upcoming_class = $this->db->query($query)->result();
       foreach ($upcoming_class as $class) {
@@ -229,7 +229,7 @@ QUERY;
       $query = <<<QUERY
 select * from studio_schedule_reserve
 where user_id={$user_id} and reserve=1
-and '{$start_date}'<= schedule_at and  schedule_at<='{$end_date}' order by schedule_at asc
+and '{$start_date}'<= schedule_at order by schedule_at asc limit 0,3
 QUERY;
       $upcoming_class2 = $this->db->query($query)->result();
       foreach ($upcoming_class2 as $class) {
@@ -246,7 +246,24 @@ QUERY;
 //    $blog_category = $this->db->get_where('category_blog', array('name' => 'shop'))->row();
     $this->db->order_by('blog_id', 'desc');
     $blogs = $this->db->get_where('blog', array('main_view' => 1, 'activate' => 1))->result();
+  
+    $best_order_col = 'best2';
+    $order_start = 0;
+ 
+    $best_cat = '010000';
+    $best_items_1 = $this->crud_model->get_product_list(0, SHOP_PRODUCT_STATUS_ON_SALE, '', $best_cat, 0,
+      SHOP_PRODUCT_BEST_LIST_PAGE_SIZE, 'asc', $best_order_col, 0, $order_start);
+    $best_cat = '020000';
+    $best_items_2 = $this->crud_model->get_product_list(0, SHOP_PRODUCT_STATUS_ON_SALE, '', $best_cat, 0,
+      SHOP_PRODUCT_BEST_LIST_PAGE_SIZE, 'asc', $best_order_col, 0, $order_start);
+    $best_cat = '030000';
+    $best_items_3 = $this->crud_model->get_product_list(0, SHOP_PRODUCT_STATUS_ON_SALE, '', $best_cat, 0,
+      SHOP_PRODUCT_BEST_LIST_PAGE_SIZE, 'asc', $best_order_col, 0, $order_start);
 
+    $this->page_data['best_items_1'] = $best_items_1;
+    $this->page_data['best_items_2'] = $best_items_2;
+    $this->page_data['best_items_3'] = $best_items_3;
+  
     $this->page_data['sliders'] = $sliders;
     $this->page_data['bookmark_centers'] = $bookmark_centers;
     $this->page_data['bookmark_teachers'] = $bookmark_teachers;
@@ -2220,6 +2237,7 @@ QUERY;
         $upcoming_classes = $this->studio_model->get_upcoming_class_list($limit, $offset);
         foreach ($upcoming_classes as $class) {
           $class->teacher = $this->teacher_model->get($class->teacher_id);
+          $class->studio = $this->studio_model->get($class->studio_id);
           $this->studio_model->check_ticketing($class);
 //          if ($this->is_login()) {
 //            $user_id = $this->session->userdata('user_id');
@@ -2255,6 +2273,7 @@ QUERY;
         $upcoming_classes = $this->studio_model->get_upcoming_class_list($limit, $offset);
         foreach ($upcoming_classes as $class) {
           $class->teacher = $this->teacher_model->get($class->teacher_id);
+          $class->studio = $this->studio_model->get($class->studio_id);
           $this->studio_model->check_ticketing($class);
           if ($this->is_login()) {
             $user_id = $this->session->userdata('user_id');
@@ -2440,7 +2459,7 @@ QUERY;
         if ($type == FIND_TYPE_CENTER) {
           
           $query = <<<QUERY
-select * from center where title like '%{$q}%' order by center_id desc limit {$offset},{$limit}
+select * from center where title like '%{$q}%' and activate=1 order by center_id desc limit {$offset},{$limit}
 QUERY;
           
           $center_data = $this->db->query($query)->result();
@@ -2457,7 +2476,7 @@ QUERY;
         } else if ($type == FIND_TYPE_TEACHER) {
           
           $query = <<<QUERY
-select * from teacher where name like '%{$q}%' order by teacher_id desc limit {$offset},{$limit}
+select * from teacher where name like '%{$q}%' and activate=1 order by teacher_id desc limit {$offset},{$limit}
 QUERY;
           
           $teacher_data = $this->db->query($query)->result();
@@ -2491,12 +2510,12 @@ QUERY;
         $q = $_GET['q'];
         
         $query = <<<QUERY
-select count(*) as cnt from center where title like '%{$q}%'
+select count(*) as cnt from center where title like '%{$q}%' and activate=1
 QUERY;
         $center_cnt = $this->db->query($query)->row()->cnt;
         
         $query = <<<QUERY
-select count(*) as cnt from teacher where name like '%{$q}%'
+select count(*) as cnt from teacher where name like '%{$q}%' and activate=1
 QUERY;
         $teacher_cnt = $this->db->query($query)->row()->cnt;
         
@@ -3934,6 +3953,20 @@ QUERY;
         } else {
           $no_profile_image = true;
         }
+        
+        log_message('error', 'isset['.json_encode($_FILES['profile_img']).'] type['.substr($_FILES['profile_img']['type'], 6).']');
+        
+        if (isset($_FILES['profile_img']) && $this->crud_model->file_validation($_FILES["profile_img"], false) == 0) {
+          $file_name = 'teacher_' . $teacher_id . '.'.substr($_FILES['profile_img']['type'], 6);
+          $this->crud_model->upload_image($this->teacher_model->get_img_path(), $file_name,
+            $_FILES["profile_img"], 1000, 0, true, true);
+  
+          $time = time();
+          $file_name = 'teacher_' . $teacher_id . '_thumb.'.substr($_FILES['profile_img']['type'], 6);
+          $profile_image_url = $this->teacher_model->get_img_web_path(). $file_name . '?id=' . $time;
+          $del_except_files[] = $this->teacher_model->get_img_path().$file_name;
+          $no_profile_image = false;
+        }
   
         $this->teacher_model->update($teacher_id, $name = '', $about, $youtube, $instagram, $category_etc, $categories,
           $profile_image_url, $no_profile_image);
@@ -4312,6 +4345,9 @@ QUERY;
           $cat = trim($cat);
           $this->db->insert('teacher_video_category', array('video_id' => $video_id, 'category' => $cat));
         }
+  
+        $this->teacher_model->update_profile($teacher_data->teacher_id);
+        
         echo "done";
       }
 
@@ -4320,13 +4356,105 @@ QUERY;
     }
   }
   
+  public function upcoming($para1 = '', $para2 = '', $para3 = '')
+  {
+    $type = $para1;
+  
+    if ($type == 'list') {
+  
+      if ($this->is_login() == false) {
+        $this->redirect_login();
+      }
+  
+      $page = $_GET['page'];
+      $type = $_GET['type'];
+      $limit = 5;
+      $offset = 5 * ($page - 1);
+    
+      $user_id = $this->session->userdata('user_id');
+      $now = time();
+      $start_date = date('Y-m-d H:i:s', $now);
+      if ($type == FIND_TYPE_CENTER) {
+        $query = <<<QUERY
+select * from center_schedule_reserve
+where user_id={$user_id} and (reserve=1 or wait=1)
+and '{$start_date}'<= schedule_at order by schedule_at asc limit {$offset},{$limit}
+QUERY;
+        $upcoming_class = $this->db->query($query)->result();
+        foreach ($upcoming_class as $class) {
+          $class->schedule_info = $this->db->get_where('center_schedule_info', array('schedule_info_id' => $class->schedule_info_id))->row();
+          $class->center_info = $this->db->get_where('center', array('center_id' => $class->schedule_info->center_id))->row();
+          $class->wait_number = 0;
+          if ($class->wait == 1) {
+            $query = <<<QUERY
+select count(*) as cnt from center_schedule_reserve
+where schedule_info_id={$class->schedule_info_id} and wait=1 and reserve_id<={$class->reserve_id}
+QUERY;
+            $class->wait_number = $this->db->query($query)->row()->cnt;
+          }
+        }
+      } else if ($type == FIND_TYPE_TEACHER) {
+        $query = <<<QUERY
+select * from studio_schedule_reserve
+where user_id={$user_id} and reserve=1
+and '{$start_date}'<= schedule_at order by schedule_at asc limit {$offset},{$limit}
+QUERY;
+        $upcoming_class = $this->db->query($query)->result();
+        foreach ($upcoming_class as $class) {
+          $class->schedule_info = $this->db->get_where('studio_schedule_info', array('schedule_info_id' => $class->schedule_info_id))->row();
+          $class->studio_info = $this->db->get_where('studio', array('studio_id' => $class->schedule_info->studio_id))->row();
+        }
+      } else {
+        $base_url = base_url();
+        echo "<script>alert('잘못된 접근입니다');location.href='{$base_url}'</script>";
+        exit;
+      }
+    
+      $this->page_data['type'] = $type;
+      $this->page_data['upcoming_class'] = $upcoming_class;
+      $this->load->view('front/upcoming/list', $this->page_data);
+    
+    } else {
+
+      if ($this->is_login() == false) {
+        $this->redirect_login();
+      }
+  
+      $user_id = $this->session->userdata('user_id');
+      
+      $now = time();
+      $start_date = date('Y-m-d H:i:s', $now);
+
+      $query = <<<QUERY
+select count(*) as cnt from center_schedule_reserve
+where user_id={$user_id} and (reserve=1 or wait=1)
+and '{$start_date}'<= schedule_at
+QUERY;
+      $class_cnt = $this->db->query($query)->row()->cnt;
+    
+      $query = <<<QUERY
+select count(*) as cnt from studio_schedule_reserve
+where user_id={$user_id} and reserve=1
+and '{$start_date}'<= schedule_at
+QUERY;
+      $zoom_cnt = $this->db->query($query)->row()->cnt;
+    
+      $this->page_data['page_name'] = "upcoming";
+      $this->page_data['asset_page'] = "find";
+      $this->page_data['page_title'] = "find";
+      $this->page_data['class_cnt'] = $class_cnt;
+      $this->page_data['zoom_cnt'] = $zoom_cnt;
+      $this->load->view('front/index', $this->page_data);
+    }
+  }
+  
   public function studio($para1 = "", $para2 = "", $para3 = "")
   {
-  
+    
     if ($para1 == 'schedule') {
-  
+      
       $type = $para2;
-  
+      
       if ($type == 'info') {
         
         if (isset($_GET['sid']) == false || isset($_GET['date']) == false) {

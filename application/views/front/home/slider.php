@@ -1,7 +1,7 @@
 <?php if (count($sliders) > 0) { ?>
   <style>
     .carousel-caption {
-      padding: 5px 0 !important;
+      padding: 1px 0 !important;
     }
     .carousel-caption h3, h6 {
       margin: 0 !important;
@@ -45,17 +45,38 @@
         </div>
       <?php } ?>
     </div>
-    <div class="slider-for">
+    <div class="slider-for" id="redesign" style="padding-top: 8px;">
       <?php foreach ($sliders as $slider) {?>
         <div class="carousel-caption">
-          <p class="p-category"><?php echo $slider->category; ?></p>
-          <h3 style="font-family: 'Patua One' !important; margin-top: 10px"><?php echo $slider->title; ?></h3>
-          <p><?php echo $slider->desc; ?></p>
+          <p class="p-category font-futura"><?php echo $slider->category; ?></p>
+          <h3 class="tit__lg"><?php echo $slider->title; ?></h3>
+          <p class="tit__sm"><?php echo $slider->desc; ?></p>
         </div>
       <?php } ?>
     </div>
   </div>
-
+  <style type="text/css">
+    .wide {
+      background-color: #F9F7F4;
+    }
+    @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1&display=swap');
+    #redesign .slick-list, .p-category {
+      font-size: 12px;
+      color: #424242;
+    }
+    #redesign .tit__lg {
+      padding: 4px 0 8px;
+      font-family: 'Shippori Mincho B1', serif !important;
+      /*letter-spacing: -0.05em;*/
+      font-size: 22px;
+    }
+    #redesign .tit__sm {
+      font-size: 12px;
+      line-height: 1.75;
+    }
+  
+  </style>
+  
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
   <style>

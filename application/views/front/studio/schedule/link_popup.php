@@ -1,5 +1,5 @@
 <?php if (isset($class->class_link) == true && empty($class->class_link) == false) { ?>
-  <div class="popup zoom:alt_cancel zoom:wrap" style="height: 458px; margin-top: -229px;">
+  <div class="popup zoom:alt_cancel zoom:wrap after_style" style="height: 458px; margin-top: -229px;">
     <div class="zoom_box popup_tit">
       <div class="popup_topic" style="text-align: center;">
         <div class="topic_icon" style="background-color: transparent;">
@@ -47,7 +47,7 @@
     });
   </script>
 <?php } else { ?>
-  <div class="popup zoom:alt_cancel zoom:wrap" style="height: 336px; margin-top: -168px;">
+  <div class="popup zoom:alt_cancel zoom:wrap before_height" style="height: 336px; margin-top: -168px;">
     <div class="zoom_box popup_tit">
       <div class="popup_topic" style="text-align: center;">
         <div class="topic_icon" style="background-color: #1ba9e4; display: inline-block; margin-right: 16px;">

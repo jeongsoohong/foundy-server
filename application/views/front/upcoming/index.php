@@ -1,153 +1,482 @@
 <style>
-  .main-header {
-    text-align: center;
+  .profile div select.form-control {
+    width: 100% !important;
+    height: 30px !important;
+    font-size: 12px !important;
+    padding: 0 0 0 0 !important;
+    text-align-last: right;
+    border: none;
+    direction: rtl;
+  }
+  select option {
+    direction: ltr;
+  }
+  .img-youtube img, .img-insta img {
+    width : 20px !important;
+    height: 20px !important;
+    margin-right: 5px;
+  }
+  .video_ul li {
+    padding: 0 0 20px !important;
+  }
+  @media(min-width:375px){
+    .video-title {
+      font-size: 14px !important;
+    }
+    .footprint {
+      padding-top: 4px !important;
+    }
+  }
+  @media(min-width:414px){
+    .media-link {
+      width: 207px !important;
+      padding: 0 0 123px 0 !important;
+      margin-right: 16px !important;
+    }
+  }
+  .content-area {
+    background-color: #fff;
+  }
+  /* Recommend Zoom Class */
+  .upcoming_wrap {
+    margin-bottom: 20px;
+  }
+  
+  .btn_more {
+    display: block;
+    width: 108px;
+    height: 36px;
+    margin: 0 auto 20px;
+    border: 1px solid #B7A6A4;
+    box-sizing: border-box;
+    color: #B7A6A4;
+    font-size: 14px;
+    padding: 0;
+    background-color: transparent;
+  }
+  
+  .upcoming_tit {
     height: 40px;
   }
-  .main-header h6 {
-    height: 40px;
+  .tit_txt {
+    height: inherit;
     line-height: 40px;
-    margin: 0 0 0 0;
-    font-size: 15px;
-  }
-  .main-discovery .main-nav .main-blog {
-    padding-left: 15px;
-    padding-right: 15px;
-  }
-  .main-discovery .main-nav div{
     text-align: center;
-    width: 32.7% !important;
+    /*font-weight: bold !important;*/
+    font-size: 13px;
+    margin: 0;
+  }
+  .upcoming_schedule {
+    padding: 12px 16px;
+    background-color: #fff;
+    position: relative;
+  }
+  .type_today {
     display: inline-block;
-    color: white;
-    margin: 0 0 0 0;
-    background-color: #B39E98;
-    height: 40px;
-    line-height: 40px;
-    vertical-align: center;
-    padding-left: 0;
-    padding-right: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: #8F8990;
+    position: relative;
+    vertical-align: middle;
   }
-  .main-discovery, .main-fav {
-    margin: 0 0 10px 0;
-    padding-left: 0;
-    padding-right: 0;
+  .type_today .font-futura {
+    font-weight: bold !important;
   }
-  .main-blog-content {
-    margin: 0 0 10px 0;
-    padding-left: 0;
-    padding-right: 0;
-    /*background-color: white;*/
-    padding-bottom: 10px;
-  }
-  .blog-img {
-    padding-left: 0;
-    padding-right: 0;
-  }
-  .blog-img img {
-    min-height: 100%;
-    min-width: 100%;
-  }
-  .blog-title {
-    padding-left: 0;
-    padding-right: 0;
-  }
-  .blog-title h5 {
-    margin: 10px 0 5px 0;
-  }
-  .blog-summery {
+  .today_date {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: #fff;
     font-size: 11px;
-    padding-left: 0;
-    padding-right: 0;
+    font-weight: bold;
+    line-height: 1.2;
+    width: 40px;
+    text-align: center;
+    margin: -14px 0 0 -20px;
+  }
+  .today_date span {
+    display: inline-block;
+  }
+  .date_no {
+    font-size: 13px;
+  }
+  
+  .type_info {
+    display: inline-block;
+    color: #000;
+    font-size: 14px;
+    margin: -4px 10px 0;
+    vertical-align: middle;
+    line-height: 1.3;
+  }
+  .type_name {
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: -4px;
+  }
+  .name_class, .name_center {
+    margin: 0;
+  }
+  .name_class {
+    color: #757575;
+    font-size: 12px;
+    padding-bottom: 2px;
+  }
+  .name_center {
+    color: #8C584C;
+    font-size: 10px;
+    font-weight: bold !important;
+  }
+  
+  .type_cancel {
+    position: absolute;
+    top: 6px;
+    right: 4px;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background-color: transparent;
+    border: 0
+  }
+  
+  .schedule_type {
+    font-size: 0;
+  }
+  
+  
+  .upcoming_schedule {
+    margin-bottom: 12px;
+  }
+  
+  .upcoming_schedule {
+    padding: 12px 16px 12px 12px;
+  }
+  .type_info {
+    font-size: 13.5px;
+    line-height: 1.5;
+    letter-spacing: -0.05em;
+    margin: -4px 8px 0;
+  }
+  .type_name {
+    margin: 0;
+    position: absolute;
+    top: 12px;
+    right: 52px;
+  }
+  .wait_schedule {
+    background-color: #f5f5f5;
+  }
+  .wait_schedule .type_today {
+    background-color: #e0e0e0;
+  }
+  .wait_schedule .type_info,
+  .wait_schedule .name_class,
+  .wait_schedule .name_center {
+    color: #9e9e9e;
+  }
+  #waitClass {
+    position: absolute;
+    bottom: 10px;
+    right: 8px;
+    margin: 0;
+    font-size: 10.5px;
+    font-weight: bold;
+    color: #d32f2f;
+    z-index: 2;
+  }
+  
+  .upcoming_schedule {
+    padding: 12px 16px 12px 12px;
+  }
+  .type_info {
+    font-size: 13.5px;
+    line-height: 1.5;
+    letter-spacing: -0.05em;
+    margin: -4px 8px 0;
+  }
+  .type_name {
+    margin: 0;
+    position: absolute;
+    top: 12px;
+    right: 52px;
+  }
+  .wait_schedule {
+    background-color: #f5f5f5;
+  }
+  .wait_schedule .type_today {
+    background-color: #e0e0e0;
+  }
+  .wait_schedule .type_info,
+  .wait_schedule .name_class,
+  .wait_schedule .name_center {
+    color: #9e9e9e;
+  }
+  #waitClass {
+    position: absolute;
+    bottom: 10px;
+    right: 9px;
+    margin: 0;
+    font-size: 10.5px;
+    font-weight: bold;
+    color: #d32f2f;
+    z-index: 2;
+  }
+  .coming .upcoming_schedule {
+    display: table;
+    width: 100%;
+    height: 80px;
+    padding: 0 12px;
+  }
+  .coming .schedule_type {
+    padding-right: 32px;
+    display: table-cell;
+    vertical-align: middle;
+  }
+  .coming .type_info {
+    line-height: 1.5;
+    font-size: 12.5px;
+    margin: -4px 0 0 6px;
+    letter-spacing: -0.06em;
+  }
+  .coming .type_name {
+    position: unset;
+    float: right;
+    line-height: 1.5;
+    width: 54%;
+    margin-top: -1px;
+  }
+  .coming .type_cancel {
+    margin: auto;
+    top: -16px;
+    bottom: 0;
+    right: 2px;
+  }
+  .coming .name_class {
+    text-align: right;
+    padding: 1px 0 2px;
+    font-size: 10.3px;
+    line-height: 1.85;
+    letter-spacing: -0.05em;
+  }
+  .coming .name_center {
+    text-align: right;
+  }
+  
+  
+  /* 스타일 추가 */
+  .wide .content-area,
+  .wide .page-section {
+    background-color: #F9F7F4;
+  }
+  
+  .wide .page-section {
+    padding-top: 20px !important;
+  }
+  
+  /*
+        #up {
+          border-radius: 4px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+        #up .upcoming_schedule {
+          margin: 0;
+          border-bottom: 1px solid #eee;
+        }
+        #up .upcoming_schedule:first-child {
+          border-radius: 4px 4px 0 0;
+        }
+        #up .upcoming_schedule:last-child {
+          border-radius: 0 0 4px 4px;
+          border: 0;
+        }
+  */
+  .up .upcoming_schedule  {
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  }
+  
+  .coming .upcoming_tit {
+    position: relative;
+  }
+  .coming .tit_txt {
+    margin: 0;
+  }
+  .coming .tit_seeAll {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 54px;
+    height: 40px;
+    color: #9e9e9e;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 40px;
+    font-family: futura-pt !important;
+  }
+  
+  .divide-upcoming {
+    float: left;
+    width: 50%;
+    height: 40px;
+    color: #433532;
+    background-color: #fff;
+    border: 0;
+    outline: none;
+    padding: 0;
+    border-bottom: 3px solid #ded5c3;
+    cursor: pointer;
+  }
+  .Unselected {
+    color: #bdbdbd !important;
+    background-color: #e8e8e8 !important;
+    border-bottom: 3px solid #e8e8e8 !important;
+  }
+  .divideCnts .upcoming_schedule:first-child {
+    margin-top: 12px;
   }
 </style>
-<section class="page-section" style="padding: 12px 0 32px !important; margin: 0 16px !important;">
-  <div class="row">
-    <!-- UPCOMING CLASS -->
-    <? include 'upcoming.php'; ?>
-    <!-- /UPCOMING CLASS -->
-    <!-- FAVORITE -->
-    <div class="col-md-12 main-fav">
-      <div class="col-md-12 main-header navigation-header font-futura" style="text-align: center">
-        <?php if (empty($bookmark_centers) && empty($bookmark_teachers)) { ?>
-          <h6 class="font-futura">Your Favorite</h6>
-        <?php } else { ?>
-          <h6 class="font-futura">My Favorite</h6>
-        <?php } ?>
-      </div>
-      <div class="col-md-12 main-fav-content">
-        <?php include "favorite.php"; ?>
-      </div>
-    </div>
-    <!-- / FAVORITE -->
-    <!-- BEST ITEM -->
-    <div class="col-md-12 main-shop">
-      <?php include "best_item.php"; ?>
-    </div>
-    <!--/ BEST ITEM -->
-    <div class="col-md-12 main-discovery">
-      <div class="col-md-12 main-header navigation-header" style="text-align: center; margin: 10px 0">
-        <h6 class="font-futura" style="height: 20px; line-height: 20px;">Find</h6>
-        <p>건강한 시작을 위한 클래스 찾기</p>
-      </div>
-      <div class="col-md-12 main-nav" style="display: flex">
-        <a href="<?php echo base_url().'home/find'; ?>" style="margin:auto;">
-          <img class="img-responsive" src="<?php echo base_url(); ?>template/icon/fd_this.png" width="80" height="80" alt="" />
-        </a>
-        <a href="<?php echo base_url().'home/find/center/'.CENTER_TYPE_YOGA; ?>" style="margin:auto;">
-          <img class="img-responsive" src="<?php echo base_url(); ?>template/icon/fd_yoga.png" width="80" height="80" alt="" />
-        </a>
-        <a href="<?php echo base_url().'home/find/center/'.CENTER_TYPE_PILATES; ?>" style="margin:auto;">
-          <img class="img-responsive" src="<?php echo base_url(); ?>template/icon/fd_pilates.png" width="80" height="80" alt="" />
-        </a>
-        <?
-        if (STUDIO_OPEN) {
-          if (DEV_SERVER) {
-            $online_link = base_url().'home/find/studio';
-          } else {
-            $online_link = base_url().'home/find/studio';
-          }
-        } else {
-          if ($this->session->userdata('user_login') == 'yes') {
-            $user_data = json_decode($this->session->userdata('user_data'));
-            if ($user_data->user_type & USER_TYPE_ADMIN) {
-              $online_link = base_url() . 'home/find/studio';
-            } else {
-              $online_link = base_url() . 'home/find/class';
-            }
-          } else {
-            $online_link = base_url() . 'home/find/class';
-          }
-        }
-        ?>
-        <a href="<?= $online_link; ?>" style="margin:auto;">
-          <img class="img-responsive" src="<?php echo base_url(); ?>template/icon/fd_onlineClass.png" width="80" height="80" alt="" />
-        </a>
-      </div>
-    </div>
-    <?php if (count($blogs) > 0) { ?>
-      <div class="col-md-12 main-blog" style="padding: 0;">
-        <div class="col-md-12 main-header navigation-header" style="text-align: center">
-          <h6 class="font-futura">This Week</h6>
-        </div>
-        <?php foreach ($blogs as $blog) { ?>
-          <div class="col-md-12 main-blog-content">
-            <div class="col-md-12 blog-img">
-              <a href="<?php echo base_url().'home/blog/view?id='.$blog->blog_id; ?>">
-                <img class="img-responsive" src="<?php echo $blog->main_image_url; ?>" alt="" />
-              </a>
+<section class="page-section with-sidebar">
+  <div class="container" id="fd-class" style="padding: 0 15px !important;">
+    <div class="row">
+      <div class="col-md-12 content" id="content">
+        <div id="blog-content">
+          <div class="divideBtn clearfix">
+            <button class="divide-upcoming font-futura" id="divide-upcoming-class" data-id="class">Upcoming Class</button>
+            <button class="divide-upcoming font-futura" id="divide-upcoming-zoom" data-id="zoom">Upcoming Zoom</button>
+          </div>
+          <div class="divideCnts">
+            <div class="Cnt__layer Cnt-class" id="upcoming-class" style="display: none;">
+              <div class="col-md-12" style="padding: 0 0 0 0 !important; ">
+                <div class="row">
+                  <div class="col-md-12 main-upcoming coming upcomingAll">
+                    <div class="upcoming_wrap up" id="class_list">
+                      <!-- CLASS LIST -->
+                      <!-- /CLASS_LIST -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-bottom: 10px !important;">
+                <p style="text-align: center; margin-bottom: 0">
+                  <a class="btn btn-lg btn-primary" id="class_view_more" onclick="ajax_class_list();" role="button" style="font-size: 15px; color: gray; background-color: inherit; border: 1px solid rgb(211, 211, 211); font-family: Quicksand !important; display: none;">
+                    view more
+                  </a>
+                </p>
+              </div>
             </div>
-            <div class="col-md-12 blog-title">
-              <h5><b><?php echo $blog->title; ?></b></h5>
-            </div>
-            <div class="col-md-12 blog-summery">
-              <?php echo $blog->summery; ?>
+            <div class="Cnt__layer Cnt-zoom" id="upcoming-zoom" style="display: none;">
+              <div class="col-md-12" style="padding: 0 0 0 0 !important; ">
+                <div class="row">
+                  <div class="col-md-12 main-upcoming coming upcomingAll">
+                    <div class="upcoming_wrap up" id="zoom_list">
+                      <!-- ZOOM LIST -->
+                      <!-- /ZOOM LIST -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-bottom: 10px !important;">
+                <p style="text-align: center; margin-bottom: 0">
+                  <a class="btn btn-lg btn-primary" id="zoom_view_more" onclick="ajax_zoom_list();" role="button" style="font-size: 15px; color: gray; background-color: inherit; border: 1px solid rgb(211, 211, 211); font-family: Quicksand !important; display: none;">
+                    view more
+                  </a>
+                </p>
+              </div>
             </div>
           </div>
-        <?php } ?>
+        </div>
       </div>
-    <?php } ?>
+    </div>
   </div>
 </section>
-
+<script>
+  let class_page = 0;
+  let zoom_page = 0;
+  let class_type = <?php echo FIND_TYPE_CENTER; ?>;
+  let zoom_type = <?php echo FIND_TYPE_TEACHER; ?>;
+  let class_cnt = <?php echo $class_cnt; ?>;
+  let zoom_cnt = <?php echo $zoom_cnt; ?>;
+  
+  function ajax_class_list() {
+    class_page = class_page + 1;
+    $.ajax({
+      url: "<?php echo base_url().'home/upcoming/list?page='; ?>" + class_page + '&type=' + class_type,
+      type: 'GET', // form submit method get/post
+      dataType: 'html', // request type html/json/xml
+      success: function(data) {
+        $('#class_list').append(data);
+        
+        let listCnt = $("#class_list .upcoming_schedule").length;
+        if (listCnt < class_cnt) {
+          $('#class_view_more').show();
+        } else {
+          $('#class_view_more').hide();
+        }
+        
+        console.log('class_cnt : ' + class_cnt);
+        console.log('class_list_cnt : ' + listCnt);
+      },
+      error: function(e) {
+        console.log(e)
+      }
+    });
+  }
+  
+  function ajax_zoom_list() {
+    zoom_page = zoom_page + 1;
+    $.ajax({
+      url: "<?php echo base_url().'home/upcoming/list?page='; ?>"  + zoom_page + '&type=' + zoom_type,
+      type: 'GET', // form submit method get/post
+      dataType: 'html', // request type html/json/xml
+      success: function(data) {
+        $('#zoom_list').append(data);
+        
+        let listCnt = $("#zoom_list .upcoming_schedule").length;
+        if (listCnt < zoom_cnt) {
+          $('#zoom_view_more').show();
+        } else {
+          $('#zoom_view_more').hide();
+        }
+        
+        console.log('zoom_cnt : ' + zoom_cnt);
+        console.log('zoom_list_cnt : ' + listCnt);
+      },
+      error: function(e) {
+        console.log(e)
+      }
+    });
+  }
+  
+  $(function(){
+    //console.log(1);
+    //$('.divide-upcoming').removeClass('Unselected');
+    $('.divide-upcoming').click(function(){
+      let index = $('.divide-upcoming').index(this);
+      let id = $(this).data('id');
+      console.log(id);
+      $('.Cnt__layer').hide();
+      $('.Cnt__layer').eq(index).show();
+      $(this).removeClass('Unselected');
+      $(this).siblings().addClass('Unselected');
+    });
+    
+    <? if ($class_cnt > 0) { ?>
+    ajax_class_list();
+    <? } ?>
+    <? if ($zoom_cnt > 0) { ?>
+    ajax_zoom_list();
+    <? } ?>
+    
+    <? if ($class_cnt > 0) { ?>
+    $('#divide-upcoming-class').click();
+    <? } else { ?>
+    $('#divide-upcoming-zoom').click();
+    <? } ?>
+  
+  });
+</script>
 <!-- popup -->
 <style type="text/css">
   .popup-box {
@@ -365,7 +694,7 @@
     height: 460px;
     margin-top: -230px;
   }
-
+  
   .online_box {
     width: 228px;
     height: 96px;
@@ -406,7 +735,7 @@
     font-weight: bold;
     line-height: 1.75;
   }
-
+  
   .online_data {
     margin: 20px auto 0;
     width: 228px;
@@ -449,7 +778,7 @@
     font-weight: normal;
     border-radius: inherit;
   }
-
+  
   .announce {
     width: 228px;
     margin: 20px auto;
@@ -491,7 +820,7 @@
     height: inherit;
     overflow-y: scroll;
   }
-
+  
   .favorite_close {
     width: 44px;
     height: 44px;
@@ -502,7 +831,7 @@
     padding: 0;
     background-color: transparent;
   }
-
+  
   /* popup 스타일 수정 및 줌 관련 팝업 */
   .popup-box {
     z-index: 200;
@@ -588,7 +917,7 @@
     border: 0;
     margin: 0;
   }
-
+  
   .zoom\:wrap .copy-linkBtn {
     background-color: #fff;
     margin-top: 20px;
@@ -622,7 +951,7 @@
     right: 0;
     margin: auto;
   }
-
+  
   .changeCancel {
     margin: 12px auto 0 !important;
     width: 80%;
@@ -631,7 +960,7 @@
     font-size: 10px;
     font-weight: normal;
   }
-
+  
   .stripe {
     display: block;
     border-top: 1px dashed #eee;

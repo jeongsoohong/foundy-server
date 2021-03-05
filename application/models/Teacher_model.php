@@ -245,6 +245,8 @@ class Teacher_model extends CI_Model
       $cat = trim($cat);
       $this->db->insert('teacher_video_category', array('video_id' => $video_id, 'category' => $cat));
     }
+    
+    $this->update_profile($teacher->teacher_id);
   }
   
   function unregister_video($video_id, $teacher_id)
@@ -320,5 +322,15 @@ class Teacher_model extends CI_Model
   {
     return $this->db->get_where('teacher_video', array('teacher_id' => $teacher_id, 'video_id' => $video_id, 'activate' => 1))->row();
   }
-
+  
+  function update_profile($teacher_id)
+  {
+    $this->db->where('teacher_id', $teacher_id);
+    $this->db->set('updated_at', 'NOW()', false);
+    $this->db->update('teacher');
+    $this->db->where('teacher_id', $teacher_id);
+    $this->db->set('updated_at', 'NOW()', false);
+    $this->db->update('teacher_category');
+  }
+  
 }

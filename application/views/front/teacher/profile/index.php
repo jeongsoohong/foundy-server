@@ -529,7 +529,7 @@ if ($this->session->userdata('user_login') == 'yes') {
                 width: 100%;
                 height: 100%;
                 background-repeat: no-repeat;
-                background-position: top center;
+                background-position: center;
                 background-size: cover;
                 background-attachment: scroll;
                 opacity: 0.8;

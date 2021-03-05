@@ -1,3 +1,31 @@
+<style>
+  .btn-theme {
+    background-color: #7d7d7d !important;
+    border-color: #7d7d7d !important;
+    color: #ffffff !important;
+  }
+  .form-control {
+    height: 50px !important;
+  }
+  .nav-tabs li a {
+    font-weight: 300 !important;
+  }
+  .btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: 0;
+    background: white;
+    cursor: inherit;
+    display: block;
+  }
+</style>
 <section class="page-section">
   <div class="wrap container">
     <!-- <div id="profile-content"> -->
@@ -16,7 +44,12 @@
                           <i class="fa fa-angle-down"></i>
                           강사 정보 입력
                         </div>
-                        <p class="text-success">수업 분류 기타에 여러 분류 입력 시 공백으로 구분해 주세요</p>
+<!--                        <p class="text-success">-->
+<!--                          * 수업 분류 기타에 여러 분류 입력 시 공백으로 구분해 주세요.<br>-->
+<!--                          * 권장 이미지 사이즈는 1000 * 500 px, 이미지 용량은 최대 16MB까지 업로드 가능합니다.<br>-->
+<!--                          * 노출되는 위치에 따라 이미지가 잘려 보일 수 있으므로 인물이 중앙에 위치한 사진을 추천드립니다.<br>-->
+<!--                          * 세로형 이미지는 오류가 발생할 수 있으므로 가급적 가로형 혹은 정사각형 비율의 이미지를 업로드 해주세요. 세로형 이미지가 회전되어 업로드 되는 경우, 앨범에서 이미지를 다시 돌려서 저장 후 업로드 해주세요.-->
+<!--                        </p>-->
                         <div class="details-box">
                           <?php
                           echo form_open(base_url() . 'home/teacher/do_edit_profile/'.$teacher_data->teacher_id, array(
@@ -45,6 +78,18 @@
                               <div class="form-group">
                                 <input value="<?php echo $teacher_data->instagram; ?>" class="form-control" id="instagram-url" name="instagram" type="url" placeholder="인스타그램 홈 URL" data-toggle="tooltip"
                                        title="instagram">
+                              </div>
+                            </div>
+                            <div class="col-md-12 btm_border">
+                              <div class="form-group">
+                                <label class="col-sm-12 control-label">프로필 사진</label>
+                                <div class="col-sm-12">
+                                  <span class="pull-left btn btn-default btn-file">사진선택
+                                    <input type="file" name="profile_img" onchange="preview(this);" class="form-control">
+                                  </span>
+                                  <br><br>
+                                  <span id="previewImg" ></span>
+                                </div>
                               </div>
                             </div>
                             <div class="col-md-12">
@@ -76,6 +121,12 @@
                                 </div>
                               </div>
                             </div>
+                            <p class="text-success" style="padding: 20px 15px 0;">
+                              * 수업 분류 기타에 여러 분류 입력 시 공백으로 구분해 주세요.<br>
+                              * 권장 이미지 사이즈는 1000 * 500 px, 이미지 용량은 최대 16MB까지 업로드 가능합니다.<br>
+                              * 노출되는 위치에 따라 이미지가 잘려 보일 수 있으므로 인물이 중앙에 위치한 사진을 추천드립니다.<br>
+                              * 세로형 이미지는 오류가 발생할 수 있으므로 가급적 가로형 혹은 정사각형 비율의 이미지를 업로드 해주세요. 세로형 이미지가 회전되어 업로드 되는 경우, 앨범에서 이미지를 다시 돌려서 저장 후 업로드 해주세요.
+                            </p>
                             <div class="col-md-12" style="border-top: 2px solid #f5f5f5; margin-top: 35px">
                               <button type="button" class="btn btn-theme pull-right open_modal
                                         teacher-edit" data-toggle="modal" data-target="#teacherEditModal">
@@ -134,5 +185,18 @@
 
     $('html').animate({scrollTop:$('html, body').offset().top}, 100);
   });
+  
+  window.preview = function (input) {
+    if (input.files && input.files[0]) {
+      $("#previewImg").html('');
+      $(input.files).each(function () {
+        var reader = new FileReader();
+        reader.readAsDataURL(this);
+        reader.onload = function (e) {
+          $("#previewImg").append("<div style='float:left;border:4px solid #303641;padding:5px;margin:5px;'><img height='80' src='" + e.target.result + "'></div>");
+        }
+      });
+    }
+  }
 </script>
 

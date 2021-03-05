@@ -1440,15 +1440,8 @@ class Studio extends CI_Controller
           }
         }
       }
-    
-      if ($ticketing) {
-        $this->db->where('teacher_id', $this->teacher_id);
-        $this->db->set('updated_at', 'NOW()', false);
-        $this->db->update('teacher');
-        $this->db->where('teacher_id', $this->teacher_id);
-        $this->db->set('updated_at', 'NOW()', false);
-        $this->db->update('teacher_category');
-      }
+
+      $this->teacher_model->update_profile($this->teacher_id);
   
       $this->response($result);
     
