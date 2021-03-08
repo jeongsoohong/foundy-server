@@ -534,7 +534,7 @@
                               }
                               ?>
                               <div class="instructor slick-content active" id="1" style="margin-top: 10px; text-align: center">
-                                <a href="<?php echo base_url().'home/teacher/profile/'.$user_data->user_id; ?>">
+                                <a href="<?php echo base_url().'home/teacher/profile/'.$teacher->teacher_id; ?>">
                                   <p>
                                     <span><img src="<?php echo $profile_image_url; ?>" style="width:60px; height: 60px; margin: auto; border-radius: 30px"></span>
                                     <span><?php echo $teacher_name; ?></span>
