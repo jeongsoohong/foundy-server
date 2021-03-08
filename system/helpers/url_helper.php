@@ -641,9 +641,14 @@ if ( ! function_exists('get_back_url'))
     } else if (
       $page_name == 'find/search' ||
       $page_name == 'find/center' ||
+      $page_name == 'find/studio' ||
       $page_name == 'find/class'
     ) {
       $back_url = base_url().'home/find';
+    } else if (
+      $page_name == 'find/teacher'
+    ) {
+      $back_url = base_url().'home/find/studio';
     } else if (
       $page_name == 'shop/cart'
     ) {
