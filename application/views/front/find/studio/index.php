@@ -803,9 +803,9 @@
                   position: absolute;
                   right: 13px;
                   width: 25%;
-                  bottom: 8px;
+                  bottom: 0;
                   float: unset;
-                  top: unset;
+                  top: 58px;
                 }
                 .comeUp .name_class {
                   line-height: 1.5;
@@ -844,7 +844,7 @@
                   }
                   .comeUp .type_name {
                     right: 24px;
-                    width: 20%;
+                    width: 22%;
                   }
                   .comeUp .type_cancel {
                     right: 13px;

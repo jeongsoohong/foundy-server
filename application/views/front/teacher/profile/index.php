@@ -733,7 +733,7 @@ if ($this->session->userdata('user_login') == 'yes') {
                   </div>
                   <div class="widget">
                     <ul class="profile_ul" style="text-align: center">
-                      <li style="padding: 12px 0 !important;"><?php echo $teacher_data->about?>
+                      <li style="padding: 12px 15px !important; white-space: pre-wrap; text-align: center;"><?php echo $teacher_data->about?>
                       </li>
                     </ul>
                   </div>
