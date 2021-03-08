@@ -637,7 +637,7 @@
                         <?php
                       }
                       ?>
-                      <option value="SEEALL" class="seeall">SEE ALL</option>
+<!--                      <option value="SEEALL" class="seeall">SEE ALL</option>-->
                     </select>
                   </div>
                   <div class="pull-right" style="position: absolute; right: 16px; width: 5%; text-align: right; height: 50px; line-height: 50px; color: grey">
@@ -649,11 +649,12 @@
                     $("#class_category").change(function() {
                       let filter = this.value;
                       console.log(filter);
-                      if (filter === 'SEEALL') {
-                        location.href = '<?= base_url(); ?>home/find/class';
-                      } else {
-                        $('#free-youtube').load('<?= base_url(); ?>home/find/class/list?page=1&limit=3&type=find&filter=' + filter);
-                      }
+                      $('#free-youtube').load('<?= base_url(); ?>home/find/class/list?page=1&limit=3&type=find&filter=' + filter);
+                      //if (filter === 'SEEALL') {
+                      //  location.href = '<?//= base_url(); ?>//home/find/class';
+                      //} else {
+                      //  $('#free-youtube').load('<?//= base_url(); ?>//home/find/class/list?page=1&limit=3&type=find&filter=' + filter);
+                      //}
                     });
                   })
                 </script>
@@ -738,6 +739,7 @@
                     <? } ?>
                   </ul>
                   <!-- /ajax_class_list() -->
+                  <a class="font-futura btn_more" style="font-weight: bold !important;margin-bottom: 20px !important;text-align: center;line-height: 36px;" href="<?= base_url(); ?>home/find/class">MORE</a>
                 </div>
               </div>
               

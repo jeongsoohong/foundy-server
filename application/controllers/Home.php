@@ -2068,7 +2068,7 @@ QUERY;
         
         $page = $_GET['page'];
         $filter = $_GET['filter'];
-        $limit = 10;
+        $limit = $this->teacher_model::TEACHER_VIDEO_PAGE_SIZE;
         if (isset($_GET['limit'])) {
           $limit = $_GET['limit'];
         }
@@ -2111,25 +2111,25 @@ QUERU;
         
       } else {
         
-        $bookmarks = array();
-        if ($this->is_login()) {
-          $user_id = $this->session->userdata('user_id');
-          $bookmarks = $this->db->get_where('bookmark_teacher', array('user_id' => $user_id))->result();
-          if (!empty($bookmarks) && count($bookmarks) > 0) {
-            $teacher_ids = array();
-            foreach ($bookmarks as $t) {
-              $teacher_ids[] = $t->teacher_id;
-            }
-            $this->db->where('activate', 1);
-            $this->db->where_in('teacher_id', $teacher_ids);
-            $bookmarks = $this->db->get('teacher')->result();
-          }
-        }
+//        $bookmarks = array();
+//        if ($this->is_login()) {
+//          $user_id = $this->session->userdata('user_id');
+//          $bookmarks = $this->db->get_where('bookmark_teacher', array('user_id' => $user_id))->result();
+//          if (!empty($bookmarks) && count($bookmarks) > 0) {
+//            $teacher_ids = array();
+//            foreach ($bookmarks as $t) {
+//              $teacher_ids[] = $t->teacher_id;
+//            }
+//            $this->db->where('activate', 1);
+//            $this->db->where_in('teacher_id', $teacher_ids);
+//            $bookmarks = $this->db->get('teacher')->result();
+//          }
+//        }
         
-        $video_data = $this->db->order_by('video_id', 'desc')->get('teacher_video', 10, 0)->result();
+//        $video_data = $this->db->order_by('video_id', 'desc')->get('teacher_video', 10, 0)->result();
         
-        $this->page_data['video_data'] = $video_data;
-        $this->page_data['bookmarks'] = $bookmarks;
+//        $this->page_data['video_data'] = $video_data;
+//        $this->page_data['bookmarks'] = $bookmarks;
         $this->page_data['page_name'] = "find/class";
         $this->page_data['asset_page'] = "class";
         $this->page_data['page_title'] = "class";

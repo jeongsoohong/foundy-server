@@ -5,7 +5,7 @@ if (!defined('BASEPATH'))
 
 class Teacher_model extends CI_Model
 {
-  const TEACHER_VIDEO_PAGE_SIZE = 5;
+  const TEACHER_VIDEO_PAGE_SIZE = 10;
   const FIND_TEACHER_PAGE_SIZE = 10;
   
   function __construct()

@@ -43,52 +43,51 @@
   <!-- /CONTENT -->
   <div class="container">
     <div class="row">
-      
-      <?php if (!empty($bookmarks) && count($bookmarks) > 0) { ?>
+<!--      --><?php //if (!empty($bookmarks) && count($bookmarks) > 0) { ?>
         <!-- bookmark -->
-        <div class="col-md-12 content" id="content" style="margin-bottom: 0 !important; background-color: white !important; border-bottom: 1px solid #F5F5F5">
-          <div id="blog-content">
-            <div class="col-md-12" style="padding: 0 0 0 0 !important; ">
-              <div class="row">
-                <div class="col-md-12" style="padding: 0 0 0 0 !important; height: 50px">
-                  <div class="profile" style="font-size: 15px; height: 50px; line-height: 50px; padding: 5px 20px 5px 20px !important; text-align: center">
-                    <span class="font-futura">My Favorite</span>
-                  </div>
-                </div>
-                <div class="col-md-12" style="padding: 10px 0px 10px 0px !important; border: none;">
-                  <div class="recent-post" style="background: #fff;/* border: 1px solid #e0e0e0; */">
-                    <div class="media">
-                      <div class="instructor slick" style="height: 100px; /* padding-bottom: 10px; */">
-                        <?php
-                        foreach ($bookmarks as $teacher) {
-                          $teacher = $this->db->get_where('teacher', array('teacher_id' => $teacher->teacher_id))->row();
-                          $teacher_name = $teacher->name;
-                          $user_data = $this->db->get_where('user', array('user_id' => $teacher->user_id))->row();
-                          $profile_image_url = $user_data->profile_image_url;
-                          if (empty($profile_image_url) or strlen($profile_image_url) == 0) {
-                            $profile_image_url = base_url().'uploads/icon/profile_icon.png';
-                          }
-                          ?>
-                          <div class="instructor slick-content active" id="1" style="margin-top: 10px; text-align: center">
-                            <a href="<?php echo base_url().'home/teacher/profile/'.$teacher->teacher_id; ?>">
-                              <p>
-                                <span><img src="<?php echo $profile_image_url; ?>" style="width:60px; height: 60px; margin: auto; border-radius: 30px"></span>
-                                <span><?php echo $teacher_name; ?></span>
-                              </p>
-                            </a>
-                          </div>
-                          <?php
-                        }
-                        ?>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      <?php } ?>
+<!--        <div class="col-md-12 content" id="content" style="margin-bottom: 0 !important; background-color: white !important; border-bottom: 1px solid #F5F5F5">-->
+<!--          <div id="blog-content">-->
+<!--            <div class="col-md-12" style="padding: 0 0 0 0 !important; ">-->
+<!--              <div class="row">-->
+<!--                <div class="col-md-12" style="padding: 0 0 0 0 !important; height: 50px">-->
+<!--                  <div class="profile" style="font-size: 15px; height: 50px; line-height: 50px; padding: 5px 20px 5px 20px !important; text-align: center">-->
+<!--                    <span class="font-futura">My Favorite</span>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--                <div class="col-md-12" style="padding: 10px 0px 10px 0px !important; border: none;">-->
+<!--                  <div class="recent-post" style="background: #fff;/* border: 1px solid #e0e0e0; */">-->
+<!--                    <div class="media">-->
+<!--                      <div class="instructor slick" style="height: 100px; /* padding-bottom: 10px; */">-->
+<!--                        --><?php
+//                        foreach ($bookmarks as $teacher) {
+//                          $teacher = $this->db->get_where('teacher', array('teacher_id' => $teacher->teacher_id))->row();
+//                          $teacher_name = $teacher->name;
+//                          $user_data = $this->db->get_where('user', array('user_id' => $teacher->user_id))->row();
+//                          $profile_image_url = $user_data->profile_image_url;
+//                          if (empty($profile_image_url) or strlen($profile_image_url) == 0) {
+//                            $profile_image_url = base_url().'uploads/icon/profile_icon.png';
+//                          }
+//                          ?>
+<!--                          <div class="instructor slick-content active" id="1" style="margin-top: 10px; text-align: center">-->
+<!--                            <a href="--><?php //echo base_url().'home/teacher/profile/'.$teacher->teacher_id; ?><!--">-->
+<!--                              <p>-->
+<!--                                <span><img src="--><?php //echo $profile_image_url; ?><!--" style="width:60px; height: 60px; margin: auto; border-radius: 30px"></span>-->
+<!--                                <span>--><?php //echo $teacher_name; ?><!--</span>-->
+<!--                              </p>-->
+<!--                            </a>-->
+<!--                          </div>-->
+<!--                          --><?php
+//                        }
+//                        ?>
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      --><?php //} ?>
       <!-- online class -->
       <div class="col-md-12 content" id="content" style="background-color: white !important;">
         <div id="blog-content">
@@ -150,11 +149,11 @@
       type: 'GET', // form submit method get/post
       dataType: 'html', // request type html/json/xml
       success: function(data) {
-        let prevCnt = $(".video_ul a li").length;
+        let prevCnt = $(".video_ul li").length;
         $('.video_ul').append(data);
-        // console.log($(".video_ul a li").length % 10);
-        let listCnt = $(".video_ul a li").length;
-        if ( listCnt === 0 || listCnt % 10 !== 0 || prevCnt === listCnt) {
+        // console.log($(".video_ul li").length % 10);
+        let listCnt = $(".video_ul li").length;
+        if ( listCnt === 0 || listCnt % <?= $this->teacher_model::TEACHER_VIDEO_PAGE_SIZE; ?> !== 0 || prevCnt === listCnt) {
           $('#view_more').hide();
         } else {
           $('#view_more').show();
@@ -190,60 +189,59 @@
 </script>
 
 <?php
-if (!empty($bookmarks) && count($bookmarks) > 0) {
-  ?>
-  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
-  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-  
-  <style>
-    .slick-content:focus {
-      outline: none !important;
-    }
-  </style>
-  <!--  <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>-->
-  <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-  <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-  <script type="text/javascript">
-    // $(function() {
-    //   $('.instructor-add').click(function () {
-    //     console.log('instructor-add');
-    //   });
-    // });
-    
-    $(document).ready(function(){
-      $('.instructor.slick').slick({
-        centerMode: false,
-        centerPadding: '20px',
-        slidesToShow: 5,
-        slidesToScroll: 1,
-        autoplay: false,
-        arrows: false,
-        focusOnSelect: false,
-        infinite: false,
-        swipe: true,
-        swipeToSlide: true,
-        speed: 100,
-        waitForAnimate: false,
-        easing: 'swing',
-        responsive: [
-          {
-            breakpoint: 768,
-            settings: {
-              centerPadding: '15px',
-              slidesToShow: 5
-            }
-          },
-          {
-            breakpoint: 480,
-            settings: {
-              centerPadding: '10px',
-              slidesToShow: 3
-            }
-          }
-        ]
-      });
-    });
-  </script>
-  <?php
-}
-?>
+//if (!empty($bookmarks) && count($bookmarks) > 0) {
+//  ?>
+<!--  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>-->
+<!--  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>-->
+<!--  -->
+<!--  <style>-->
+<!--    .slick-content:focus {-->
+<!--      outline: none !important;-->
+<!--    }-->
+<!--  </style>-->
+<!--  <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>-->
+<!--  <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>-->
+<!--  <script type="text/javascript">-->
+<!--    // $(function() {-->
+<!--    //   $('.instructor-add').click(function () {-->
+<!--    //     console.log('instructor-add');-->
+<!--    //   });-->
+<!--    // });-->
+<!--    -->
+<!--    $(document).ready(function(){-->
+<!--      $('.instructor.slick').slick({-->
+<!--        centerMode: false,-->
+<!--        centerPadding: '20px',-->
+<!--        slidesToShow: 5,-->
+<!--        slidesToScroll: 1,-->
+<!--        autoplay: false,-->
+<!--        arrows: false,-->
+<!--        focusOnSelect: false,-->
+<!--        infinite: false,-->
+<!--        swipe: true,-->
+<!--        swipeToSlide: true,-->
+<!--        speed: 100,-->
+<!--        waitForAnimate: false,-->
+<!--        easing: 'swing',-->
+<!--        responsive: [-->
+<!--          {-->
+<!--            breakpoint: 768,-->
+<!--            settings: {-->
+<!--              centerPadding: '15px',-->
+<!--              slidesToShow: 5-->
+<!--            }-->
+<!--          },-->
+<!--          {-->
+<!--            breakpoint: 480,-->
+<!--            settings: {-->
+<!--              centerPadding: '10px',-->
+<!--              slidesToShow: 3-->
+<!--            }-->
+<!--          }-->
+<!--        ]-->
+<!--      });-->
+<!--    });-->
+<!--  </script>-->
+<!--  --><?php
+//}
+//?>
