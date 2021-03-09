@@ -1752,8 +1752,13 @@ QUERY;
         $this->db->set('create_at', 'NOW()', false);
         $this->db->set('approval_at', 'NOW()', false);
         $this->db->insert('center');
-
+  
         $center_id = $this->db->insert_id();
+  
+        if ($center_id <= 0) {
+          echo '반영되지 않았습니다!';
+          exit;
+        }
 
         $this->db->set('center_id', $center_id, true);
         $this->db->set('location', "ST_GeomFromText('POINT({$longitude} {$latitude})')", false);
@@ -1849,7 +1854,12 @@ QUERY;
         $this->db->insert('studio');
     
         $studio_id = $this->db->insert_id();
-    
+  
+        if ($studio_id <= 0) {
+          echo '반영되지 않았습니다!';
+          exit;
+        }
+  
         foreach ($categories_yoga as $cat) {
           $cat = trim($cat);
           $this->db->insert('studio_category', array('studio_id' => $studio_id, 'category' => $cat, 'type' => STUDIO_TYPE_YOGA, 'activate' => 0));
@@ -1918,7 +1928,12 @@ QUERY;
         $this->db->set('approval_at', 'NOW()', false);
         $this->db->insert('teacher', $data);
         $teacher_id = $this->db->insert_id();
-
+        
+        if ($teacher_id <= 0) {
+          echo '반영되지 않았습니다!';
+          exit;
+        }
+  
         foreach ($categories as $cat) {
           $cat = trim($cat);
           $this->db->insert('teacher_category', array('teacher_id' => $teacher_id, 'category' => $cat));
@@ -4340,7 +4355,12 @@ QUERY;
         $this->db->insert('teacher_video', $ins);
 
         $video_id = $this->db->insert_id();
-
+  
+        if ($video_id <= 0) {
+          echo '반영되지 않았습니다!';
+          exit;
+        }
+  
         foreach ($categories as $cat) {
           $cat = trim($cat);
           $this->db->insert('teacher_video_category', array('video_id' => $video_id, 'category' => $cat));
