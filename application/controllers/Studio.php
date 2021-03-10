@@ -13,7 +13,7 @@ class Studio extends CI_Controller
   private $teacher = null;
   
   private $studio_id = 0;
-  private $studio_ids = null;
+//  private $studio_ids = null;
   private $studio = null;
   private $studios = null;
   
@@ -291,17 +291,17 @@ class Studio extends CI_Controller
           $this->session->set_userdata('teacher_id', $teacher_data->teacher_id);
           $this->session->set_userdata('teacher', json_encode($teacher_data));
         
-          if ($teacher_data->studio_ids != null) {
-            $studio_ids = json_decode($teacher_data->studio_ids);
-            $this->studio_id = $studio_ids[0];
-            $this->studio = $this->db->get_where('studio', array('studio_id' => $this->studio_id))->row();
-            $this->studios = $this->db->get_where('studio', array('user_id' => $this->user_id))->result();
-            $this->session->set_userdata('studio_id', $studio_ids[0]);
-            $this->session->set_userdata('studio', json_encode($this->studio));
-            $this->session->set_userdata('studios', json_encode($this->studios));
-          } else {
-            $this->session->set_userdata('studio_id', 0);
-          }
+//          if ($teacher_data->studio_ids != null) {
+//            $studio_ids = json_decode($teacher_data->studio_ids);
+//            $this->studio_id = $studio_ids[0];
+//            $this->studio = $this->db->get_where('studio', array('studio_id' => $this->studio_id))->row();
+//            $this->studios = $this->db->get_where('studio', array('user_id' => $this->user_id))->result();
+//            $this->session->set_userdata('studio_id', $studio_ids[0]);
+//            $this->session->set_userdata('studio', json_encode($this->studio));
+//            $this->session->set_userdata('studios', json_encode($this->studios));
+//          } else {
+//            $this->session->set_userdata('studio_id', 0);
+//          }
           echo 'lets_login';
         } else {
           echo '이메일이 잘못되었습니다.';
@@ -327,17 +327,20 @@ class Studio extends CI_Controller
       $this->page_data['teacher_id'] = $this->teacher_id;
       $this->page_data['teacher'] = $this->teacher;
      
-      $this->studio_ids = $this->teacher->studio_ids != null ? json_decode($this->teacher->studio_ids) : null;
-      $this->studio_id = $this->studio_ids != null ? $this->studio_ids[0] : 0;
-      $this->page_data['studio_id'] = $this->studio_id;
-      
-      if ($this->studio_id > 0) {
-        $this->studio = $this->studio_model->get($this->studio_id);
-        $this->studios = $this->studio_model->get_studios($this->teacher_id);
-        
-        $this->page_data['studio'] = $this->studio;
-        $this->page_data['studios'] = $this->studios;
+//      $this->studio_ids = $this->teacher->studio_ids != null ? json_decode($this->teacher->studio_ids) : null;
+//      $this->studio_id = $this->studio_ids != null ? $this->studio_ids[0] : 0;
+      $this->studio = $this->studio_model->get_from_user_id($this->user_id);
+      if (isset($this->studio) && !empty($this->studio)) {
+        $this->studio_id = $this->studio->studio_id;
+      } else {
+        $this->studio_id = 0;
       }
+      $this->page_data['studio'] = $this->studio;
+      $this->page_data['studio_id'] = $this->studio_id;
+  
+      $this->studios = $this->studio_model->get_studios($this->teacher_id);
+      $this->page_data['studios'] = $this->studios;
+  
 
 //      log_message('debug', '[studio] user_id['.$this->user_id.']');
 //      log_message('debug', '[studio] user['.json_encode($this->user).']');
@@ -365,8 +368,12 @@ class Studio extends CI_Controller
         echo ("<script>alert('승인 대기 중입니다');</script>");
         exit;
       }
-      
-      $this->page_data['register'] = false;
+  
+      $query = <<<QUERY
+SELECT count(*) as cnt FROM studio WHERE user_id={$this->user_id} and (activate=1 or activate=0)
+QUERY;
+      $count = $this->db->query($query)->row()->cnt;
+      $this->page_data['register'] = $count;
       
       return true;
     } else {
@@ -593,8 +600,16 @@ class Studio extends CI_Controller
     }
     if ($para1 == 'register') {
   
+      $query = <<<QUERY
+SELECT count(*) as cnt FROM studio WHERE user_id={$this->user_id} and (activate=1 or activate=0)
+QUERY;
+      $count = $this->db->query($query)->row()->cnt;
+      if ($count > 0) {
+        $this->alert_exit('이미신청하셨습니다', base_url().'studio');
+      }
+
       $this->load->library('form_validation');
-//      $this->form_validation->set_rules('title', 'title', 'trim|required|max_length[32]');
+      $this->form_validation->set_rules('title', 'title', 'trim|required|max_length[32]');
 //      $this->form_validation->set_rules('about', 'about', 'trim|required|max_length[64]');
 //      $this->form_validation->set_rules('instagram', 'instagram', 'trim|valid_url|max_length[256]');
 //      $this->form_validation->set_rules('youtube', 'youtube', 'trim|valid_url|max_length[256]');
@@ -606,7 +621,7 @@ class Studio extends CI_Controller
         exit;
       }
       
-//      $title = $this->input->post('title');
+      $title = $this->input->post('title');
 //      $about = $this->input->post('about');
 //      $instagram = $this->input->post('instagram');
 //      $youtube = $this->input->post('youtube');
@@ -615,10 +630,10 @@ class Studio extends CI_Controller
   
       $categories_yoga = json_decode($this->input->post('category_yoga'));
       $categories_pilates = json_decode($this->input->post('category_pilates'));
-      $category_yoga_etc = $this->input->post('category_yoga');
-      $category_pilates_etc = $this->input->post('category_pilates');
+      $category_yoga_etc = $this->input->post('category_yoga_etc');
+      $category_pilates_etc = $this->input->post('category_pilates_etc');
       
-      $title = $this->teacher->name;
+//      $title = $this->teacher->name;
       $instagram = $this->teacher->instagram;
       $youtube = $this->teacher->youtube;
   
@@ -626,12 +641,12 @@ class Studio extends CI_Controller
         $title, $instagram, $youtube, $email, $payment_page,
         $categories_yoga, $categories_pilates, $category_yoga_etc, $category_pilates_etc);
      
-      if ($this->teacher->studio_ids == null) {
-        $this->teacher->studio_ids = array();
-      }
-      $this->teacher->studio_ids[] = $studio_id;
-      
-      $this->db->update('teacher', array('studio_ids' => json_encode($this->teacher->studio_ids)), array('teacher_id' => $this->teacher_id));
+//      if ($this->teacher->studio_ids == null) {
+//        $this->teacher->studio_ids = array();
+//      }
+//      $this->teacher->studio_ids[] = $studio_id;
+//
+//      $this->db->update('teacher', array('studio_ids' => json_encode($this->teacher->studio_ids)), array('teacher_id' => $this->teacher_id));
   
       echo "done";
     
@@ -641,8 +656,8 @@ class Studio extends CI_Controller
         
         $this->load->library('form_validation');
         $this->form_validation->set_rules('email', 'email', 'trim|required|valid_email|max_length[128]');
-        $this->form_validation->set_rules('instagram_', 'instagram', 'trim|valid_url|max_length[256]');
-        $this->form_validation->set_rules('youtube', 'youtube', 'trim|valid_url|max_length[256]');
+//        $this->form_validation->set_rules('instagram_', 'instagram', 'trim|valid_url|max_length[256]');
+//        $this->form_validation->set_rules('youtube', 'youtube', 'trim|valid_url|max_length[256]');
         $this->form_validation->set_rules('payment_page', 'payment_page', 'trim|valid_url|max_length[256]');
         
         if ($this->form_validation->run() == FALSE) {
@@ -711,8 +726,17 @@ class Studio extends CI_Controller
         $register = true;
       }
       
-      if ($register == true && $this->studio_id > 0) {
-        $this->alert_exit('이미신청하셨습니다', base_url().'studio');
+      if ($register == true) {
+        if ($this->studio_id > 0) {
+          $this->alert_exit('이미신청하셨습니다', base_url() . 'studio');
+        }
+        $query = <<<QUERY
+SELECT count(*) as cnt FROM studio WHERE user_id={$this->user_id} and (activate=1 or activate=0)
+QUERY;
+        $count = $this->db->query($query)->row()->cnt;
+        if ($count > 0) {
+          $this->alert_exit('이미신청하셨습니다', base_url().'studio');
+        }
       }
       
       $category_yoga_data = array();
@@ -728,7 +752,7 @@ class Studio extends CI_Controller
         $category_pilates_etc = $result[1];
       }
       
-      $this->page_data['register'] = $register;
+//      $this->page_data['register'] = $register;
       $this->page_data['category_yoga_data'] = $category_yoga_data;
       $this->page_data['category_yoga_etc'] = $category_yoga_etc;
       $this->page_data['category_pilates_data'] = $category_pilates_data;

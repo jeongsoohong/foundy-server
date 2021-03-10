@@ -28,12 +28,12 @@
                              placeholder="온라인 스튜디오 이름" data-toggle="tooltip" title="studio_name">
                     </div>
                   </div>
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <input class="form-control" id="about" name="about" value="" type="text"
-                             placeholder="about" data-toggle="tooltip" title="about">
-                    </div>
-                  </div>
+<!--                  <div class="col-md-12">-->
+<!--                    <div class="form-group">-->
+<!--                      <input class="form-control" id="about" name="about" value="" type="text"-->
+<!--                             placeholder="about" data-toggle="tooltip" title="about">-->
+<!--                    </div>-->
+<!--                  </div>-->
                   <div class="col-md-12">
                     <div class="form-group">
                       <input class="form-control" id="email" name="email" value="" type="email"
@@ -42,14 +42,23 @@
                   </div>
                   <div class="col-md-12">
                     <div class="form-group">
-                      <input class="form-control" id="instagram-url" name="instagram" value="" type="url"
-                             placeholder="인스타그램 홈 url" data-toggle="tooltip" title="instagram">
+                      <input disabled class="form-control" id="instagram-url" name="instagram" type="url"
+                             placeholder="인스타그램 홈 url" data-toggle="tooltip" title="instagram"
+                             value="<?= $teacher->instagram; ?>">
                     </div>
                   </div>
                   <div class="col-md-12">
                     <div class="form-group">
-                      <input class="form-control" id="youtube-url" name="youtube" value="" type="url"
-                             placeholder="유투브 URL" data-toggle="tooltip" title="youtube">
+                      <input disabled class="form-control" id="youtube-url" name="youtube" type="url"
+                             placeholder="유투브 URL" data-toggle="tooltip" title="youtube"
+                             value="<?= $teacher->youtube; ?>">
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <input class="form-control" id="payment_page" name="payment_page" type="url"
+                             placeholder="결제페이지 URL" data-toggle="tooltip" title="payment_page"
+                             value="">
                     </div>
                   </div>
                   <div class="col-md-12">

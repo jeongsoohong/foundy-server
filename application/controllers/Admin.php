@@ -977,6 +977,18 @@ QUERY;
 UPDATE studio_category set activate={$activate} where studio_id={$studio_id}
 QUERY;
       $this->db->query($query);
+ 
+      if ($activate == 2) {
+        $query = <<<QUERY
+UPDATE studio_schedule set activate={$activate} where studio_id={$studio_id}
+QUERY;
+        $this->db->query($query);
+        
+        $query = <<<QUERY
+UPDATE studio_schedule_info set activate={$activate} where studio_id={$studio_id}
+QUERY;
+        $this->db->query($query);
+      }
       
       $query = <<<QUERY
 select count(*) as cnt from studio where user_id={$user_id} and activate=1

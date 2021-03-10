@@ -1499,6 +1499,11 @@ QUERY;
         }
         $ticket->center = $this->db->get_where('center', array('center_id' => $ticket->center_id))->row();
       }
+      
+      $query = <<<QUERY
+select count(*) as cnt from studio where user_id={$user_id} and (activate = 1 or activate = 0)
+QUERY;
+      $studio_registered = $this->db->query($query)->row()->cnt;
 
       $this->page_data['bookmark_centers'] = $bookmark_centers;
       $this->page_data['bookmark_teachers'] = $bookmark_teachers;
@@ -1506,6 +1511,7 @@ QUERY;
       $this->page_data['on_tickets'] = $on_tickets;
       $this->page_data['stop_tickets'] = $stop_tickets;
       $this->page_data['planed_tickets'] = $planed_tickets;
+      $this->page_data['studio_registered'] = $studio_registered;
       $this->load->view('front/user/profile', $this->page_data);
 
     } else if ($view_type == 'edit_profile') {
@@ -1614,8 +1620,26 @@ QUERY;
         echo ("<script>alert('강사 회원이 아닙니다!'); window.location.href='{$base_url}home/user'</script>");
         exit;
       }
-      
-      $this->load->view('front/user/studio_register');
+  
+      $query = <<<QUERY
+SELECT * FROM teacher WHERE user_id={$user_id} and activate=1
+QUERY;
+      $teacher = $this->db->query($query)->row();
+      if (isset($teacher) == false || empty($teacher) == true) {
+        echo ("<script>alert('강사회원이 아닙니다!');'</script>");
+        exit;
+      }
+      $query = <<<QUERY
+SELECT count(*) as cnt FROM studio WHERE user_id={$user_id} and (activate=1 or activate=0)
+QUERY;
+      $count = $this->db->query($query)->row()->cnt;
+      if ($count > 0) {
+        echo ("<script>alert('이미신청하셨습니다'); window.location.href='{$base_url}home/user'</script>");
+        exit;
+      }
+  
+      $this->page_data['teacher'] =  $teacher;
+      $this->load->view('front/user/studio_register', $this->page_data);
 
     } elseif ($view_type == "teacher_register") {
 
@@ -1624,14 +1648,22 @@ QUERY;
 SELECT teacher_id FROM user WHERE user_id={$user_id}
 QUERY;
       $row = $this->db->query($query)->row();
-
-      if ($row->teacher_id > 0) {
+      if ($row->user_type & USER_TYPE_TEACHER) {
         echo ("<script>alert('이미신청하셨습니다'); window.location.href='{$base_url}home/user'</script>");
         exit;
-      } else {
-        $this->load->view('front/user/teacher_register');
       }
-
+  
+      $query = <<<QUERY
+SELECT count(*) as cnt FROM teacher WHERE user_id={$user_id} and (activate=1 or activate=0)
+QUERY;
+      $count = $this->db->query($query)->row()->cnt;
+      if ($count > 0) {
+        echo ("<script>alert('이미신청하셨습니다'); window.location.href='{$base_url}home/user'</script>");
+        exit;
+      }
+      
+      $this->load->view('front/user/teacher_register');
+    
     } elseif ($view_type == "shop_register") {
 
       $user_id = $this->session->userdata('user_id');
@@ -1786,90 +1818,49 @@ QUERY;
   
       $this->load->library('form_validation');
       $this->form_validation->set_rules('title', 'studio-title', 'trim|required|max_length[32]');
+//      $this->form_validation->set_rules('about', 'about', 'trim|required|max_length[64]');
+//      $this->form_validation->set_rules('instagram', 'instagram', 'trim|valid_url|max_length[256]');
+//      $this->form_validation->set_rules('youtube', 'youtube', 'trim|valid_url|max_length[256]');
       $this->form_validation->set_rules('email', 'email', 'trim|required|valid_email|max_length[128]');
-      $this->form_validation->set_rules('about', 'about', 'trim|required|max_length[64]');
-      $this->form_validation->set_rules('instagram', 'instagram', 'trim|valid_url|max_length[256]');
-      $this->form_validation->set_rules('youtube', 'youtube', 'trim|valid_url|max_length[256]');
+      $this->form_validation->set_rules('payment_page', 'payment_page', 'trim|valid_url|max_length[256]');
   
       if ($this->form_validation->run() == FALSE) {
         echo '<br>' . validation_errors();
       } else {
         $user_id = $this->session->userdata('user_id');
         $title = $this->input->post('title');
+//        $about = $this->input->post('about');
+//        $instagram = $this->input->post('instagram');
+//        $youtube = $this->input->post('youtube');
         $email = $this->input->post('email');
-        $about = $this->input->post('about');
-        $instagram = $this->input->post('instagram');
-        $youtube = $this->input->post('youtube');
+        $payment_page = $this->input->post('payment_page');
+        
         $categories_yoga = $this->input->post('category_yoga');
         $categories_pilates = $this->input->post('category_pilates');
-    
-        if (!empty(($this->input->post('category_yoga_etc')))) {
-          if (isset($categories_yoga) && count($categories_yoga)) {
-            $categories_yoga = array_merge($categories_yoga, explode(' ', trim($this->input->post('category_yoga_etc'))));
-          } else {
-            $categories_yoga = explode(' ', trim($this->input->post('category_yoga_etc')));
-          }
-        }
-    
-        if (!empty($categories_yoga) && count($categories_yoga)) {
-          $categories_yoga = array_filter(array_map('trim', $categories_yoga));
-        }
-    
-        if (!empty(($this->input->post('category_pilates_etc')))) {
-          if (isset($categories_pilates) && count($categories_pilates)) {
-            $categories_pilates = array_merge($categories_pilates, explode(' ', trim($this->input->post('category_pilates_etc'))));
-          } else {
-            $categories_pilates = explode(' ', trim($this->input->post('category_pilates_etc')));
-          }
-        }
-    
-        if (!empty($categories_pilates) && count($categories_pilates)) {
-          $categories_pilates = array_filter(array_map('trim', $categories_pilates));
-        }
-    
-        if ((empty($categories_yoga) && empty($categories_pilates)) || (count($categories_yoga) == 0 && count($categories_pilates) == 0)) {
-          echo ("<script>alert('최소 하나의 분류를 선택해주세요');</script>");
+        $category_yoga_etc = $this->input->post('category_yoga_etc');
+        $category_pilates_etc = $this->input->post('category_pilates_etc');
+  
+        $query = <<<QUERY
+SELECT * FROM teacher WHERE user_id={$user_id} and activate=1
+QUERY;
+        $teacher = $this->db->query($query)->row();
+        if (isset($teacher) == false || empty($teacher) == true) {
+          echo ("<script>alert('강사회원이 아닙니다'); window.location.href='{$base_url}home/user'</script>");
           exit;
         }
+//        $title = $this->teacher->name;
+        $instagram = $teacher->instagram;
+        $youtube = $teacher->youtube;
+        
+        $studio_id = $this->studio_model->register($user_id, $teacher->teacher_id, null,
+          $title, $instagram, $youtube, $email, $payment_page,
+          $categories_yoga, $categories_pilates, $category_yoga_etc, $category_pilates_etc);
     
-        if (isset($instagram) == false || empty($instagram) == true) {
-          $instagram = null;
-        }
-        if (isset($youtube) == false || empty($youtube) == true) {
-          $youtube = null;
-        }
-    
-        $data = array(
-          'user_id' => $user_id,
-          'title' => $title,
-          'email' => $email,
-          'about' => $about,
-          'instagram' => $instagram,
-          'youtube' => $youtube,
-          'activate' => 0,
-        );
-        $this->db->set($data);
-        $this->db->set('create_at', 'NOW()', false);
-        $this->db->set('approval_at', 'NOW()', false);
-        $this->db->insert('studio');
-    
-        $studio_id = $this->db->insert_id();
-  
         if ($studio_id <= 0) {
           echo '반영되지 않았습니다!';
           exit;
         }
-  
-        foreach ($categories_yoga as $cat) {
-          $cat = trim($cat);
-          $this->db->insert('studio_category', array('studio_id' => $studio_id, 'category' => $cat, 'type' => STUDIO_TYPE_YOGA, 'activate' => 0));
-        }
-    
-        foreach ($categories_pilates as $cat) {
-          $cat = trim($cat);
-          $this->db->insert('studio_category', array('studio_id' => $studio_id, 'category' => $cat, 'type' => STUDIO_TYPE_PILATES, 'activate' => 0));
-        }
-
+       
         echo "done";
       }
   
@@ -3866,10 +3857,10 @@ QUERY;
 
       $video_data = $this->db->order_by('video_id', 'desc')->get_where('teacher_video', $where)->result();
      
-      $studio_ids = json_decode($teacher_data->studio_ids);
-      if (isset($studio_ids) == true && count($studio_ids) > 0) {
-        $studio_id = $studio_ids[0];
-        $studio_data = $this->studio_model->get($studio_id);
+//      $studio_ids = json_decode($teacher_data->studio_ids);
+      if ($user_data->user_type & USER_TYPE_STUDIO) {
+//        $studio_id = $studio_ids[0];
+        $studio_data = $this->studio_model->get_from_user_id($user_data->user_id);
         
         $start_time = time();
         $end_time = strtotime("+90 day");

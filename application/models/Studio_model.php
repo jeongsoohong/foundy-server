@@ -22,6 +22,9 @@ class Studio_model extends CI_Model
   function get($studio_id) {
     return $this->db->get_where('studio', array('studio_id' => $studio_id))->row();
   }
+  function get_from_user_id($user_id) {
+    return $this->db->get_where('studio', array('user_id' => $user_id, 'activate' => 1))->row();
+  }
   
   function get_studios($teacher_id) {
     return $this->db->get_where('studio', array('teacher_id' => $teacher_id, 'activate' => 1))->result();
@@ -260,6 +263,13 @@ QUERY;
   function register($user_id, $teacher_id, $center_id, $title, $instagram, $youtube, $email, $payment_page,
                     $categories_yoga, $categories_pilates, $category_yoga_etc, $category_pilates_etc)
   {
+    $this->db->where('title', $title);
+    $dup = $this->db->get('studio')->row();
+    if (isset($dup) && !empty($dup)) {
+      echo ("<script>alert('이미 있는 스튜디오명입니다! 다시 시도해주세요!');</script>");
+      exit;
+    }
+    
     if (!empty($category_yoga_etc)) {
       if (isset($categories_yoga) && count($categories_yoga)) {
         $categories_yoga = array_merge($categories_yoga, explode(' ', trim($category_yoga_etc)));
@@ -299,7 +309,7 @@ QUERY;
       $email = null;
     }
     if (isset($payment_page) == false || empty($payment_page) == true) {
-      $email = null;
+      $payment_page =  null;
     }
   
     $data = array(
@@ -317,9 +327,9 @@ QUERY;
     $this->db->set('create_at', 'NOW()', false);
     $this->db->set('approval_at', 'NOW()', false);
     $this->db->insert('studio');
-  
+    
     $studio_id = $this->db->insert_id();
-  
+    
     foreach ($categories_yoga as $cat) {
       $cat = trim($cat);
       $this->db->insert('studio_category', array('studio_id' => $studio_id, 'category' => $cat, 'type' => STUDIO_TYPE_YOGA, 'activate' => 0));

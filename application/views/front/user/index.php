@@ -28,19 +28,19 @@
           <ul class="pleft_nav">
             <a class="pnav_info" href="#profile_content" style="display: none;"><li>프로필</li></a>
             <a class="pnav_edit_profile" href="#profile_content" style="display: none"><li>프로필 편집</li></a>
-            <a class="pnav_notification"><li>공지사항</li></a>
-            <a class="pnav_introduce"><li>파운디 소개</li></a>
-            <a class="pnav_faq"><li>자주하는 질문</li></a>
-            <a class="pnav_customer_center"><li>고객센터</li></a>
+            <a class="pnav_notification" href="#profile_content"><li>공지사항</li></a>
+            <a class="pnav_introduce" href="#profile_content"><li>파운디 소개</li></a>
+            <a class="pnav_faq" href="#profile_content"><li>자주하는 질문</li></a>
+            <a class="pnav_customer_center" href="#profile_content"><li>고객센터</li></a>
             <!--            <a class="pnav_user_question" href="#"><li>1:1 문의하기</li></a>-->
             <!--            <a class="pnav_service" href="#profile_content"><li>서비스 이용 약관</li></a>-->
             <!--            <a class="pnav_privacy" href="#profile_content"><li>개인정보 보호정책</li></a>-->
           </ul>
           <div class="information-title" style="margin-bottom: 0px; margin-top: 0px;">샵</div>
           <ul class="pleft_nav">
-            <a class="pnav_shop_wishlist"><li>위시리스트</li></a>
-            <a class="pnav_shop_orderlist"><li>주문내역</li></a>
-            <a class="pnav_coupon_box"><li>쿠폰박스</li></a>
+            <a class="pnav_shop_wishlist" href="#profile_content"><li>위시리스트</li></a>
+            <a class="pnav_shop_orderlist" href="#profile_content"><li>주문내역</li></a>
+            <a class="pnav_coupon_box" href="#profile_content"><li>쿠폰박스</li></a>
           </ul>
           <div class="information-title" style="margin-bottom: 0px; margin-top: 0px;">신청</div>
           <ul class="pleft_nav">
@@ -53,8 +53,8 @@
           </ul>
           <div class="information-title" style="margin-bottom: 0px; margin-top: 0px;">계정</div>
           <ul class="pleft_nav">
-            <a class="pnav_logout"><li>로그아웃</li></a>
-            <a class="pnav_unregister"><li>회원탈퇴</li></a>
+            <a class="pnav_logout" href="#profile_content"><li>로그아웃</li></a>
+            <a class="pnav_unregister" href="#profile_content"><li>회원탈퇴</li></a>
           </ul>
         </div>
       </div>

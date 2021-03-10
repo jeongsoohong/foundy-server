@@ -297,8 +297,12 @@
                 $user = '';
                 if ($user_type & USER_TYPE_ADMIN) {
                   echo '어드민';
+                } else if ($user_type & USER_TYPE_TEACHER and $user_type & USER_TYPE_STUDIO and $user_type & USER_TYPE_CENTER) {
+                  $user .= '스튜디오/센터회원';
                 } else if ($user_type & USER_TYPE_TEACHER and $user_type & USER_TYPE_CENTER) {
                   $user .= '강사/센터회원';
+                } else if ($user_type & USER_TYPE_TEACHER and $user_type & USER_TYPE_STUDIO) {
+                  $user .= '스튜디오회원';
                 } else if ($user_type & USER_TYPE_TEACHER) {
                   $user .= '강사회원';
                 } else if ($user_type & USER_TYPE_CENTER) {
@@ -319,7 +323,7 @@
             </tr>
             <tr style="height: 20px">
               <td style="width: 70%">
-                <? if (($user_type & USER_TYPE_TEACHER) && !($user_type & USER_TYPE_STUDIO)) { ?>
+                <? if (($user_type & USER_TYPE_TEACHER) && $studio_registered == false) { ?>
                   <a href="#profile_content" class="enroll_studio pnav_studio_register">온라인 스튜디오 신청하기</a>
                   <style type="text/css">
                     .enroll_studio {

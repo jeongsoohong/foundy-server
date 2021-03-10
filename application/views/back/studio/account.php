@@ -56,7 +56,7 @@
         <img src="<?= base_url(); ?>template/back/center/imgs/icon_next_white.png" width="6" height="auto" style="display: none;" class="next_white">
       </div>
     </a>
-    <? if (!$register) { ?>
+    <? if ($register) { ?>
       <a href="#" class="tit_theme">
         추가정보
         <div class="theme_arrow">
@@ -71,7 +71,7 @@
       <h3 class="meaning">스튜디오 정보</h3>
       <div class="type_wrap val_wrap shadow" id="topic">
         <div class="stu_box stu_val ">
-          <? if ($register) { ?>
+          <? if (!$register) { ?>
             <button class="stu_btn btn_save" onclick="register_studio();">신청</button>
           <? } else { ?>
             <button class="stu_btn btn_save" onclick="save_profile();">저장</button>
@@ -80,8 +80,13 @@
           <dl class="type_detail stu_detail clearfix">
             <dt class="area_tit stu_name">스튜디오 이름</dt>
             <dd class="area_data name_data" style="margin-bottom: 10px;">
-              <input class="data_name gray_bg" type="text" value="<?=  $studio->title; ?>" disabled>
-              <span class="read">스튜디오 이름 변경시 담당자에게 연락주시기 바랍니다.</span>
+              <? if (!$register) { ?>
+                <input class="data_name" id="studio_title" type="text" value="">
+                <span class="read"></span>
+              <? } else { ?>
+                <input class="data_name gray_bg" id="studio_title" type="text" value="<?=  $studio->title; ?>" disabled>
+                <span class="read">스튜디오 이름 변경시 담당자에게 연락주시기 바랍니다.</span>
+              <? } ?>
             </dd>
           </dl>
         </div>
@@ -97,7 +102,7 @@
             </dd>
             <dt class="area_tit stu_name">이메일</dt>
             <dd class="area_data name_data">
-              <input class="data_name" type="email" id="studio_email" value="<? if (!$register) echo $studio->email; ?>">
+              <input class="data_name" type="email" id="studio_email" value="<? if ($register) echo $studio->email; ?>">
               <span class="read theme:sns">*기재해주신 이메일 주소로 수업 관련 문의 글을 받을 예정이오니, <br>자주 사용하시는 이메일로 기재해 주세요!</span>
             </dd>
           </dl>
@@ -107,7 +112,7 @@
           <dl class="type_detail stu_detail clearfix">
             <dt class="area_tit stu_name">결제 페이지 url</dt>
             <dd class="area_data name_data">
-              <input class="data_name" type="url" id="payment_page" value="<? if (!$register) echo $studio->payment_page; ?>">
+              <input class="data_name" type="url" id="payment_page" value="<? if ($register) echo $studio->payment_page; ?>">
           </dl>
         </div>
         <div class="stu_box stu_area">
@@ -218,9 +223,9 @@
 <!--          <button class="sch_btn btn_save" onclick="save_about();">저장</button>-->
 <!--          <form class="addinfo_textbox">-->
 <!--            <div class="remain_textarea">-->
-<!--              <p>남은 글자 수 <span class="remain_text"><strong class="remain_val">--><?php //if (!$register) { echo (1000 - mb_strlen($studio->about)); } else { echo 1000; } ?><!--</strong>자</span></p>-->
+<!--              <p>남은 글자 수 <span class="remain_text"><strong class="remain_val">--><?php //if ($register) { echo (1000 - mb_strlen($studio->about)); } else { echo 1000; } ?><!--</strong>자</span></p>-->
 <!--            </div>-->
-<!--            <textarea class="about_textarea" placeholder="내용을 입력해주세요 (최대 1,000자)">--><?// if (!$register) echo $studio->about; ?><!--</textarea>-->
+<!--            <textarea class="about_textarea" placeholder="내용을 입력해주세요 (최대 1,000자)">--><?// if ($register) echo $studio->about; ?><!--</textarea>-->
 <!--          </form>-->
 <!--        </div>-->
         <div class="type_box info_box shadow">
@@ -232,7 +237,7 @@
                 <br>- 이미지가 비정상적으로 보여질 수 있으므로, 권장사이즈를 준수하여 주시기 바랍니다.</p>
             </div>
             <div class="editor_box">
-              <textarea class="summernotes" id='summernotes' data-height="500" data-name="item-desc"><? if (!$register) echo $studio->info; ?></textarea>
+              <textarea class="summernotes" id='summernotes' data-height="500" data-name="item-desc"><? if ($register) echo $studio->info; ?></textarea>
             </div>
           </div>
         </div>
@@ -245,6 +250,7 @@
   
   function get_profile_data() {
   
+    let title = trim($('#studio_title').val());
     let instagram = trim($('#instagram_url').val());
     let youtube = trim($('#youtube_url').val());
     let payment_page = trim($('#payment_page').val());
@@ -294,6 +300,7 @@
     let data = [];
     // data['instagram'] = instagram;
     // data['youtube'] = youtube;
+    data['title'] = title;
     data['email'] = email;
     data['payment_page'] = payment_page;
     data['category_yoga'] = JSON.stringify(category_yoga);
@@ -368,7 +375,7 @@
           // },
         },
       });
-      now.closest('div').find('.val').val('<? if(!$register) echo $studio->info; ?>');
+      now.closest('div').find('.val').val('<? if($register) echo $studio->info; ?>');
       // console.log(now.closest('div').find('.val').val());
       // now.closest('div').find('.val').val(now.summernote('code'));
       // console.log($('#summernotes').summernote('fullscreen.isFullscreen'));

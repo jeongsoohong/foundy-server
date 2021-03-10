@@ -10,9 +10,7 @@
       <div class="menu_wrap clearfix">
         <a href="<?= base_url().'studio/teacher'; ?>" id="menu_teacher">강사 정보</a>
         <a href="<?= base_url().'studio/youtube'; ?>" id="menu_youtube">유튜브 클래스</a>
-        <? if ($register) { ?>
-          <a href="<?= base_url().'studio/account?r='; ?>" id="menu_account" style="display: none;">스튜디오 정보</a>
-        <? } else { ?>
+        <? if ($register == true && $studio_id > 0) { ?>
           <a href="<?= base_url().'studio/account'; ?>" id="menu_account" style="display: none;">스튜디오 정보</a>
         <? } ?>
         <a href="<?= base_url().'studio/schedule'; ?>" id="menu_schedule" style="display: none;">스튜디오 스케줄</a>
@@ -165,4 +163,6 @@
   $('#menu_schedule').hide();
   $('#btn_apply_studio').show();
   <? } ?>
+  //alert('<?//= $register; ?>//');
+  //alert('<?//= $studio_id; ?>//');
 </script>
