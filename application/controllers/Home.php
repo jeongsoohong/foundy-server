@@ -750,12 +750,12 @@ QUERY;
         curl_setopt_array($ch, $opts);
         $result = json_decode(curl_exec($ch), true);
         curl_close($ch);
-
+  
+        log_message('debug', '[kakao login] result['.json_encode($result).']');
+  
         $this->session->set_userdata('reg_type', '');
         $result = $this->crud_model->do_kakao_login($result);
         
-//        log_message('debug', '[kakao] result['.$result['status'].']');
-
         if ($result['status'] == 'success') {
           $user_id = $this->session->userdata('user_id');
           $kakao_id = $this->session->userdata('kakao_id');
@@ -4277,87 +4277,9 @@ QUERY;
         $desc = $this->input->post('description');
         $video_url = $this->input->post('video_url');
         $categories = $this->input->post('category');
-
-        if (!empty(($this->input->post('category_etc')))) {
-          if (isset($categories) && count($categories)) {
-            $categories = array_merge($categories, explode(' ', trim($this->input->post('category_etc'))));
-          } else {
-            $categories = explode(' ', trim($this->input->post('category_etc')));
-          }
-        }
-
-        if (!empty($categories) && count($categories)) {
-          $categories = array_filter(array_map('trim', $categories));
-        }
-
-//                $categories = json_encode(($this->input->post('category_etc')));
-//                $categories = json_encode($categories);
-//                print_r($categories);
-//                echo "<script>alert('{$categories}')</script>";
-//                exit;
-
-        if (empty($categories) || count($categories) == 0) {
-          echo ("<script>alert('최소 하나의 분류를 선택해주세요');</script>");
-          exit;
-        }
-        if (count($categories) > 3) {
-          echo("<script>alert('수업 분류는 최대 3가지만 선택 가능합니다');</script>");
-          exit;
-        }
-
-        /* parsing to extract youtube video id from video url */
-        $reg_exp = '/^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/';
-        preg_match($reg_exp, $video_url, $matches);
-        $youtube_id = $matches[7];
-
-        /* get video info */
-        $content = file_get_contents("https://youtube.com/get_video_info?video_id=".$youtube_id);
-        parse_str($content, $data);
-        $result = json_decode($data['player_response']);
-        
-        log_message('debug', '[youtube] register data['.json_encode($result->videoDetails->thumbnail).']');
-
-//        echo "아이디 : ".$result->videoDetails->videoId;
-//        echo "채널아이디: ".$result->videoDetails->channelId;
-//        echo "제목 : ".$result->videoDetails->title;
-//        echo "설명 : ".$result->videoDetails->shortDescription;
-//        echo "올린 사람 : ".$result->videoDetails->author;
-//        echo "조회수: ".$result->videoDetails->viewCount;
-//        echo "동영상 길이 : ".$result->videoDetails->lengthSeconds;
-//        echo "키워드: ".json_encode($result->videoDetails->keywords);
-//        echo "썸네일 갯수: ".count($result->videoDetails->thumbnail->thumbnails);
-//        echo "썸네일: ".json_encode($result->videoDetails->thumbnail->thumbnails[0]);
-//        echo "썸네일: ".json_encode($result->videoDetails->thumbnail->thumbnails[1]);
-//        echo "썸네일: ".json_encode($result->videoDetails->thumbnail->thumbnails[2]);
-//        echo "썸네일: ".json_encode($result->videoDetails->thumbnail->thumbnails[3]);
-
-        $youtube_url = "https://www.youtube.com/embed/".$youtube_id;
-
-        $ins = array(
-          'teacher_id' => $teacher_data->teacher_id,
-          'title' => $title,
-          'video_url' => $youtube_url,
-          'desc' => $desc,
-          'thumbnail_image_url' => $result->videoDetails->thumbnail->thumbnails[3]->url,
-          'playtime' => $result->videoDetails->lengthSeconds,
-          'activate' => 1,
-          'yt_info' => $data['player_response']
-        );
-        $this->db->insert('teacher_video', $ins);
-
-        $video_id = $this->db->insert_id();
+        $category_etc = $this->input->post('category_etc');
   
-        if ($video_id <= 0) {
-          echo '반영되지 않았습니다!';
-          exit;
-        }
-  
-        foreach ($categories as $cat) {
-          $cat = trim($cat);
-          $this->db->insert('teacher_video_category', array('video_id' => $video_id, 'category' => $cat));
-        }
-  
-        $this->teacher_model->update_profile($teacher_data->teacher_id);
+        $this->teacher_model->register_youtube($teacher_data, $title, $desc, $video_url, $categories, $category_etc);
         
         echo "done";
       }

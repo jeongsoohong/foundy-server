@@ -200,16 +200,43 @@ class Teacher_model extends CI_Model
       echo("<script>alert('수업 분류는 최대 3가지만 선택 가능합니다');</script>");
       exit;
     }
-    
+  
     /* parsing to extract youtube video id from video url */
     $reg_exp = '/^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/';
     preg_match($reg_exp, $video_url, $matches);
-    $youtube_id = $matches[7];
     
+    log_message('debug', '[youtube] matches['.json_encode($matches).']');
+    if (isset($matches) == false || empty($matches) == true) {
+      echo("<script>alert('비디오 데이터가 존재하지 않습니다!! 유튜브 URL을 다시 확인해주세요!!');</script>");
+      exit;
+    }
+
+    $youtube_id = $matches[7];
+  
     /* get video info */
     $content = file_get_contents("https://youtube.com/get_video_info?video_id=".$youtube_id);
+    
+    log_message('debug', '[youtube] content['.json_encode($content).']');
+    if (isset($content) == false || empty($content) == true) {
+      echo("<script>alert('비디오 데이터가 존재하지 않습니다!! 유튜브 URL을 다시 확인해주세요!!');</script>");
+      exit;
+    }
+  
     parse_str($content, $data);
+  
+    log_message('debug', '[youtube] data['.json_encode($data).']');
+    if (isset($data) == false || empty($data) == true) {
+      echo("<script>alert('비디오 데이터가 존재하지 않습니다!! 유튜브 URL을 다시 확인해주세요!!');</script>");
+      exit;
+    }
+  
     $result = json_decode($data['player_response']);
+  
+    log_message('debug', '[youtube] register data['.json_encode($result).']');
+    if (isset($result) == false || empty($result)) {
+      echo("<script>alert('비디오 데이터가 존재하지 않습니다!! 유튜브 URL을 다시 확인해주세요!!');</script>");
+      exit;
+    }
 
 //        echo "아이디 : ".$result->videoDetails->videoId;
 //        echo "채널아이디: ".$result->videoDetails->channelId;
@@ -240,6 +267,11 @@ class Teacher_model extends CI_Model
     $this->db->insert('teacher_video', $ins);
     
     $video_id = $this->db->insert_id();
+  
+    if ($video_id <= 0) {
+      echo ("<script>alert('반영되지 않았습니다!');</script>");
+      exit;
+    }
     
     foreach ($categories as $cat) {
       $cat = trim($cat);
