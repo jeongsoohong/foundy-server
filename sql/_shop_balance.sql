@@ -1,3 +1,11 @@
+
+-- 전체구매
+select a.purchase_product_id,a.product_id,c.product_code,c.item_name,a.user_id,a.session_id,a.purchase_code,
+       a.total_balance,a.total_price,a.discount,a.total_shipping_fee,
+       a.shipping_status,a.shipping_status_code,a.shop_id,b.shop_name,a.purchase_at,a.modified_at,a.shipping_data,a.shop_balance
+from shop_purchase_product a, shop b, shop_product c
+where a.shipping_status in (1,3,4,5,6) and a.shop_id=b.shop_id and a.product_id=c.product_id order by a.purchase_product_id desc;
+
 -- 샵 정산
 select
     a.shop_id as '샵아이디',
@@ -30,11 +38,11 @@ select
     a.purchase_at as '구매날짜',
     a.modified_at as '상태변경날짜(구매확정)'
 from shop_purchase_product a, shop b, shop_product c -- , user d
-where b.shop_name= '아로마블리스' and a.shop_id=b.shop_id and a.shipping_status=6 and a.shop_balance=0
+where b.shop_name= '' and a.shop_id=b.shop_id and a.shipping_status=6 and a.shop_balance=0
   and a.product_id=c.product_id and a.modified_at <= '2021-02-28 23:59:59';
 -- and a.user_id > 0 and a.user_id=d.user_id;
 
 -- 정산 파일 생성 후 정산완료 처리
 update shop_purchase_product
 set shop_balance=(TRUNCATE(total_price * (100 - item_margin) / 100,-2) + total_shipping_fee + total_additional_price)
-where shop_id=12 and shipping_status=6 and shop_balance=0 and a.modified_at <= '2021-02-28 23:59:59';
+where shop_id= and shipping_status=6 and shop_balance=0 and modified_at <= '2021-02-28 23:59:59';
