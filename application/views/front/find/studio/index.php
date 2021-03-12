@@ -854,11 +854,11 @@
                 }
                 @media(min-width: 414px){
                   .comeUp .schedule_type {
-                    padding: 10px 36px;
+                    padding: 10px 36px 10px 20px;
                   }
                   .comeUp .type_className {
-                    left: 36px;
-                    width: 50%;
+                    left: 20px;
+                    /*width: 50%;*/
                   }
                   .comeUp .type_name {
                     right: 36px;
