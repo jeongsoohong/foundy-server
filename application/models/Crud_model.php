@@ -374,7 +374,7 @@ class Crud_model extends CI_Model
     
     if (isset($res->user_id) && isset($res->plus_friends)) {
       $status = $res->plus_friends[0]->relation;
-      if ($status == 'BLOCKED' || $status == 'NONE') { // ADDED, BLOCKED, NONE
+      if ($status == 'NONE') { // ADDED, BLOCKED, NONE
         $this->session->set_userdata('need_kakao_channel_add', 'yes');
       }
     }
