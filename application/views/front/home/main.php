@@ -98,27 +98,27 @@
         <a href="<?php echo base_url().'home/find/center/'.CENTER_TYPE_PILATES; ?>" style="margin:auto;">
           <img class="img-responsive" src="<?php echo base_url(); ?>template/icon/fd_pilates.png" width="80" height="80" alt="" />
         </a>
-        <?
-        if (STUDIO_OPEN) {
-          if (DEV_SERVER) {
-            $online_link = base_url().'home/find/studio';
-          } else {
-            $online_link = base_url().'home/find/studio';
-          }
-        } else {
-          if ($this->session->userdata('user_login') == 'yes') {
-            $user_data = json_decode($this->session->userdata('user_data'));
-            if ($user_data->user_type & USER_TYPE_ADMIN) {
-              $online_link = base_url() . 'home/find/studio';
-            } else {
-              $online_link = base_url() . 'home/find/class';
-            }
-          } else {
-            $online_link = base_url() . 'home/find/class';
-          }
-        }
-        ?>
-        <a href="<?= $online_link; ?>" style="margin:auto;">
+<!--        --><?//
+//        if (STUDIO_OPEN) {
+//          if (DEV_SERVER) {
+//            $online_link = base_url().'home/find/studio';
+//          } else {
+//            $online_link = base_url().'home/find/studio';
+//          }
+//        } else {
+//          if ($this->session->userdata('user_login') == 'yes') {
+//            $user_data = json_decode($this->session->userdata('user_data'));
+//            if ($user_data->user_type & USER_TYPE_ADMIN) {
+//              $online_link = base_url() . 'home/find/studio';
+//            } else {
+//              $online_link = base_url() . 'home/find/class';
+//            }
+//          } else {
+//            $online_link = base_url() . 'home/find/class';
+//          }
+//        }
+//        ?>
+        <a href="<?= base_url().'home/find/studio'; ?>" style="margin:auto;">
           <img class="img-responsive" src="<?php echo base_url(); ?>template/icon/fd_onlineClass.png" width="80" height="80" alt="" />
         </a>
       </div>

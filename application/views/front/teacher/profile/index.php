@@ -741,7 +741,7 @@ if ($this->session->userdata('user_login') == 'yes') {
               </div>
             </div>
             <!-- 센터 프로필에 있는 schedule 넣어주세요 -->
-            <? if ((STUDIO_OPEN == true || ($user_type & USER_TYPE_ADMIN) || $iam_this_teacher == true) && isset($studio_data) == true) { ?>
+            <? if (/*(STUDIO_OPEN == true || ($user_type & USER_TYPE_ADMIN) || $iam_this_teacher == true) &&*/ isset($studio_data) == true) { ?>
               <div class="col-md-12" id="schedule">
                 <div class="row">
                   <div class="col-md-12">
@@ -1077,7 +1077,7 @@ if ($this->session->userdata('user_login') == 'yes') {
   }
 </style>
 
-<?php if ((STUDIO_OPEN == true || ($user_type & USER_TYPE_ADMIN) || $iam_this_teacher == true) && isset($studio_data) == true) { ?>
+<?php if (/*(STUDIO_OPEN == true || ($user_type & USER_TYPE_ADMIN) || $iam_this_teacher == true) &&*/ isset($studio_data) == true) { ?>
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
   

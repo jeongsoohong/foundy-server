@@ -85,27 +85,27 @@
     <div class="col-md-6 col-sm-6 col-xs-6 find-left">
       <div class="thumbnail my-2 no-scale no-border no-padding thumbnail-banner">
         <div class="media">
-         <?
-         if (STUDIO_OPEN) {
-           if (DEV_SERVER) {
-             $online_link = base_url().'home/find/studio';
-           } else {
-             $online_link = base_url().'home/find/studio';
-           }
-         } else {
-           if ($this->session->userdata('user_login') == 'yes') {
-             $user_data = json_decode($this->session->userdata('user_data'));
-             if ($user_data->user_type & USER_TYPE_ADMIN) {
-               $online_link = base_url() . 'home/find/studio';
-             } else {
-               $online_link = base_url() . 'home/find/class';
-             }
-           } else {
-             $online_link = base_url() . 'home/find/class';
-           }
-         }
-         ?>
-          <a class="media-link" href="<?= $online_link; ?>">
+<!--         --><?//
+//         if (STUDIO_OPEN) {
+//           if (DEV_SERVER) {
+//             $online_link = base_url().'home/find/studio';
+//           } else {
+//             $online_link = base_url().'home/find/studio';
+//           }
+//         } else {
+//           if ($this->session->userdata('user_login') == 'yes') {
+//             $user_data = json_decode($this->session->userdata('user_data'));
+//             if ($user_data->user_type & USER_TYPE_ADMIN) {
+//               $online_link = base_url() . 'home/find/studio';
+//             } else {
+//               $online_link = base_url() . 'home/find/class';
+//             }
+//           } else {
+//             $online_link = base_url() . 'home/find/class';
+//           }
+//         }
+//         ?>
+          <a class="media-link" href="<?= base_url().'home/find/studio'; ?>">
             <div class="col-md-6 img-bg image_delay" data-src="<?php echo base_url(); ?>uploads/icon_0604/online.png"
                  style="background-image: url('<?php echo base_url(); ?>uploads/icon_0604/online.png');">
             </div>
