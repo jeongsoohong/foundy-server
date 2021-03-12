@@ -349,7 +349,36 @@ class Crud_model extends CI_Model
     $this->session->set_userdata('kakao_thumbnail_image_url', $kakao_thumbnail_image_url);
     $this->session->set_userdata('profile_image_url', $profile_image_url);
     $this->session->set_userdata('login_type', $login_type);
- 
+
+    // 카카오 채널 추가 여부 확인
+    $app_url= "https://kapi.kakao.com/v1/api/talk/plusfriends";
+    $params = sprintf( '?target_id_type=user_id&target_id=%d', $kakao_id);
+    $app_url .= $params;
+
+    $opts = array(
+      CURLOPT_URL => $app_url,
+      CURLOPT_SSL_VERIFYPEER => false,
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_HTTPHEADER => array(
+        "Authorization: KakaoAK " . APIKEY_KAKAO_ADMIN,
+        "Content-type: application/x-www-form-urlencoded;charset=utf-8"
+        )
+    );
+  
+    $ch = curl_init();
+    curl_setopt_array($ch, $opts);
+    $res = json_decode(curl_exec($ch));
+    curl_close($ch);
+   
+    log_message('debug', '[kakao_login] check kakao channel added, opts['.json_encode($opts).' res['.json_encode($res).']');
+    
+    if (isset($res->user_id) && isset($res->plus_friends)) {
+      $status = $res->plus_friends[0]->relation;
+      if ($status == 'BLOCKED' || $status == 'NONE') { // ADDED, BLOCKED, NONE
+        $this->session->set_userdata('need_kakao_channel_add', 'yes');
+      }
+    }
+    
     return $result;
   }
   

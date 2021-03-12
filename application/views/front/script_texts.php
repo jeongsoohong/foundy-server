@@ -732,11 +732,30 @@
   }
 
   function chatKakaoChannel() {
-    Kakao.init('<?= APIKEY_KAKAO_JAVASCRIPT; ?>');
-    Kakao.Channel.chat({
-      channelPublicId: '_xnzxbxaxb',
+    $.getScript("https://developers.kakao.com/sdk/js/kakao.min.js", function() {
+      Kakao.init('<?= APIKEY_KAKAO_JAVASCRIPT; ?>');
+      Kakao.Channel.chat({
+        channelPublicId: '_xnzxbxaxb',
+      });
     });
   }
+  
+  function addKakaoChannel() {
+    $.getScript("https://developers.kakao.com/sdk/js/kakao.min.js", function() {
+      Kakao.init('<?= APIKEY_KAKAO_JAVASCRIPT; ?>');
+      Kakao.Channel.addChannel({
+        channelPublicId: '_xnzxbxaxb',
+      });
+    });
+  }
+
+  <? if ($this->session->userdata('need_kakao_channel_add') == 'yes') { ?>
+  $(function() {
+    addKakaoChannel();
+  });
+  <?
+  $this->session->unset_userdata('need_kakao_channel_add');
+  } ?>
 
   function validateEmail(emailAddress) {
     let pattern = new RegExp(/^(("[\w-+\s]+")|([\w-+]+(?:\.[\w-+]+)*)|("[\w-+\s]+")([\w-+]+(?:\.[\w-+]+)*))(@((?:[\w-+]+\.)*\w[\w-+]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][\d]\.|1[\d]{2}\.|[\d]{1,2}\.))((25[0-5]|2[0-4][\d]|1[\d]{2}|[\d]{1,2})\.){2}(25[0-5]|2[0-4][\d]|1[\d]{2}|[\d]{1,2})\]?$)/i);
