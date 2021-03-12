@@ -301,4 +301,4 @@ defined('ONE_YEAR')     OR define('ONE_YEAR', 365 * ONE_DAY);
 // user_auth
 defined('USER_AUTH_TYPE_NICE_CHECK_PLUS_SAFE') OR define('USER_AUTH_TYPE_NICE_CHECK_PLUS_SAFE', 1);
 
-defined('STUDIO_OPEN') OR define('STUDIO_OPEN', false);
+defined('STUDIO_OPEN') OR define('STUDIO_OPEN', true);
