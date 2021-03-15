@@ -108,7 +108,10 @@
           </dl>
         </div>
         <div class="stu_box stu_sns" id="sns">
-          <p class="type_tit stu_tit" style="padding: 4px 0 24px;">결제 페이지</p>
+          <div class="clearfix">
+            <p class="type_tit stu_tit pull-left" style="padding: 4px 0 24px;">결제 페이지</p>
+            <p class="txt__add pull-left" style="padding: 8px 0 0 30px;">현재 온라인 수업 결제를 별도 진행하는 곳 (N사 페이, P사 페이)이 있다면 사용 가능합니다.</p>
+          </div>
           <dl class="type_detail stu_detail clearfix">
             <dt class="area_tit stu_name">결제 페이지 url</dt>
             <dd class="area_data name_data">
@@ -118,26 +121,26 @@
         <div class="stu_box stu_area">
           <p class="type_tit stu_tit">클래스 분류</p>
           <div class="stu_yoga" style="margin-bottom: 16px;">
-            <div class="class_chkbox">
+            <div class="class_chkbox" style="max-width: 636px; height: 210px;">
               <p class="tit_sm">요가 클래스</p>
               <div class="chkbox_line clearfix">
                 <?php
                 $count = 0;
-                $categories = $this->db->order_by('category_id', 'asc')->get_where('category_studio', array('type' => CENTER_TYPE_YOGA))->result();
+                $categories = $this->db->order_by('name', 'asc')->get_where('category_studio', array('type' => CENTER_TYPE_YOGA, 'activate' => 1))->result();
                 foreach ($categories as $category) {
                 $category_id = $category->category_id;
                 $name = $category->name;
                 $count++;
                 ?>
-                <?php if ($count % 5 == 0) { ?>
-              </div>
-              <div class="chkbox_line clearfix">
-                <?php } ?>
-                <label class="form-chk col_sp">
+                <label class="form-chk col_sp width-type <? if ($count % 5 == 0) echo 'width-form'; ?>">
                   <input name="category_yoga" type="checkbox" value="<?php echo $name;?>"
                     <?php if(in_array($name,$category_yoga_data)){ echo 'checked'; }?> id="<?php echo $category_id; ?>"/>
                   <?php echo $name; ?>
                 </label>
+                <?php if ($count % 5 == 0) { ?>
+              </div>
+              <div class="chkbox_line clearfix">
+                <?php } ?>
                 <?php } ?>
                 <label class="form-chk col_sp" id="chk_other">
                   <input id="chkbox_yoga_etc" <?php if (empty($category_yoga_etc) == false) echo 'checked'; ?> type="checkbox" name="number">
@@ -155,21 +158,21 @@
               <div class="chkbox_line clearfix">
                 <?php
                 $count = 0;
-                $categories = $this->db->order_by('category_id', 'asc')->get_where('category_studio', array('type' => CENTER_TYPE_PILATES))->result();
+                $categories = $this->db->order_by('name', 'asc')->get_where('category_studio', array('type' => CENTER_TYPE_PILATES, 'activate' => 1))->result();
                 foreach ($categories as $category) {
                 $category_id = $category->category_id;
                 $name = $category->name;
                 $count++;
                 ?>
-                <?php if ($count % 5 == 0) { ?>
-              </div>
-              <div class="chkbox_line clearfix">
-                <?php } ?>
-                <label class="form-chk col_sp">
+                <label class="form-chk col_sp width-type">
                   <input name="category_pilates" type="checkbox" value="<?php echo $name;?>"
                     <?php if(in_array($name,$category_pilates_data)){ echo 'checked'; }?> id="<?php echo $category_id; ?>"/>
                   <?php echo $name; ?>
                 </label>
+                <?php if ($count % 5 == 0) { ?>
+              </div>
+              <div class="chkbox_line clearfix">
+                <?php } ?>
                 <?php } ?>
                 <label class="form-chk col_sp" id="chk_other">
                   <input id="chkbox_pilates_etc" <?php if (empty($category_pilates_etc) == false) echo 'checked'; ?> type="checkbox" name="number">
@@ -233,7 +236,8 @@
           <button class="sch_btn btn_save" onclick="save_info();">저장</button>
           <div class="edit_wrap">
             <div style="width: 100%; font-size: 12px;">
-              <p style="line-height: 1.75; margin-bottom: 8px;">- 권장 이미지 사이즈 : 가로 1000px
+              <p style="line-height: 1.75; margin-bottom: 8px; width: 600px;">- 센터(스튜디오) 정보를 잘 소개할 텍스트, 사진, 영상 등을 자유롭게 입력합니다. 파운디 유저가 ‘요가(필라테스) 스튜디오 찾기 ‘에서 해당 센터를 발견 후 클릭할 시 나오는 화면 하단의 Info에 표현되는 내용입니다.
+                <br>- 권장 이미지 사이즈 : 가로 1000px
                 <br>- 이미지가 비정상적으로 보여질 수 있으므로, 권장사이즈를 준수하여 주시기 바랍니다.</p>
             </div>
             <div class="editor_box">

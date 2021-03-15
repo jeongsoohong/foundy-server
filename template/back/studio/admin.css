@@ -539,7 +539,9 @@
 }
 @media(min-width: 1025px){
   #stu #topic .col_sp,
-  #stu #topic2 .col_sp {
+  #stu #topic .width-type,
+  #stu #topic2 .col_sp
+  #stu #topic2 .width-type {
     width: 110px;
   }
   #stu #topic .col_sp:last-child,
@@ -548,6 +550,9 @@
   }
   .chk_write {
     width: 140px;
+  }
+  .width-fixed {
+    width: 110px !important;
   }
 }
 
@@ -893,7 +898,8 @@ input[type="file"] {
 #send .addinfo_textbox,
 #popSch .addinfo_textbox {
   box-sizing: border-box;
-  border-radius: 0 0 4px 4px;
+  border-radius: 0;
+  margin: 0;
 }
 #send3 .about_textarea2,
 #popSch3 .about_textarea3,
@@ -910,8 +916,57 @@ input[type="file"] {
   line-height: 1.75;
   word-break: keep-all;
   box-sizing: border-box;
-  border-radius: inherit;
   border: 1px solid #eee;
+  border-bottom: 0;
+  border-radius: 0;
+}
+
+/* choice__wrap */
+#stu .choice__wrap {
+  padding: 0 16px 16px;
+  border: 1px solid #eee;
+  border-width: 0 1px 1px 1px;
+  border-radius: 0 0 4px 4px;
+}
+#stu .choice {
+  display: block;
+  position: relative;
+  margin: 0;
+  width: 100%;
+  /*border-top: 1px dashed #eee;*/
+  padding-top: 16px;
+  
+}
+#stu .choice--slc {
+  position: relative;
+  left: 0;
+  width: 100%;
+  height: 32px;
+  line-height: 32px;
+  -webkit-appearance: auto;
+  -moz-appearance: auto;
+  padding: 0 10px;
+  color: #616161;
+  font-size: 11.5px;
+  font-weight: bold;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  /* color: #B0957A; */
+  /* border: 1px solid #B0957A; */
+}
+
+#stu .choice--write {
+  display: block;
+  color: #616161;
+  font-size: 12px;
+  font-weight: normal;
+  padding: 0 10px 0 14px;
+  position: relative;
+  width: 100%;
+  height: 32px;
+  margin: 8px 0 0;
+  border-radius: 4px
 }
 
 
@@ -1887,6 +1942,12 @@ div[class*=":situation"] {
   margin-bottom: 20px;
 }
 
+#stu .payGuide {
+  color: #9e9e9e;
+  font-size: 13px;
+  margin: 0 0 12px;
+}
+
 .pay--url .form_time {
   height: 32px;
   line-height: 32px;
@@ -1906,4 +1967,33 @@ div[class*=":situation"] {
   font-weight: normal;
   font-size: 11px;
   padding: 6px 0 8px;
+}
+#stu .img_guideTip {
+  color: #0091ea;
+  font-size: 10px;
+  display: block;
+  line-height: 1.75;
+  min-width: 410px;
+  margin: 4px 0 8px;
+}
+
+/* 문구수정사항 클래스 */
+#stu .txt__add {
+  color: #bdbdbd;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1.75;
+}
+
+.txtGuide {
+  display: block;
+  color: #bdbdbd;
+  margin-top: 2px;
+  font-size: 10px;
+  font-weight: bold;
+}
+@media(min-width: 1025px){
+  .width-form {
+    width: 110px !important;
+  }
 }

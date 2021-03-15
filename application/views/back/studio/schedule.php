@@ -135,29 +135,29 @@
               </div>
             </dd>
             <dt class="area_tit">클래스 분류</dt>
-            <dd class="area_data class_data" style="height: 244px">
-              <p class="data_limit" style="line-height: 34px;">클래스 분류는 최대 3개 까지 선택 가능합니다. 기타 카테고리를 여러개 등록시 공백(스페이스)로 구분해 주세요.</p>
+            <dd class="area_data class_data" style="height: 336px">
+              <p class="data_limit" style="line-height: 1.75; padding: 5px 0; max-width: 540px;">사용자들이 원하는 수업을 모아 볼 수 있게 카테고리를 분류합니다. 클래스 분류는 최대 3개 까지 선택 가능합니다. 기타 카테고리를 여러개 등록시 공백(스페이스)로 구분해 주세요.</p>
               <div class="data_box" style="height: inherit;">
-                <div class="stu_yoga" style="margin-bottom: 16px;">
+                <div class="stu_yoga" style="height: 196px; margin-bottom: 16px;">
                   <div class="class_chkbox">
                     <p class="tit_sm class_name">요가 클래스</p>
                     <div class="chkbox_line clearfix">
                       <?php
                       $count = 0;
-                      $categories = $this->db->order_by('category_id', 'asc')->get_where('category_studio', array('type' => CENTER_TYPE_YOGA))->result();
+                      $categories = $this->db->order_by('name', 'asc')->get_where('category_studio', array('type' => CENTER_TYPE_YOGA, 'activate' => 1))->result();
                       foreach ($categories as $category) {
                       $category_id = $category->category_id;
                       $name = $category->name;
                       $count++;
                       ?>
-                      <?php if ($count % 5 == 0) { ?>
-                    </div>
-                    <div class="chkbox_line clearfix">
-                      <?php } ?>
                       <label class="form-chk col_sp <?= (mb_strlen($name) >= 4 ? 'clip' : ''); ?>">
                         <input name="category_yoga" type="checkbox" value="<?php echo $name;?>" id="<?php echo $category_id; ?>"/>
                         <?php echo $name; ?>
                       </label>
+                      <?php if ($count % 5 == 0) { ?>
+                    </div>
+                    <div class="chkbox_line clearfix">
+                      <?php } ?>
                       <?php } ?>
                       <label class="form-chk col_sp" id="chk_other">
                         <input id="chkbox_yoga_etc" type="checkbox" name="number">
@@ -175,20 +175,20 @@
                     <div class="chkbox_line clearfix">
                       <?php
                       $count = 0;
-                      $categories = $this->db->order_by('category_id', 'asc')->get_where('category_studio', array('type' => CENTER_TYPE_PILATES))->result();
+                      $categories = $this->db->order_by('name', 'asc')->get_where('category_studio', array('type' => CENTER_TYPE_PILATES, 'activate' => 1))->result();
                       foreach ($categories as $category) {
                       $category_id = $category->category_id;
                       $name = $category->name;
                       $count++;
                       ?>
-                      <?php if ($count % 5 == 0) { ?>
-                    </div>
-                    <div class="chkbox_line clearfix">
-                      <?php } ?>
                       <label class="form-chk col_sp <?= (mb_strlen($name) >= 4 ? 'clip' : ''); ?>">
                         <input name="category_pilates" type="checkbox" value="<?php echo $name;?>" id="<?php echo $category_id; ?>"/>
                         <?php echo $name; ?>
                       </label>
+                      <?php if ($count % 5 == 0) { ?>
+                    </div>
+                    <div class="chkbox_line clearfix">
+                      <?php } ?>
                       <?php } ?>
                       <label class="form-chk col_sp" id="chk_other">
                         <input id="chkbox_pilates_etc" type="checkbox" name="number">
@@ -237,6 +237,7 @@
                       <label class="urlLabel gray_txt">
                         <input type="checkbox" id="urlChk"> 결제 URL
                       </label>
+                      <p class="payGuide">현재 온라인 수업 결제를 별도 진행하는 곳 (N사 페이, P사 페이)이 있다면 사용가능합니다.</p>
                       <div class="pay--url" id="url">
                         <input type="text" class="form_time" id="payment_page" value="<?= $studio->payment_page; ?>" style="width: 100%;">
                       </div>
@@ -244,17 +245,60 @@
                     <div id="send3" style="margin-top: 20px;">
                       <div class="sendinfo-poptxt">
                         <p class="send-txt announce-txt">티켓팅 시 팝업 상세 문구</p>
-                        <form class="addinfo_textbox">
+                        <form class="addinfo_textbox" id="addinfo_textbox_1" style="display: none;">
                           <div class="remain_textarea">
                             <p>남은 글자 수
                               <span class="remain_text">
-                                <strong class="remain_val">
+                                <strong class="remain_val" id="remain_val_1">
                                   100</strong>자
                               </span>
                             </p>
                           </div>
-                          <textarea id="reserve_popup" class="about_textarea2" placeholder="'예약 후 00시간 이내 미입금 시 예약 취소됩니다' 혹은 '입금 순서대로 예약 확정 마감됩니다' 등 온라인 스튜디오의 예약 마감 및 정원에 대한 문구를 간단히 기재해주세요! (최대 100자)"></textarea>
+                          <textarea id="reserve_popup" class="about_textarea2" placeholder="'예약 후 00시간 이내 미입금 시 예약 취소됩니다' 혹은 '입금 순서대로 예약 확정 마감됩니다' 등 온라인 스튜디오의 예약 마감 및 정원에 대한 문구를 간단히 기재해주세요! (최대 100자)"><?= STUDIO_RESERVE_POPUP_QA1; ?></textarea>
                         </form>
+                        <div class="choice__wrap" style="border-top: 1px solid #eee;">
+                          <div class="choice">
+                            <select class="choice--slc slcNo1">
+                              <option value="qna--1"><?= STUDIO_RESERVE_POPUP_QA1; ?></option>
+                              <option value="qna--2"><?= STUDIO_RESERVE_POPUP_QA2; ?></option>
+                              <option value="qna--3"><?= STUDIO_RESERVE_POPUP_QA3; ?></option>
+                              <option value="qna--direct1" class="qna--write">직접 입력</option>
+                            </select>
+<!--                            <input type="text" placeholder="티켓팅 시 팝업 상세 문구를 직접 입력해주세요" class="choice--write writebox1" style="display: none;">-->
+                            <script>
+                              $(function(){
+                                // alert('준비되었습니다!');
+                                $('.slcNo1').change(function(){
+                                  let state = $('.slcNo1 option:selected').val();
+                                  // console.log(state);
+                                  // alert('sss');
+                                  if(state === 'qna--direct1'){
+                                    // alert('성공');
+                                    $('#remain_val_1').text('100');
+                                    $('#reserve_popup').val('');
+                                    $('#addinfo_textbox_1').show();
+                                  }
+                                  else {
+                                    $('#reserve_popup').val($('.slcNo1 option:selected').text());
+                                    $('#addinfo_textbox_1').hide();
+                                  }
+                                })
+                                $('.about_textarea2').on('keyup',function(){
+                                  var input = $(this).val().length;
+                                  var left = 100 - input;
+                                  $('#remain_val_1').text(left);
+    
+                                  if($(this).val().length > 100) {
+                                    alert("글자수는 100자 이내로 제한됩니다.");
+                                    $(this).val($(this).val().substring(0,100));
+                                    $('#remain_val_1').text(0);
+                                    // left = 0;
+                                  }
+                                })
+                              })
+                            </script>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -323,7 +367,9 @@
                 </div>
               </div>
             </dd>
-            <dt class="centerBook area_tit" style="line-height: 1.5; margin: 1px 0 0; margin-top: 8px; word-break: keep-all; display: none;">티켓팅 확정인원</dt>
+            <dt class="centerBook area_tit" style="line-height: 1.5; margin: 0; word-break: keep-all; display: none;">티켓팅 확정인원
+              <span class="txtGuide">최대 수업 정원</span>
+            </dt>
             <dd class="centerBook area_data clearfix" style="display: none;">
               <!-- 태그 클래스 추가 -->
               <div class="data_box">
@@ -340,7 +386,9 @@
                 </div>
               </div>
             </dd>
-            <dt class="centerBook area_tit" style="line-height: 1.5; margin: 1px 0 0; margin-top: 8px; word-break: keep-all; letter-spacing: -0.03em; display: none;">입금 요청 최대 인원</dt>
+            <dt class="centerBook area_tit" style="line-height: 1.5; margin: 0; word-break: keep-all; letter-spacing: -0.03em; display: none;">입금 요청 최대 인원
+              <span class="txtGuide">수업신청 가능한 최대 인원</span>
+            </dt>
             <dd class="centerBook area_data clearfix" style="display: none;">
               <!-- 태그 클래스 추가 -->
               <div class="data_box">
@@ -361,6 +409,7 @@
             <dd class="centerBook area_data name_data add_photo photo_class" style="display: none;">
               <p class="data_limit img_guide">권장 이미지 사이즈는 1000 * 500 px, 이미지 용량은 최대 16MB까지 업로드 가능합니다.
                 <br>노출되는 위치에 따라 이미지가 잘려 보일 수 있으므로 인물이 중앙에 위치한 사진을 추천드립니다.</p>
+                <span class="img_guideTip">세로형 이미지는 이미지가 많이 잘리게 되어 가로형 이미지 혹은 정사각형 이미지를 올려주세요!</span>
               <label type="file" class="data_form file_form" style="min-width: 410px;">파일열기
                 <span class="file_alert" style="color: #bdbdbd;">(사진 추가를 하지 않으면 온라인 스튜디오 메인이미지로 반영됩니다.)</span>
                 <span class="file_arrow"></span>
@@ -692,21 +741,6 @@
     // title: '스케줄 종료시간',
   });
   
-  $(function() {
-    $('.about_textarea2').on('keyup',function(){
-      var input = $(this).val().length;
-      var left = 100 - input;
-      $('.remain_val').text(left);
-    
-      if($(this).val().length > 100) {
-        alert("글자수는 100자 이내로 제한됩니다.");
-        $(this).val($(this).val().substring(0,100));
-        $('.remain_val').text(0);
-        // left = 0;
-      }
-    })
-  })
-  
   function register_schedule() {
     let url = '<?php echo base_url()."studio/schedule/register"; ?>';
   
@@ -802,7 +836,7 @@
     data['category_pilates'] = JSON.stringify(category_pilates);
     data['category_pilates_etc'] = category_pilates_etc;
     
-    console.log(data);
+    // console.log(data);
     
     let start_date = data['start_date'];
     send_post_data(data, url, function() {
@@ -919,7 +953,7 @@
     data['category_pilates'] = JSON.stringify(category_pilates);
     data['category_pilates_etc'] = category_pilates_etc;
   
-    console.log(data);
+    // console.log(data);
     
     send_post_data(data, url, function() {
       $.notify({

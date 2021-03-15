@@ -38,7 +38,10 @@
           </dl>
         </div>
         <div class="stu_box stu_img">
-          <p class="type_tit stu_tit" style="padding: 4px 0 24px;">이미지 등록</p>
+          <div class="clearfix">
+            <p class="type_tit stu_tit pull-left" style="padding: 4px 0 24px;">이미지 등록</p>
+            <p class="txt__add pull-left" style="padding: 8px 0 0 30px;">유저들이 온라인 클래스를 등록한 강사님 프로필을 클릭했을 시 보여줄 대문 이미지입니다.</p>
+          </div>
           <dl class="type_detail stu_detail clearfix">
             <dt class="area_tit stu_name">대문 이미지 등록</dt>
             <dd class="area_data name_data add_photo">
@@ -128,7 +131,9 @@
         </div>
         <div class="type_box about_box shadow" id="info">
           <p class="type_tit sch_tit">About</p>
-<!--          <button class="sch_btn btn_save">저장</button>-->
+          <p class="txt__add" style="margin: -14px 0 20px;">- 유저들이 온라인 클래스를 등록한 강사님 프로필을 클릭했을 시 보여줄 소개정보입니다.
+          </p>
+          <!--          <button class="sch_btn btn_save">저장</button>-->
           <form class="addinfo_textbox">
             <div class="remain_textarea">
               <p>남은 글자 수 <span class="remain_text"><strong class="remain_val"><?= 1000 - mb_strlen($teacher->about); ?></strong>자</span></p>

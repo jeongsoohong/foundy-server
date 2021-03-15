@@ -128,6 +128,28 @@
     min-width: 320px;
     width: 100%;
     height: 100%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    max-width: 460px;
+    margin: 0 auto;
+  }
+  #cat_menu .cat-box {
+    padding: 24px 16px 40px;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: rgb(241, 238, 232);
+  }
+  #cat_menu .layer {
+    position: relative;
+    z-index: 3100;
+    width: 300%;
+    height: 100%;
+    /* max-width: 460px; */
+    margin: auto;
+    background-color: #F3EFEB;
+    left: -1380px;
   }
   #cat_menu h2, #cat_menu h3, #cat_menu h4, #cat_menu a {
     font-family: futura-pt !important;
@@ -142,8 +164,13 @@
     display: block;
   }
   #cat_menu .menu_box {
-    padding: 24px 16px 40px;
-    background-color: #000;
+    padding: 0;
+    background-color: transparent;
+    left: -920px;
+    max-width: 460px;
+    right: 0px;
+    margin: auto;
+    top: 0px;
     box-sizing: border-box;
     position: fixed;
     z-index: 3000;
@@ -250,6 +277,7 @@
     position: fixed;
     z-index: 4000;
     background-color: #fff;
+    top: 0;
   }
   #cat_menu .settings {
     padding: 36px 16px;
@@ -356,91 +384,94 @@
   }
 </style>
 <div id="cat_menu">
-  <article class="menu_box scroll-y" style="display: none; background-color: #F1EEE8">
-    <h2 class="meaning">카테고리</h2>
-    <button class="btn_close menu_close" onclick="close_menu()">
-      <img src="<?php echo base_url(); ?>template/front/header/imgs/icon_close_black.png" width="16" height="16" alt="닫기">
-    </button>
-    <div class="menu_main">
-      <h3>
-        <a href="javascript:void(0)" onclick="getLink('<?php echo base_url(); ?>home/user')" style="color: #A5A3A0; font-size: 21px">MY PAGE</a>
-      </h3>
-      <h3>
-        <a href="javascript:void(0)" onclick="getLink('<?php echo base_url(); ?>home/coupon')" style="color: #A5A3A0; font-size: 21px">COUPON BOX</a>
-      </h3>
-      <article class="main_shop">
-        <h3 style="color: #845B4C; font-size: 21px">SHOP</h3>
-        <section class="shop_theme">
-          <h4>
-            <a href="javascript:void(0)" onclick="getLink('<?php echo base_url(); ?>home/shop/main')" style="color: #A5A3A0; font-size: 18px;">main</a>
-          </h4>
-          <h4>
-            <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=all&col=product_id&order=desc'; ?>')" style="color: #A5A3A0; font-size: 18px;">new</a>
-          </h4>
-          <div class="sld_wrap">
-            <h4 class="sld_tit highlight" style="color: #A5A3A0; font-size: 18px;">yoga</h4>
-            <div class="sld_li" style="display: none;">
-              <a href="#" class="li_theme li_focus" style="color: #939393; font-size: 18px">Yoga wear</a>
-              <div style="display: none;" class="li_cnt">
-                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=010101&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">TOP</a>
-                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=010102&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">BOTTOM</a>
-                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=010103&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">OUTER</a>
-              </div>
-              <a href="#" class="li_theme li_focus" style="color: #939393; font-size: 18px">Yoga mat</a>
-              <div style="display: none;" class="li_cnt">
-                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=010201&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">Mat</a>
-                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=010202&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">Towel</a>
-              </div>
-              <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=010203&col=product_id&order=desc'; ?>')" class="li_focus" style="color: #939393; font-size: 18px">Prop</a>
-              <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=010301&col=product_id&order=desc'; ?>')" class="li_focus" style="color: #939393; font-size: 18px">Accessories</a>
-            </div>
-            <h4 class="sld_tit highlight" style="color: #A5A3A0; font-size: 18px;">vegan</h4>
-            <div class="sld_li" style="display: none;">
-              <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=020100&col=product_id&order=desc'; ?>')" class="li_focus" style="color: #939393; font-size: 18px">Cosmetic</a>
-              <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=020200&col=product_id&order=desc'; ?>')" class="li_focus" style="color: #939393; font-size: 18px">Foods</a>
-            </div>
-            <h4 class="sld_tit highlight" style="color: #A5A3A0; font-size: 18px;">healing</h4>
-            <div class="sld_li" style="display: none;">
-              <a href="#" class="li_theme li_focus" style="color: #939393; font-size: 18px">Tea</a>
-              <div style="display: none;" class="li_cnt">
-                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=030101&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">차</a>
-                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=030102&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">다도용품</a>
-              </div>
-              <a href="#" class="li_theme li_focus" style="color: #939393; font-size: 18px">Fragrance</a>
-              <div style="display: none;" class="li_cnt">
-                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=030201&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">향</a>
-                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=030202&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">아로마</a>
-                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=030203&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">향꽂이</a>
-              </div>
-              <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=030301&col=product_id&order=desc'; ?>')" class="li_focus" style="color: #939393; font-size: 18px">Meditation</a>
-              <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=030302&col=product_id&order=desc'; ?>')" class="li_focus" style="color: #939393; font-size: 18px">Book</a>
-            </div>
-          </div>
-        </section>
-      </article>
-      <h3 >
-        <a href="javascript:void(0)" onclick="getLink('<?php echo base_url(); ?>home/find')" style="color: #845B4C; font-size: 21px">FIND</a>
-      </h3>
-      <h3>
-        <a href="javascript:void(0)" onclick="getLink('<?php echo base_url(); ?>home/blog')" style="color: #845B4C; font-size: 21px">LIFE</a>
-      </h3>
-    </div>
-    <div class="menu_sub">
-      <?php if ($this->app_model->is_app()) { ?>
-        <h3 class="sub_work work_set">
-          <button href="javascript:void(0)" onclick="open_setting_menu()" style="color: #845B4C;">SETTINGS</button>
+  <div class="layer"></div>
+  <article class="menu_box scroll-y">
+    <div class="cat-box">
+      <h2 class="meaning">카테고리</h2>
+      <button class="btn_close menu_close" onclick="close_menu()">
+        <img src="<?php echo base_url(); ?>template/front/header/imgs/icon_close_black.png" width="16" height="16" alt="닫기">
+      </button>
+      <div class="menu_main">
+        <h3>
+          <a href="javascript:void(0)" onclick="getLink('<?php echo base_url(); ?>home/user')" style="color: #A5A3A0; font-size: 21px">MY PAGE</a>
         </h3>
-      <?php } ?>
-      <h3 class="sub_work">
-        <?php if ($this->session->userdata('user_login') == 'yes') { ?>
-          <a href="javascript:void(0)" onclick="_logout();" style="color: #845B4C;">LOGOUT</a>
-        <?php } else { ?>
-          <a onclick="getLink('<?php echo base_url(); ?>home/login');" style="color: #845B4C;">LOGIN</a>
+        <h3>
+          <a href="javascript:void(0)" onclick="getLink('<?php echo base_url(); ?>home/coupon')" style="color: #A5A3A0; font-size: 21px">COUPON BOX</a>
+        </h3>
+        <article class="main_shop">
+          <h3 style="color: #845B4C; font-size: 21px">SHOP</h3>
+          <section class="shop_theme">
+            <h4>
+              <a href="javascript:void(0)" onclick="getLink('<?php echo base_url(); ?>home/shop/main')" style="color: #A5A3A0; font-size: 18px;">main</a>
+            </h4>
+            <h4>
+              <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=all&col=product_id&order=desc'; ?>')" style="color: #A5A3A0; font-size: 18px;">new</a>
+            </h4>
+            <div class="sld_wrap">
+              <h4 class="sld_tit highlight" style="color: #A5A3A0; font-size: 18px;">yoga</h4>
+              <div class="sld_li" style="display: none;">
+                <a href="#" class="li_theme li_focus" style="color: #939393; font-size: 18px">Yoga wear</a>
+                <div style="display: none;" class="li_cnt">
+                  <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=010101&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">TOP</a>
+                  <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=010102&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">BOTTOM</a>
+                  <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=010103&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">OUTER</a>
+                </div>
+                <a href="#" class="li_theme li_focus" style="color: #939393; font-size: 18px">Yoga mat</a>
+                <div style="display: none;" class="li_cnt">
+                  <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=010201&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">Mat</a>
+                  <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=010202&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">Towel</a>
+                </div>
+                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=010203&col=product_id&order=desc'; ?>')" class="li_focus" style="color: #939393; font-size: 18px">Prop</a>
+                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=010301&col=product_id&order=desc'; ?>')" class="li_focus" style="color: #939393; font-size: 18px">Accessories</a>
+              </div>
+              <h4 class="sld_tit highlight" style="color: #A5A3A0; font-size: 18px;">vegan</h4>
+              <div class="sld_li" style="display: none;">
+                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=020100&col=product_id&order=desc'; ?>')" class="li_focus" style="color: #939393; font-size: 18px">Cosmetic</a>
+                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=020200&col=product_id&order=desc'; ?>')" class="li_focus" style="color: #939393; font-size: 18px">Foods</a>
+              </div>
+              <h4 class="sld_tit highlight" style="color: #A5A3A0; font-size: 18px;">healing</h4>
+              <div class="sld_li" style="display: none;">
+                <a href="#" class="li_theme li_focus" style="color: #939393; font-size: 18px">Tea</a>
+                <div style="display: none;" class="li_cnt">
+                  <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=030101&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">차</a>
+                  <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=030102&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">다도용품</a>
+                </div>
+                <a href="#" class="li_theme li_focus" style="color: #939393; font-size: 18px">Fragrance</a>
+                <div style="display: none;" class="li_cnt">
+                  <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=030201&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">향</a>
+                  <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=030202&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">아로마</a>
+                  <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=030203&col=product_id&order=desc'; ?>')" style="color:#111111; font-size: 18px;">향꽂이</a>
+                </div>
+                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=030301&col=product_id&order=desc'; ?>')" class="li_focus" style="color: #939393; font-size: 18px">Meditation</a>
+                <a href="javascript:void(0)" onclick="getLink('<?php echo base_url().'home/shop?cat=030302&col=product_id&order=desc'; ?>')" class="li_focus" style="color: #939393; font-size: 18px">Book</a>
+              </div>
+            </div>
+          </section>
+        </article>
+        <h3 >
+          <a href="javascript:void(0)" onclick="getLink('<?php echo base_url(); ?>home/find')" style="color: #845B4C; font-size: 21px">FIND</a>
+        </h3>
+        <h3>
+          <a href="javascript:void(0)" onclick="getLink('<?php echo base_url(); ?>home/blog')" style="color: #845B4C; font-size: 21px">LIFE</a>
+        </h3>
+      </div>
+      <div class="menu_sub">
+        <?php if ($this->app_model->is_app() == true) { ?>
+          <h3 class="sub_work work_set">
+            <button href="javascript:void(0)" onclick="open_setting_menu()" style="color: #845B4C;">SETTINGS</button>
+          </h3>
         <?php } ?>
-      </h3>
+        <h3 class="sub_work">
+          <?php if ($this->session->userdata('user_login') == 'yes') { ?>
+            <a href="javascript:void(0)" onclick="_logout();" style="color: #845B4C;">LOGOUT</a>
+          <?php } else { ?>
+            <a href="javascript:void(0)" onclick="getLink('<?php echo base_url(); ?>home/login');" style="color: #845B4C;">LOGIN</a>
+          <?php } ?>
+        </h3>
+      </div>
     </div>
   </article>
-  <?php if ($this->app_model->is_app()) { ?>
+  <?php if ($this->app_model->is_app() == true) { ?>
     <article class="setting_wrap" style="display: none;">
       <h2 class="meaning">설정</h2>
       <header class="header">
@@ -489,7 +520,7 @@
   <?php } ?>
 </div>
 
-<?php if ($this->app_model->is_app()) { ?>
+<?php if ($this->app_model->is_app() == true) { ?>
   <?php if ($page_name == 'home') {  // only home ?>
     <header class="header header-logo-left" id="fd-header" style="position: fixed; width: 100%; height: 56px; z-index: 15;">
       <div class="header-wrapper" style="padding: 0 !important; position: relative; width: inherit; height: inherit; background-color: transparent;">
@@ -926,27 +957,29 @@
   function open_menu() {
     menu_on = 1;
     $('body').css('overflow-y','hidden');
-    $('.menu_box').show().css('left','-100%').animate({ left : '0%'},300);
+    $('.menu_box').show().css('left','-920px').animate({ left : '0%'},500);
   }
   function close_menu() {
     menu_on = 0;
     $('body').css('overflow-y','auto');
-    $('.menu_box').css('left','0%').animate({left : '-100%'},300);
+    $('.menu_box').css('left','0%').animate({left : '-920px'},500);
   }
   function open_setting_menu() {
     setting_on = 1;
+    console.log(setting_on);
     $('body').css('overflow-y','hidden');
-    $('.setting_wrap').show().css('left','100%').animate({left : '0%'},300);
+    $('.setting_wrap').show().css('left','100%').animate({left : '0%'},500);
   }
   function close_setting_menu() {
     setting_on = 0;
+    console.log(setting_on);
     $('body').css('overflow-y','auto');
-    $('.setting_wrap').css('left','0%').animate({left : '100%'},300);
+    $('.setting_wrap').css('left','0%').animate({left : '100%'},500);
   }
   function _logout() {
     if (menu_on) {
       close_menu();
-      setTimeout(function(){user_logout()}, 300);
+      setTimeout(function(){user_logout()}, 500);
     } else {
       user_logout();
     }
@@ -964,7 +997,7 @@
       var index = $('.sld_tit').index(this);
       var display = $('.sld_li').eq(index).css('display');
     
-      if(display == 'none') {
+      if(display === 'none') {
         $('.sld_li').slideUp();
         $('.sld_li').eq(index).slideDown();
       }
@@ -977,7 +1010,7 @@
       var index = $('.li_theme').index(this);
       var display = $('.li_cnt').eq(index).css('display');
     
-      if(display == 'none') {
+      if(display === 'none') {
         $('.li_cnt').slideUp();
         $(this).next().slideDown();
       }

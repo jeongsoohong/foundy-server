@@ -302,3 +302,7 @@ defined('ONE_YEAR')     OR define('ONE_YEAR', 365 * ONE_DAY);
 defined('USER_AUTH_TYPE_NICE_CHECK_PLUS_SAFE') OR define('USER_AUTH_TYPE_NICE_CHECK_PLUS_SAFE', 1);
 
 defined('STUDIO_OPEN') OR define('STUDIO_OPEN', true);
+
+defined('STUDIO_RESERVE_POPUP_QA1') OR define('STUDIO_RESERVE_POPUP_QA1', '티켓팅 확정 후 예약 취소는 불가합니다.');
+defined('STUDIO_RESERVE_POPUP_QA2') OR define('STUDIO_RESERVE_POPUP_QA2', '티켓팅 후 4시간 이내 미입금 시 예약이 취소됩니다.');
+defined('STUDIO_RESERVE_POPUP_QA3') OR define('STUDIO_RESERVE_POPUP_QA3', '다회권을 가지셨다면, 중복결제 하지 않게 주의해 주세요.');

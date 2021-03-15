@@ -58,7 +58,7 @@ function get_time($time)
         <div class="data_box">
           <div class="teacher_select clearfix" id="teach2">
             <div class="selbox-wrap">
-              <input type="text" id="selboxDirect2" value="<?= $schedule_info->teacher_name; ?> " style="padding: 0 10px;">
+              <input type="text" id="selboxDirect2" value="<?= $schedule_info->teacher_name; ?>" style="padding: 0 10px; width: 100%; height: inherit;">
             </div>
             <div class="selbox-name">
               <p>수업명</p>
@@ -68,30 +68,30 @@ function get_time($time)
         </div>
       </dd>
       <dt class="area_tit">클래스 분류</dt>
-      <dd class="area_data class_data" style="height: 244px">
+      <dd class="area_data class_data" style="height: 336px">
         <p class="data_limit" style="line-height: 34px;">클래스 분류는 최대 3개 까지 선택 가능합니다. 기타 카테고리를 여러개 등록시 공백(스페이스)로 구분해 주세요.</p>
         <div class="data_box" style="height: inherit;">
-          <div class="stu_yoga" id="stu_yoga" style="margin-bottom: 16px;">
+          <div class="stu_yoga" id="stu_yoga" style="margin-bottom: 16px; height: 196px;">
             <div class="class_chkbox">
               <p class="tit_sm class_name">요가 클래스</p>
               <div class="chkbox_line clearfix">
                 <?php
                 $count = 0;
-                $categories = $this->db->order_by('category_id', 'asc')->get_where('category_studio', array('type' => STUDIO_TYPE_YOGA))->result();
+                $categories = $this->db->order_by('name', 'asc')->get_where('category_studio', array('type' => STUDIO_TYPE_YOGA, 'activate' => 1))->result();
                 foreach ($categories as $category) {
                 $category_id = $category->category_id;
                 $name = $category->name;
                 $count++;
                 ?>
-                <?php if ($count % 5 == 0) { ?>
-              </div>
-              <div class="chkbox_line clearfix">
-                <?php } ?>
                 <label class="form-chk col_sp <?= (mb_strlen($name) >= 4 ? 'clip' : ''); ?>">
                   <input name="category_yoga" type="checkbox" value="<?php echo $name;?>" id="<?php echo $category_id; ?>"
                     <?php if(in_array($name,$category_yoga_data)){ echo 'checked'; }?> id="<?php echo $category_id; ?>"/>
                   <?php echo $name; ?>
                 </label>
+                <?php if ($count % 5 == 0) { ?>
+              </div>
+              <div class="chkbox_line clearfix">
+                <?php } ?>
                 <?php } ?>
                 <label class="form-chk col_sp" id="chk_other2">
                   <input id="chkbox_yoga_etc2" <?php if (empty($category_yoga_etc) == false) echo 'checked'; ?> type="checkbox" name="number">
@@ -109,21 +109,21 @@ function get_time($time)
               <div class="chkbox_line clearfix">
                 <?php
                 $count = 0;
-                $categories = $this->db->order_by('category_id', 'asc')->get_where('category_studio', array('type' => STUDIO_TYPE_PILATES))->result();
+                $categories = $this->db->order_by('name', 'asc')->get_where('category_studio', array('type' => STUDIO_TYPE_PILATES, 'activate' => 1))->result();
                 foreach ($categories as $category) {
                 $category_id = $category->category_id;
                 $name = $category->name;
                 $count++;
                 ?>
-                <?php if ($count % 5 == 0) { ?>
-              </div>
-              <div class="chkbox_line clearfix">
-                <?php } ?>
                 <label class="form-chk col_sp <?= (mb_strlen($name) >= 4 ? 'clip' : ''); ?>">
                   <input name="category_pilates" type="checkbox" value="<?php echo $name;?>"
                     <?php if(in_array($name,$category_pilates_data)){ echo 'checked'; }?> id="<?php echo $category_id; ?>"/>
                   <?php echo $name; ?>
                 </label>
+                <?php if ($count % 5 == 0) { ?>
+              </div>
+              <div class="chkbox_line clearfix">
+                <?php } ?>
                 <?php } ?>
                 <label class="form-chk col_sp" id="chk_other3">
                   <input id="chkbox_pilates_etc2" <?php if (empty($category_pilates_etc) == false) echo 'checked'; ?> type="checkbox" name="number">
@@ -173,19 +173,80 @@ function get_time($time)
                 <label class="urlLabel2 gray_txt">
                   <input <? if ($schedule_info->use_bank == 0) echo 'checked'; ?> type="checkbox" id="urlChk2"> 결제 URL
                 </label>
+                <p class="payGuide">현재 온라인 수업 결제를 별도 진행하는 곳 (N사 페이, P사 페이)이 있다면 사용가능합니다.</p>
                 <div class="pay--url" id="url2">
                   <input type="text" class="form_time" value="<?= $schedule_info->payment_page; ?>" id="payment_page2" style="width: 100%;">
                 </div>
               </div>
               <div class="sendinfo-poptxt" id="popSch2" style="margin-top: 20px;">
                 <p class="send-txt announce-txt">티켓팅 시 팝업 상세 문구</p>
-                <form class="addinfo_textbox">
+                <?
+                if (!strcmp($schedule_info->reserve_popup, STUDIO_RESERVE_POPUP_QA1)) {
+                  $qa_num = 1;
+                  ?>
+                <form class="addinfo_textbox" id="addinfo_textbox_2" style="display: none;">
+                <? } else if (!strcmp($schedule_info->reserve_popup, STUDIO_RESERVE_POPUP_QA2)) {
+                  $qa_num = 2;
+                  ?>
+                <form class="addinfo_textbox" id="addinfo_textbox_2" style="display: none;">
+                <? } else if (!strcmp($schedule_info->reserve_popup, STUDIO_RESERVE_POPUP_QA3)) {
+                  $qa_num = 3;
+                  ?>
+                <form class="addinfo_textbox" id="addinfo_textbox_2" style="display: none;">
+                <? } else {
+                  $qa_num = 0;
+                  ?>
+                <form class="addinfo_textbox" id="addinfo_textbox_2">
+                <? } ?>
                   <div class="remain_textarea">
-                    <p>남은 글자 수 <span class="remain_text"><strong class="remain_val"><?= (100 - mb_strlen($schedule_info->reserve_popup)); ?></strong>자</span></p>
+                    <p>남은 글자 수 <span class="remain_text"><strong class="remain_val" id="remain_val_2"><?= (100 - mb_strlen($schedule_info->reserve_popup)); ?></strong>자</span></p>
                   </div>
                   <textarea class="about_textarea2" id="reserve_popup2"
-                            placeholder="' 등 온라인 스튜디오의 예약 마감 및 정원에 대한 문구를 간단히 기재해주세요! (최대 100자)"><?= $schedule_info->reserve_popup; ?></textarea>
+                            placeholder="'예약 후 00시간 이내 미입금 시 예약 취소됩니다' 혹은 '입금 순서대로 예약 확정 마감됩니다' 등 온라인 스튜디오의 예약 마감 및 정원에 대한 문구를 간단히 기재해주세요! (최대 100자)"><?= $schedule_info->reserve_popup; ?></textarea>
                 </form>
+                <div class="choice__wrap" style="border-top: 1px solid #eee;">
+                  <div class="choice">
+                    <select class="choice--slc slcNo2">
+                      <option <? if ($qa_num == 1) echo 'selected'; ?> value="qna--1"><?= STUDIO_RESERVE_POPUP_QA1; ?></option>
+                      <option <? if ($qa_num == 2) echo 'selected'; ?> value="qna--2"><?= STUDIO_RESERVE_POPUP_QA2; ?></option>
+                      <option <? if ($qa_num == 3) echo 'selected'; ?> value="qna--3"><?= STUDIO_RESERVE_POPUP_QA3; ?></option>
+                      <option <? if ($qa_num == 0) echo 'selected'; ?> value="qna--direct2" class="qna--write">직접입력</option>
+                    </select>
+<!--                    <input type="text" placeholder="티켓팅 시 팝업 상세 문구를 직접 입력해주세요" class="choice--write writebox2" style="display: none;">-->
+                    <script>
+                      $(function(){
+                        // alert('준비되었습니다!');
+                        $('.slcNo2').change(function(){
+                          let state = $('.slcNo2 option:selected').val();
+                          // console.log(state);
+                          // alert('sss');
+                          if(state === 'qna--direct2'){
+                            // alert('성공');
+                            $('#remain_val_2').text('100');
+                            $('#reserve_popup2').val('');
+                            $('#addinfo_textbox_2').show();
+                          }
+                          else {
+                            $('#reserve_popup2').val($('.slcNo2 option:selected').text());
+                            $('#addinfo_textbox_2').hide();
+                          }
+                        })
+                        $('.about_textarea2').on('keyup',function(){
+                          var input = $(this).val().length;
+                          var left = 100 - input;
+                          $('#remain_val_2').text(left);
+    
+                          if($(this).val().length > 100) {
+                            alert("글자수는 100자 이내로 제한됩니다.");
+                            $(this).val($(this).val().substring(0,100));
+                            $('#remain_val_2').text(0);
+                            // left = 0;
+                          }
+                        })
+                      })
+                    </script>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -257,7 +318,9 @@ function get_time($time)
           </div>
         </div>
       </dd>
-      <dt class="centerBook2 area_tit" style="line-height: 1.5; margin: 1px 0 0; margin-top: 8px; word-break: keep-all;">티켓팅 확정인원</dt>
+      <dt class="centerBook2 area_tit" style="line-height: 1.5; margin: 0; word-break: keep-all;">티켓팅 확정인원
+        <span class="txtGuide">최대 수업 정원</span>
+      </dt>
       <dd class="centerBook2 area_data clearfix">
         <!-- 태그 클래스 추가 -->
         <div class="data_box">
@@ -275,7 +338,9 @@ function get_time($time)
           </div>
         </div>
       </dd>
-      <dt class="centerBook2 area_tit" style="line-height: 1.5; margin: 1px 0 0; margin-top: 8px; word-break: keep-all; letter-spacing: -0.03em;">입금 요청 최대 인원</dt>
+      <dt class="centerBook2 area_tit" style="line-height: 1.5; margin: 0; word-break: keep-all; letter-spacing: -0.03em;">입금 요청 최대 인원
+        <span class="txtGuide">수업신청 가능한 최대 인원</span>
+      </dt>
       <dd class="centerBook2 area_data clearfix">
         <!-- 태그 클래스 추가 -->
         <div class="data_box">
@@ -297,6 +362,7 @@ function get_time($time)
       <dd class="centerBook2 area_data name_data add_photo add_photo2 photo_class" style="width: 800px;">
         <p class="data_limit img_guide">권장 이미지 사이즈는 1000 * 500 px, 이미지 용량은 최대 16MB까지 업로드 가능합니다.
           <br>노출되는 위치에 따라 이미지가 잘려 보일 수 있으므로 인물이 중앙에 위치한 사진을 추천드립니다.</p>
+          <span class="img_guideTip">세로형 이미지는 이미지가 많이 잘리게 되어 가로형 이미지 혹은 정사각형 이미지를 올려주세요!</span>
         <label type="file" class="data_form file_form" style="min-width: 410px;">파일열기
           <span class="file_alert" style="color: #bdbdbd;">(사진 추가를 하지 않으면 온라인 스튜디오 메인이미지로 반영됩니다.)</span>
           <span class="file_arrow file_arrow2" style="transform: rotate(45deg);"></span>

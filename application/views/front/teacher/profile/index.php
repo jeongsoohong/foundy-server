@@ -733,7 +733,7 @@ if ($this->session->userdata('user_login') == 'yes') {
                   </div>
                   <div class="widget">
                     <ul class="profile_ul" style="text-align: center">
-                      <li style="padding: 12px 15px !important; white-space: pre-wrap; text-align: center;"><?php echo $teacher_data->about?>
+                      <li style="padding: 12px 15px !important; white-space: pre-line; text-align: center;"><?php echo $teacher_data->about?>
                       </li>
                     </ul>
                   </div>
@@ -862,7 +862,7 @@ if ($this->session->userdata('user_login') == 'yes') {
                     <div class="widget" style="padding: 20px 16px;">
                       <ul class="profile_ul" style="text-align: center;background-color: black;">
                         <a class="pnav_add_video" href="<?php echo base_url()."home/teacher/video/add/{$user_data->user_id}"; ?>">
-                          <li style="color: white; line-height: 40px; padding: 0 !important;"><b>+</b>&nbsp;&nbsp;클래스 올리기</li>
+                          <li style="color: white; line-height: 40px; padding: 0 !important;"><b>+</b>&nbsp;&nbsp;유튜브 클래스 올리기</li>
                         </a>
                       </ul>
                     </div>
@@ -882,7 +882,7 @@ if ($this->session->userdata('user_login') == 'yes') {
                       <div class="widget" style="padding: 20px 16px;">
                         <ul class="profile_ul" style="text-align: center;background-color: black;">
                           <a class="pnav_add_video" href="<?php echo base_url()."home/teacher/video/add/{$user_data->user_id}"; ?>">
-                            <li style="color: white; line-height: 40px; padding: 0 !important;"><b>+</b>&nbsp;&nbsp;클래스 올리기</li>
+                            <li style="color: white; line-height: 40px; padding: 0 !important;"><b>+</b>&nbsp;&nbsp;유튜브 클래스 올리기</li>
                           </a>
                         </ul>
                       </div>

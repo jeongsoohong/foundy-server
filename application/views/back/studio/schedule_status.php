@@ -319,7 +319,7 @@
         </div>
       </div>
       <div class="sendTime_sendIdentity clearfix">
-        <p class="sendChk_tit">회의 ID / 비밀번호</p>
+        <p class="sendChk_tit">ZOOM 회의 ID / 비밀번호</p>
         <div class="sendChk_chks">
           <span class="start_time zoom_form" name="zoom-id" style="width: 100%;">
             <input id="class_id" type="text" class="form_time" placeholder="id" value="<?= $schedule_info->class_id; ?>">

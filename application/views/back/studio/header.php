@@ -163,6 +163,4 @@
   $('#menu_schedule').hide();
   $('#btn_apply_studio').show();
   <? } ?>
-  //alert('<?//= $register; ?>//');
-  //alert('<?//= $studio_id; ?>//');
 </script>

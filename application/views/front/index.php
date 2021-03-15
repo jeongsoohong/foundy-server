@@ -15,6 +15,8 @@
       
       gtag('config', 'UA-182268526-1');
     </script>
+    <!-- 구글 애드센드 -->
+    <script data-ad-client="ca-pub-5246386026868293" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
   <? } ?>
 </head>
 <body id="home" class="wide">
@@ -23,6 +25,199 @@
 include 'preloader.php';
 ?>
 <!-- WRAPPER -->
+<? if ($this->agent->is_mobile() == false) { ?>
+<style type="text/css">
+  .wide {
+    background-color: #F3EFEB !important;
+    overflow-x: hidden;
+  }
+  /* pc에서만 스크롤바 안보이게 가능한지 제혁님께 요청하기
+     햄버거 메뉴 팝업이 스크롤바 가로너비만큼 짧아지기 때문에 */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  .wrapper {
+    max-width: 460px;
+    margin: 0 auto;
+  }
+  .wrapper .header .navigation-wrapper.navigation-sticky {
+    max-width: 460px;
+  }
+  .wrapper .container {
+    max-width: 460px;
+    padding: 0;
+  }
+  
+  .wrapper .popup-box {
+    max-width: 460px;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    z-index: 200;
+  }
+  /* 센터프로필 페이지 */
+  .wrapper .row {
+    margin: 0;
+  }
+  /* 온라인 클래스 찾기 */
+  .wrapper #content {
+    padding: 0;
+  }
+  .wrapper .col-md-12 {
+    width: 100% !important;
+    /* padding: 0; 센터프로필만 건드리게끔 */
+  }
+  #profile_content .row .col-md-12 {
+    padding: 0;
+  }
+  #profile_content .row .col-md-12 .col-md-12 {
+    padding: 0;
+  }
+  /* 장바구니 구매,결제하기 페이지 */
+  .item-purchase-btn {
+    max-width: 460px;
+    margin: 0 auto;
+    right: 0;
+  }
+  /* 샵 카테고리 상품 상세 페이지 - sticky 상태가 안됨 */
+  .item-nav-tab.sticky {
+    max-width: 460px;
+    margin: 0 auto;
+    right: 0;
+    background-color: #fff;
+  }
+  .item-cart-btn {
+    max-width: 460px;
+    margin: 0 auto;
+    right: 0;
+  }
+  /* 강사 프로필 페이지 */
+  .post-media {
+    width: 100%;
+    padding-bottom: 56.25%;
+  }
+  .post-single iframe {
+    position: absolute;
+    width: 100% !important;
+    padding-bottom: 56.25% !important;
+  }
+  /* 유튜브 클래스 페이지 */
+  #free-youtube .media-body {
+    width: 100% !important;
+  }
+  .recent-post .media {
+    height: 100px;
+  }
+  .recent-post .slick-list {
+    width: 100%;
+    height: 40px;
+  }
+  .recent-post .slick-track {
+    width: 10070px !important;
+  }
+  #login hr {
+    display: inline-block;
+    background: transparent;
+    height: 1px;
+    width: 100%;
+  }
+
+  #login .title {
+    width: 100% !important;
+  }
+
+  @media(min-width: 460px){
+    .thumbnail .thumbnail-banner {
+      height: 220px; !important;
+    }
+  }
+
+  .thumbnail.thumbnail-banner .media,
+  .thumbnaii.thumbnail-banner .media .media-link,
+  .thumbnail.thumbnail-banner .media .caption {
+    height: 220px;
+  }
+
+  .wrapper .thumbnail-banner {
+    height: 220px;
+  }
+
+  #instructors .slick-list {
+    overflow: auto;
+    height: inherit;
+  }
+  #instructors .slick-initialized .slick-slide {
+    width: 100% !important;
+    max-width: 460px;
+    margin: 10px auto 0;
+  }
+  #instructors .slick-initialized .slick-slide a {
+    display: inline-block;
+    margin: 0 16px;
+  }
+
+  #info .recent-post .media {
+    height: auto;
+  }
+
+  div[class*=“popup-box”] {
+    z-index: 200;
+  }
+
+  .modal-open .modal {
+    max-width: 460px;
+    margin: auto;
+  }
+  .modal-backdrop {
+    max-width: 460px;
+    margin: auto;
+  }
+  .modal-dialog {
+    width: auto !important;
+    margin: 10px !Important;
+  }
+
+  .modal {
+    max-width: 460px;
+    margin: auto;
+  }
+
+  @media(min-width: 768px){
+    #profile_content .col-sm-6 {
+      width: 100%;
+      margin: 0;
+      padding-bottom: 20px;
+      border-bottom: 1px dashed #eee;
+    }
+    #profile_content .col-md-12:nth-child(12) .col-sm-6 {
+      border: 0;
+    }
+  }
+
+  @media(min-width: 414px){
+    .popup_pw {
+      max-width: 372px !important;
+      margin-left: -186px !important;
+    }
+  }
+
+  #free-youtube a::after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+  #__daum__layer_1 {
+    position: absolute !important;
+    min-width: unset !important;
+    max-width: 460px !important;
+    margin: auto !important;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+</style>
+<? } ?>
 <div class="wrapper" style="overflow-x: hidden;">
   
   <!-- HEADER -->
