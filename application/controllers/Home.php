@@ -2274,7 +2274,7 @@ QUERY;
         );
         $teachers = $this->teacher_model->get_list($limit, $offset, 'updated_at', 'desc', $where);
   
-        if (DEV_SERVER == false && now() <= strtotime('2021-03-31 20:00:00')) {
+        if (DEV_SERVER == false && time() <= strtotime('2021-03-31 20:00:00')) {
           $limit = $this->studio_model::FIND_UPCOMING_CLASS_PAGE_SIZE - 1;
           $offset = 0;
           $where_in = array(213,214,215,216,217);
