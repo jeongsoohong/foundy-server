@@ -20,7 +20,7 @@
       <div class="col-sm-12">
         <div class="row box_shape" style="border: none; box-shadow: none;">
           <div class="title">
-            <div class="col-sm-12 title" style="background-color: #ffffff; padding: 20px; height: auto; font-weight: 700; color: #232323">
+            <div class="col-sm-12 title" style="background-color: #ffffff; padding: 20px; height: 76px; font-weight: 700; color: #232323">
               <!-- 로그인 -->
               <div class="option" style="text-align: center !important; margin: 0 auto; text-transform: none; font-size: 12px; line-height: 1.5; font-weight: 400; color: #757575">
                 간편하게 로그인하고<br>
@@ -48,7 +48,7 @@
               </span>
             </a>
           </div>
-          <div class="col-sm-12 title" style="display: flex; background-color: #ffffff; padding: 10px 15px; height: 40px font-weight: 400; color: #232323">
+          <div class="col-sm-12 title" style="display: flex; background-color: #ffffff; padding: 10px 15px; height: 40px; font-weight: 400; color: #232323">
             <div class="forgot-password" style="text-align: left; width: 50%; font-size: 12px; line-height: 20px;">
               <a href="javascript:void(0)" onclick="open_forget_password()">
                 <u>비밀번호 찾기</u>
@@ -60,7 +60,7 @@
               </a>
             </div>
           </div>
-          <hr style="margin-top: 12px; margin-bottom: 24px;">
+          <hr style="display: block; margin-top: 12px; margin-bottom: 24px;">
 <!--          <div class="col-sm-12">-->
 <!--            <span class="btn btn-theme-sm btn-block btn-theme-transparent pull-center kakao-login btn-kakao-login">-->
 <!--              카카오 로그인-->

@@ -70,7 +70,7 @@ if ($type == FIND_TYPE_CENTER) {
         </div>
       </a>
       <button class="profile_favorite">
-        <?php echo $this->crud_model->sns_func_html('bookmark', 'center', $teacher->bookmark, $teacher->teacher_id, 20, 20); ?>
+        <?php echo $this->crud_model->sns_func_html('bookmark', 'teacher', $teacher->bookmark, $teacher->teacher_id, 20, 20); ?>
       </button>
     </div>
   <?php }

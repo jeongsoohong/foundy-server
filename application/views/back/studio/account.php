@@ -164,7 +164,7 @@
                 $name = $category->name;
                 $count++;
                 ?>
-                <label class="form-chk col_sp width-type">
+                <label class="form-chk col_sp width-type <? if ($count % 5 == 0) echo 'width-form'; ?>">
                   <input name="category_pilates" type="checkbox" value="<?php echo $name;?>"
                     <?php if(in_array($name,$category_pilates_data)){ echo 'checked'; }?> id="<?php echo $category_id; ?>"/>
                   <?php echo $name; ?>
