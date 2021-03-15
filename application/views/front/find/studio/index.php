@@ -497,14 +497,14 @@
               <!-- Recommend 클래스 -->
               <div class="col-md-12 recommend coming yourClass">
                 <div class="upcoming_slideHorizon">
-                  <ul class="slideUl" style="width: 100%; padding-bottom: 20px;">
+                  <ul class="slideUl" style="width: 100%; padding-bottom: 20px; overflow-y: hidden;">
                     <?
                     $i = 1;
-                    foreach ($upcoming_classes as $class) { ?>
+                    foreach ($recommend_classes as $class) { ?>
                       <li class="slideUl_li" id="class_<?= $i; ?>" data-id="<?= $i; ?>">
                         <a href="<?= base_url().'home/teacher/profile/'.$class->teacher_id.'?nav=schedule&sdate='.$class->schedule_date; ?>">
                           <div class="upcoming_tit">
-                            <p class="font-futura tit_txt"><?= $class->schedule_title; ?></p>
+                            <p class="font-futura tit_txt" style="text-overflow: ellipsis;"><?= $class->schedule_title; ?></p>
                           </div>
                           <div class="upcoming_wrap">
                             <div class="teacher_thumb">
@@ -557,10 +557,10 @@
                                   <img src="<?= base_url(); ?>template/icon/online_ticketDisabled.png" width="28" height="28" class="dropShadow">
                                 <? } ?>
                                 <div class="type_name clearfix">
-                                  <p class="name_class">
+                                  <p class="name_class" style="text-overflow: ellipsis;">
                                     <?= $class->schedule_title; ?>
                                   </p>
-                                  <p class="name_center">
+                                  <p class="name_center" style="text-overflow: ellipsis;">
                                     <?= $class->studio->title; ?>
                                   </p>
                                 </div>
@@ -620,129 +620,133 @@
                   }
                 </style>
               </div>
-              
-              <div class="col-md-12" style="padding: 0 0 0 0 !important; ">
+  
+              <div class="col-md-12" style="padding: 0 !important; margin-bottom: 36px;">
                 <div class="profile" style="display: block; font-size: 16px; padding: 0 16px !important; text-align: left; height: 48px; line-height: 48px; margin: 16px 0 4px !important; position: relative; color: #845B4C;">
                   <div style="width: calc(100% - 32px); height: inherit; line-height: inherit; position: absolute;">
                     <span class="font-futura" style="position: unset; left: 0; font-size: 15px;">FREE youtube class</span>
                   </div>
-                  <div class="pull-right" style="width: 32%; height: 48px; line-height: 48px; position: absolute; float: none !important; right: 40px;">
-                    <select class="form-control select-arrow" id="class_category" name="class_category" style="height: 48px !important; line-height: 48px !important; text-align-last: unset;">
-                      <option value="ALL" selected="selected">ALL</option>
-                      <?php
-                      $categories = $this->db->order_by('category_id', 'asc')->get_where('category_class', array('activate' => 1))->result();
-                      foreach ($categories as $cat) {
-                        ?>
-                        <option value="<?php echo $cat->name; ?>"><?php echo $cat->name; ?></option>
-                        <?php
-                      }
-                      ?>
-<!--                      <option value="SEEALL" class="seeall">SEE ALL</option>-->
-                    </select>
-                  </div>
-                  <div class="pull-right" style="position: absolute; right: 16px; width: 5%; text-align: right; height: 50px; line-height: 50px; color: grey">
-                    <i class="fa fa-angle-down"></i>
-                  </div>
+                  <a href="<?= base_url(); ?>home/find/class" class="tit--viewAll font-futura youtu--more">SEE ALL</a>
                 </div>
-                <script>
-                  $(function() {
-                    $("#class_category").change(function() {
-                      let filter = this.value;
-                      console.log(filter);
-                      $('#free-youtube').load('<?= base_url(); ?>home/find/class/list?page=1&limit=3&type=find&filter=' + filter);
-                      //if (filter === 'SEEALL') {
-                      //  location.href = '<?//= base_url(); ?>//home/find/class';
-                      //} else {
-                      //  $('#free-youtube').load('<?//= base_url(); ?>//home/find/class/list?page=1&limit=3&type=find&filter=' + filter);
-                      //}
-                    });
-                  })
-                </script>
-                <div class="widget" style="padding-bottom:10px; ">
-                  <!-- ajax_class_list() -->
-                  <style type="text/css">
-                    #free-youtube .youtube__a {
-                      display: block;
-                    }
-                    #free-youtube .media {
-                      padding: 0 16px !important;
-                    }
-                    #free-youtube .media-link {
-                      width: 100%;
-                      padding: 0 0 56.25% 0;
-                      position: relative;
-                      margin-right: 4%;
-                    }
-                    #free-youtube .media-link img {
-                      position: absolute;
-                      width: 100%;
-                      height: 100%;
-                      /* max-width: 207px; */
-                      /* max-height: 123px; */
-                    }
-                    #free-youtube .media-body {
-                      width: 46%;
-                      padding: 0;
-                    }
-                    #free-youtube .video-title {
-                      margin: 12px 0 2px;
-                      line-height: 1.5;
-                      font-size: 14px;
-                      font-weight: bold !important;
-                    }
-                    #free-youtube .classType {
-                      color: saddlebrown;
-                      display:block;
-                      font-size: 12px;
-                      line-height: 1.5;
-                    }
-                    #free-youtube .footprint {
-                      color: gray;
-                      display: block;
-                      color: #bdbdbd;
-                      font-size: 10px;
-                      font-weight: bold !important;
-                      line-height: 1.5 !important;
-                      padding-top: 8px;
-                      letter-spacing: 0.08em;
-                    }
-                  </style>
-                  <ul class="video_ul video-youtube" id="free-youtube">
-                    <? foreach ($youtube_classes as $class) {
-                      $cat = '';
-                      $categories = $this->db->get_where('teacher_video_category', array('video_id' => $class->video_id))->result();
-                      foreach($categories as $category) {
-                        $cat .= $category->category . '/';
+                <div class="youtuClassWrap" style="overflow-y: hidden;">
+                  <? foreach ($youtube_classes as $class) {
+                    $cat = array();
+                    $etc = false;
+                    $categories = $this->db->get_where('teacher_video_category', array('video_id' => $class->video_id))->result();
+                    foreach($categories as $category) {
+                      if (in_array($category->category, $youtube_categories)) {
+                        if (!strcmp($category->category, '쿠킹클래스')) {
+                          $cat[] = '쿠킹';
+                        } else {
+                          $cat[] = $category->category;
+                        }
+                      } else {
+                        $etc = true;
                       }
-                      $cat[strlen($cat) - 1] = "\0";
-                      ?>
-                      <li>
-                        <a href="<?= base_url(); ?>home/teacher/video/view/<?= $class->video_id; ?>" class="youtube__a clearfix">
-                          <div class="col-md-12 media clearfix">
-                            <div class="col-md-6 pull-left media-link">
-                              <img src="<?= $class->thumbnail_image_url; ?>" width="180" height="120" alt="">
+                    }
+                    if ($etc) {
+                      $cat[] = '기타';
+                    }
+                    ?>
+                    <div class="youtuClass">
+                      <div class="yourClass">
+                        <a href="<?= base_url(); ?>home/teacher/video/view/<?= $class->video_id; ?>" class="youtu_linkbox">
+                          <div class="upcoming_wrap">
+                            <div class="teacher_thumb">
+                              <div class="thumb_bg"></div>
+                              <div class="thumb_photo" style="background-image: url(<?= $class->thumbnail_image_url; ?>)"></div>
                             </div>
-                            <div class="col-md-6 media-body">
-                              <h5 class="video-title">
-                                <?= $class->title; ?>
-                              </h5>
-                              <span class="classType">
-                              <?= $cat; ?>
-                            </span>
-                              <span class="footprint">
-                                <?= (int)($class->playtime/60).'분'; printf("%02d",$class->playtime%60);?>초&middot;조회수<?= $class->view;?>&middot;좋아요<?= $class->like;?>&middot;스크랩<?= $class->bookmark;?>
-                            </span>
+                            <div class="upcoming_schedule">
+                              <div class="schedule_type">
+                                <!-- 요가/필라테스/홈핏/쿠킹/명상/기타 , 최대 [ 3개 ] 까지 -->
+                                <? foreach ($cat as $c) { ?>
+                                  <div class="type_today">
+                                    <p class="font-futura today_date youtu_type">
+                                      <span class="type_className"><?= $c; ?></span>
+                                    </p>
+                                  </div>
+                                <? } ?>
+                                <p class="type_info youtu_info"><?= $class->title; ?></p>
+                              </div>
                             </div>
                           </div>
                         </a>
-                      </li>
-                    <? } ?>
-                  </ul>
-                  <!-- /ajax_class_list() -->
-                  <a class="font-futura btn_more" style="font-weight: bold !important;margin-bottom: 20px !important;text-align: center;line-height: 36px;" href="<?= base_url(); ?>home/find/class">MORE</a>
+                      </div>
+                    </div>
+                  <? } ?>
                 </div>
+                <style>
+                  .recommend {
+                    padding: 24px 0 0;
+                  }
+                  .youtu--more {
+                    line-height: inherit;
+                    float: unset;
+                    position: absolute;
+                    top: 0;
+                    right: 16px;
+                  }
+                  .youtuClassWrap {
+                    white-space: nowrap;
+                    overflow-x: scroll;
+      
+                    -ms-overflow-style: none; /* IE and Edge */
+                    scrollbar-width: none; /* Firefox */
+                  }
+                  .youtuClassWrap::-webkit-scrollbar {
+                    display: none; /* Chrome, Safari, Opera*/
+                  }
+                  .youtuClass {
+                    display: inline-block;
+                    width: 100%;
+                    padding: 0 16px;
+                  }
+                  .youtu_linkbox {
+                    display: block;
+                  }
+                  .youtuClass .thumb_bg {
+                    background-color: rgba(0,0,0,0.4);
+                  }
+                  .youtu_info {
+                    font-weight: bold;
+                    display: block;
+                    margin: 12px 0 0;
+                    overflow-x: scroll;
+                    text-overflow: ellipsis;
+                    max-width: 324px;
+      
+                    -ms-overflow-style: none; /* IE and Edge */
+                    scrollbar-width: none; /* Firefox */
+                  }
+                  .youtu_info::-webkit-scrollbar {
+                    display: none;
+                  }
+                  .youtuClass .type_today {
+                    margin-right: 8px;
+                  }
+                  .youtuClass .type_today:last-child {
+                    margin-right: 0;
+                  }
+                  .youtu_type {
+                    display: table;
+                    white-space: pre-wrap;
+                    font-size: 12.5px;
+                    width: 30px;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    margin: auto;
+                    line-height: 1.15;
+                    height: 30px;
+                  }
+                  .type_className {
+                    display: table-cell !important;
+                    vertical-align: middle;
+                    color: #74615d;
+                  }
+                </style>
               </div>
-              
               <!-- Zoom 클래스 -->
               <style type="text/css">
                 .comeUp .online_sch {
@@ -1007,6 +1011,22 @@
     });
   
     $('.slideUl').slick({
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      dots: true,
+      centerMode: true,
+      infinite: true,
+      // swipe: true,
+      // swipeToSlide: true,
+      speed: 500,
+      autoplaySpeed: 3000,
+      waitForAnimate: false,
+      focusOnSelect: true,
+      autoplay: true,
+      arrows: false,
+      centerPadding: '0px',
+    });
+    $('.youtuClassWrap').slick({
       slidesToShow: 1,
       slidesToScroll: 1,
       dots: true,

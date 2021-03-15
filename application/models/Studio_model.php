@@ -344,13 +344,22 @@ QUERY;
   }
   
   const FIND_UPCOMING_CLASS_PAGE_SIZE = 5;
-  function get_upcoming_class_list($limit, $offset) {
+  function get_upcoming_class_list($limit, $offset, $random = false, $where_in = null) {
     $today = date('Y-m-d');
     $time = date('H:i:s');
     $this->db->limit($limit, $offset);
-    $this->db->order_by('schedule_date,start_time asc');
-    $this->db->where("(schedule_date = '{$today}' and start_time > '$time' and activate = 1)");
-    $this->db->or_where("(schedule_date > '{$today}' and activate = 1)");
+    if ($random == true) {
+      $this->db->order_by('rand() asc');
+    } else {
+      $this->db->order_by('schedule_date,start_time asc');
+    }
+    if (isset($where_in) == true && empty($where_in) == false) {
+      $this->db->where("(schedule_date >= '{$today}' and activate = 1)");
+      $this->db->where_in('schedule_info_id', $where_in);
+    } else {
+      $this->db->where("(schedule_date = '{$today}' and start_time > '$time' and activate = 1)");
+      $this->db->or_where("(schedule_date > '{$today}' and activate = 1)");
+    }
 //    $sql = $this->db->get_compiled_select('studio_schedule_info');
 //    log_message('debug', '[studio] sql['.$sql.']');
     return $this->db->get('studio_schedule_info')->result();

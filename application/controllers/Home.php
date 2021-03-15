@@ -2240,7 +2240,7 @@ QUERY;
         $limit = $this->studio_model::FIND_UPCOMING_CLASS_PAGE_SIZE;
         $offset = $limit * ($page - 1);
 
-        $upcoming_classes = $this->studio_model->get_upcoming_class_list($limit, $offset);
+        $upcoming_classes = $this->studio_model->get_upcoming_class_list($limit, $offset, false);
         foreach ($upcoming_classes as $class) {
           $class->teacher = $this->teacher_model->get($class->teacher_id);
           $class->studio = $this->studio_model->get($class->studio_id);
@@ -2274,10 +2274,19 @@ QUERY;
         );
         $teachers = $this->teacher_model->get_list($limit, $offset, 'updated_at', 'desc', $where);
   
-        $limit = $this->studio_model::FIND_UPCOMING_CLASS_PAGE_SIZE;
-        $offset = 0;
-        $upcoming_classes = $this->studio_model->get_upcoming_class_list($limit, $offset);
-        foreach ($upcoming_classes as $class) {
+        if (DEV_SERVER == false && now() <= strtotime('2021-03-31 20:00:00')) {
+          $limit = $this->studio_model::FIND_UPCOMING_CLASS_PAGE_SIZE - 1;
+          $offset = 0;
+          $where_in = array(213,214,215,216,217);
+          $recommend_classes = $this->studio_model->get_upcoming_class_list(1, $offset, false, $where_in);
+          $recommend_classes = array_merge($recommend_classes, $this->studio_model->get_upcoming_class_list($limit, $offset, true));
+        } else {
+          $limit = $this->studio_model::FIND_UPCOMING_CLASS_PAGE_SIZE;
+          $offset = 0;
+          $recommend_classes = $this->studio_model->get_upcoming_class_list($limit, $offset, true);
+        }
+  
+        foreach ($recommend_classes as $class) {
           $class->teacher = $this->teacher_model->get($class->teacher_id);
           $class->studio = $this->studio_model->get($class->studio_id);
           $this->studio_model->check_ticketing($class);
@@ -2289,12 +2298,33 @@ QUERY;
           }
         }
   
+        $limit = $this->studio_model::FIND_UPCOMING_CLASS_PAGE_SIZE;
+        $offset = 0;
+        $upcoming_classes = $this->studio_model->get_upcoming_class_list($limit, $offset, false);
+        foreach ($upcoming_classes as $class) {
+          $class->teacher = $this->teacher_model->get($class->teacher_id);
+          $class->studio = $this->studio_model->get($class->studio_id);
+          $this->studio_model->check_ticketing($class);
+//          if ($this->is_login()) {
+//            $user_id = $this->session->userdata('user_id');
+//            $class->bookmarked = $this->teacher_model->get_bookmarked($user_id, $class->teacher_id);
+//          } else {
+//            $class->bookmarked = false;
+//          }
+        }
 //        log_message('debug', '[studio] upcoming class['.json_encode($upcoming_classes).']');
-
-        $youtube_classes = $this->db->limit(3,0)->order_by('video_id', 'desc')->get_where('teacher_video')->result();
   
+        $youtube_categories = array();
+        $categories = $this->db->get_where('category_class', array('activate' => 1))->result();
+        foreach ($categories as $category) {
+          $youtube_categories[] = $category->name;
+        }
+        $youtube_classes = $this->db->limit(10,0)->order_by('rand()', 'asc')->get_where('teacher_video')->result();
+  
+        $this->page_data['recommend_classes'] = $recommend_classes;
         $this->page_data['upcoming_classes'] = $upcoming_classes;
         $this->page_data['youtube_classes'] = $youtube_classes;
+        $this->page_data['youtube_categories'] = $youtube_categories;
         $this->page_data['teachers'] = $teachers;
         $this->page_data['page_name'] = "find/studio";
         $this->page_data['asset_page'] = "class";
