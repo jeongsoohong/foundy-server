@@ -349,7 +349,7 @@ QUERY;
     $time = date('H:i:s');
     $this->db->limit($limit, $offset);
     if ($random == true) {
-      $this->db->order_by('rand() asc');
+      $this->db->order_by('schedule_date,rand() asc');
     } else {
       $this->db->order_by('schedule_date,start_time asc');
     }
