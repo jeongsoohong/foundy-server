@@ -206,6 +206,14 @@ include 'preloader.php';
     display: block;
     clear: both;
   }
+  #free-youtube a, .video_ul li a {
+    display: block;
+  }
+  .video_ul li a::after {
+    content: "";
+    display: block;
+    clear: both;
+  }
   #__daum__layer_1 {
     position: absolute !important;
     min-width: unset !important;
