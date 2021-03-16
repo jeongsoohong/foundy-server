@@ -299,6 +299,8 @@
     font-size: 12px;
     background-color: white;
     border: none;
+    overflow-x: hidden;
+    white-space: pre-line;
   }
   .qna-title {
     margin 5px 0;
