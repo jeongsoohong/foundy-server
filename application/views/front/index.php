@@ -32,9 +32,9 @@ include 'preloader.php';
   }
   /* pc에서만 스크롤바 안보이게 가능한지 제혁님께 요청하기
      햄버거 메뉴 팝업이 스크롤바 가로너비만큼 짧아지기 때문에 */
-  ::-webkit-scrollbar {
-    display: none;
-  }
+  /*::-webkit-scrollbar {*/
+  /*  display: none;*/
+  /*}*/
   .wrapper {
     max-width: 460px;
     margin: 0 auto;

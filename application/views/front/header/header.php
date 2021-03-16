@@ -167,7 +167,7 @@
     padding: 0;
     background-color: transparent;
     left: -920px;
-    max-width: 460px;
+    max-width: 470px;
     right: 0px;
     margin: auto;
     top: 0px;
