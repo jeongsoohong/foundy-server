@@ -2275,13 +2275,13 @@ QUERY;
         $teachers = $this->teacher_model->get_list($limit, $offset, 'updated_at', 'desc', $where);
   
         if (DEV_SERVER == false && time() <= strtotime('2021-03-31 20:00:00')) {
-          $limit = $this->studio_model::FIND_UPCOMING_CLASS_PAGE_SIZE - 1;
+          $limit = $this->studio_model::FIND_RECOMMEND_CLASS_PAGE_SIZE - 1;
           $offset = 0;
           $where_in = array(213,214,215,216,217);
           $recommend_classes = $this->studio_model->get_upcoming_class_list(1, $offset, false, $where_in);
           $recommend_classes = array_merge($recommend_classes, $this->studio_model->get_upcoming_class_list($limit, $offset, true));
         } else {
-          $limit = $this->studio_model::FIND_UPCOMING_CLASS_PAGE_SIZE;
+          $limit = $this->studio_model::FIND_RECOMMEND_CLASS_PAGE_SIZE;
           $offset = 0;
           $recommend_classes = $this->studio_model->get_upcoming_class_list($limit, $offset, true);
         }

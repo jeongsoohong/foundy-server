@@ -343,7 +343,8 @@ QUERY;
     return $studio_id;
   }
   
-  const FIND_UPCOMING_CLASS_PAGE_SIZE = 5;
+  const FIND_RECOMMEND_CLASS_PAGE_SIZE = 5;
+  const FIND_UPCOMING_CLASS_PAGE_SIZE = 10;
   function get_upcoming_class_list($limit, $offset, $random = false, $where_in = null) {
     $today = date('Y-m-d');
     $time = date('H:i:s');
