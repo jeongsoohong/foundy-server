@@ -161,7 +161,7 @@
       position: absolute;
       float: unset;
       width: auto !important;
-      top: 0;
+      bottom: 0;
       right: 15px;
       font-size: 13px;
     }

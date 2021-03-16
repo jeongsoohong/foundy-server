@@ -4331,8 +4331,8 @@ QUERY;
   
       $page = $_GET['page'];
       $type = $_GET['type'];
-      $limit = 5;
-      $offset = 5 * ($page - 1);
+      $limit = 10;
+      $offset = $limit * ($page - 1);
     
       $user_id = $this->session->userdata('user_id');
       $now = time();
