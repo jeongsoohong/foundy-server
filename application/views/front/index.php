@@ -12,11 +12,10 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      
       gtag('config', 'UA-182268526-1');
     </script>
     <!-- 구글 애드센드 -->
-    <script data-ad-client="ca-pub-5246386026868293" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--    <script data-ad-client="ca-pub-5246386026868293" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>-->
   <? } ?>
 </head>
 <body id="home" class="wide">
