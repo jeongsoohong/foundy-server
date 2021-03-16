@@ -432,7 +432,7 @@ QUERY;
       }
       $this->check_ticketing($schedule);
     }
-    log_message('debug', '[studio] get_schedules['.json_encode($schedules).']');
+    log_message('debug', '[studio] studio_id['.$studio_id.'] date['.$date.' get_schedules['.json_encode($schedules).']');
     return $schedules;
   }
   
