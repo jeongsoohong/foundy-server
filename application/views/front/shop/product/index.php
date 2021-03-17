@@ -1078,7 +1078,7 @@
     var offset = $(id).offset();
     offset.top = offset.top - 110;
     // console.log(offset);
-    $('html, body').animate({scrollTop : offset.top}, 100);
+    $('html, body').animate({scrollTop : offset.top}, 500);
   }
 
   function change_item_nav_tab(elem) {
