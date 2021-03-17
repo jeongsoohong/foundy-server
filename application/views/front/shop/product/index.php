@@ -55,12 +55,17 @@
     width: 100%;
   }
   .review-images .slick-track {
-    width: 100% !important;
+    /*width: 100% !important;*/
     display: flex !important;
   }
   .review-image {
     width: 33.3% !important;
     margin: 3px !important;
+    padding-bottom: 19.3% !important;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: scroll;
   }
   .review-image {
     width: 100%;
@@ -357,8 +362,9 @@
     background-color: white;
     border-color: #C5C5C5;
     width: 100%;
-    height: 28vw;
-    line-height: 28vw;
+    height: auto;
+    max-height: 140px;
+    line-height: 140px;
     font-size: 30px;
     margin: auto;
     padding: 0;
@@ -636,8 +642,8 @@
             <?php } ?>
           </div>
         </div>
-        <div class="col-md-12 item-content-review">
-          <div class="col-md-12 item-review-on">
+        <div class="col-md-12 item-content-review" style="display: block; padding-bottom: 60px !important;">
+          <div class="col-md-12 item-review-on" style="z-index: 3;">
             평점(<?php echo $review_score_i.'.'.$review_score_f; ?>)
             <a href="javascript:void(0);" onclick="open_review()"><span class="pull-right"><u>리뷰쓰기</u></span></a>
           </div>
@@ -663,11 +669,14 @@
           <?php if (count($review_images) > 0) { ?>
             <div class="review-images">
               <?php foreach ($review_images as $review_image) {?>
-                <div class="review-image">
-                  <img class="slider-img" src="<?php echo $review_image->url; ?>" alt="">
-                </div>
+                <div class="review-image" style="background-image: url(<?= $review_image->url; ?>);"></div>
               <?php }?>
             </div>
+            <style>
+              .review-images .slick-list {
+                overflow: unset;
+              }
+            </style>
           <?php }?>
           <div class="col-md-12 item-content-review-ul">
             <ul>
@@ -680,8 +689,8 @@
             </a>
           </div>
         </div>
-        <div class="col-md-12 item-content-question">
-          <div class="col-md-12 item-question-btn">
+        <div class="col-md-12 item-content-question" style="display: none; padding-bottom: 60px !important;">
+          <div class="col-md-12 item-question-btn" style="margin: 0; padding: 0 16px;">
             <a href="javascript:void(0);" onclick="open_qna()"><h6>상품문의작성</h6></a>
           </div>
           <div class="col-md-12 item-content-qna-ul">
@@ -1011,6 +1020,9 @@
     </div>
   </div>
 </div>
+<input class="review_img" id="review_img_1" data-id="1" type="file" name="review_img_1" style="display: none;">
+<input class="review_img" id="review_img_2" data-id="2" type="file" name="review_img_2" style="display: none;">
+<input class="review_img" id="review_img_3" data-id="3" type="file" name="review_img_3" style="display: none;">
 <!--<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>-->
 <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
@@ -1346,7 +1358,7 @@
       alert('구매내역이 존재하지 않습니다');
       return false;
     }
-
+    
     $('#reviewModal').modal('show');
   }
 
@@ -1374,21 +1386,23 @@
         var reader = new FileReader();
         reader.readAsDataURL(this);
         reader.onload = function (e) {
-          preview.append("<img src='" + e.target.result + "' style='width: 100%; height: 100%; vertical-align: unset'>");
+          // preview.append("<img src='" + e.target.result + "' style='width: 100%; height: inherit; vertical-align: unset'>");
+          preview.append('<div class="review-image" style="width: 100% !important; height: 140px; margin: 0 !important; background-image: url(' + e.target.result + ');"></div>');
         }
       });
     }
   }
+  $(function() {
+    $('.review_img').change(function(event) {
+      let img_id = $(this).data('id');
+      preview_img(event.target.files, img_id);
+      review_img[img_id-1] = event.target.files[0];
+    });
+  })
 
   function open_review_file(elem) {
     let img_id = $(elem).data('id');
-    let input = document.createElement("input");
-    input.type = "file";
-    input.name = "review_img_" + img_id;
-    input.onchange = function (event) {
-      preview_img(event.target.files, img_id);
-      review_img[img_id-1] = event.target.files[0];
-    };
+    let input = $('#review_img_'+img_id)
     input.click();
   }
 

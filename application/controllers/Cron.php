@@ -35,13 +35,13 @@ class Cron extends CI_Controller
     // 30 23 * * * nginx /usr/bin/nohup /usr/bin/php -f /web/public_html/index.php cron unregister delete 2>&1 &
     
     $date = date('Y-m-d', strtotime('-7 days'));
-    echo $date;
+//    echo $date;
     if ($para1 == 'delete') {
       $query = <<<QUERY
 select a.* from user a, user_unregister b where a.user_id=b.user_id and a.unregister=1 and b.unregister_at<'{$date}'
 QUERY;
       $result = $this->db->query($query)->result();
-  
+      
       log_message('info', '[cron] unregister, para1['.$para1.'] result['.json_encode($result).']');
 //      var_dump($result);
 //      echo json_encode($result);

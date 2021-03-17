@@ -4882,9 +4882,10 @@ QUERY;
         $user_id = $this->session->userdata('user_id');
         $liked = $this->crud_model->get_sns_mark('product', 'like', $user_id, $product_id);
 
+        $shipping_status = SHOP_SHIPPING_STATUS_PURCHASE_COMPLETED;
         $query = <<<QUERY
 select * from shop_purchase_product 
-where user_id={$user_id} and product_id={$product_id} and reviewed=0 and canceled=0 
+where user_id={$user_id} and product_id={$product_id} and reviewed=0 and canceled=0 and shipping_status={$shipping_status}
 order by purchase_product_id asc limit 1
 QUERY;
         $purchase_product = $this->db->query($query)->row();
@@ -6157,12 +6158,11 @@ QUERY;
             $i = 0;
             $review_img_url = array();
             for (; $i < $review_file_cnt; $i++) {
-              if (isset($_FILES["review_file_{$i}"]) == true) {
-                $this->crud_model->file_validation($_FILES["review_file_{$i}"]);
-                $file_name = 'review_' . $review_id . '_' . $i . '.jpg';
-                $this->crud_model->upload_image(IMG_PATH_SHOP, $file_name, $_FILES["review_file_{$i}"], 400, 0, true, true);
+              if (isset($_FILES["review_file_{$i}"]) == true && $this->crud_model->file_validation($_FILES["review_file_{$i}"], false) == 0) {
+                $file_name = 'review_' . $review_id . '_' . $i . '.'.substr($_FILES["review_file_{$i}"]['type'], 6);
+                $this->crud_model->upload_image(IMG_PATH_SHOP, $file_name, $_FILES["review_file_{$i}"], 1000, 0, true, true);
                 $time = time();
-                $file_name = 'review_' . $review_id . '_' . $i . '_thumb.jpg';
+                $file_name = 'review_' . $review_id . '_' . $i . '_thumb.'.substr($_FILES["review_file_{$i}"]['type'], 6);
                 $review_img_url[$i] = IMG_WEB_PATH_SHOP . $file_name . '?id=' . $time;
               }
             }
