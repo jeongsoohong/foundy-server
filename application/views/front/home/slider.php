@@ -26,7 +26,7 @@
       background-attachment: scroll;
     }
   </style>
-  <div class="col-md-12" style="height: auto; padding: 0;">
+  <div class="col-md-12" style="height: auto; padding: 0; position: relative; z-index: 3;">
     <div class="slider-nav">
       <?php
       $i = 0;
