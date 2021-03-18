@@ -971,19 +971,15 @@
     menu_on = 1;
     $('body').css('overflow-y','hidden');
     <? if ($this->app_model->is_app()) { ?>
-    $('.menu_box').show().css('left','-100%').animate({ left : '0%'},500);
+    $('.menu_box').css('left','-100%').animate({ left : '0%'},500);
     <? } else { ?>
-    $('.menu_box').show().css('top',window.pageYOffset).css('left','-100%').animate({ left : '0%'},500);
+    $('.menu_box').css('top',window.pageYOffset).css('left','-100%').animate({ left : '0%'},500);
     <? } ?>
   }
   function close_menu() {
     menu_on = 0;
     $('body').css('overflow-y','auto');
-    <? if ($this->app_model->is_app()) { ?>
     $('.menu_box').css('left','0%').animate({left : '-100%'},500);
-    <? } else { ?>
-    $('.menu_box').css('left','0%').animate({left : '-100%'},500);
-    <? } ?>
   }
   function open_setting_menu() {
     setting_on = 1;

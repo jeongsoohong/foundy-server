@@ -642,7 +642,7 @@
             <?php } ?>
           </div>
         </div>
-        <div class="col-md-12 item-content-review" style="display: block; padding-bottom: 60px !important;">
+        <div class="col-md-12 item-content-review" style="display: none; padding-bottom: 60px !important;">
           <div class="col-md-12 item-review-on" style="z-index: 3;">
             평점(<?php echo $review_score_i.'.'.$review_score_f; ?>)
             <a href="javascript:void(0);" onclick="open_review()"><span class="pull-right"><u>리뷰쓰기</u></span></a>
@@ -1076,7 +1076,7 @@
 
   function move(id) {
     var offset = $(id).offset();
-    offset.top = offset.top - 110;
+    offset.top = offset.top - 90;
     // console.log(offset);
     $('html, body').animate({scrollTop : offset.top}, 500);
   }
