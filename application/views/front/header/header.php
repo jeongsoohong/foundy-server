@@ -131,7 +131,9 @@
     position: absolute;
     left: 0;
     right: 0;
-    max-width: 460px;
+    <? if ($this->agent->is_mobile() == false) { ?>
+    max-width: 470px;
+    <? } ?>
     margin: 0 auto;
   }
   #cat_menu .cat-box {
@@ -141,16 +143,19 @@
     position: relative;
     background-color: rgb(241, 238, 232);
   }
+  <? if ($this->agent->is_mobile() == false) { ?>
   #cat_menu .layer {
     position: relative;
     z-index: 3100;
     width: 300%;
     height: 100%;
-    /* max-width: 460px; */
+    /* max-width: 470px; */
     margin: auto;
     background-color: #F3EFEB;
-    left: -1380px;
+    /*left: -1380px;*/
+    left: -300%;
   }
+  <? } ?>
   #cat_menu h2, #cat_menu h3, #cat_menu h4, #cat_menu a {
     font-family: futura-pt !important;
     font-style: normal !important;
@@ -166,13 +171,15 @@
   #cat_menu .menu_box {
     padding: 0;
     background-color: transparent;
-    left: -920px;
+    /*left: -920px;*/
+    left: -100%;
+    <? if ($this->agent->is_mobile() == false) { ?>
     max-width: 470px;
-    right: 0px;
+    <? } ?>
     margin: auto;
-    top: 0px;
+    top: 0;
     box-sizing: border-box;
-    position: fixed;
+    position: absolute;
     z-index: 3000;
     width: 100%;
     height: 100%;
@@ -384,7 +391,9 @@
   }
 </style>
 <div id="cat_menu">
-  <div class="layer"></div>
+  <? if ($this->agent->is_mobile() == false) { ?>
+    <div class="layer"></div>
+  <? } ?>
   <article class="menu_box scroll-y">
     <div class="cat-box">
       <h2 class="meaning">카테고리</h2>
@@ -957,12 +966,12 @@
   function open_menu() {
     menu_on = 1;
     $('body').css('overflow-y','hidden');
-    $('.menu_box').show().css('left','-920px').animate({ left : '0%'},500);
+    $('.menu_box').show().css('top',window.pageYOffset).css('left','-100%').animate({ left : '0%'},500);
   }
   function close_menu() {
     menu_on = 0;
     $('body').css('overflow-y','auto');
-    $('.menu_box').css('left','0%').animate({left : '-920px'},500);
+    $('.menu_box').css('top',0).css('left','0%').animate({left : '-100%'},500);
   }
   function open_setting_menu() {
     setting_on = 1;
