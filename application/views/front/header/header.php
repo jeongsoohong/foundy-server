@@ -179,7 +179,11 @@
     margin: auto;
     top: 0;
     box-sizing: border-box;
+    <? if ($this->app_model->is_app()) { ?>
+    position: fixed;
+    <? } else { ?>
     position: absolute;
+    <? } ?>
     z-index: 3000;
     width: 100%;
     height: 100%;
@@ -966,12 +970,20 @@
   function open_menu() {
     menu_on = 1;
     $('body').css('overflow-y','hidden');
+    <? if ($this->app_model->is_app()) { ?>
+    $('.menu_box').show().css('left','-100%').animate({ left : '0%'},500);
+    <? } else { ?>
     $('.menu_box').show().css('top',window.pageYOffset).css('left','-100%').animate({ left : '0%'},500);
+    <? } ?>
   }
   function close_menu() {
     menu_on = 0;
     $('body').css('overflow-y','auto');
-    $('.menu_box').css('top',0).css('left','0%').animate({left : '-100%'},500);
+    <? if ($this->app_model->is_app()) { ?>
+    $('.menu_box').css('left','0%').animate({left : '-100%'},500);
+    <? } else { ?>
+    $('.menu_box').css('left','0%').animate({left : '-100%'},500);
+    <? } ?>
   }
   function open_setting_menu() {
     setting_on = 1;
