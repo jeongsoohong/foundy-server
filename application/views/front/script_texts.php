@@ -1142,14 +1142,19 @@
       }
     });
   }
-  function open_alert_popup(message) {
+  let alert_popup_redirect = '';
+  function open_alert_popup(message, redirect = '') {
     $('#schedule_alert_popup .popup_guide').text(message);
     $('#schedule_alert_popup').show();
     $('body').css('overflow-y', 'hidden');
+    alert_popup_redirect = redirect;
   }
   function close_alert_popup() {
     $('#schedule_alert_popup').hide();
     $('body').css('overflow-y', 'auto');
+    if (alert_popup_redirect !== '') {
+      window.location.href = alert_popup_redirect;
+    }
   }
   function open_notify_popup(message) {
     $('#schedule_notify_popup .popup_guide').text(message);

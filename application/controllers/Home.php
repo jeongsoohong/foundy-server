@@ -286,9 +286,11 @@ QUERY;
   
   private function get_login_url($url = '') {
     if ($url == '') {
-      return base_url().'home/login?l='.build_url($this->uri, $_GET);
+      $this->cookie_model->set_cookie('relocation', build_url($this->uri, $_GET));
+      return base_url().'home/login?l=';
     }
-    return base_url().'home/login?l='.$url;
+    $this->cookie_model->set_cookie('relocation', $url);
+    return base_url().'home/login?l=';
   }
   
   private function redirect_login() {
@@ -909,7 +911,7 @@ QUERY;
       $restore = isset($_GET['r']);
       $relocation = base_url();
       if (isset($_GET['l'])) {
-        $relocation = build_get_location($_GET, 'l');
+        $relocation = $this->cookie_model->get_cookie('relocation');
       }
 
       $this->page_data['page_name'] = "user/login";
@@ -4449,10 +4451,6 @@ QUERY;
   
         if ($para3 == 'info') {
     
-          if ($this->is_login() == false) {
-            $this->response('fail', '클래스 예약은 로그인이 필요합니다!');
-          }
-    
           if (isset($_POST['id']) == false) {
             $this->response('fail', '비정상적인 접근입니다!');
           }
@@ -4461,10 +4459,16 @@ QUERY;
           $schedule_info_id = $this->input->post('id');
           
           $schedule_info = $this->studio_model->get_schedule_info($schedule_info_id);
-          if ($schedule_info->activate == false) {
+          if (isset($schedule_info) == false || empty($schedule_info) || $schedule_info->activate == false) {
             $this->response('fail', '삭제된 클래스입니다!');
           }
-    
+  
+          if ($this->is_login() == false) {
+            $this->response('fail', '클래스 예약은 로그인이 필요합니다!',
+              $this->get_login_url(base_url().'home/teacher/profile/'.$schedule_info->teacher_id.
+                '?'.http_build_query(array('nav'=>'schedule','sdate'=>$schedule_info->schedule_date))));
+          }
+  
           if ($schedule_info->ticketing == false) {
             $this->response('fail', '예약이 오픈되지 않았습니다!');
           }
@@ -4496,18 +4500,20 @@ QUERY;
   
         } else if ($para3 == 'wait') {
   
-          if ($this->is_login() == false) {
-            $this->response('fail', '로그인이 필요합니다!');
-          }
-  
           if (isset($_POST['id']) == false) {
             $this->response('fail', '비정상적인 접근입니다!');
           }
           
           $schedule_info_id = $this->input->post('id');
           $schedule_info = $this->studio_model->get_schedule_info($schedule_info_id);
-          if ($schedule_info->activate == false) {
+          if (isset($schedule_info) == false || empty($schedule_info) || $schedule_info->activate == false) {
             $this->response('fail', '삭제된 클래스입니다!');
+          }
+  
+          if ($this->is_login() == false) {
+            $this->response('fail', '로그인이 필요합니다!',
+              $this->get_login_url(base_url().'home/teacher/profile/'.$schedule_info->teacher_id.
+                '?'.http_build_query(array('nav'=>'schedule','sdate'=>$schedule_info->schedule_date))));
           }
   
           if ($schedule_info->ticketing == false) {
@@ -4541,8 +4547,14 @@ QUERY;
           
           $schedule_info_id = $this->input->post('id');
           $schedule_info = $this->studio_model->get_schedule_info($schedule_info_id);
-          if ($schedule_info->activate == false) {
+          if (isset($schedule_info) == false || empty($schedule_info) || $schedule_info->activate == false) {
             $this->response('fail', '삭제된 클래스입니다!');
+          }
+  
+          if ($this->is_login() == false) {
+            $this->response('fail', '로그인이 필요합니다!',
+              $this->get_login_url(base_url().'home/teacher/profile/'.$schedule_info->teacher_id.
+                '?'.http_build_query(array('nav'=>'schedule','sdate'=>$schedule_info->schedule_date))));
           }
   
           if ($schedule_info->ticketing == false) {
@@ -4558,10 +4570,6 @@ QUERY;
           $this->load->view('front/studio/schedule/reserve_final_popup', $this->page_data);
   
         } else if ($para3 == 'do') {
-    
-          if ($this->is_login() == false) {
-            $this->response('fail', '클래스 예약은 로그인이 필요합니다!');
-          }
     
           if (isset($_POST['id']) == false) {
             $this->response('fail', '비정상적인 접근입니다!');
@@ -4597,11 +4605,18 @@ QUERY;
           }
     
           $schedule_info = $this->studio_model->get_schedule_info($schedule_info_id);
-          if ($schedule_info->activate == false) {
+          if (isset($schedule_info) == false || empty($schedule_info) || $schedule_info->activate == false) {
             $this->studio_model->unlock_schedule_info($schedule_info_id);
             $this->response('fail', '삭제된 클래스입니다!');
           }
-    
+  
+          if ($this->is_login() == false) {
+            $this->studio_model->unlock_schedule_info($schedule_info_id);
+            $this->response('fail', '로그인이 필요합니다!',
+              $this->get_login_url(base_url().'home/teacher/profile/'.$schedule_info->teacher_id.
+                '?'.http_build_query(array('nav'=>'schedule','sdate'=>$schedule_info->schedule_date))));
+          }
+  
           $studio_info = $this->studio_model->get($schedule_info->studio_id);
           if (empty($studio_info) == true || $studio_info->activate == 0) {
             $this->studio_model->unlock_schedule_info($schedule_info_id);
@@ -4698,10 +4713,6 @@ QUERY;
   
         } else if ($para3 == 'link') {
   
-          if ($this->is_login() == false) {
-            $this->response('fail', '로그인이 필요합니다!');
-          }
-  
           if (isset($_POST['id']) == false) {
             $this->response('fail', '비정상적인 접근입니다!');
           }
@@ -4710,8 +4721,14 @@ QUERY;
           $schedule_info_id = $this->input->post('id');
   
           $schedule_info = $this->studio_model->get_schedule_info($schedule_info_id);
-          if ($schedule_info->activate == false) {
+          if (isset($schedule_info) == false || empty($schedule_info) || $schedule_info->activate == false) {
             $this->response('fail', '삭제된 클래스입니다!');
+          }
+  
+          if ($this->is_login() == false) {
+            $this->response('fail', '로그인이 필요합니다!',
+              $this->get_login_url(base_url().'home/teacher/profile/'.$schedule_info->teacher_id.
+                '?'.http_build_query(array('nav'=>'schedule','sdate'=>$schedule_info->schedule_date))));
           }
   
           if ($schedule_info->ticketing == false) {
@@ -5037,7 +5054,9 @@ QUERY;
           $session_id = $this->crud_model->get_session_id();
           $cart_items = $this->db->get_where('shop_cart', array('session_id' => $session_id))->result();
         }
-
+        
+       
+        // 레거시 코드 - 묶음배송비가 브랜드별로 적용되지 않고 상품별로 적용됨
         $total_price = 0;
         $total_purchase_cnt = 0;
         $total_shipping_fee = 0;
@@ -5116,6 +5135,17 @@ QUERY;
           $this->db->set('modified_at', 'NOW()', false);
           $this->db->update('shop_cart', $upd, array('cart_id' => $item->cart_id));
         }
+        // 레거시 코드
+  
+//        $cart_item_cnt = count($cart_items);
+//        $total_price = 0;
+//        $total_shipping_fee= 0;
+//        $total_additional_price = 0;
+//        $total_purchase_cnt = 0;
+//        $cart_ids = array();
+//
+//        $shop_items = $this->shop_model->get_purchase_items($cart_items, $cart_ids, false,
+//          $total_price, $total_shipping_fee, $total_additional_price, $total_purchase_cnt);
 
         $total_balance = $total_price + $total_shipping_fee + $total_additional_price;
 
@@ -5125,6 +5155,8 @@ QUERY;
         $this->page_data['total_additional_price'] = $total_additional_price;
         $this->page_data['total_balance'] = $total_balance;
         $this->page_data['cart_items'] = $cart_items;
+//        $this->page_data['cart_item_cnt'] = $cart_item_cnt;
+//        $this->page_data['shop_items'] = $shop_items;
         $this->page_data['page_name'] = "shop/cart";
         $this->page_data['asset_page'] = "shop";
         $this->page_data['page_title'] = "shop";
@@ -6618,12 +6650,13 @@ QUERY;
     redirect(base_url().'home/info?m='.$msg.'&p='.$page);
   }
   
-  private function response($status, $msg = '') {
+  private function response($status, $msg = '', $redirect = '') {
     $result['status'] = $status;
     if ($status == 'done' && $msg == '') {
       $msg = '성공하였습니다!';
     }
     $result['message'] = $msg;
+    $result['redirect'] = $redirect;
     echo json_encode($result, JSON_UNESCAPED_UNICODE);
     exit;
   }

@@ -2076,7 +2076,8 @@ if ($this->session->userdata('user_login') == 'yes') {
       success: function(data) {
         $("#loading_set").fadeOut(500);
         if(IsJsonString(data) === true) {
-          open_alert_popup(JSON.parse(data).message);
+          let res = JSON.parse(data);
+          open_alert_popup(res.message, res.redirect);
         } else {
           $('#schedule_reserve_url').html(data);
           $('#schedule_reserve_url').show();

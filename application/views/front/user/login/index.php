@@ -817,7 +817,7 @@
       }
     });
   }
-  
+
   function do_login() { // with email
     let email = $('#user-email').val();
     let password = $('#user-password').val();
@@ -830,7 +830,7 @@
     
     // console.log(email);
     // console.log(password);
-    
+  
     $.ajax({
       url : '<?php echo base_url().'/home/login/email'; ?>',
       type: 'post', // form submit method get/post
@@ -933,6 +933,8 @@
       scope: scope
     });
   }
+
+  console.log('<?= $relocation; ?>');
 
   function loginWithKakaoRest() { // with REST API
     let app_key = "<?= APIKEY_KAKAO_REST; ?>";
