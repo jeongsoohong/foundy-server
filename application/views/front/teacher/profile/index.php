@@ -1940,32 +1940,6 @@ if ($this->session->userdata('user_login') == 'yes') {
     </div>
   </div>
 </div>
-<!-- 즐겨찾기 되지 않은 센터의 수업을 예약 (회원권은 부여되었는데 회원이 즐겨찾기를 누르지 않은경우) -->
-<!--<div class="popup-box" id="schedule_favorite_popup" style="display: none;">-->
-<!--  <div class="popup theme:alt_cancel_detail" style="height: 264px; margin-top: -132px;">-->
-<!--    <div class="popup_tit">-->
-<!--      <button class="favorite_close" onclick="close_schedule_favorite_popup();">-->
-<!--        <img src="--><?//= base_url(); ?><!--template/back/center/imgs/icon_close_black.png" alt="" width="12" height="12" style="opacity: 0.5;">-->
-<!--      </button>-->
-<!--      <div class="popup_topic" style="text-align: center;">-->
-<!--        <div class="topic_icon" style="background-color: #1ba9e4; margin: 0;">-->
-<!--          <img src="--><?//= base_url(); ?><!--template/icon/information_white.png" alt="" width="16" height="16">-->
-<!--        </div>-->
-<!--        <p class="topic_message font-futura" style="font-weight: bold !important; color: #1ba9e4; margin: 16px 0 0 !important; line-height: 44px; word-break: keep-all; line-height: 1.75; text-align: center;">-->
-<!--          My Favorite 에 <strong id="schedule_favorite_val">--><?//= $center_data->title; ?><!--</strong> 센터를 추가하시겠습니까?-->
-<!--        </p>-->
-<!--      </div>-->
-<!--      <div>-->
-<!--        <p class="popup_guide" style="letter-spacing: -0.05em; width: 226px; margin: 0 auto;">-->
-<!--          <strong id="center-val">--><?//= $center_data->title; ?><!--</strong> 센터의 스케줄 / 예약 및 관련 소식을 카카오톡과 문자로 받아보실 수 있습니다.</p>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <div class="confirm_btn">-->
-<!--      <button class="btn_no" onclick="close_schedule_favorite_popup()">CANCEL</button>-->
-<!--      <button class="btn_yes" data-action="do" onclick="set_bookmark($(this))">OK</button>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
 <script>
   let close_schedule_favorite_action = '';
   let close_schedule_favorite_redirect = '<?= base_url(); ?>';
@@ -2008,7 +1982,8 @@ if ($this->session->userdata('user_login') == 'yes') {
       success: function(data) {
         $("#loading_set").fadeOut(500);
         if(IsJsonString(data) === true) {
-          open_alert_popup(JSON.parse(data).message);
+          let res = JSON.parse(data);
+          open_alert_popup(res.message, res.redirect);
         } else {
           $('#wait-money').html(data);
           $('#wait-money').show();
@@ -2041,7 +2016,8 @@ if ($this->session->userdata('user_login') == 'yes') {
       success: function(data) {
         $("#loading_set").fadeOut(500);
         if(IsJsonString(data) === true) {
-          open_alert_popup(JSON.parse(data).message);
+          let res = JSON.parse(data);
+          open_alert_popup(res.message, res.redirect);
         } else {
           $('#schedule_notify_ticket_online').html(data);
           $('#schedule_notify_ticket_online').show();
@@ -2136,7 +2112,8 @@ if ($this->session->userdata('user_login') == 'yes') {
         //   }
           open_notify_popup_online(id, redirect);
         } else {
-          open_alert_popup(data.message);
+          let res = JSON.parse(data);
+          open_alert_popup(res.message, res.redirect);
         }
       },
       error: function(e) {

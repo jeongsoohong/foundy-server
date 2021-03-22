@@ -1025,7 +1025,8 @@
       success: function(data) {
         $("#loading_set").fadeOut(500);
         if(IsJsonString(data) === true) {
-          open_alert_popup(JSON.parse(data).message);
+          let res = JSON.parse(data);
+          open_alert_popup(res.message, res.redirect);
         } else {
           $('#schedule_reserve_popup').html(data);
           $('#schedule_reserve_popup').show();
@@ -1072,7 +1073,8 @@
           }
           open_notify_popup(data.message);
         } else {
-          open_alert_popup(data.message);
+          let res = JSON.parse(data);
+          open_alert_popup(res.message, res.redirect);
         }
       },
       error: function(e) {
@@ -1096,7 +1098,8 @@
         // console.log(data);
         $("#loading_set").fadeOut(500);
         if(IsJsonString(data) === true) {
-          open_alert_popup(JSON.parse(data).message);
+          let res = JSON.parse(data);
+          open_alert_popup(res.message, res.redirect);
         } else {
           console.log($('#schedule_cancel_popup'));
           $('#schedule_cancel_popup').html(data);
@@ -1194,7 +1197,8 @@
       success: function(data) {
         $("#loading_set").fadeOut(500);
         if(IsJsonString(data) === true) {
-          open_alert_popup(JSON.parse(data).message);
+          let res = JSON.parse(data);
+          open_alert_popup(res.message, res.redirect);
         } else {
           $('#confirmed_linked').html(data);
           $('#confirmed_linked').show();
