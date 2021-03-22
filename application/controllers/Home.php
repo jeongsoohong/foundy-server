@@ -3321,10 +3321,6 @@ QUERY;
     
         if ($para3 == 'info') {
   
-          if ($this->is_login() == false) {
-            $this->response('fail', '클래스 예약은 로그인이 필요합니다!');
-          }
-          
           if (isset($_POST['id']) == false) {
             $this->response('fail', '비정상적인 접근입니다!');
           }
@@ -3333,10 +3329,16 @@ QUERY;
           $schedule_info_id = $this->input->post('id');
   
           $schedule_info = $this->center_model->get_schedule_info($schedule_info_id);
-          if ($schedule_info->activate == false) {
+          if (isset($schedule_info) == false || empty($schedule_info) || $schedule_info->activate == false) {
             $this->response('fail', '삭제된 클래스입니다!');
           }
-          
+  
+          if ($this->is_login() == false) {
+            $this->response('fail', '클래스 예약은 로그인이 필요합니다!',
+              $this->get_login_url(base_url().'home/center/profile/'.$schedule_info->center_id.
+                '?'.http_build_query(array('nav'=>'schedule','sdate'=>$schedule_info->schedule_date))));
+          }
+  
           if ($schedule_info->reservable == false) {
             $this->response('fail', '예약이 오픈되지 않았습니다!');
           }
@@ -3385,10 +3387,6 @@ QUERY;
           
         } else if ($para3 == 'do') {
   
-          if ($this->is_login() == false) {
-            $this->response('fail', '클래스 예약은 로그인이 필요합니다!');
-          }
-  
           if (isset($_POST['id']) == false || isset($_POST['mid']) == false) {
             $this->response('fail', '비정상적인 접근입니다!');
           }
@@ -3396,7 +3394,17 @@ QUERY;
           $user_id = $this->session->userdata('user_id');
           $schedule_info_id = $this->input->post('id');
           $member_id = $this->input->post('mid');
-      
+  
+          if ($this->is_login() == false) {
+            $schedule_info = $this->center_model->get_schedule_info($schedule_info_id);
+            if (isset($schedule_info) == false || empty($schedule_info) || $schedule_info->activate == false) {
+              $this->response('fail', '삭제된 클래스입니다!');
+            }
+            $this->response('fail', '클래스 예약은 로그인이 필요합니다!',
+              $this->get_login_url(base_url().'home/center/profile/'.$schedule_info->center_id.
+                '?'.http_build_query(array('nav'=>'schedule','sdate'=>$schedule_info->schedule_date))));
+          }
+          
           $query = <<<QUERY
 select * from center_schedule_reserve where schedule_info_id={$schedule_info_id} and user_id={$user_id}
 and (wait=1 or reserve=1)
@@ -3597,16 +3605,22 @@ QUERY;
   
         if ($para3 == 'info') {
   
-          if ($this->is_login() == false) {
-            $this->response('fail', '클래스 취소는 로그인이 필요합니다!');
-          }
-  
           if (isset($_POST['id']) == false) {
             $this->response('fail', '비정상적인 접근입니다!');
           }
   
           $user_id = $this->session->userdata('user_id');
           $schedule_info_id = $this->input->post('id');
+  
+          if ($this->is_login() == false) {
+            $schedule_info = $this->center_model->get_schedule_info($schedule_info_id);
+            if (isset($schedule_info) == false || empty($schedule_info) || $schedule_info->activate == false) {
+              $this->response('fail', '삭제된 클래스입니다!');
+            }
+            $this->response('fail', '클래스 취소는 로그인이 필요합니다!',
+              $this->get_login_url(base_url().'home/center/profile/'.$schedule_info->center_id.
+                '?'.http_build_query(array('nav'=>'schedule','sdate'=>$schedule_info->schedule_date))));
+          }
   
           $query = <<<QUERY
 select * from center_schedule_reserve
@@ -3643,16 +3657,22 @@ QUERY;
   
         } else if ($para3 == 'do') {
   
-          if ($this->is_login() == false) {
-            $this->response('fail', '클래스 취소는 로그인이 필요합니다!');
-          }
-  
           if (isset($_POST['id']) == false) {
             $this->response('fail', '비정상적인 접근입니다!');
           }
   
           $user_id = $this->session->userdata('user_id');
           $schedule_info_id = $this->input->post('id');
+  
+          if ($this->is_login() == false) {
+            $schedule_info = $this->center_model->get_schedule_info($schedule_info_id);
+            if (isset($schedule_info) == false || empty($schedule_info) || $schedule_info->activate == false) {
+              $this->response('fail', '삭제된 클래스입니다!');
+            }
+            $this->response('fail', '클래스 취소는 로그인이 필요합니다!',
+              $this->get_login_url(base_url().'home/center/profile/'.$schedule_info->center_id.
+                '?'.http_build_query(array('nav'=>'schedule','sdate'=>$schedule_info->schedule_date))));
+          }
   
           $query = <<<QUERY
 select * from center_schedule_reserve
