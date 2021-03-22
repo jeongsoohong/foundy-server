@@ -633,6 +633,7 @@ if ( ! function_exists('get_back_url'))
       $page_name == 'teacher/profile' ||
       $page_name == 'teacher/video/view' ||
       $page_name == 'shop/product' ||
+      $page_name == 'shop' ||
       $page_name == 'user/login' ||
       $page_name == 'blog/blog_view'
     )
