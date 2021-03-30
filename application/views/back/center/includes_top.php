@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css">
   <link rel="stylesheet" href="<?php echo base_url(); ?>template/back/plugins/font-awesome/css/font-awesome.min.css">
 <!--  <link href="--><?php //echo base_url(); ?><!--template/back/css/activeit.min.css" rel="stylesheet">-->
-  <link rel="stylesheet" href="<?php echo base_url().'template/back/center/admin.css'; ?>">
+  <link rel="stylesheet" href="<?php echo base_url().'template/back/center/admin.css?v=1.0'; ?>">
 <!--  <link rel="stylesheet" href="--><?php //echo base_url().'template/back/center/bootstrap.css'; ?><!--">-->
   
   <!-- font -->

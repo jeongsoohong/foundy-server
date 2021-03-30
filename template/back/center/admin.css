@@ -631,7 +631,7 @@ table {
 
 
 .count_limit {
-    float: left;
+    float: unset;
 }
 .count_cancel {
     display: block;
@@ -1698,12 +1698,6 @@ table {
     display: inline-block;
 }
 
-
-
-
-
-
-
 /* input 너비값 조정 */
 @media(min-width:1025px){
     /* 헤더 메뉴 폰트 크기 */
@@ -1722,7 +1716,8 @@ table {
         margin-right: 2%;
     }
     .enroll_detail dd, .name_detail dd {
-        width: 87%;
+        width: 100%;
+        float: unset;
     }
     .detail_name .name_space {
         width: 60%;
