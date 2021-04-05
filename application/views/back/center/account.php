@@ -49,7 +49,7 @@
     <section class="contents_center contents_enroll scroll-y">
       <h3 class="meaning">센터명</h3>
       <div class="center_detailbox shadow_md">
-        <div class="centerName">
+        <div class="centerName cntsName">
           <button class="btn_save btn_val btn_rg" onclick="save_profile()">저장</button>
           <p class="centerName_tit enroll_tit tit-lg">센터명</p>
           <dl class="enroll_detail clearfix">

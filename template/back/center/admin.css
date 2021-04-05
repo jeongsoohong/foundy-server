@@ -1112,6 +1112,17 @@ table {
     top: 28px;
     right: 20px;
 }
+
+.cntsName .enroll_detail dd {
+    width: 79%;
+}
+
+@media(min-width: 1025px) {
+    .cntsName .enroll_detail dd {
+        float: left;
+    }
+}
+
 .address_box {
     width: 100%;
     height: 32px;
