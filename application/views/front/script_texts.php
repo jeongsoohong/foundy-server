@@ -732,12 +732,13 @@
   }
 
   function chatKakaoChannel() {
-    $.getScript("https://developers.kakao.com/sdk/js/kakao.min.js", function() {
-      Kakao.init('<?= APIKEY_KAKAO_JAVASCRIPT; ?>');
-      Kakao.Channel.chat({
-        channelPublicId: '_xnzxbxaxb',
-      });
-    });
+    //$.getScript("https://developers.kakao.com/sdk/js/kakao.min.js", function() {
+    //  Kakao.init('<?//= APIKEY_KAKAO_JAVASCRIPT; ?>//');
+    //  Kakao.Channel.chat({
+    //    channelPublicId: '_xnzxbxaxb',
+    //  });
+    //});
+    window.open('http://pf.kakao.com/_xnzxbxaxb/chat', '_blank');
   }
   
   function addKakaoChannel() {

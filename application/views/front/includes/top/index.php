@@ -50,6 +50,9 @@ include 'meta/' . $asset_page . '.php';
 <link href="<?php echo base_url(); ?>template/front/modal/css/sm.css" rel="stylesheet">
 <link href="<?php echo base_url(); ?>template/front/rateit/rateit.css" rel="stylesheet">
 
+<!-- style css -->
+<link href="<?php echo base_url(); ?>template/front/m_fd.css?v=1.0" rel="stylesheet">
+
 <!-- Theme CSS -->
 <link href="<?php echo base_url(); ?>template/front/css/theme.css" rel="stylesheet">
 <link href="<?php echo base_url(); ?>template/front/css/theme-ash-1.css" rel="stylesheet" id="theme-config-link">
