@@ -98,7 +98,7 @@
 /* fd-talk */
 #fd-talk {
   position: fixed;
-  bottom: 68px;
+  bottom: 24px;
   max-width: 460px;
   width: 100%;
   height: 44px;
@@ -147,6 +147,29 @@
   color: #111;
   font-size: 11px;
   font-weight: normal;
+}
+
+/* talk-close-btn */
+#fd-talk .talk-close-btn {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: #fff;
+}
+
+#fd-talk .talk-close-btn img {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 /* orderCancel_status */

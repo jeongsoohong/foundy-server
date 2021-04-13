@@ -238,49 +238,65 @@ include 'preloader.php';
     include $page_name.'/index.php';
     ?>
   </div>
-  <!-- 카카오톡 링크 -->
-  <div id="fd-talk">
-    <a href="javascript:void(0);" class="goTo-kakaoTalk" onclick="chatKakaoChannel();">
-      <div class="kakaoTalk__link">
-        <!-- 원형 아이콘 -->
-        <div class="link--symbol shadow_sp">
-          <img src="<?= base_url(); ?>template/front/img/ic_kakaoTalk.png" alt="카카오톡 링크" width="44" height="44">
+  <? if ($page_name != 'shop/cart' && $page_name != 'shop/product' && $page_name != 'shop/purchase') { ?>
+    <!-- 카카오톡 링크 -->
+    <div id="fd-talk">
+      <a href="javascript:void(0);" class="goTo-kakaoTalk" onclick="chatKakaoChannel();">
+        <div class="kakaoTalk__link">
+          <!-- 원형 아이콘 -->
+          <div class="link--symbol shadow_sp">
+            <img src="<?= base_url(); ?>template/front/img/ic_kakaoTalk.png" alt="카카오톡 링크" width="44" height="44">
+          </div>
+          <!-- 텍스트 문구 -->
+          <div class="link--guide shadow_sp">
+            <p>궁금하면 클릭!</p>
+          </div>
         </div>
-        <!-- 텍스트 문구 -->
-        <div class="link--guide shadow_sp">
-          <p>궁금하면 클릭!</p>
-        </div>
-      </div>
-    </a>
-  </div>
-  <!-- 5초 지나면 '궁금하면 클릭!' 문구 사라지게 -->
-  <!--    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>-->
-  <script>
-    let SetTime = 5;		// 최초 설정 시간(기본 : 초)
+      </a>
+      <button class="talk-close-btn shadow_sp">
+        <img src="<?= base_url(); ?>template/front/img/ic_close_kakaoTalk.png" alt="카카오톡 링크 닫기" width="12" height="12">
+      </button>
+    </div>
+    <!-- 5초 지나면 '궁금하면 클릭!' 문구 사라지게 -->
+    <!--    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>-->
+    <script>
+      let SetTime = 5;		// 최초 설정 시간(기본 : 초)
     
-    function msg_time() {	// 1초씩 카운트
+      function msg_time() {	// 1초씩 카운트
       
-      let m = Math.floor(SetTime % 60) + "초";	// 남은 시간 계산
-      let msg = "현재 남은 시간은" + m + "입니다.";
-      // console.log(msg);
+        let m = Math.floor(SetTime % 60) + "초";	// 남은 시간 계산
+        let msg = "현재 남은 시간은" + m + "입니다.";
+        // console.log(msg);
       
-      SetTime--;					// 1초씩 감소
+        SetTime--;					// 1초씩 감소
       
-      if (SetTime < 0) {			// 시간이 종료 되었으면..
-        clearInterval(tid);		// 타이머 해제
-        // alert(msg);
-        // console.log('!');
-        $('.link--guide p').fadeOut(400);
-        $('.link--guide').animate({
-          width : '20px',
-          right : '10px',
-          opacity : '0'
-        },600);
+        if (SetTime < 0) {			// 시간이 종료 되었으면..
+          clearInterval(tid);		// 타이머 해제
+          // alert(msg);
+          // console.log('!');
+          $('.link--guide p').fadeOut(400);
+          $('.link--guide').animate({
+            width : '20px',
+            right : '10px',
+            opacity : '0'
+          },600);
+          $('.talk-close-btn').fadeIn(400);
+          $('.talk-close-btn').animate({
+            top : '-56px'
+          },400)
+        }
       }
-    }
     
-    window.onload = function TimerStart(){ tid=setInterval('msg_time()',1000) };
-  </script>
+      window.onload = function TimerStart(){ tid=setInterval('msg_time()',1000) };
+
+      $(function(){
+        // alert('ok');
+        $('#fd-talk .talk-close-btn').click(function(){
+          $(this).hide().parent('#fd-talk').hide();
+        })
+      })
+    </script>
+  <? } ?>
   <!-- /CONTENT AREA -->
   
   <!-- FOOTER -->
