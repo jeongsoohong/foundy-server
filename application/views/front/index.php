@@ -240,7 +240,11 @@ include 'preloader.php';
   </div>
   <? if ($page_name != 'shop/cart' && $page_name != 'shop/product' && $page_name != 'shop/purchase') { ?>
     <!-- 카카오톡 링크 -->
-    <div id="fd-talk">
+<? if ($this->app_model->is_app()) { ?>
+    <div id="fd-talk" style="margin-right: -52%;">
+<? } else { ?>
+    <div id="fd-talk" style="margin-right: -230px;">
+<? } ?>
       <a href="javascript:void(0);" class="goTo-kakaoTalk" onclick="chatKakaoChannel();">
         <div class="kakaoTalk__link">
           <!-- 원형 아이콘 -->
