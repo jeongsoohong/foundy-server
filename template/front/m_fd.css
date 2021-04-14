@@ -99,8 +99,9 @@
 #fd-talk {
   position: fixed;
   bottom: 24px;
-  max-width: 460px;
-  width: 100%;
+  width: 44px;
+  right: 50%;
+  margin-right: -230px;
   height: 44px;
   z-index: 112;
 }

@@ -374,7 +374,7 @@ if ($this->session->userdata('user_login') == 'yes') {
 </div>
 <section class="page-section" style="padding-top: 0 !important; padding-bottom: 0 !important; background-color: white" id="fd-teacher">
   <div class="wrap container" id="fd-sch">
-      <div class="row profile">
+      <div class="row profile" style="padding-bottom: 80px;">
       <div class="col-lg-12 col-md-12" style="padding-left: 0 !important; padding-right: 0 !important;">
         <div id="profile_content">
           <!-- <div class="profile">
@@ -742,7 +742,7 @@ if ($this->session->userdata('user_login') == 'yes') {
             </div>
             <!-- 센터 프로필에 있는 schedule 넣어주세요 -->
             <? if (/*(STUDIO_OPEN == true || ($user_type & USER_TYPE_ADMIN) || $iam_this_teacher == true) &&*/ isset($studio_data) == true) { ?>
-              <div class="col-md-12" id="schedule" style="padding-bottom: 80px;">
+              <div class="col-md-12" id="schedule">
                 <div class="row">
                   <div class="col-md-12">
                     <div class="profile">
@@ -761,7 +761,7 @@ if ($this->session->userdata('user_login') == 'yes') {
                       </table>
                     </div>
                     <!--                  <div class="col-md-12" style="padding: 10px 0px 10px 0px !important; border: none;">-->
-                    <div class="col-md-12" style="padding: 10px 0px 10px 0px !important; border-bottom: 0;">
+                    <div class="col-md-12" style="padding: 10px 0px 10px 0px !important; border-bottom: 1px solid #eee;">
                       <div class="col-md-12 recent-post" style="background: #fff; padding-left: 5px; padding-right: 5px; /* border: 1px solid #e0e0e0; */">
                         <div class="media">
                           <p style="color: #6D6D6D; font-size: medium; height: 30px; text-align: center; font-weight: 600; margin-bottom: 0px !important; padding: 0 5px 0 5px">
