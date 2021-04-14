@@ -240,7 +240,7 @@ include 'preloader.php';
   </div>
   <? if ($page_name != 'shop/cart' && $page_name != 'shop/product' && $page_name != 'shop/purchase') { ?>
     <!-- 카카오톡 링크 -->
-<? if ($this->app_model->is_app()) { ?>
+<? if ($this->agent->is_mobile()) { ?>
     <div id="fd-talk" style="margin-right: -52%;">
 <? } else { ?>
     <div id="fd-talk" style="margin-right: -230px;">
