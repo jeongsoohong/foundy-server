@@ -1,0 +1,216 @@
+/* bootstrap CSS 건드리지 않는 범위내에서 작성할 것 */
+
+#fd-shop * {
+  padding: 0;
+  border: 0;
+  margin: 0;
+}
+
+#fd-shop input[type="text"],
+#fd-shop input[type="password"],
+#fd-shop input[type="email"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+#fd-shop input[type="checkbox"],
+#fd-shop input[type="radio"] {
+  vertical-align: middle;
+  margin: 0;
+}
+#fd-shop textarea {
+  display: block;
+  outline: none;
+  resize: none;
+  border: 0;
+}
+#fd-shop img {
+  vertical-align: middle;
+}
+#fd-shop a {
+  text-decoration: none;
+}
+#fd-shop li {
+  list-style: none;
+}
+#fd-shop p {
+  word-break: keep-all;
+}
+#fd-shop a:hover {
+  text-decoration: none;
+}
+#fd-shop button {
+  outline: none;
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+}
+#fd-shop input {
+  background: transparent;
+  outline: none;
+  
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+}
+#fd-shop table {
+  width: 100%;
+  border-collapse: collapse;
+}
+#fd-shop select {
+  background: none;
+  outline: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  border-radius: 0;
+  border: 0;
+  cursor: pointer;
+}
+
+#fd-shop .clearfix::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.meaning {
+  overflow: hidden;
+  position: absolute;
+  width: 0;
+  height: 0;
+  line-height: 0;
+}
+.shadow {
+  box-shadow: 0 15px 30px rgba(0,0,0,0.11);
+}
+.shadow_sm {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+}
+.gray_txt {
+  color: #bdbdbd !important;
+}
+.gray_bg {
+  background-color: #f5f5f5 !important;
+}
+
+/* pop-wrap */
+#fd-shop {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  z-index: 20;
+  background-color: rgba(0,0,0,30%);
+}
+.pop-wrap p, .pop-wrap table tr th,
+.pop-wrap table tr td, .pop-wrap textarea {
+  font-family: 'Spoqa Han Sans Neo', 'sans-serif' !important;
+}
+#fd-shop .pop__cnt {
+  width: 380px;
+  height: 592px;
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0 16px 16px;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgb(0 0 0 / 12%);
+}
+#fd-shop .cnt--tit {
+  height: 44px;
+  line-height: 44px;
+  box-sizing: content-box;
+  padding: 8px 0;
+}
+#fd-shop .tit-case {
+  margin: 0;
+  color: #ad796d;
+  font-size: 21px;
+  font-weight: bold;
+}
+#fd-shop .cnt--table {
+  padding: 16px 0 24px;
+  border: 1px dashed #ddd;
+  border-width: 1px 0 0;
+}
+#fd-shop .table-price {
+  width: 100%;
+}
+.table-price tr {
+  height: 40px;
+}
+.table-price tr th {
+  color: #000;
+  font-size: 14px;
+  text-align: left;
+}
+.table-price tr td {
+  color: #000;
+  font-size: 14px;
+  text-align: right;
+}
+#fd-shop .table-border-stripe {
+  height: 1px;
+  background: #000;
+  margin: 10px 0;
+}
+.price-normal tr th, .price-normal tr td {
+  font-weight: normal;
+}
+.price-bold tr th, .price-bold tr td {
+  font-size: 18px;
+  font-weight: bold;
+}
+#fd-shop .cancel-reason-tit {
+  color: #9e9e9e;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+#fd-shop .write-form {
+  border: 1px solid #bdbdbd;
+  border-radius: 4px;
+  margin: 0px;
+  width: 100%;
+  color: #757575;
+  line-height: 1.75;
+  padding: 12px;
+  height: 160px;
+}
+#fd-shop .pop__close {
+  position: absolute;
+  top: 4px;
+  right: 0;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background-color: transparent;
+  padding: 0;
+}
+#fd-shop .cnt--cancel-confirm {
+  height: 44px;
+  line-height: 44px;
+  background-color: #433532;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 16px;
+}
+
+#page-content .shop-fn-wrap {
+  width: 32%;
+  float: right;
+  padding: 0;
+}
+#page-content .fn-tip-cancel {
+  width: 48%;
+  margin-right: 2.5%;
+  vertical-align: top;
+}
+#page-content .fn-tip-status {
+  width: 48%;
+}

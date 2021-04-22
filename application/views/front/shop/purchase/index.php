@@ -230,6 +230,9 @@
             line-height: 52px;
             margin-top: 4px;
           }
+          #paying .purchase-content {
+            padding: 0 16px;
+          }
           #paying .cart-header {
             border-bottom: 1px solid #ccc;
           }
@@ -251,7 +254,7 @@
           }
           #paying .user-info tr th,
           #paying .shipping-new-info tr th {
-            line-height: 32px;
+            line-height: 35px;
           }
           #paying .user-info {
             padding-bottom: 10px;
@@ -289,59 +292,164 @@
             line-height: 1.5;
           }
           #paying .readme {
-            letter-spacing: -0.05em;
+            letter-spacing: -0.08em;
+          }
+          #paying .shipping-address-btn {
+            margin-top: 19px;
           }
           @media(min-width: 360px) {
             #paying .readme {
               letter-spacing: 0;
             }
           }
+          #paying .cart-brand-tit {
+            color: #111;
+            font-size: 16px;
+            font-weight: bold;
+            height: 24px;
+            line-height: 24px;
+          }
+          /*
+                    #paying .cart-item-info {
+                          width: 64%;
+                    }
+                    #paying .cart-item-image {
+                          width: 36%;
+                    }
+          */
+          #paying .item-name {
+            font-size: 14px !important;
+          }
+          #paying .item-price,
+          #paying .item-option {
+            color: #757575;
+            font-size: 11px !important;
+            font-weight: bold;
+          }
+          #paying .cart-brand-wrap {
+            padding: 16px 0 20px;
+            border-bottom: 1px dashed #111;
+          }
+          #paying .cart-brand-wrap:last-child {
+            border: 0;
+          }
+          #paying .cart-item {
+            padding: 12px 0;
+            border-bottom: 1px dashed #ccc;
+          }
+          #paying .cart-item:last-child {
+            padding-bottom: 0;
+            border-bottom: 0;
+          }
+          #paying .cart-item-all {
+            border-bottom: 1px solid #353535;
+          }
+
+          #paying .brand-delivery {
+            float: right;
+            width: 40%;
+            height: 20px;
+            line-height: 20px;
+            margin: 2px 0;
+          }
+          #paying .delivery-txt {
+            display: block;
+            float: left;
+            width: 40px;
+            height: 20px;
+            line-height: 20px;
+            border-radius: 14px;
+            text-align: center;
+            margin-right: 3px;
+            color: #fff;
+            background-color: saddlebrown;
+            font-size: 10px;
+            font-weight: bold;
+            border-radius: 10px;
+          }
+          #paying .delivery-price {
+            float: right;
+            height: 20px;
+            line-height: 20px;
+            color: saddlebrown;
+            font-size: 12px;
+            font-weight: bold;
+          }
         </style>
         <div class="cart-item-all">
-          <?php foreach ($cart_items as $item) { ?>
-            <div class="cart-item" data-id="<?php echo $item->cart_id; ?>" data-price="<?php echo $item->item_sell_price; ?>" data-additional-price="<?php echo $item->additional_price;?>" data-shipping-fee="<?php echo $item->shipping_fee; ?>" data-purchase-cnt="<?php echo $item->total_purchase_cnt;?>" data-status="<?php echo $item->product_id->status; ?>"
-              <?php if ($item->product_id->status != SHOP_PRODUCT_STATUS_ON_SALE) echo 'style="color: grey;"'; ?>>
-              <div class="cart-item-info">
-                <div class="item-name">
-                  <span class="item-brand"><?php echo $item->shop->shop_name.' '; ?></span><?php echo $item->product->item_name; ?>
-                </div>
-<!--                <div class="item-name"></div>-->
-                <div class="item-price" >
-                  [가격]
-                  <?php echo $this->crud_model->get_price_str($item->total_price); ?>원
-                  <?php echo '('.$this->crud_model->get_price_str($item->item_sell_price).'원*'.$item->total_purchase_cnt.'개)'; ?>
-                </div>
-                <div class="item-option" >
-                  <?php
-                  $opt_str = '';
-                  foreach ($item->item_option_requires as $opt) {
-                    if ($opt->val != -1) {
-                      $opt_str .= "[$opt->name]$opt->option / ";
-                    }
-                  }
-                  foreach ($item->item_option_others as $opt) {
-                    if ($opt->val != -1) {
-                      $opt_str .= "[$opt->name]$opt->option / ";
-                    }
-                  }
-                  $opt_str .= '[배송비]';
-                  if ($item->shipping_fee == 0) $opt_str .= '무료';
-                  else $opt_str .= $this->crud_model->get_price_str($item->shipping_fee).'원';
-                  
-                  echo $opt_str;
-                  if ($item->product_id->status != SHOP_PRODUCT_STATUS_ON_SALE) {
-                    echo ' / 판매중지상품';
-                  }
+          <? foreach ($shop_items as $shop_id => $shop_item) { ?>
+            <div class="cart-brand-wrap">
+              <div class="cart-brand-tit clearfix"><?= $shop_item->shop->shop_name; ?>
+                <p class="brand-delivery clearfix">
+                  <span class="delivery-txt">배송비</span>
+                  <span class="delivery-price">
+                  <?
+                  if ($shop_item->total_shipping_fee == 0) echo '무료';
+                  else echo $this->crud_model->get_price_str($shop_item->total_shipping_fee).'원';
                   ?>
+                  </span>
+                </p>
+              </div>
+              <? foreach ($shop_item->items as $product_id => $item) {
+                foreach ($item->cart_items as $cart_id => $cart_item) {
+                ?>
+                <div class="cart-item"
+                     data-id="<?php echo $cart_id; ?>"
+                     data-shop-id="<?php echo $shop_id; ?>"
+                     data-product-id="<?php echo $product_id; ?>"
+                     data-price="<?php echo $cart_item->item_sell_price; ?>"
+                     data-additional-price="<?php echo $cart_item->additional_price;?>"
+                     data-shipping-fee="<?php echo $item->shipping_fee; ?>"
+                     data-purchase-cnt="<?php echo $cart_item->total_purchase_cnt;?>"
+                     data-status="<?php echo $item->product_id->status; ?>"
+                  <?php if ($item->product_id->status != SHOP_PRODUCT_STATUS_ON_SALE) echo 'style="color: grey;"'; ?>>
+                  <div class="cart-item-info">
+                    <div class="item-name">
+                      <span class="item-brand"></span><?= $item->product->item_name; ?></div>
+                    <!--                <div class="item-name"></div>-->
+                    <div class="item-price">
+                      [가격]
+                      <?php echo $this->crud_model->get_price_str($cart_item->total_price); ?>원
+                      <?php echo '('.$this->crud_model->get_price_str($cart_item->item_sell_price).'원*'.$cart_item->total_purchase_cnt.'개)'; ?>
+                    </div>
+                    <div class="item-option">
+                      <?php
+                      $opt_str = '';
+                      foreach ($cart_item->item_option_requires as $opt) {
+                        if ($opt->val != -1) {
+                          $opt_str .= "[$opt->name] $opt->option / ";
+                        }
+                      }
+                      foreach ($cart_item->item_option_others as $opt) {
+                        if ($opt->val != -1) {
+                          $opt_str .= "[$opt->name] $opt->option / ";
+                        }
+                      }
+                      //$opt_str .= '[배송비] ';
+                      //if ($item->shipping_fee == 0) $opt_str .= '무료';
+                      //else $opt_str .= $this->crud_model->get_price_str($item->shipping_fee).'원';
+    
+                      if (empty($opt_str) == false) {
+                        $opt_str[strlen($opt_str) - 2] = "\0";
+                        echo $opt_str;
+                      }
+
+                      if ($item->product_id->status != SHOP_PRODUCT_STATUS_ON_SALE) {
+                        echo ' / 판매중지상품';
+                      }
+                      ?>
+                    </div>
+                  </div>
+                  <div class="cart-item-image">
+                    <a href="<?php echo base_url().'home/shop/product?id='.$item->product->product_id; ?>">
+                      <img src="<?php echo $item->product->item_image_url_0; ?>" alt="">
+                    </a>
+                  </div>
                 </div>
-              </div>
-              <div class="cart-item-image">
-                <a href="<?php echo base_url().'home/shop/product?id='.$item->product->product_id; ?>">
-                  <img src="<?php echo $item->product->item_image_url_0; ?>" alt="">
-                </a>
-              </div>
+                <? }
+              } ?>
             </div>
-          <?php } ?>
+          <? } ?>
         </div>
         <div class="shipping-info-header">
           구매자 정보
@@ -486,7 +594,7 @@
                   return false;
                 }
     
-                if (user_postcode === '' || user_address_1 === '' || user_address_2 === '') {
+                if (user_postcode === '' || user_address_1 === '') {
                   alert('구매자 주소를 먼저 입력해주세요.');
                   return false;
                 }
@@ -809,8 +917,7 @@
     let shipping_req_code = $('#shipping-new-req').find('option:selected').val();
 
     if (address_name === '' || receiver_name === '' ||
-      postcode === '' || address_1 === '' ||
-      address_2 === '' || phone_1 === '') {
+      postcode === '' || address_1 === '' || phone_1 === '') {
       alert('배송지 필수 정보를 입력해주세요.');
       return false;
     }
@@ -964,17 +1071,20 @@
     }
   
     let items = [
-      <?php foreach ($cart_items as $item) {
-      echo "{
+      <?php
+      foreach ($shop_item->items as $product_id => $item) {
+        foreach ($item->cart_items as $cart_id => $cart_item) {
+          echo "{
           item_name: '{$item->product->item_name}',
-          qty: {$item->total_purchase_cnt},
+          qty: {$cart_item->total_purchase_cnt},
           unique: '{$item->product->product_code}',
           price: {$item->product->item_sell_price},
           cat1: '{$this->crud_model->get_product_category_str($item->product->item_cat, 1)}',
           cat2: '{$this->crud_model->get_product_category_str($item->product->item_cat, 2)}',
           cat3: '{$this->crud_model->get_product_category_str($item->product->item_cat, 3)}'
           },";
-    }?>
+        }
+      }?>
     ];
   
     let user_info = {
@@ -1067,7 +1177,7 @@
     BootPay.request({
       price: total_balance - discount,
       application_id: "<?= APIKEY_BOOTPAY_WEB; ?>",
-      name: '<?php echo $cart_items[0]->product->item_name.' 등 '.count($cart_items).' 건'; ?>',
+      name: '<?php echo $delegate_item->product->item_name.' 등 '.count(json_decode($purchase_info->cart_ids)).' 건'; ?>',
       pg: 'payapp',
       <? if ($this->app_model->is_app()) { ?>
       method: '', //결제수단, 입력하지 않으면 결제수단 선택부터 화면이 시작합니다.

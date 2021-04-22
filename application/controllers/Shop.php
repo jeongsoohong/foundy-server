@@ -1191,15 +1191,173 @@ QUERY;
               $purchase_info->purchase_code, $product_info->item_name, $shipping_data->shipping_company_name, $shipping_data->shipping_code,
               $product_info->item_image_url_0, $email);
           }
-        } else if ($next_status == SHOP_SHIPPING_STATUS_PURCHASE_CANCELED) { // 결제 취소가 필요한 부분
+          
+          echo 'done';
+        
+        } else if ($next_status == SHOP_SHIPPING_STATUS_ORDER_CANCELED) {
+          // 주문취소 - 결제 취소가 필요한 부분
+          
+          if (isset($_POST['only_info']) == false) {
+            $this->crud_model->alert_exit("잘못된 접근입니다.");
+          }
+  
+          $only_info = $_POST['only_info'] == '1';
+          
+          if (isset($_POST['cancel_reason']) == false) {
+            $this->crud_model->alert_exit("잘못된 접근입니다.");
+          }
+          $cancel_reason = $_POST['cancel_reason'];
+          if ($only_info == false && mb_strlen($cancel_reason) < 5) {
+            $this->crud_model->alert_exit("취소 사유는 최소 5자 입력바랍니다.");
+          }
+  
+          $cancel_items = array();
+          $purchase_code = null;
+          $shop_id = 0;
           foreach ($shipping_infos as $info) {
             $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $info->purchase_product_id))->row();
             if ($purchase_product->shipping_status != $ship_status) {
-              continue;
+              $this->crud_model->alert_exit("잘못된 접근입니다.({$purchase_product->shipping_status})");
             }
-            $this->shop_model->cancel_payment($purchase_product->purchase_product_id, $purchase_product->cancel_reason,
-              SHOP_SHIPPING_STATUS_PURCHASE_CANCELED, false, null);
+            
+            if ($shop_id == 0) {
+              $shop_id = $purchase_product->shop_id;
+              $purchase_code = $purchase_product->purchase_code;
+            } else if ($purchase_code != $purchase_product->purchase_code) {
+              $this->crud_model->alert_exit("주문취소는 하나의 구매코드에 대해서 가능합니다!");
+            }
+            
+            if ($shop_id != $this->session->userdata('shop_id')) {
+              $this->crud_model->alert_exit("상품 브랜드 관리자가 아닙니다!");
+            }
+            
+            $cancel_items[] = $purchase_product;
           }
+          
+          if (count($cancel_items) <= 0) {
+            $this->crud_model->alert_exit("취소상품이 존재하지 않습니다!");
+          }
+  
+          $this->db->where(array('purchase_code' => $purchase_code, 'shop_id' => $shop_id));
+          $total_items = $this->db->get('shop_purchase_product')->result();
+          
+          $total_balance = 0;
+          $total_discount = 0;
+          $total_shipping_fee = 0;
+          $no_cancel_items = array();
+          foreach ($total_items as $item1) {
+            $cancel_item = false;
+            foreach ($cancel_items as $item2) {
+              if ($item1->purchase_product_id == $item2->purchase_product_id) {
+                $cancel_item = true;
+                break;
+              }
+            }
+            if ($cancel_item == false && $item1->shipping_status != SHOP_SHIPPING_STATUS_ORDER_CANCELED) {
+              $no_cancel_items[] = $item1;
+            }
+            if ($item1->shipping_status != SHOP_SHIPPING_STATUS_ORDER_CANCELED) {
+              $total_balance += $item1->total_balance;
+              $total_discount += $item1->discount;
+              $total_shipping_fee += $item1->total_shipping_fee;
+            }
+          }
+  
+//          log_message('debug', '[order] only_info['.$only_info.'] purchase_code['.$purchase_code.'] shop_id['.$shop_id.
+//            '] no_cancel_items['.json_encode($no_cancel_items).'] cancel_items['.json_encode($cancel_items).']');
+  
+          $no_cancel_info = new stdClass();
+          $no_cancel_info->total_price = 0;
+          $no_cancel_info->total_shipping_fee = 0;
+          $no_cancel_info->total_additional_price = 0;
+          $no_cancel_info->total_purchase_cnt = 0;
+          $no_cancel_info->total_balance = 0;
+          $no_cancel_info->total_discount = 0;
+          
+          if ($only_info == true) {
+
+            if (count($no_cancel_items)) {
+              $this->shop_model->get_no_cancel_info($no_cancel_items, $no_cancel_info, false);
+            }
+
+//            $cancel_items = $this->shop_model->get_cancel_items($cancel_items, $result, false);
+//            log_message('debug', '[shop] result['.json_encode($result).']');
+ 
+            $final_balance = ($total_balance - $total_discount) - ($no_cancel_info->total_balance - $no_cancel_info->total_discount);
+            
+            $page_data['total_balance'] = $total_balance;
+            $page_data['total_discount'] = $total_discount;
+            $page_data['total_shipping_fee'] = $total_shipping_fee;
+            $page_data['final_balance'] = $final_balance;
+            $page_data['no_cancel_info'] = $no_cancel_info;
+            $page_data['page_name'] = "order";
+            $this->load->view('back/shop/order_cancel_popup', $page_data);
+          
+          } else {
+            
+            if (count($no_cancel_items)) {
+              $this->shop_model->get_no_cancel_info($no_cancel_items, $no_cancel_info, false);
+            }
+  
+            $cancel_shipping_fee = $total_shipping_fee - $no_cancel_info->total_shipping_fee;
+          
+            $charge_shipping_fee = false;
+            $cancel_total_balance = 0;
+            foreach ($cancel_items as $cancel_item) {
+              if ($charge_shipping_fee == false) {
+                $cancel_item->total_shipping_fee = $cancel_shipping_fee;
+                $charge_shipping_fee = true;
+              } else {
+                $cancel_item->total_shipping_fee = 0;
+              }
+              $cancel_item->total_balance = $cancel_item->total_price + $cancel_item->total_shipping_fee + $cancel_item->total_additional_price;
+              $cancel_total_balance += ($cancel_item->total_balance - $cancel_item->discount);
+            }
+  
+            if ($cancel_total_balance <= 0) {
+              $this->crud_model->alert_exit('취소 확정 금액이 0원이므로 취소하실 수 없습니다. 관리자에게 문의바랍니다.');
+            }
+            
+            if (count($no_cancel_items)) {
+              $this->shop_model->get_no_cancel_info($no_cancel_items, $no_cancel_info, true);
+            }
+  
+            foreach ($cancel_items as $cancel_item) {
+              $upd = array(
+                'total_shipping_fee' => $cancel_item->total_shipping_fee,
+                'total_balance' => $cancel_item->total_balance,
+              );
+              $this->db->update('shop_purchase_product', $upd, array('purchase_product_id' => $cancel_item->purchase_product_id));
+            }
+            
+            $this->shop_model->cancel_payment($purchase_code, $cancel_items, $cancel_reason, $next_status, false, null);
+            
+            echo 'done';
+          }
+  
+//        } else if ($next_status == SHOP_SHIPPING_STATUS_PURCHASE_CANCELED) {
+//          // 반품완료 - 결제 취소가 필요한 부분
+//
+//          $purchase_infos = array();
+//          foreach ($shipping_infos as $info) {
+//            $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $info->purchase_product_id))->row();
+//            if ($purchase_product->shipping_status != $ship_status) {
+//              $this->crud_model->alert_exit("반품완료가 불가한 상품이 존재합니다.(구매코드: {$purchase_product->purchase_code}, 구매상품아이디 : {$info->purchase_product_id})");
+//            }
+//            if (isset($purchase_infos[$purchase_product->purchase_code]) == false) {
+//              $purchase_infos[$purchase_product->purchase_code] = new stdClass();
+//              $purchase_infos[$purchase_product->purchase_code]->items = array();
+//            }
+//            $purchase_infos[$purchase_product->purchase_code]->items[] = $purchase_product;
+//          }
+//
+//          foreach ($purchase_infos as $purchase_code => $purchase_info) {
+//            $this->shop_model->cancel_payment($purchase_code, $purchase_info->items,
+//              $this->shop_model->get_shipping_status_str($next_status), $next_status, false, null, true);
+//          }
+//
+//          echo 'done';
+//
         } else {
           $purchase_product_ids = array();
           foreach ($shipping_infos as $info) {
@@ -1248,9 +1406,9 @@ QUERY;
             $this->db->set('modified_at', 'NOW()', false);
             $this->db->update('shop_purchase_product');
           }
+          echo 'done';
         }
     
-        echo 'done';
       }
   
     } else if ($para1 == 'req') {
@@ -1294,8 +1452,10 @@ QUERY;
       }
       
       if ($req_type == SHOP_ORDER_REQ_TYPE_CANCEL) { // 결제 취소가 필요한 부분
-        $this->shop_model->cancel_payment($purchase_product->purchase_product_id, $req_reason,
-          SHOP_SHIPPING_STATUS_ORDER_CANCELED, false, null);
+        echo '잘못된 접근입니다.';
+        exit;
+//        $this->shop_model->cancel_payment($purchase_product->purchase_product_id, $req_reason,
+//          SHOP_SHIPPING_STATUS_ORDER_CANCELED, false, null);
       } else {
         $ins = array(
           'purchase_product_id' => $purchase_product_id,

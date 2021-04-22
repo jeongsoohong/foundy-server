@@ -5076,7 +5076,7 @@ QUERY;
         }
         
        
-        // 레거시 코드 - 묶음배송비가 브랜드별로 적용되지 않고 상품별로 적용됨
+        /* 레거시 코드 - 묶음배송비가 브랜드별로 적용되지 않고 상품별로 적용됨
         $total_price = 0;
         $total_purchase_cnt = 0;
         $total_shipping_fee = 0;
@@ -5156,27 +5156,40 @@ QUERY;
           $this->db->update('shop_cart', $upd, array('cart_id' => $item->cart_id));
         }
         // 레거시 코드
+        */
   
 //        $cart_item_cnt = count($cart_items);
-//        $total_price = 0;
-//        $total_shipping_fee= 0;
-//        $total_additional_price = 0;
-//        $total_purchase_cnt = 0;
-//        $cart_ids = array();
-//
-//        $shop_items = $this->shop_model->get_purchase_items($cart_items, $cart_ids, false,
-//          $total_price, $total_shipping_fee, $total_additional_price, $total_purchase_cnt);
+        
+        $result = new stdClass();
+        $result->cart_ids = array();
+        $result->total_price = 0;
+        $result->total_shipping_fee = 0;
+        $result->total_additional_price = 0;
+        $result->total_purchase_cnt = 0;
+        $result->delegate_item = null;
 
+        $shop_items = $this->shop_model->get_purchase_items($cart_items, $result, false, false, true);
+  
+        $delegate_item = $result->delegate_item;
+        $cart_ids = $result->cart_ids;
+        $total_price = $result->total_price;
+        $total_shipping_fee = $result->total_shipping_fee;
+        $total_additional_price = $result->total_additional_price;
+        $total_purchase_cnt = $result->total_purchase_cnt;
         $total_balance = $total_price + $total_shipping_fee + $total_additional_price;
-
+  
+        log_message('debug', '[purchase] cart_ids['.json_encode($cart_ids).'] total_price['.$total_price.
+          '] total_shipping_fee['.$total_shipping_fee.'] total_purchase_cnt['.$total_purchase_cnt.
+          '] total_additional_price['.$total_additional_price.'] total_balance['.$total_balance.
+          '] delegate_item['.json_encode($delegate_item).']');
+  
         $this->page_data['total_purchase_cnt'] = $total_purchase_cnt;
         $this->page_data['total_price'] = $total_price;
         $this->page_data['total_shipping_fee'] = $total_shipping_fee;
         $this->page_data['total_additional_price'] = $total_additional_price;
         $this->page_data['total_balance'] = $total_balance;
-        $this->page_data['cart_items'] = $cart_items;
-//        $this->page_data['cart_item_cnt'] = $cart_item_cnt;
-//        $this->page_data['shop_items'] = $shop_items;
+//        $this->page_data['cart_items'] = $cart_items;
+        $this->page_data['shop_items'] = $shop_items;
         $this->page_data['page_name'] = "shop/cart";
         $this->page_data['asset_page'] = "shop";
         $this->page_data['page_title'] = "shop";
@@ -5216,22 +5229,56 @@ QUERY;
         }
 
         $payment_info = json_decode($purchase_info->bootpay_done_data);
-
-        foreach ($purchase_items as $item) {
-          $item->product = $this->db->get_where('shop_product', array('product_id' => $item->product_id))->row();
-          $item->product_id = $this->db->get_where('shop_product_id', array('product_id' => $item->product_id))->row();
-          $item->shop = $this->db->get_where('shop', array('shop_id' => $item->product->shop_id))->row();
-          $item->item_option_requires = json_decode($item->item_option_requires);
-          $item->item_option_others = json_decode($item->item_option_others);
-          $item->shipping_data = json_decode($item->shipping_data);
+ 
+        $total_shipping_fee = 0;
+        $shop_items = array();
+        foreach ($purchase_items as $purchase_item) {
+          if (isset($shop_items[$purchase_item->shop_id]) == false) {
+            $shop_item = new stdClass();
+            $shop = $this->db->get_where('shop', array('shop_id' => $purchase_item->shop_id))->row();
+            $shop_item->shop = new stdClass();
+            $shop_item->shop->shop_id = $shop->shop_id;
+            $shop_item->shop->shop_name = $shop->shop_name;
+            $shop_item->total_shipping_fee = 0;
+            $shop_item->cancelable = true;
+            $shop_items[$purchase_item->shop_id] = $shop_item;
+          }
+  
+          $shop_item = $shop_items[$purchase_item->shop_id];
+          if ($purchase_item->shipping_status != SHOP_SHIPPING_STATUS_ORDER_CANCELED) {
+            $shop_item->total_shipping_fee += $purchase_item->total_shipping_fee;
+            $total_shipping_fee += $purchase_item->total_shipping_fee;
+          }
+  
+          if (isset($shop_item->items[$purchase_item->product_id]) == false) {
+            $item = new stdClass();
+            $product = $this->db->get_where('shop_product', array('product_id' => $purchase_item->product_id))->row();
+            $item->product = $product;
+    
+            $product_id = $this->db->get_where('shop_product_id', array('product_id' => $purchase_item->product_id))->row();
+            $item->product_id = $product_id;
+            $shop_item->items[$purchase_item->product_id] = $item;
+          }
+          $item = $shop_item->items[$purchase_item->product_id];
+          
+          $purchase_item->item_option_requires = json_decode($purchase_item->item_option_requires);
+          $purchase_item->item_option_others = json_decode($purchase_item->item_option_others);
+          $purchase_item->shipping_data = json_decode($purchase_item->shipping_data);
+          $item->purchase_items[$purchase_item->purchase_product_id] = $purchase_item;
+          if ($purchase_item->shipping_status != SHOP_SHIPPING_STATUS_ORDER_COMPLETED &&
+            $purchase_item->shipping_status != SHOP_SHIPPING_STATUS_PREPARE) {
+            $shop_item->cancelable = false;
+          }
         }
 
-        $this->page_data['page_type'] = $type;
+//        $this->page_data['page_type'] = $type;
         $this->page_data['auth_code'] = $auth_code;
         $this->page_data['purchase_code'] = $purchase_code;
         $this->page_data['purchase_info'] = $purchase_info;
         $this->page_data['payment_info'] = $payment_info;
-        $this->page_data['purchase_items'] = $purchase_items;
+        $this->page_data['total_shipping_fee'] = $total_shipping_fee;
+//        $this->page_data['purchase_items'] = $purchase_items;
+        $this->page_data['shop_items'] = $shop_items;
         $this->page_data['page_name'] = "shop/order/detail";
         $this->page_data['asset_page'] = "shop";
         $this->page_data['page_title'] = "shop";
@@ -5469,7 +5516,6 @@ QUERY;
         //$this->crud_model->alert_exit('구매가 성공하였습니다.', base_url().'home/shop/main');
         redirect($redirect_url, 'refresh');
 
-
       } elseif ($type == 'done') {
 
         // check payment validation
@@ -5595,15 +5641,33 @@ QUERY;
         echo 'done';
   
       } elseif ($type == 'cancel') { // 유저가 주문 취소 요청
-  
+ 
         log_message('debug', '[bootpay] user cancel data['.json_encode($_POST).']');
-        
-        $purchase_product_id = $this->input->post('id');
+  
+        if (isset($_POST['purchase_code']) == false ||
+          isset($_POST['sid']) == false ||
+          isset($_POST['auth_code']) == false ||
+          isset($_POST['reason']) == false) {
+          $this->response('fail', '비정상적인 접근입니다!');
+        }
+       
+        $purchase_code = $this->input->post('purchase_code');
+        $shop_id = $this->input->post('sid');
         $cancel_reason = $this->input->post('reason');
         $auth_code = $this->input->post('auth_code');
+       
+        if ($shop_id > 0) {
+          $purchase_products = $this->db->get_where('shop_purchase_product', array('purchase_code' => $purchase_code, 'shop_id' => $shop_id))->result();
+        } else {
+          $purchase_products = $this->db->get_where('shop_purchase_product', array('purchase_code' => $purchase_code))->result();
+        }
         
-        $this->shop_model->cancel_payment($purchase_product_id, $cancel_reason, SHOP_SHIPPING_STATUS_ORDER_CANCELED,
-          true, $auth_code);
+        if (isset($purchase_products) == false || empty($purchase_products) == true) {
+          $this->crud_model->alert_exit('취소 가능한 상품이 존재하지 않습니다!');
+        }
+        
+        $this->shop_model->cancel_payment($purchase_code, $purchase_products, $cancel_reason,
+          SHOP_SHIPPING_STATUS_ORDER_CANCELED, true, $auth_code);
  
         echo 'done';
   
@@ -5732,6 +5796,7 @@ QUERY;
           $this->crud_model->alert_exit('상품이 존재하지 않습니다.', base_url().'home/shop/main');
         }
 
+        /* 레거시 코드 - 묶음배송비가 브랜드별로 적용되지 않고 상품별로 적용됨
         $total_price = 0;
         $total_purchase_cnt = 0;
         $total_shipping_fee = 0;
@@ -5806,9 +5871,32 @@ QUERY;
           $this->db->set('modified_at', 'NOW()', false);
           $this->db->update('shop_cart', $upd, array('cart_id' => $item->cart_id));
         }
-
+        // 레거시 코드
+        */
+  
+        $result = new stdClass();
+        $result->cart_ids = array();
+        $result->total_price = 0;
+        $result->total_shipping_fee = 0;
+        $result->total_additional_price = 0;
+        $result->total_purchase_cnt = 0;
+        $result->delegate_item = null;
+  
+        $shop_items = $this->shop_model->get_purchase_items($cart_items, $result, true, true, true);
+  
+        $delegate_item = $result->delegate_item;
+        $cart_ids = $result->cart_ids;
+        $total_price = $result->total_price;
+        $total_shipping_fee = $result->total_shipping_fee;
+        $total_additional_price = $result->total_additional_price;
+        $total_purchase_cnt = $result->total_purchase_cnt;
         $total_balance = $total_price + $total_shipping_fee + $total_additional_price;
-
+  
+        log_message('debug', '[purchase] cart_ids['.json_encode($cart_ids).'] total_price['.$total_price.
+          '] total_shipping_fee['.$total_shipping_fee.'] total_purchase_cnt['.$total_purchase_cnt.
+          '] total_additional_price['.$total_additional_price.'] total_balance['.$total_balance.
+          '] delegate_item['.json_encode($delegate_item).']');
+  
         $where = $user_key;
         $where['status'] = SHOP_PURCHASE_STATUS_PURCHASING;
         $purchase_info = $this->db->get_where('shop_purchase', $where)->row();
@@ -5913,7 +6001,8 @@ QUERY;
         $this->page_data['total_shipping_fee'] = $total_shipping_fee;
         $this->page_data['total_additional_price'] = $total_additional_price;
         $this->page_data['total_balance'] = $total_balance;
-        $this->page_data['cart_items'] = $cart_items;
+        $this->page_data['delegate_item'] = $delegate_item;
+        $this->page_data['shop_items'] = $shop_items;
         $this->page_data['shipping_info'] = $shipping_info;
         $this->page_data['shipping_info_cnt'] = count($shipping_info);
         $this->page_data['page_name'] = "shop/purchase";
@@ -5931,7 +6020,7 @@ QUERY;
         $this->form_validation->set_rules('receiver_name', 'receiver_name', 'trim|required|max_length[64]');
         $this->form_validation->set_rules('postcode', 'postcode', 'trim|required|numeric|max_length[8]');
         $this->form_validation->set_rules('address_1', 'address_1', 'trim|required|max_length[128]');
-        $this->form_validation->set_rules('address_2', 'address_2', 'trim|required|max_length[128]');
+        $this->form_validation->set_rules('address_2', 'address_2', 'trim|max_length[128]');
         $this->form_validation->set_rules('phone_1', 'phone_1', 'trim|required|numeric|min_length[9]|max_length[16]');
         $this->form_validation->set_rules('phone_2', 'phone_2', 'trim|numeric|min_length[9]|max_length[16]');
         $this->form_validation->set_rules('shipping_req', 'shipping_req', 'trim|max_length[64]');

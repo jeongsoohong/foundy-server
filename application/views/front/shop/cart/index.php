@@ -103,6 +103,9 @@
       <div class="cart-content">
         <div class="cart-header">
           <style type="text/css">
+            #buying .cart-content {
+              padding: 0 16px;
+            }
             #buying .cart-header {
               border-bottom: 1px solid #ccc;
               height: 52px;
@@ -142,12 +145,14 @@
               font-size: 11px !important;
               font-weight: 900;
             }
+            /*
             #buying .cart-item-info {
               width: 64%;
             }
             #buying .cart-item-image {
               width: 36%;
             }
+            */
             #buying .cart-balance tr {
               height: 28px;
             }
@@ -235,15 +240,70 @@
               height: 40px !important;
               top: 6px;
             }
-            #chk--only {
+            .chk--only {
               position: relative;
               line-height: 20px;
             }
-            #chk--only .type_label:before {
+            .chk--only .type_label:before {
               top: 0;
             }
-            #chk--only .type_label:after {
+            .chk--only .type_label:after {
               top: 4px;
+            }
+            #buying .cart-brand-tit {
+              color: #111;
+              font-size: 16px;
+              font-weight: bold;
+              height: 24px;
+              line-height: 24px;
+            }
+            #buying .cart-brand-wrap {
+              padding: 16px 0 20px;
+              border-bottom: 1px dashed #111;
+            }
+            #buying .cart-brand-wrap:last-child {
+              border: 0;
+            }
+            #buying .cart-item {
+              padding: 12px 0;
+            }
+            #buying .cart-item:last-child {
+              padding-bottom: 0;
+              border-bottom: 0;
+            }
+            #buying .cart-item-all {
+              border-bottom: 1px solid #353535;
+            }
+
+            #buying .brand-delivery {
+              float: right;
+              width: 40%;
+              height: 20px;
+              line-height: 20px;
+              margin: 2px 0;
+            }
+            #buying .delivery-txt {
+              display: block;
+              float: left;
+              width: 40px;
+              height: 20px;
+              line-height: 20px;
+              border-radius: 14px;
+              text-align: center;
+              margin-right: 3px;
+              color: #fff;
+              background-color: saddlebrown;
+              font-size: 10px;
+              font-weight: bold;
+              border-radius: 10px;
+            }
+            #buying .delivery-price {
+              float: right;
+              height: 20px;
+              line-height: 20px;
+              color: saddlebrown;
+              font-size: 12px;
+              font-weight: bold;
             }
           </style>
           <div class="cart-item-checkbox" id="all_wrap">
@@ -267,62 +327,87 @@
           </div>
         </div>
         <div class="cart-item-all">
-          <?php foreach ($cart_items as $item) { ?>
-            <div class="cart-item" data-id="<?php echo $item->cart_id; ?>" data-price="<?php echo $item->item_sell_price; ?>" data-additional-price="<?php echo $item->additional_price;?>" data-shipping-fee="<?php echo $item->shipping_fee; ?>" data-purchase-cnt="<?php echo $item->total_purchase_cnt;?>" data-status="<?php echo $item->product_id->status; ?>"
-              <?php if ($item->product_id->status != SHOP_PRODUCT_STATUS_ON_SALE) echo 'style="color: grey;"'; ?>>
-              <div class="cart-item-info">
-<!--                <div class="item-brand">-->
-                <div class="item-brand" id="chk--only">
-                  <input <?php if ($item->product_id->status == SHOP_PRODUCT_STATUS_ON_SALE) echo 'checked'; ?>
-                    class='chk_style' name="cart_item_check_all" type="checkbox"
-                    data-status="<?php echo $item->product_id->status; ?>" style="top: 1px;"/>
-                  <label class="type_label changed confirm_chk">
-                    <?php echo $item->shop->shop_name; ?>
-                  </label>
-                  <!--
-                  <label style="text-align:left">
-                    <input <?php //if ($item->product_id->status == SHOP_PRODUCT_STATUS_ON_SALE) echo 'checked'; ?> onchange="change_balance()" class='form-checkbox' id="cart-item-check-all" name="cart_item_check_all" type="checkbox" value="1" data-status="<?php //echo $item->product_id->status; ?>"/>
-                    <?php //echo $item->shop->shop_name; ?>
-                  </label>
-                  -->
-                </div>
-                <div class="item-name"><?php echo $item->product->item_name; ?></div>
-                <div class="item-price">
-                  [가격]
-                  <?php echo $this->crud_model->get_price_str($item->total_price); ?>원
-                  <?php echo '('.$this->crud_model->get_price_str($item->item_sell_price).'원*'.$item->total_purchase_cnt.'개)'; ?>
-                </div>
-                <div class="item-option">
-                  <?php
-                  $opt_str = '';
-                  foreach ($item->item_option_requires as $opt) {
-                    if ($opt->val != -1) {
-                      $opt_str .= "[$opt->name] $opt->option / ";
-                    }
-                  }
-                  foreach ($item->item_option_others as $opt) {
-                    if ($opt->val != -1) {
-                      $opt_str .= "[$opt->name] $opt->option / ";
-                    }
-                  }
-                  $opt_str .= '[배송비] ';
-                  if ($item->shipping_fee == 0) $opt_str .= '무료';
-                  else $opt_str .= $this->crud_model->get_price_str($item->shipping_fee).'원';
-                  
-                  echo $opt_str;
-                  if ($item->product_id->status != SHOP_PRODUCT_STATUS_ON_SALE) {
-                    echo ' / 판매중지상품';
-                  }
+          <? foreach ($shop_items as $shop_id => $shop_item) { ?>
+            <div class="cart-brand-wrap">
+              <div class="cart-brand-tit clearfix"><?= $shop_item->shop->shop_name; ?>
+                <p class="brand-delivery clearfix">
+                  <span class="delivery-txt">배송비</span>
+                  <span class="delivery-price" id="shipping-price-<?= $shop_id ?>">
+                  <?
+                  if ($shop_item->total_shipping_fee == 0) echo '무료';
+                  else echo $this->crud_model->get_price_str($shop_item->total_shipping_fee).'원';
                   ?>
-                </div>
+                </span>
+                </p>
               </div>
-              <div class="cart-item-image">
-                <a href="<?php echo base_url().'home/shop/product?id='.$item->product->product_id; ?>">
-                  <img src="<?php echo $item->product->item_image_url_0; ?>" alt="">
-                </a>
-              </div>
+              <?php foreach ($shop_item->items as $product_id => $item) {
+                foreach ($item->cart_items as $cart_id => $cart_item) {
+                  ?>
+                  <div class="cart-item" id="cart-item-<?= $cart_id; ?>"
+                       data-id="<?php echo $cart_id; ?>"
+                       data-shop-id="<?php echo $shop_id; ?>"
+                       data-product-id="<?php echo $product_id; ?>"
+                       data-price="<?php echo $cart_item->item_sell_price; ?>"
+                       data-additional-price="<?php echo $cart_item->additional_price;?>"
+                       data-shipping-fee="<?php echo $item->shipping_fee; ?>"
+                       data-purchase-cnt="<?php echo $cart_item->total_purchase_cnt;?>"
+                       data-status="<?php echo $item->product_id->status; ?>"
+                    <?php if ($item->product_id->status != SHOP_PRODUCT_STATUS_ON_SALE) echo 'style="color: grey;"'; ?>>
+                    <div class="cart-item-info">
+                      <!--                <div class="item-brand">-->
+                      <div class="item-brand chk--only">
+                        <input <?php if ($item->product_id->status == SHOP_PRODUCT_STATUS_ON_SALE) echo 'checked'; ?>
+                          class='chk_style' name="cart_item_check_all" type="checkbox"
+                          data-cart-id="<?php echo $cart_id; ?>"
+                          data-status="<?php echo $item->product_id->status; ?>"
+                          style="top: 1px;"/>
+                        <label class="type_label confirm_chk <? if ($item->product_id->status == SHOP_PRODUCT_STATUS_ON_SALE) echo 'changed'; ?>">
+                          <?php echo $item->product->item_name; ?>
+                        </label>
+                      </div>
+<!--                      <div class="item-name">--><?php //echo $item->product->item_name; ?><!--</div>-->
+                      <div class="item-price">
+                        [가격]
+                        <?php echo $this->crud_model->get_price_str($cart_item->total_price); ?>원
+                        <?php echo '('.$this->crud_model->get_price_str($cart_item->item_sell_price).'원*'.$cart_item->total_purchase_cnt.'개)'; ?>
+                      </div>
+                      <div class="item-option">
+                        <?php
+                        $opt_str = '';
+                        foreach ($cart_item->item_option_requires as $opt) {
+                          if ($opt->val != -1) {
+                            $opt_str .= "[$opt->name] $opt->option / ";
+                          }
+                        }
+                        foreach ($cart_item->item_option_others as $opt) {
+                          if ($opt->val != -1) {
+                            $opt_str .= "[$opt->name] $opt->option / ";
+                          }
+                        }
+                        //                    $opt_str .= '[배송비] ';
+                        //                    if ($item->shipping_fee == 0) $opt_str .= '무료';
+                        //                    else $opt_str .= $this->crud_model->get_price_str($item->shipping_fee).'원';
+                        if (empty($opt_str) == false) {
+                          $opt_str[strlen($opt_str) - 2] = "\0";
+                          echo $opt_str;
+                        }
+                        
+                        if ($item->product_id->status != SHOP_PRODUCT_STATUS_ON_SALE) {
+                          echo ' / 판매중지상품';
+                        }
+                        ?>
+                      </div>
+                    </div>
+                    <div class="cart-item-image">
+                      <a href="<?php echo base_url().'home/shop/product?id='.$item->product->product_id; ?>">
+                        <img src="<?php echo $item->product->item_image_url_0; ?>" alt="">
+                      </a>
+                    </div>
+                  </div>
+                <?php }
+              } ?>
             </div>
-          <?php } ?>
+          <? } ?>
         </div>
         <div class="cart-balance">
           <table>
@@ -387,7 +472,6 @@
   </div>
 </div>
 <script>
-  let cart_item_cnt = <?php echo count($cart_items); ?>;
   let total_purchase_cnt = <?php echo $total_purchase_cnt; ?>;
   let total_price = <?php echo $total_price; ?>;
   let total_shipping_fee = <?php echo $total_shipping_fee; ?>;
@@ -397,13 +481,14 @@
   function check_all() {
     let checked = $('#cart-item-check-all').prop('checked');
     $.each($('.cart-item-all').find('input:checkbox'),function(idx,item) {
-      // console.log(item);
-      $(item).prop('checked', checked);
-      if (checked === true) {
-        $(item).closest('.item-brand').find('.confirm_chk').addClass('changed')
-      } else {
-        $(item).closest('.item-brand').find('.confirm_chk').removeClass('changed')
-      }
+        if (checked === true) {
+            $(item).prop('checked', true);
+            $(item).closest('.item-brand').find('.confirm_chk').addClass('changed')
+        } else {
+          $(item).prop('checked', false);
+          $(item).closest('.item-brand').find('.confirm_chk').removeClass('changed')
+        }
+      // console.log($(item).prop('checked'));
     });
     change_balance();
   }
@@ -415,11 +500,11 @@
         $('#loading_set').show();
         let cart_item = $(item).closest('.cart-item');
         let cart_id = cart_item.data('id');
-        let price = cart_item.data('price');
-        let additional_price = cart_item.data('additional-price');
-        let shipping_fee = cart_item.data('shipping-fee');
-        let purchase_cnt = cart_item.data('purchase-cnt');
-        let purchable = cart_item.data('status') === <?php echo SHOP_PRODUCT_STATUS_ON_SALE; ?>;
+        //let price = cart_item.data('price');
+        //let additional_price = cart_item.data('additional-price');
+        //let shipping_fee = cart_item.data('shipping-fee');
+        //let purchase_cnt = cart_item.data('purchase-cnt');
+        //let purchable = cart_item.data('status') === <?php //echo SHOP_PRODUCT_STATUS_ON_SALE; ?>//;
         
         // console.log(purchable);
         let formData = new FormData();
@@ -435,32 +520,9 @@
           success: function (data) {
             $("#loading_set").fadeOut(500);
             if (data === 'done' || data.search('done') !== -1) {
-              
-              if (purchable === true) {
-                total_purchase_cnt -= purchase_cnt;
-                total_price -= (price * purchase_cnt);
-                total_shipping_fee -= shipping_fee;
-                total_additional_price -= additional_price;
-                total_balance = total_price + total_shipping_fee + total_additional_price;
-  
-                $('#total-purchase-cnt').text(total_purchase_cnt + '개');
-                $('#total-price').text(get_price_str(total_price) + '원');
-                $('#total-additional-price').text(get_price_str(total_additional_price) + '원');
-                $('#total-shipping-fee').text(get_price_str(total_shipping_fee) + '원');
-                $('#total-balance').text(get_price_str(total_balance) + '원');
-              }
-
-              cart_item.remove();
-
-              cart_item_cnt -= 1;
-
-              // console.log(cart_item_cnt);
-              if (cart_item_cnt === 0) {
-                cart_on(false);
-              }
-
               let text = '<strong>성공하였습니다</strong>';
               notify(text,'success','bottom','right');
+              window.location.reload();
             } else {
               var text = '<strong>실패하였습니다</strong>' + data;
               notify(text,'warning','bottom','right');
@@ -474,6 +536,16 @@
     });
   }
 
+  function isEmptyObject( obj ) {
+    for ( var name in obj ) {
+      return false;
+    }
+    return true;
+  }
+
+  let shop_items = JSON.parse('<?= json_encode($shop_items, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES); ?>');
+  // console.log(shop_items);
+
   function change_balance() {
     total_purchase_cnt = 0;
     total_price = 0;
@@ -481,25 +553,78 @@
     total_additional_price = 0;
     total_balance = 0;
 
+    let shops = Array();
     let all_checked = true;
     $.each($('.cart-item-all').find('input:checkbox'),function(idx,item) {
       let checked = $(item).prop('checked');
+      // console.log(checked);
       if (checked === true) {
-        if ($(item).data('status') === <?php echo SHOP_PRODUCT_STATUS_ON_SALE; ?>) {
-          let cart_item = $(item).closest('.cart-item');
-          let cart_id = cart_item.data('id');
+        // console.log(item.dataset.status);
+        if (item.dataset.status === '<?php echo SHOP_PRODUCT_STATUS_ON_SALE; ?>') {
+          let cart_id = $(item).data('cart-id');
+          let cart_item = $('#cart-item-'+cart_id);
+          let shop_id = cart_item.data('shop-id');
           let price = cart_item.data('price');
           let additional_price = cart_item.data('additional-price');
-          let shipping_fee = cart_item.data('shipping-fee');
+          // let shipping_fee = cart_item.data('shipping-fee');
           let purchase_cnt = cart_item.data('purchase-cnt');
+          let product_id = cart_item.data('product-id');
+         
+          if (isEmptyObject(shops[shop_id]) === true) {
+            shops[shop_id] = {};
+            shops[shop_id].total_price = 0;
+            shops[shop_id].total_shipping_fee = 0;
+            shops[shop_id].free_shipping = shop_items[shop_id].shop_shipping.free_shipping === '1';
+            shops[shop_id].item_cnt = 0;
+            shops[shop_id].items = [];
+            // console.log(shop[shop_id].free_shipping);
+          }
+  
+          if (isEmptyObject(shops[shop_id].items[product_id]) === true) {
+            shops[shop_id].items[product_id] = {};
+            shops[shop_id].items[product_id].total_purchase_cnt = 0;
+            shops[shop_id].items[product_id].bundle_shipping_cnt = shop_items[shop_id].items[product_id].product.bundle_shipping_cnt;
+            // shops[shop_id].items[product_id].total_shipping_fee = 0;
+            shops[shop_id].items[product_id].free_shipping = shop_items[shop_id].shop_shipping.free_shipping === '1';
+            shops[shop_id].item_cnt++;
+          }
+          
+          shops[shop_id].total_price += (price * purchase_cnt);
+          shops[shop_id].items[product_id].total_purchase_cnt += purchase_cnt;
   
           total_purchase_cnt += purchase_cnt;
           total_price += (price * purchase_cnt);
-          total_shipping_fee += shipping_fee;
+          // total_shipping_fee += shipping_fee;
           total_additional_price += additional_price;
         }
       } else {
         all_checked = false;
+      }
+    });
+    
+    shops.forEach(function(shop, shop_id, shops) {
+      // console.log(shop_id);
+      // console.log(shop);
+      if (shop.free_shipping === false) {
+        if (shop.total_price < shop_items[shop_id].shop_shipping.free_shipping_total_price) {
+          shop.items.forEach(function(item, product_id, items) {
+            // console.log(item);
+            // console.log(product_id);
+            // console.log(items);
+            // console.log(shop_items[shop_id].shop_shipping.free_shipping_total_price);
+            item.shipping_fee = shop_items[shop_id].shop_shipping.free_shipping_cond_price *
+              (parseInt(item.total_purchase_cnt / item.bundle_shipping_cnt) +
+                parseInt(item.total_purchase_cnt % item.bundle_shipping_cnt > 0 ? 1 : 0));
+            // console.log(item.shipping_fee);
+            shop.total_shipping_fee += item.shipping_fee;
+          });
+          $('#shipping-price-' + shop_id).text(get_price_str(shop.total_shipping_fee));
+          total_shipping_fee += shop.total_shipping_fee;
+        } else {
+          $('#shipping-price-' + shop_id).text('무료');
+        }
+      } else {
+        $('#shipping-price-' + shop_id).text('무료');
       }
     });
 
@@ -619,8 +744,11 @@
     $('.confirm_chk').click(function(){
       let target = $(this).closest('.item-brand').find('input[type=checkbox]');
       let checked = target.prop('checked');
+      //let on_sale = target.data('status') === '<?//= SHOP_PRODUCT_STATUS_ON_SALE; ?>//';
       // console.log(target);
+      // console.log(target.data('status'));
       // console.log(checked);
+      // console.log(on_sale);
       if (checked === true) {
         target.prop('checked', false);
         $(this).removeClass('changed');
@@ -630,7 +758,7 @@
       }
       change_balance();
     })
-    change_balance();
+    // change_balance();
   });
 
 </script>

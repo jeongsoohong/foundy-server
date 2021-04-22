@@ -4,6 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
   <title>Shop | FOUNDY</title>
+  
+  <!-- inclue shop_add.css -->
+  <link rel="stylesheet" href="<?= base_url(); ?>template/back/shop/shop_add.css?v=1.1.0">
+  
   <!-- Favicon -->
   <link rel="shortcut icon" href="<?php echo base_url(); ?>uploads/others/favicon.png">
   <!--STYLESHEET-->

@@ -568,7 +568,8 @@
                   무료배송
                 <?php } else {?>
                   배송비 - <?php  echo $this->crud_model->get_price_str($shop_shipping->free_shipping_cond_price); ?>원<br>
-                  해당 제품 <?php echo $this->crud_model->get_price_str($shop_shipping->free_shipping_total_price); ?>원 이상 구매시 무료배송
+                  해당 브랜드 상품
+                  <?= $this->crud_model->get_price_str($shop_shipping->free_shipping_total_price); ?>원 이상 구매시 무료배송
                 <?php }?>
               </td>
             </tr>
@@ -1132,7 +1133,7 @@
     window.location.href = '<?php echo base_url(); ?>home/shop/cart';
   }
   function go_shop() {
-    window.location.href = '<?php echo base_url(); ?>home/shop?cat=all&col=product_id&order=desc';
+    window.location.href = '<?php echo base_url(); ?>home/shop/main';
   }
 
   let purchable = <? echo ($product->status == SHOP_PRODUCT_STATUS_ON_SALE ? 'true' : 'false'); ?>;

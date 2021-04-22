@@ -545,10 +545,10 @@
                     </div>
                     <div class="col-md-2 col-sm-2 col-xs-2">
                       <?php if ($edit) { ?>
-                        <input class='form-control' id="purchase-max-cnt" name="purchase_max_cnt" type="number"
+                        <input class='form-control' id="purchase-max-cnt" name="purchase_max_cnt" type="number" min="0" max="100"
                                value="<?php echo $product_data->purchase_max_cnt; ?>" />
                       <?php } else { ?>
-                        <input class='form-control' id="purchase-max-cnt" name="purchase_max_cnt" type="number" value="0" />
+                        <input class='form-control' id="purchase-max-cnt" name="purchase_max_cnt" type="number" value="0" min="0" max="100"/>
                       <?php } ?>
                     </div>
                     <div class="col-md-2 col-sm-2 col-xs-2" style="text-align: center">

@@ -160,7 +160,7 @@
       <div class="col-md-12 col-sm-12 col-xs-12">
         <hr style="width: 100%; border: 1px solid #EAEAEA">
       </div>
-      <div class="col-md-12 col-sm-12 col-xs-12 item-status">
+      <div class="col-md-12 col-sm-12 col-xs-12 item-status" style="padding-bottom: 16px;">
         <div class="col-md-12 col-sm-12 col-xs-12">
           <div class="col-md-4 col-sm-4 col-xs-4">
             <h5 style="padding-left: 15px">주문목록 [ 총 <?php echo $total_cnt; ?>건 ]</h5>
@@ -169,25 +169,31 @@
           </div>
           <div class="col-md-2 col-sm-2 col-xs-2">
           </div>
-          <div class="col-md-2 col-sm-2 col-xs-2">
+          <div class="col-md-2 col-sm-2 col-xs-2 shop-fn-wrap">
             <?php if ($ship_status == SHOP_SHIPPING_STATUS_ORDER_COMPLETED) { ?>
-              <button class="order-change-status btn-dark" disabled id="order-status-change-btn" onclick="change_status();">
+              <button class="order-change-status btn-danger fn-tip-cancel" id="order-cancel-btn" onclick="get_cancel_info();">
+                주문취소
+              </button>
+              <button class="order-change-status btn-dark fn-tip-status" id="order-status-change-btn" onclick="change_status();">
                 <<?php echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PREPARE); ?>>으로 변경
               </button>
             <?php } else if ($ship_status == SHOP_SHIPPING_STATUS_PREPARE) { ?>
-              <button class="order-change-status btn-dark" disabled id="order-status-change-btn" onclick="change_status();">
+              <button class="order-change-status btn-danger fn-tip-cancel" id="order-cancel-btn" onclick="get_cancel_info();">
+                주문취소
+              </button>
+              <button class="order-change-status btn-dark fn-tip-status" id="order-status-change-btn" onclick="change_status();">
                 <<?php echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_IN_PROGRESS); ?>>으로 변경
               </button>
             <?php } else if ($ship_status == SHOP_SHIPPING_STATUS_IN_PROGRESS) { ?>
-              <button class="order-change-status btn-dark" disabled id="order-status-change-btn" onclick="change_status();">
+              <button class="order-change-status btn-dark fn-tip-status" id="order-status-change-btn" style="margin-left: 48%;" onclick="change_status();">
                 <<?php echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_COMPLETED); ?>>으로 변경
               </button>
             <?php } else if ($ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CANCELING) { ?>
-              <button class="order-change-status btn-dark" disabled id="order-status-change-btn" onclick="change_status();">
+              <button class="order-change-status btn-dark fn-tip-status" id="order-status-change-btn" style="margin-left: 48%;" onclick="change_status();">
                 <<?php echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PURCHASE_CANCELED); ?>>으로 변경
               </button>
             <?php } else if ($ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CHANGING) { ?>
-              <button class="order-change-status btn-dark" disabled id="order-status-change-btn" onclick="change_status();">
+              <button class="order-change-status btn-dark fn-tip-status" id="order-status-change-btn" style="margin-left: 48%;" onclick="change_status();">
                 <<?php echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_PURCHASE_CHANGED); ?>>으로 변경
               </button>
             <?php } else { ?>
@@ -238,8 +244,10 @@
                 <td class="col-md-2 col-sm-2 col-xs-2" style="width: 100%; margin: auto">
                   <button class="btn btn-info" onclick="get_info(<?php echo $order->purchase_product_id; ?>)"
                           style="font-size: 10px; width: auto; height: 30px; margin: auto">정보</button>
-                  <button class="btn btn-danger" onclick="open_req_order_modal(<?php echo $order->purchase_product_id; ?>, <?php echo SHOP_ORDER_REQ_TYPE_CANCEL; ?>)"
-                          style="font-size: 10px; width: auto; height: 30px; margin: auto"><?php echo $this->shop_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CANCEL); ?></button>
+                  <? if (false) { ?>
+                    <button class="btn btn-danger" onclick="open_req_order_modal(<?php echo $order->purchase_product_id; ?>, <?php echo SHOP_ORDER_REQ_TYPE_CANCEL; ?>)"
+                            style="font-size: 10px; width: auto; height: 30px; margin: auto"><?php echo $this->shop_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CANCEL); ?></button>
+                  <? } ?>
                 </td>
               </tr>
             <?php }?>
@@ -298,8 +306,10 @@
                 <td class="col-md-1 col-sm-1 col-xs-1" style="width: 100%; margin: auto">
                   <button class="btn btn-info" onclick="get_info(<?php echo $order->purchase_product_id; ?>)"
                           style="font-size: 10px; width: auto; height: 30px; margin: auto">정보</button>
-                  <button class="btn btn-danger" onclick="open_req_order_modal(<?php echo $order->purchase_product_id; ?>, <?php echo SHOP_ORDER_REQ_TYPE_CANCEL; ?>)"
-                          style="font-size: 10px; width: auto; height: 30px; margin: auto"><?php echo $this->shop_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CANCEL); ?></button>
+                  <? if (false) { ?>
+                    <button class="btn btn-danger" onclick="open_req_order_modal(<?php echo $order->purchase_product_id; ?>, <?php echo SHOP_ORDER_REQ_TYPE_CANCEL; ?>)"
+                            style="font-size: 10px; width: auto; height: 30px; margin: auto"><?php echo $this->shop_model->get_order_req_type_str(SHOP_ORDER_REQ_TYPE_CANCEL); ?></button>
+                  <? } ?>
                 </td>
               </tr>
             <?php }?>
@@ -438,15 +448,17 @@
             <?php }?>
             </tbody>
           <?php } else if ($ship_status == SHOP_SHIPPING_STATUS_ORDER_CANCELED ||
-          $ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CHANGING ||
-            $ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CHANGED||
-            $ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CANCELED||
-          $ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CANCELING) {
+            $ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CHANGING ||
+            $ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CHANGED ||
+            $ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CANCELED ||
+            $ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CANCELING) {
             if ($ship_status == SHOP_SHIPPING_STATUS_ORDER_CANCELED) {
               $req_type = SHOP_ORDER_REQ_TYPE_CANCEL;
-            } else if ($ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CHANGING || $ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CHANGED) {
-                $req_type = SHOP_ORDER_REQ_TYPE_CHANGE;
-            } else if ($ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CANCELING || $ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CANCELED) {
+            } else if ($ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CHANGING ||
+              $ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CHANGED) {
+              $req_type = SHOP_ORDER_REQ_TYPE_CHANGE;
+            } else if ($ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CANCELING ||
+              $ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CANCELED) {
               $req_type = SHOP_ORDER_REQ_TYPE_RETURN;
             }
             ?>
@@ -592,6 +604,15 @@
     </div>
   </div>
 </div>
+<div class="pop-wrap" id="fd-shop" style="display: none;">
+  <div class="pop__cnt">
+    <div class="cnt-wrap" id="cancel-popup-wrap">
+    </div>
+    <button class="pop__close" onclick="close_cancel_popup()">
+      <img class="close--symbol" src="https://dev.foundy.me/template/front/header/imgs/icon_close_black.png" width="12" height="12" alt="닫기" style="opacity: 0.2;">
+    </button>
+  </div>
+</div>
 <style>
   .item-list-pagination {
     padding: 15px;
@@ -635,7 +656,7 @@
     modal.appendTo('body');
     info.html(loading_set);
     info.load("<?php echo base_url()?>shop/order/view/" + id);
-  };
+  }
   
   function get_order_page(page) {
     // console.log(ship_status);
@@ -666,12 +687,12 @@
   function check_all() {
     if ($('#item-list-all').is(':checked') === true) {
       $('.order-list').find('input:checkbox').prop('checked', true);
-      $('#order-status-change').attr('disabled', false);
-      $('#order-status-change-btn').attr('disabled', false);
+      // $('#order-status-change').attr('disabled', false);
+      // $('#order-status-change-btn').attr('disabled', false);
     } else {
       $('.order-list').find('input:checkbox').prop('checked', false);
-      $('#order-status-change').attr('disabled', true);
-      $('#order-status-change-btn').attr('disabled', true);
+      // $('#order-status-change').attr('disabled', true);
+      // $('#order-status-change-btn').attr('disabled', true);
     }
   }
 
@@ -695,21 +716,22 @@
     // console.log(checked_cnt);
   
     if (checked_cnt === 0) {
-      $('#order-status-change').attr('disabled', true);
-      $('#order-status-change-btn').attr('disabled', true);
+      // $('#order-status-change').attr('disabled', true);
+      // $('#order-status-change-btn').attr('disabled', true);
+      // $('#order-cancel-btn').attr('disabled', true);
     } else {
-      $('#order-status-change').attr('disabled', false);
-      $('#order-status-change-btn').attr('disabled', false);
+      // $('#order-status-change').attr('disabled', false);
+      // $('#order-status-change-btn').attr('disabled', false);
+      // $('#order-cancel-btn').attr('disabled', false);
     }
   }
-  
+
   function check_number(v) {
     let regexp = /^[0-9]*$/;
     return regexp.test(v);
   }
-  function change_status() {
-    let next_status = <?php echo $next_status; ?>;
-  
+
+  function get_shipping_infos(check) {
     let shipping_infos = Array();
     let idx = 0;
     let validate = true;
@@ -717,11 +739,60 @@
     $.each($('.item-list-checkbox'), function(i,e) {
       if ($(e).prop('checked') === true) {
         let purchase_product_id = $(e).data('id');
+      
+        shipping_infos[idx] = Object();
+        shipping_infos[idx].purchase_product_id = purchase_product_id;
+      
+        if (check === true && ship_status === <?php echo SHOP_SHIPPING_STATUS_PREPARE; ?>) {
+          let purchase_code = $(e).closest('tr').find('.purchase-code').data('code');
+          let shipping_company = $(e).closest('tr').find('.shipping-company option:selected').val();
+          let shipping_code = $(e).closest('tr').find('.shipping-code').val();
+          if (shipping_company === '0' || shipping_code === '') {
+            alert('배송정보를 정확히 입력 바랍니다.(구매번호 : ' + purchase_code + ')');
+            validate = false;
+            return false;
+          }
+          if (check_number(shipping_code) === false) {
+            alert('운송장번호에는 숫자만 입력가능합니다.(구매번호 : ' + purchase_code + ')');
+            validate = false;
+            return false;
+          }
+        
+          shipping_infos[idx].shipping_company = shipping_company;
+          shipping_infos[idx].shipping_code = shipping_code;
+        }
+        idx++;
+      }
+    });
+  
+    if (validate === false) {
+      return null;
+    }
+    
+    if (shipping_infos.length === 0) {
+      alert('상품을 선택해 주세요!');
+      return null;
+    }
+  
+    return shipping_infos;
+  }
+
+  function change_status() {
+    let next_status = <?php echo $next_status; ?>;
+  
+    /*
+    let shipping_infos = Array();
+    let idx = 0;
+    let validate = true;
+ 
+    $.each($('.item-list-checkbox'), function(i,e) {
+      if ($(e).prop('checked') === true) {
+        let purchase_product_id = $(e).data('id');
   
         shipping_infos[idx] = Object();
         shipping_infos[idx].purchase_product_id = purchase_product_id;
         
-        if (ship_status === <?php echo SHOP_SHIPPING_STATUS_PREPARE; ?>) {
+        if (ship_status === <?php //echo SHOP_SHIPPING_STATUS_PREPARE; ?>) {
           let purchase_code = $(e).closest('tr').find('.purchase-code').data('code');
           let shipping_company = $(e).closest('tr').find('.shipping-company option:selected').val();
           let shipping_code = $(e).closest('tr').find('.shipping-code').val();
@@ -744,6 +815,12 @@
     });
     
     if (validate === false) {
+      return false;
+    }
+    */
+    
+    let shipping_infos = get_shipping_infos(true);
+    if (shipping_infos === null) {
       return false;
     }
   
@@ -805,6 +882,110 @@
     });
   }
   
+  function close_cancel_popup() {
+    $('#fd-shop').hide();
+  }
+
+  function process_cancel(only_info, cancel_reason = '') {
+    let next_status = <?php echo SHOP_SHIPPING_STATUS_ORDER_CANCELED; ?>;
+    let shipping_infos = get_shipping_infos(false);
+    if (shipping_infos === null) {
+      return false;
+    }
+  
+    // console.log(ship_status);
+    // console.log(next_status);
+    // console.log(only_info);
+    // console.log(shipping_infos);
+    // console.log(cancel_reason);
+  
+    $('#loading_set').show();
+  
+    let formData = new FormData();
+    formData.append('ship_status', ship_status);
+    formData.append('next_status', next_status);
+    formData.append('cancel_reason', cancel_reason);
+    formData.append('only_info', only_info === true ? '1' : '0');
+    formData.append('shipping_infos', JSON.stringify(shipping_infos));
+    
+    $.ajax({
+      url: '<?php echo base_url(); ?>shop/order/update', // form action url
+      type: 'POST', // form submit method get/post
+      dataType: 'html', // request type html/json/xml
+      data: formData, // serialize form data
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function (data) {
+        $('#loading_set').fadeOut(500);
+        if (only_info) {
+          if (data === 'fail' || data.search('alert') !== -1) {
+            let title = '<strong>실패하였습니다</strong>';
+            $.notify({
+              title: title,
+              message: data,
+              icon: 'fa fa-check'
+            }, {
+              type: 'warning',
+              timer: 1000,
+              delay: 5000,
+              animate: {
+                enter: 'animated lightSpeedIn',
+                exit: 'animated lightSpeedOut'
+              }
+            });
+          } else {
+            $('#cancel-popup-wrap').html(data);
+            $('#fd-shop').show();
+          }
+        } else {
+          if (data === 'done' || data.search('done') !== -1) {
+            $.notify({
+              message: '취소되었습니다.',
+              icon: 'fa fa-check'
+            }, {
+              type: 'success',
+              timer: 1000,
+              delay: 2000,
+              animate: {
+                enter: 'animated lightSpeedIn',
+                exit: 'animated lightSpeedOut'
+              }
+            });
+            setTimeout(function(){location.href='<?php echo base_url(); ?>shop/order?ship_status=' + next_status;}, 1000);
+          } else {
+            let title = '<strong>실패하였습니다</strong>';
+            $.notify({
+              title: title,
+              message: data,
+              icon: 'fa fa-check'
+            }, {
+              type: 'warning',
+              timer: 1000,
+              delay: 5000,
+              animate: {
+                enter: 'animated lightSpeedIn',
+                exit: 'animated lightSpeedOut'
+              }
+            });
+          }
+        }
+      },
+      error: function (e) {
+        console.log(e)
+      }
+    });
+  }
+
+  function get_cancel_info() {
+    return process_cancel(true);
+  }
+
+  function do_cancel() {
+    let cancel_reason = $('#cancel-reason').val();
+    return process_cancel(false, cancel_reason);
+  }
+
   let req_id = 0;
   let req_type = <?php echo SHOP_ORDER_REQ_TYPE_DEFAULT; ?>;
   function open_req_order_modal(id, type) {
