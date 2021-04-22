@@ -5,16 +5,15 @@
     include 'includes/top/index.php';
     ?>
   <? if (DEV_SERVER == false) { ?>
-    <!— Global site tag (gtag.js) - Google Analytics —>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-182268526-1">
-    </script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-182268526-1"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'UA-182268526-1');
     </script>
-    <!-- 구글 애드센드 -->
+    <!-- Google Ads -->
     <script data-ad-client="ca-pub-5246386026868293" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
   <? } ?>
 </head>
@@ -25,7 +24,7 @@ include 'preloader.php';
 ?>
 <!-- WRAPPER -->
 <? if ($this->agent->is_mobile() == false) { ?>
-<style type="text/css">
+<style>
   .wide {
     background-color: #F3EFEB !important;
     overflow-x: hidden;
