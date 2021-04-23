@@ -11,6 +11,8 @@
             개인정보보호책임자 홍정수(<a href="mailto:hello@foundy.me">hello@foundy.me</a>) |
             <a href="javascript:void(0);" onclick="onopen('service')"><u>서비스이용약관</u></a> |
             <a href="javascript:void(0);" onclick="onopen('privacy')"><u>개인정보보호정책</u></a>
+            <br>
+            운영대행 : (주)남일애드컴 / 대표 : 이석 / 사업자등록번호 : 886-81-01251 / 주소 : 서울특별시 강남구 논현로 95길 12, 4층~5층
           </div>
         </div>
       </div>
