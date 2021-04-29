@@ -573,7 +573,7 @@
       </a>
     </h1>
     <div class="page_data">
-      <p id="page_type" class="futura-pt">https://dev.foundy.me/<?= $control; ?></p>
+      <p id="page_type" class="futura-pt"><?= base_url().$control; ?></p>
       <p class="page_question futura-pt">문의 ㅣ hello@foundy.me</p>
     </div>
     <section class="page_login">
@@ -609,7 +609,7 @@
     <article class="popup_center">
       <p class="pw_tit">FORGET PASSWORD</p>
       <button class="pw_close" onclick="close_forget_password();">
-        <img src="https://dev.foundy.me/template/front/header/imgs/icon_close_black.png" width="12" height="12" alt="닫기" style="opacity: 0.2;">
+        <img src="<?= base_url(); ?>template/front/header/imgs/icon_close_black.png" width="12" height="12" alt="닫기" style="opacity: 0.2;">
       </button>
       <div class="pw_wrap">
         <div class="pw_how">
@@ -733,13 +733,13 @@
     $('.pw_advice').show();
   }
   function send_approval_code() {
-    console.log(select);
+    // console.log(select);
     if (select === 'send_approval') {
       alert('인증이 진행중입니다!');
       return false;
     }
     let email = $('#forget_email').val();
-    console.log(email);
+    // console.log(email);
     if (validateEmail(email) === false) {
       set_approval_msg('정확한 이메일 주소를 입력바랍니다',true);
       return false;

@@ -287,8 +287,8 @@ QUERY;
   
         if ($this->email_model->get_user_approval_code_data($code, $email)) {
     
-          $this->session->set_userdata('shop_approval_email', $email);
-          $this->session->set_userdata('shop_approval_code', $code);
+          $this->session->set_userdata('admin_approval_email', $email);
+          $this->session->set_userdata('admin_approval_code', $code);
           echo 'done';
         } else {
           echo '이메일 전송에 문제가 발생했습니다!';
@@ -313,8 +313,8 @@ QUERY;
         $email = $this->input->post('email');
         $code = $this->input->post('approval_code');
     
-        $approval_email = $this->session->userdata('shop_approval_email');
-        $approval_code = $this->session->userdata('shop_approval_code');
+        $approval_email = $this->session->userdata('admin_approval_email');
+        $approval_code = $this->session->userdata('admin_approval_code');
     
         if ($email != $approval_email) {
           $result['status'] = 'fail';
