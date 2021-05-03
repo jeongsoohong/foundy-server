@@ -9,8 +9,12 @@
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
       })(window,document,'script','dataLayer','GTM-5NTRCB7');</script>
     <!-- End Google Tag Manager -->
+    <!-- facebook domain verification -->
+    <meta name="facebook-domain-verification" content="rke9nkklsdbh72xbipm7y9v0lbch70" />
+    <!-- End facebook domain verification -->
     <!-- Google Ads -->
     <script data-ad-client="ca-pub-5246386026868293" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- End Google Ads -->
   <? } ?>
   <?php include 'includes/top/index.php'; ?>
 </head>
