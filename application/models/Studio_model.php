@@ -345,7 +345,7 @@ QUERY;
   
   const FIND_RECOMMEND_CLASS_PAGE_SIZE = 5;
   const FIND_UPCOMING_CLASS_PAGE_SIZE = 10;
-  function get_upcoming_class_list($limit, $offset, $random = false, $where_in = null) {
+  function get_upcoming_class_list($limit, $offset, $random = false, $where_in = null, $studio_id = 0) {
     $today = date('Y-m-d');
     $time = date('H:i:s');
     $this->db->limit($limit, $offset);
@@ -354,12 +354,22 @@ QUERY;
     } else {
       $this->db->order_by('schedule_date,start_time asc');
     }
-    if (isset($where_in) == true && empty($where_in) == false) {
-      $this->db->where("(schedule_date >= '{$today}' and activate = 1)");
-      $this->db->where_in('schedule_info_id', $where_in);
+    if ($studio_id > 0) {
+      if (isset($where_in) == true && empty($where_in) == false) {
+        $this->db->where("(schedule_date >= '{$today}' and activate = 1 and studio_id={$studio_id})");
+        $this->db->where_in('schedule_info_id', $where_in);
+      } else {
+        $this->db->where("(schedule_date = '{$today}' and start_time > '$time' and activate = 1 and studio_id={$studio_id})");
+        $this->db->or_where("(schedule_date > '{$today}' and activate = 1 and studio_id={$studio_id})");
+      }
     } else {
-      $this->db->where("(schedule_date = '{$today}' and start_time > '$time' and activate = 1)");
-      $this->db->or_where("(schedule_date > '{$today}' and activate = 1)");
+      if (isset($where_in) == true && empty($where_in) == false) {
+        $this->db->where("(schedule_date >= '{$today}' and activate = 1)");
+        $this->db->where_in('schedule_info_id', $where_in);
+      } else {
+        $this->db->where("(schedule_date = '{$today}' and start_time > '$time' and activate = 1)");
+        $this->db->or_where("(schedule_date > '{$today}' and activate = 1)");
+      }
     }
 //    $sql = $this->db->get_compiled_select('studio_schedule_info');
 //    log_message('debug', '[studio] sql['.$sql.']');
@@ -574,6 +584,18 @@ QUERY;
   function get_cancel_str()
   {
     return $this->get_ticketing_status_str(self::TICKETING_STATUS_CANCEL);
+  }
+ 
+  CONST RESERVE_LIST2_PAGE_SIZE = 15;
+  function get_studio_reserve_list($studio_id, $datetime, $limit, $offset)
+  {
+    $date = date('Y-m-d', strtotime($datetime));
+    $this->db->select('b.*,a.schedule_title');
+    $this->db->from('studio_schedule_info a,studio_schedule_reserve b');
+    $this->db->where("a.schedule_date>='{$date}' and b.schedule_at >='{$datetime}' and a.schedule_info_id=b.schedule_info_id and a.studio_id={$studio_id} and (b.reserve=1 or b.wait=1 or b.cancel=1)");
+    $this->db->order_by('register_at', 'desc');
+    $this->db->limit($limit, $offset);
+    return $this->db->get()->result();
   }
   
 }

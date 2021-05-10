@@ -311,6 +311,16 @@ class Studio extends CI_Controller
     }
   }
   
+  private function reload_studio_info()
+  {
+    $this->studio = $this->studio_model->get_from_user_id($this->user_id);
+    $this->page_data['studio'] = $this->studio;
+    $this->studios = $this->studio_model->get_studios($this->teacher_id);
+    $this->page_data['studios'] = $this->studios;
+    
+    log_message('debug', '[reload_studio_info] studio['.json_encode($this->page_data['studio']).']');
+  }
+  
   /* Checking Login Stat */
   private function is_logged()
   {
@@ -815,6 +825,33 @@ QUERY;
       $this->page_data['page_name'] = "teacher";
       $this->load->view('back/studio/schedule_list', $this->page_data);
   
+    } else if ($para1 == 'list2') {
+  
+      if (isset($_GET['date']) == false) {
+        $this->redirect_error('비정상적인 접근입니다!');
+      }
+  
+      $date = $_GET['date'];
+      
+      if (strlen($date) == 6) {
+        $schedule_date = '20'.substr($date, 0, 2).'-'.substr($date, 2, 2).'-'.substr($date,4,2);
+        $schedules = $this->db->order_by('start_time', 'asc')->get_where('studio_schedule_info',
+          array('studio_id' => $this->studio_id, 'schedule_date' => $schedule_date, 'activate' => 1))->result();
+      } else {
+        $schedules = $this->studio_model->get_upcoming_class_list(15, 0, false, null, $this->studio_id);
+      }
+  
+//      log_message('debug', '[studio] date['.$date.'] schedules['.json_encode($schedules).']');
+  
+      foreach ($schedules as $class) {
+        $class->reserve = $this->studio_model->get_schedule_reserve_cnt($class->schedule_info_id);
+        $class->wait = $this->studio_model->get_schedule_wait_cnt($class->schedule_info_id);
+      }
+  
+      $this->page_data['classes'] = $schedules;
+      $this->page_data['page_name'] = "teacher";
+      $this->load->view('back/studio/schedule_list2', $this->page_data);
+      
     } else if ($para1 == 'link') {
       
       if ($para2 == 'set') {
@@ -825,6 +862,8 @@ QUERY;
         $this->form_validation->set_rules('class_link', 'class_link', 'trim|required|valid_url|max_length[256]');
         $this->form_validation->set_rules('class_id', 'class_id', 'trim|required|max_length[128]');
         $this->form_validation->set_rules('class_pw', 'class_pw', 'trim|required|max_length[128]');
+        $this->form_validation->set_rules('class_info', 'class_info', 'trim|max_length[1000]');
+        $this->form_validation->set_rules('reuse_class_info', 'reuse_class_info', 'trim|required|is_natural|less_than_equal_to[1]');
         
         if ($this->form_validation->run() == FALSE) {
           echo '<br>' . validation_errors();
@@ -837,8 +876,13 @@ QUERY;
         $class_link = $this->input->post('class_link');
         $class_id = $this->input->post('class_id');
         $class_pw = $this->input->post('class_pw');
+        $class_info = $this->input->post('class_info');
+        $reuse_class_info = $this->input->post('reuse_class_info');
         
         $schedule_info = $this->studio_model->get_schedule_info($schedule_info_id);
+        if (isset($schedule_info) == false || empty($schedule_info) == true) {
+          $this->response(array('status' => 'fail', 'message' => '클래스가 오픈되지 않았습니다!'));
+        }
         if ($schedule_info->ticketing == 0) {
           $this->response(array('status' => 'fail', 'message' => '예약이 오픈되지 않았습니다!'));
         }
@@ -856,17 +900,28 @@ QUERY;
           $schedule_start = $schedule_info->schedule_date.' '.$schedule_info->start_time;
           $send_link_at = date('Y-m-d H:i:s', strtotime($schedule_start) - $send_link_hour*ONE_HOUR);
         }
+  
+        $this->db->set('send_link_immediate', $send_link_immediate);
+        $this->db->set('send_link_hour', $send_link_hour);
+        $this->db->set('send_link_at', $send_link_at);
+        $this->db->set('class_link', $class_link);
+        $this->db->set('class_id', $class_id);
+        $this->db->set('class_pw', $class_pw);
+        $this->db->set('class_info', $class_info);
+        $this->db->where('schedule_info_id', $schedule_info_id);
+        $this->db->update('studio_schedule_info');
         
-        $data = array(
-          'send_link_immediate' => $send_link_immediate,
-          'send_link_hour' => $send_link_hour,
-          'send_link_at' => $send_link_at,
-          'class_link' => $class_link,
-          'class_id' => $class_id,
-          'class_pw' => $class_pw,
-        );
-        $where = array('schedule_info_id' => $schedule_info_id);
-        $this->db->update('studio_schedule_info', $data, $where);
+        if ($reuse_class_info == 1 && empty($class_info) == false) {
+          $this->db->set('class_info', $class_info);
+          $this->db->where('studio_id', $this->studio_id);
+          $this->db->update('studio');
+          $this->reload_studio_info();
+        } else {
+          $this->db->set('class_info', null);
+          $this->db->where('studio_id', $this->studio_id);
+          $this->db->update('studio');
+          $this->reload_studio_info();
+        }
      
         if ($send_link_immediate == 1) {
           $schedule_info = $this->studio_model->get_schedule_info($schedule_info_id);
@@ -1923,20 +1978,20 @@ QUERY;
           $this->studio_model->unlock_schedule_info($schedule_info->schedule_info_id);
           $this->response(array('status' => 'fail', 'message' => '올바르지 않은 상태입니다!'));
         }
-        
+    
         $res = $this->studio_model->update_schedule_status($reserve_id, $status);
         if ($res) {
           $this->studio_model->unlock_schedule_info($schedule_info->schedule_info_id);
-  
+      
           $user_data = $this->db->get_where('user', array('user_id' => $reserve->user_id))->row();
           $studio_info = $this->studio_model->get($schedule_info->studio_id);
           $studio_user_data = $this->db->get_where('user', array('user_id' => $studio_info->user_id))->row();
-          
+
 //          log_message('debug', '[studio] user_data['.json_encode($user_data).']');
 //          log_message('debug', '[studio] studio_info['.json_encode($studio_info).']');
 //          log_message('debug', '[studio] studio_user_data['.json_encode($studio_user_data).']');
 //          log_message('debug', '[studio] schedule_info['.json_encode($schedule_info).']');
-  
+      
           if ($status == $this->studio_model::TICKETING_STATUS_RESERVE) {
             $this->email_model->send_online_class_reserve($user_data->email, $schedule_info->teacher_name, $schedule_info->schedule_title,
               $schedule_info->schedule_date, $schedule_info->start_time);
@@ -1949,53 +2004,99 @@ QUERY;
             $this->mts_model->send_studio_class_cancel($user_data->phone, $schedule_info->teacher_name, $schedule_info->schedule_title,
               $schedule_info->schedule_date, $schedule_info->start_time);
           }
-  
+      
           $this->response(array('status' => 'done', 'message' => '성공하였습니다!'));
         } else {
           $this->studio_model->unlock_schedule_info($schedule_info->schedule_info_id);
           $this->response(array('status' => 'fail', 'message' => '실패하였습니다!'));
         }
-      
+    
       } else {
-  
+    
         if (isset($_GET['id']) == false) {
           $this->redirect_error('비정상적인 접근입니다!');
         }
-  
+    
         $schedule_info_id = $_GET['id'];
         $schedule_info = $this->studio_model->get_schedule_info($schedule_info_id);
         if (isset($schedule_info) == false || empty($schedule_info) == true) {
           $this->redirect_error('비정상적인 접근입니다!');
         }
-  
+    
         if ($schedule_info->ticketing == false) {
           $this->redirect_error('비정상적인 접근입니다!');
         }
-  
+    
         $reserve_list = $this->studio_model->get_schedule_reserve_list($schedule_info_id, 'register_at', 'asc');
         foreach ($reserve_list as $reserve) {
           $reserve->user = $this->db->get_where('user', array('user_id' => $reserve->user_id))->row();
         }
-  
+    
         $wait_list = $this->studio_model->get_schedule_wait_list($schedule_info_id, 'register_at', 'asc');
         foreach ($wait_list as $wait) {
           $wait->user = $this->db->get_where('user', array('user_id' => $wait->user_id))->row();
         }
-  
+    
         $cancel_list = $this->studio_model->get_schedule_cancel_list($schedule_info_id, 'register_at', 'asc');
         foreach ($cancel_list as $cancel) {
           $cancel->user = $this->db->get_where('user', array('user_id' => $cancel->user_id))->row();
         }
-  
+    
         $this->page_data['reserve_list'] = $reserve_list;
         $this->page_data['wait_list'] = $wait_list;
         $this->page_data['cancel_list'] = $cancel_list;
         $this->page_data['schedule_info'] = $schedule_info;
         $this->page_data['page_name'] = "studio";
         $this->load->view('back/studio/schedule_status', $this->page_data);
-      
-      }
     
+      }
+  
+    } else if ($para1 == 'status2') {
+  
+      if (isset($_GET['page']) == false || isset($_GET['date']) == false) {
+        $this->redirect_error('비정상적인 접근입니다!');
+      }
+  
+      $page = $_GET['page'];
+      $limit = $this->studio_model::RESERVE_LIST2_PAGE_SIZE;
+      $offset = ($page - 1) * $limit;
+  
+      $reserve_list_date = $_GET['date'];
+      if ($reserve_list_date == '') {
+        $reserve_list_date = date('Y-m-d H:i:s');
+      }
+      
+      $schedule_list = array();
+      $reserve_list = $this->studio_model->get_studio_reserve_list($this->studio_id, $reserve_list_date, $limit, $offset);
+      foreach ($reserve_list as $reserve) {
+        $reserve->user = $this->db->get_where('user', array('user_id' => $reserve->user_id))->row();
+        if (!isset($schedule_list[$reserve->schedule_info_id])) {
+          $schedule_list[$reserve->schedule_info_id] = $this->studio_model->get_schedule_info($reserve->schedule_info_id);
+        }
+        $reserve->schedule_info = $schedule_list[$reserve->schedule_info_id];
+      }
+  
+      $this->page_data['reserve_list'] = $reserve_list;
+      $this->page_data['reserve_list_date'] = $reserve_list_date;
+      $this->page_data['page_name'] = "studio";
+      $this->load->view('back/studio/schedule_status2', $this->page_data);
+  
+    } else if ($para1 == 'status3') {
+  
+      if (isset($_GET['id']) == false) {
+        $this->redirect_error('비정상적인 접근입니다!');
+      }
+  
+      $schedule_info_id = $_GET['id'];
+      $schedule_info = $this->studio_model->get_schedule_info($schedule_info_id);
+      if (isset($schedule_info) == false || empty($schedule_info) == true) {
+        $this->redirect_error('비정상적인 접근입니다!');
+      }
+  
+      $this->page_data['schedule_info'] = $schedule_info;
+      $this->page_data['page_name'] = "studio";
+      $this->load->view('back/studio/schedule_status3', $this->page_data);
+  
     } else {
   
       if (isset($_GET['y']) == true && isset($_GET['m']) == true && isset($_GET['d']) == true) {

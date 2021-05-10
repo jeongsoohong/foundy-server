@@ -75,9 +75,9 @@
               exit: 'animated lightSpeedOut'
             }
           });
-          console.log(reload);
-          console.log(relocation);
-          console.log(callback);
+          // console.log(reload);
+          // console.log(relocation);
+          // console.log(callback);
           if (reload === true) {
             setTimeout(function(){location.reload()}, 1000);
           } else if (relocation !== '') {
@@ -186,13 +186,16 @@
     });
   }
 
-  function get_page(id, url, loading = true) {
+  function get_page(id, url, loading = true, callback = null) {
     if (loading) {
       $('#loading_set').show();
     }
     $('#' + id).load(url);
     if (loading) {
       $("#loading_set").delay(500).fadeOut(500);
+    }
+    if (callback !== null) {
+      callback();
     }
   }
 

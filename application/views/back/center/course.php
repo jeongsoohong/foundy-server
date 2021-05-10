@@ -28,7 +28,7 @@ input:checked + .slider:before {
     transform: translateX(0px);
 }
   */
-  .type\:active {
+  .type\:active, .type\:disabled {
     position: relative;
   }
   .agree_btn {

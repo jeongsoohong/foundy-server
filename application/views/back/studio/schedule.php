@@ -8,9 +8,16 @@
         <img src="<?= base_url(); ?>template/back/center/imgs/icon_next_white.png" width="6" height="auto" style="display: none;" class="next_white">
       </div>
     </a>
+    <a href="#" class="tit_theme" id="schedule_bookStatus" style="letter-spacing: -0.03em;">
+      스케줄 예약현황
+      <div class="theme_arrow">
+        <img src="<?= base_url(); ?>template/back/center/imgs/icon_next.png" width="6" height="auto" style="">
+        <img src="<?= base_url(); ?>template/back/center/imgs/icon_next_white.png" width="6" height="auto" style="display: none;" class="next_white">
+      </div>
+    </a>
   </div>
   <div class="info--contents scroll-y_hidden">
-    <section class="contents_type contents_schedule scroll-y">
+    <section class="contents_type contents_schedule scroll-y" style="display: none;">
       <h3 class="meaning">스케줄 관리</h3>
       <div class="type_wrap sch_wrap">
         <div class="type_box sch_register shadow">
@@ -619,9 +626,235 @@
         </div>
       </div>
     </section>
+    <section class="contents_type contents_schedule scroll-y">
+      <h3 class="meaning">스케줄 관리</h3>
+      <div class="type_wrap sch_wrap">
+        <div class="type_box sch_status shadow">
+          <div class="status_type_tit">
+            <p class="type_tit">스케줄 예약현황</p>
+            <div class="type_fn_sch fn_sch_wrap">
+              <button class="sch__btn sch-filter-btn">
+                <div class="seeAll-btn-div type:btn-div">
+                  <p class="btn-tip-detail tip-detail-case detail-fontStyle">수업별 현황</p>
+                </div>
+                <div class="filter-class-icon txt-tip-icon">
+                  <img src="<?= base_url(); ?>template/icon/ic_filter_class.png" alt="스케줄 전체 보기" width="19" height="13">
+                </div>
+                <script>
+                  $(function(){
+                    $('.sch-filter-btn').click(function(){
+                      // filter-class-type 호출
+                      let target = $('#sch-filter-btn');
+                      if (target.css('top') === '0px') {
+                        target.css('top', '35px');
+                      }
+                      target.toggle();
+                    })
+                  })
+                </script>
+              </button>
+            </div>
+            <div class="filter-class-type shadow_sp" id="sch-filter-btn">
+              <button class="type-chkArrow">
+                <img src="<?= base_url(); ?>template/icon/ic_display_Arrow.png" width="11" height="9">
+              </button>
+              <input type="text" value="수업별 현황" data-action="class" class="type-cat-val type-cat-class" readonly>
+              <input type="text" value="실시간 현황" data-action="time" class="type-cat-val type-cat-time" readonly>
+            </div>
+            <script>
+              $(function(){
+                // type-cat-class 호버
+                $('.type-cat-val').hover(function(){
+                  let action = $(this).data('action');
+                  let set_spot = 0;
+                  if(action === "class") {
+                    set_spot = 0;
+                  }
+                  else if(action === "time") {
+                    set_spot = '32px';
+                  }
+                  $(this).closest('.filter-class-type').find('.type-chkArrow').show().css({
+                    top : set_spot
+                  })
+                },function(){
+                  $(this).closest('.filter-class-type').find('.type-chkArrow').hide();
+                })
+                // type-cat-val 클릭
+                $('.type-cat-val').click(function(){
+                  let val = $(this).val();
+                  let action = $(this).data('action');
+  
+                  $(this).parent().hide();
+                  $('div[class^="stuBook__"]').hide();
+                  if(action === "class") {
+                    $('#stuBook .stuBook__class').show();
+                    $(this).parent().prev().find('.tip-detail-case').text(val);
+                  }
+                  else if(action === "time") {
+                    reserve_list2_page = 0;
+                    reserve_list2_date = '';
+                    $('#schedule_status_detail2').html('');
+                    get_reserve_list2();
+                    $('#stuBook .stuBook__realTime').show();
+                    $(this).parent().prev().find('.tip-detail-case').text(val);
+                  }
+                })
+              })
+            </script>
+          </div>
+          <div class="stuBook" id="stuBook">
+            <!-- 수업별 현황 -->
+            <div class="stuBook__class" style="display: none;">
+              <p class="class--inStatus">수업별 현황</p>
+              <div class="class--inOpt type_fn_sch">
+                <button class="sch__btn sch-search-btn" onclick="fn_searchSch();">
+                  <div class="search-btn-wrap">
+                    <div class="search-btn-div type:btn-div">
+                      <p class="btn-tip-detail">스케줄 검색</p>
+                    </div>
+                    <div class="search-btn-icon txt-tip-icon">
+                      <img src="<?= base_url(); ?>template/icon/ic_search_sch.png" alt="스케줄 검색" width="17" height="16">
+                    </div>
+                  </div>
+                  <script>
+                    function fn_searchSch() {
+                      // Upcoming Zoom 15개 숨김, 검색결과 호출
+                      // .search-btn-pop 보이게
+                      $('.search-btn-pop').toggle();
+                    }
+                  </script>
+                </button>
+                <button class="sch__btn sch-seeAll-btn" onclick="fn_seeAll();">
+                  <div class="seeAll-btn-div type:btn-div">
+                    <p class="btn-tip-detail">전체보기</p>
+                  </div>
+                  <div class="seeAll-btn-icon txt-tip-icon">
+                    <img src="<?= base_url(); ?>template/icon/ic_see_allSch.png" alt="스케줄 전체 보기" width="15" height="16">
+                  </div>
+                  <script>
+                    function fn_seeAll() {
+                      //  검색결과 숨김, Upcoming Zoom 15개 호출
+                      get_schedule_list2();
+                    }
+                  </script>
+                </button>
+              </div>
+              <!-- 스케줄 검색 팝업 -->
+              <div class="class--inSearch search-btn-pop pop:searchSch" style="display: none;">
+                <p class="searchSch_example">‘ 연/월/일 ’의 6자리로 검색해주세요.</p>
+                <div class="searchSch_term">
+                  <input type="number" id="schedule_date2" placeholder="ex) 21년 4월 5일 -> 210405" class="term_search_tip">
+                  <button class="term_search_btn" onclick="get_schedule_list2('d')">
+                    <img src="<?= base_url(); ?>template/icon/ic_pop_searchSch.png" alt="스케줄 검색" width="16" height="16">
+                  </button>
+                </div>
+              </div>
+              <div class="class--inList sch_detail" id="schedule_list2">
+                <!-- class list -->
+              </div>
+            </div>
+            <!-- 실시간 현황 -->
+            <div class="stuBook__realTime" style="display: none;">
+              <p class="realTime--inStatus">실시간 현황</p>
+              <div class="realTime--inView">
+                <div class="detail_table table_main situation_table">
+                  <table class="table_head">
+                    <colgroup>
+                      <col width="8%">
+                      <col width="8%">
+                      <col width="15%">
+                      <col width="7%">
+                      <col width="10%">
+                      <col width="10%">
+                      <col width="5%">
+                      <col width="9%">
+                      <col width="9%">
+                      <col width="9%">
+                      <col width="10%">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                      <th>티켓팅 일시</th>
+                      <th>수업 일시</th>
+                      <th>수업명</th>
+                      <th>이름</th>
+                      <th>아이디</th>
+                      <th>전화번호</th>
+                      <th>결제자정보</th>
+                      <th>상태</th>
+                      <th>확정</th>
+                      <th>취소</th>
+                      <th>수업링크발송</th>
+                    </tr>
+                    </thead>
+                  </table>
+                  <div class="table_body_wrap">
+                    <div class="table_body main_case scroll-y" id="ticket_member_list2" style="border: 1px solid #EAEAEA;height: auto; border-radius: 0 0 4px 4px;">
+                      <table class="table-list" style="display: table; border: 0;">
+                        <colgroup>
+                          <col width="8%">
+                          <col width="8%">
+                          <col width="15%">
+                          <col width="7%">
+                          <col width="10%">
+                          <col width="10%">
+                          <col width="5%">
+                          <col width="9%">
+                          <col width="9%">
+                          <col width="9%">
+                          <col width="10%">
+                        </colgroup>
+                        <tbody id="schedule_status_detail2">
+                        <!-- real time schedule list -->
+                        </tbody>
+                        <script>
+                          $(function() {
+                            $('#ticket_member_list2 .send_link').click(function () {
+                              // alert('success');
+                              $(this).closest('.boxwrap__info').next().show().find('#send-zoom-link').show();
+                            })
+                          })
+                        </script>
+                      </table>
+                      <style>
+                        .receive.reserve {
+                          color: #0091ea;
+                        }
+                        .receive.wait {
+                          color: #9e9e9e;
+                        }
+                        .receive.cancel{
+                          color: #ff6633;
+                        }
+                        .send, .perforce {
+                          left: 3px;
+                        }
+                        .send.active, .perforce.active {
+                          left: 35px;
+                        }
+                        .send, .perforce {
+                          -webkit-transition: all 0.5s ease;
+                          -moz-transition: all 0.5s ease;
+                          -o-transition: all 0.5s ease;
+                          transition: all 0.5s ease;
+                        }
+                        #stu .red_sign {
+                          background-color: #ff6633;
+                        }
+                      </style>
+                    </div>
+                  </div>
+                </div>
+                <button class="detail_table_more" onclick="get_reserve_list2();">MORE</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </div>
-<div class="popup-box" style="overflow: scroll;">
+<div class="popup-box" style="overflow: scroll; display: none;">
   <div class="popup theme:alert_remove_this" id="popScheduleRemove" style="display: none;">
     <div class="popup_cnt">
       <div class="guide_box confirm_box" style="padding-top: 36px; margin-bottom: 16px;">
@@ -675,6 +908,27 @@
     </button>
     <div class="situation_detail" id="schedule_status_detail">
       <!-- 예약 현황 -->
+    </div>
+  </div>
+  <!-- 실시간 예약현황 수업링크발송 '발송' 클릭 팝업 -->
+  <div class="popup theme:sendZoom" id="send-zoom-link" style="display: none;">
+    <div class="sendConts sendZoomBox" style="height: 620px;">
+      <button class="situation_close" onclick="fn_close_zoom2();">
+        <img src="<?= base_url(); ?>template/front/header/imgs/icon_close_black.png" width="12" height="12" alt="닫기" style="opacity: 0.2;">
+        <!-- popup_box, pop:history 닫기 -->
+        <script>
+          function fn_close_zoom2() {
+            $('.popup-box').hide().children('#send-zoom-link').hide();
+          }
+          function fn_open_zoom2(id) {
+            get_page('zoom2', '<?php echo base_url(); ?>studio/schedule/status3?id='+id, false, function() {
+              $('.popup-box').show().children('#send-zoom-link').show();
+            });
+          }
+        </script>
+      </button>
+      <div class="detail_zoom" id="zoom2">
+      </div>
     </div>
   </div>
 </div>
@@ -976,24 +1230,28 @@
       }
     });
   }
-  function set_class_link(id) {
+  function set_class_link(id, post_fix = '') {
     
     // console.log(id);
     
     let data = [];
     let url = '<?php echo base_url()."studio/schedule/link/set"; ?>';
     let sid = id;
-    let send_link_immediate = $('#send_link_immediate').prop('checked') ? 1 : 0;
-    let send_link_hour = $('#send_link_hour').val();
-    let class_link = $('#class_link').val();
-    let class_id = $('#class_id').val();
-    let class_pw = $('#class_pw').val();
+    let send_link_immediate = $('#send_link_immediate' + post_fix).prop('checked') ? 1 : 0;
+    let send_link_hour = $('#send_link_hour' + post_fix).val();
+    let class_link = $('#class_link' + post_fix).val();
+    let class_id = $('#class_id' + post_fix).val();
+    let class_pw = $('#class_pw' + post_fix).val();
+    let class_info = $('#letterZone' + post_fix).val();
+    let reuse_class_info = $('#send_talk_since' + post_fix).prop('checked') === true ? 1 : 0;
     
     // console.log(send_link_immediate);
     // console.log(send_link_hour);
     // console.log(class_link);
     // console.log(class_id);
     // console.log(class_pw);
+    // console.log(class_info);
+    // console.log(reuse_class_info);
     
     if (send_link_immediate === 0) {
       if (send_link_hour < 1) {
@@ -1017,6 +1275,8 @@
     data['class_link'] = class_link;
     data['class_id'] = class_id;
     data['class_pw'] = class_pw;
+    data['class_info'] = class_info;
+    data['reuse_class_info'] = reuse_class_info;
   
     // console.log(data);
   
@@ -1039,4 +1299,215 @@
   $(function() {
     add_menu_active('schedule');
   })
+</script>
+<script>
+  function get_reserve_list(id) {
+    $('.popup-box').show();
+    get_page('schedule_status_detail', '<?php echo base_url(); ?>studio/schedule/status?id='+id, true);
+    $('#schedule_status').show();
+    return false;
+  }
+  function open_popSchedule(id) {
+    $('.popup-box').show();
+    get_page('popScheduleRewrite', '<?php echo base_url(); ?>studio/schedule/edit?id='+id, true);
+    $('#popScheduleRewrite').show();
+    return false;
+  }
+  let remove_date;
+  function open_schedule_remove_popup(id, date) {
+    remove_date = date;
+    $('#popScheduleRemove').data('id',id);
+    $('.popup-box').show();
+    $('#popScheduleRemove').show();
+  }
+  function close_schedule_remove_popup() {
+    $('#popScheduleRemove').data('id','');
+    $('.popup-box').hide();
+    $('#popScheduleRemove').hide();
+  }
+  function unregister_schedule() {
+    let url = '<?php echo base_url()."studio/schedule/unregister"; ?>';
+    
+    let data = [];
+    data['id'] = $('#popScheduleRemove').data('id');
+    send_post_data(data, url, function() {
+      $.notify({
+        message: '성공하였습니다.',
+        icon: 'fa fa-check'
+      }, {
+        type: 'success',
+        timer: 1000,
+        delay: 2000,
+        animate: {
+          enter: 'animated lightSpeedIn',
+          exit: 'animated lightSpeedOut'
+        }
+      });
+      console.log(remove_date);
+      let _y = remove_date.substr(0, 4);
+      let _m = remove_date.substr(5, 2);
+      let _d = remove_date.substr(8, 2);
+      setTimeout(function() {window.location = '<?= base_url(); ?>studio/schedule?t=schedule&y=' + _y + '&m=' + _m + '&d=' + _d;}, 1000);
+    });
+  }
+  
+  function get_schedule_list2(type = '') {
+    let date = '';
+    if (type === 'd') {
+      date = $('#schedule_date2').val();
+      if (isNaN(parseInt(date))) {
+        alert('숫자만 입력바랍니다!');
+        return false;
+      }
+      if (date.length !== 6) {
+        alert('6자리로 정확히 입력바랍니다!');
+        return false;
+      }
+    }
+    // console.log(type);
+    // console.log(date);
+    get_page('schedule_list2', '<?= base_url(); ?>studio/schedule/list2?date=' + date, true);
+    $('.search-btn-pop').hide();
+  }
+
+
+  let reserve_list2_page = 0;
+  let reserve_list2_date = '';
+  function get_reserve_list2(){
+    reserve_list2_page++;
+    // console.log(reserve_list2_page);
+    // console.log(reserve_list2_date);
+    $('#loading_set').show();
+    $.ajax({
+      url: "<?php echo base_url().'studio/schedule/status2?page='; ?>"  + reserve_list2_page + '&date=' + reserve_list2_date,
+      type: 'GET', // form submit method get/post
+      dataType: 'html', // request type html/json/xml
+      success: function(data) {
+        $("#loading_set").delay(500).fadeOut(500);
+        let prevCnt = $('#schedule_status_detail2 tr').length;
+        $('#schedule_status_detail2').append(data);
+        let listCnt = $('#schedule_status_detail2 tr').length;
+        if ( listCnt === 0 || listCnt % <?= $this->studio_model::RESERVE_LIST2_PAGE_SIZE ?> !== 0 || prevCnt === listCnt) {
+          $('.detail_table_more').hide();
+        } else {
+          $('.detail_table_more').show();
+        }
+        // console.log(prevCnt);
+        // console.log(listCnt);
+      },
+      error: function(e) {
+        console.log(e)
+      }
+    });
+  }
+  // $(function() {
+  //   get_schedule_list2();
+  // })
+</script>
+<script>
+  // 입금 요청, 티켓팅 확정 클릭이벤트
+  let RESERVE_STR = '<?= $this->studio_model->get_reserve_str(); ?>';
+  let WAIT_STR = '<?= $this->studio_model->get_wait_str(); ?>';
+  let CANCEL_STR = '<?= $this->studio_model->get_cancel_str(); ?>';
+  
+  function set_reserve(target) {
+    target.removeClass('wait');
+    target.removeClass('cancel');
+    target.addClass('reserve');
+    target.text(RESERVE_STR);
+  }
+  function set_wait(target) {
+    target.removeClass('reserve');
+    target.removeClass('cancel');
+    target.addClass('wait');
+    target.text(WAIT_STR);
+  }
+  function set_cancel(target) {
+    target.removeClass('reserve');
+    target.removeClass('cancel');
+    target.addClass('cancel');
+    target.text(CANCEL_STR);
+  }
+  
+  function set_reserve_active(target) {
+    let active = target.hasClass('ok_sign');
+    let receive_target = target.parent().prev().find('.receive');
+    // console.log(active);
+    if (active === true) {
+      target.removeClass('ok_sign');
+      target.find('.send').removeClass('active');
+      target.parent().next().find('.td_perforce').removeClass('red_sign');
+      target.parent().next().find('.perforce').removeClass('active');
+      set_wait(receive_target);
+    } else {
+      target.addClass('ok_sign');
+      target.find('.send').addClass('active');
+      target.parent().next().find('.td_perforce').removeClass('red_sign');
+      target.parent().next().find('.perforce').removeClass('active');
+      set_reserve(receive_target);
+    }
+  }
+  
+  function set_cancel_active(target) {
+    let active = target.hasClass('red_sign');
+    let receive_target = target.parent().prev().prev().find('.receive');
+    // console.log(active);
+    if (active === true) {
+      target.removeClass('red_sign');
+      target.find('.perforce').removeClass('active');
+      target.parent().prev().find('.send').removeClass('active');
+      target.parent().prev().find('.td_send').removeClass('ok_sign');
+      set_wait(receive_target);
+    } else {
+      target.addClass('red_sign');
+      target.find('.perforce').addClass('active');
+      target.parent().prev().find('.send').removeClass('active');
+      target.parent().prev().find('.td_send').removeClass('ok_sign');
+      set_cancel(receive_target);
+    }
+  }
+
+  function schedule_reserve_active(target) {
+    let url = '<?php echo base_url()."studio/schedule/status/update"; ?>';
+    let rid = target.data('id');
+    let status = 0;
+    let data = [];
+  
+    if (target.hasClass('ok_sign')) {
+      status = <?= $this->studio_model::TICKETING_STATUS_WAIT; ?>;
+    } else {
+      status = <?= $this->studio_model::TICKETING_STATUS_RESERVE; ?>;
+    }
+  
+    data['rid'] = rid;
+    data['status'] = status;
+  
+    // console.log(data);
+  
+    send_post_data(data, url, function() {
+      set_reserve_active(target);
+    });
+  }
+
+  function schedule_cancel_active(target) {
+    let url = '<?php echo base_url()."studio/schedule/status/update"; ?>';
+    let rid = target.data('id');
+    let status = 0;
+    let data = [];
+  
+    if (target.hasClass('red_sign')) {
+      status = <?= $this->studio_model::TICKETING_STATUS_WAIT; ?>;
+    } else {
+      status = <?= $this->studio_model::TICKETING_STATUS_CANCEL; ?>;
+    }
+  
+    data['rid'] = rid;
+    data['status'] = status;
+  
+    // console.log(data);
+  
+    send_post_data(data, url, function() {
+      set_cancel_active(target);
+    });
+  }
 </script>

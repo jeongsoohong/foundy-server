@@ -767,7 +767,8 @@ MSG;
     return $this->send_atalk($phone, $msg, $subject, $template_code, $replace_type);
   }
   
-  function send_studio_class_reserve_link($phone, $teacher_name, $schedule_title, $date, $start_time, $link, $id, $pw, $studio_email)
+  function send_studio_class_reserve_link($phone, $teacher_name, $schedule_title, $date, $start_time, $link,
+                                          $id, $pw, $studio_email, $class_info)
   {
     if ($phone == null || $phone == '') {
       return 0;
@@ -801,7 +802,18 @@ MSG;
     $msg = str_replace('#{링크}', $link, $msg);
     $msg = str_replace('#{id}', $id, $msg);
     $msg = str_replace('#{pw}', $pw, $msg);
-    $msg = str_replace('#{강사이메일}', $studio_email, $msg);
+   
+    // 수업안내 메세지를 '강사이메일'절과 함께 사용함(카카오 알림톡 템플릿 코드 재등록 방지를 위해)
+    if (isset($class_info) == true && empty($class_info) == false) {
+      $replace_email = <<<MSG
+{$studio_email}
+
+{$class_info}
+MSG;
+      $msg = str_replace('#{강사이메일}', $replace_email, $msg);
+    } else {
+      $msg = str_replace('#{강사이메일}', $studio_email, $msg);
+    }
     
     $subject = '온라인클래스 티켓팅 확정';
     $template_code = 'FOUNDY_Onlinereservation02';
@@ -830,7 +842,7 @@ MSG;
     if (isset($schedule_info->class_link)) {
       $this->send_studio_class_reserve_link($user_data->phone, $schedule_info->teacher_name, $schedule_info->schedule_title,
         $schedule_info->schedule_date, $schedule_info->start_time, $schedule_info->class_link, $schedule_info->class_id, $schedule_info->class_pw,
-        (isset($studio_info->email) ? $studio_info->email : $studio_user_data->email));
+        (isset($studio_info->email) ? $studio_info->email : $studio_user_data->email), $schedule_info->class_info);
     } else {
       $this->send_studio_class_reserve_notlink($user_data->phone, $schedule_info->teacher_name, $schedule_info->schedule_title,
         $schedule_info->schedule_date, $schedule_info->start_time);

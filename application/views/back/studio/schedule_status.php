@@ -49,21 +49,15 @@
             <td><?= $reserve->user->phone; ?></td>
             <td><?= $reserve->payer_info; ?></td>
             <td class="data_txt">
-              <!-- 확정X -> 입금 요청 / 확정O -> 티켓팅 확정   -->
-              <!-- 상태 -->
               <span class="receive reserve"><?= $this->studio_model->get_reserve_str(); ?></span>
             </td>
             <td class="data_form">
-              <button class="td_send ok_sign" data-id="<?= $reserve->reserve_id; ?>">
-                <!-- 확정X -> 입금 요청 / 확정O -> 티켓팅 확정   -->
-                <!-- 버튼 폼 -->
+              <button class="td_send ok_sign" data-id="<?= $reserve->reserve_id; ?>" onclick="schedule_reserve_active($(this))">
                 <span class="send shadow active"></span>
               </button>
             </td>
             <td>
-              <button class="td_perforce" data-id="<?= $reserve->reserve_id; ?>">
-                <!-- 확정X -> 입금 요청 / 확정O -> 티켓팅 확정   -->
-                <!-- 버튼 폼 -->
+              <button class="td_perforce" data-id="<?= $reserve->reserve_id; ?>" onclick="schedule_cancel_active($(this))">
                 <span class="perforce shadow"></span>
               </button>
             </td>
@@ -80,21 +74,15 @@
             <td><?= $wait->user->phone; ?></td>
             <td><?= $wait->payer_info; ?></td>
             <td class="data_txt">
-              <!-- 확정X -> 입금 요청 / 확정O -> 티켓팅 확정   -->
-              <!-- 상태 -->
               <span class="receive wait"><?= $this->studio_model->get_wait_str(); ?></span>
             </td>
             <td class="data_form">
-              <button class="td_send" data-id="<?= $wait->reserve_id; ?>">
-                <!-- 확정X -> 입금 요청 / 확정O -> 티켓팅 확정   -->
-                <!-- 버튼 폼 -->
+              <button class="td_send" data-id="<?= $wait->reserve_id; ?>" onclick="schedule_reserve_active($(this))">
                 <span class="send shadow"></span>
               </button>
             </td>
             <td>
-              <button class="td_perforce" data-id="<?= $wait->reserve_id; ?>">
-                <!-- 확정X -> 입금 요청 / 확정O -> 티켓팅 확정   -->
-                <!-- 버튼 폼 -->
+              <button class="td_perforce" data-id="<?= $wait->reserve_id; ?>" onclick="schedule_cancel_active($(this))">
                 <span class="perforce shadow"></span>
               </button>
             </td>
@@ -111,21 +99,15 @@
             <td><?= $cancel->user->phone; ?></td>
             <td><?= $cancel->payer_info; ?></td>
             <td class="data_txt">
-              <!-- 확정X -> 입금 요청 / 확정O -> 티켓팅 확정   -->
-              <!-- 상태 -->
               <span class="receive cancel"><?= $this->studio_model->get_cancel_str(); ?></span>
             </td>
             <td class="data_form">
-              <button class="td_send" data-id="<?= $cancel->reserve_id; ?>">
-                <!-- 확정X -> 입금 요청 / 확정O -> 티켓팅 확정   -->
-                <!-- 버튼 폼 -->
+              <button class="td_send" data-id="<?= $cancel->reserve_id; ?>" onclick="schedule_reserve_active($(this))">
                 <span class="send shadow"></span>
               </button>
             </td>
             <td>
-              <button class="td_perforce red_sign" data-id="<?= $cancel->reserve_id; ?>">
-                <!-- 확정X -> 입금 요청 / 확정O -> 티켓팅 확정   -->
-                <!-- 버튼 폼 -->
+              <button class="td_perforce red_sign" data-id="<?= $cancel->reserve_id; ?>" onclick="schedule_cancel_active($(this))">
                 <span class="perforce shadow active"></span>
               </button>
             </td>
@@ -162,118 +144,6 @@
           background-color: #ff6633;
          }
       </style>
-      <script>
-        // 입금 요청, 티켓팅 확정 클릭이벤트
-        let RESERVE_STR = '<?= $this->studio_model->get_reserve_str(); ?>';
-        let WAIT_STR = '<?= $this->studio_model->get_wait_str(); ?>';
-        let CANCEL_STR = '<?= $this->studio_model->get_cancel_str(); ?>';
-        
-        function set_reserve(target) {
-          target.removeClass('wait');
-          target.removeClass('cancel');
-          target.addClass('reserve');
-          target.text(RESERVE_STR);
-        }
-        function set_wait(target) {
-          target.removeClass('reserve');
-          target.removeClass('cancel');
-          target.addClass('wait');
-          target.text(WAIT_STR);
-        }
-        function set_cancel(target) {
-          target.removeClass('reserve');
-          target.removeClass('cancel');
-          target.addClass('cancel');
-          target.text(CANCEL_STR);
-        }
-        
-        function set_reserve_active(target) {
-          let active = target.hasClass('ok_sign');
-          let receive_target = target.parent().prev().find('.receive');
-          // console.log(active);
-          if (active === true) {
-            target.removeClass('ok_sign');
-            target.find('.send').removeClass('active');
-            target.parent().next().find('.td_perforce').removeClass('red_sign');
-            target.parent().next().find('.perforce').removeClass('active');
-            set_wait(receive_target);
-          } else {
-            target.addClass('ok_sign');
-            target.find('.send').addClass('active');
-            target.parent().next().find('.td_perforce').removeClass('red_sign');
-            target.parent().next().find('.perforce').removeClass('active');
-            set_reserve(receive_target);
-          }
-        }
-        
-        function set_cancel_active(target) {
-          let active = target.hasClass('red_sign');
-          let receive_target = target.parent().prev().prev().find('.receive');
-          // console.log(active);
-          if (active === true) {
-            target.removeClass('red_sign');
-            target.find('.perforce').removeClass('active');
-            target.parent().prev().find('.send').removeClass('active');
-            target.parent().prev().find('.td_send').removeClass('ok_sign');
-            set_wait(receive_target);
-          } else {
-            target.addClass('red_sign');
-            target.find('.perforce').addClass('active');
-            target.parent().prev().find('.send').removeClass('active');
-            target.parent().prev().find('.td_send').removeClass('ok_sign');
-            set_cancel(receive_target);
-          }
-        }
-
-        $(function(){
-          $('.td_send').click(function(e) {
-            let target = $(this);
-            let url = '<?php echo base_url()."studio/schedule/status/update"; ?>';
-            let rid = target.data('id');
-            let status = 0;
-            let data = [];
-  
-            if (target.hasClass('ok_sign')) {
-              status = <?= $this->studio_model::TICKETING_STATUS_WAIT; ?>;
-            } else {
-              status = <?= $this->studio_model::TICKETING_STATUS_RESERVE; ?>;
-            }
-  
-            data['rid'] = rid;
-            data['status'] = status;
-  
-            // console.log(data);
-  
-            send_post_data(data, url, function() {
-              set_reserve_active(target);
-            });
-          });
-          
-          $('.td_perforce').click(function(e) {
-            let target = $(this);
-            let url = '<?php echo base_url()."studio/schedule/status/update"; ?>';
-            let rid = target.data('id');
-            let status = 0;
-            let data = [];
-            
-            if (target.hasClass('red_sign')) {
-              status = <?= $this->studio_model::TICKETING_STATUS_WAIT; ?>;
-            } else {
-              status = <?= $this->studio_model::TICKETING_STATUS_CANCEL; ?>;
-            }
-            
-            data['rid'] = rid;
-            data['status'] = status;
-            
-            // console.log(data);
-            
-            send_post_data(data, url, function() {
-              set_cancel_active(target);
-            });
-          });
-          
-        })
-      </script>
     </div>
     <div class="table_nav_btns" style="margin: 20px 0;">
       <div class="btns_prev"></div>
@@ -329,7 +199,63 @@
           </span>
         </div>
       </div>
-      <p class="sendTime_message">*수업 링크는 티켓팅 확정된 회원들에게 카카오 알림톡으로 발송됩니다.</p>
+      <!-- 수업 전 안내 카톡 -->
+      <div class="detail_guideTalk" id="guideTalk">
+        <p class="guideTalk_tit">수업 전 안내 카톡</p>
+        <div class="guideTalk_conts">
+          <div class="conts__txtBox">
+            <div class="txtBox-territory">
+              <div class="txtBox--area">
+                <div class="area_letterBox">
+                  <p class="area_letterCount">남은 글자 수
+                    <span class="letter_remain">
+                      <strong class="remain_number">1000</strong>자
+                    </span>
+                  </p>
+                </div>
+                <form class="area_letterForm">
+                  <? if (isset($schedule_info->class_info) == true && empty($schedule_info->class_info) == false) { ?>
+                    <textarea class="area_letterZone" id="letterZone" placeholder="1,000자 이내"><?= $schedule_info->class_info; ?></textarea>
+                  <? } else if (isset($studio->class_info) == true && empty($studio->class_info) == false) { ?>
+                    <textarea class="area_letterZone" id="letterZone" placeholder="1,000자 이내"><?= $studio->class_info; ?></textarea>
+                  <? } else { ?>
+                    <textarea class="area_letterZone" id="letterZone" placeholder="1,000자 이내"></textarea>
+                  <? } ?>
+                </form>
+              </div>
+            </div>
+            <div class="textBox--timer clearfix">
+              <label class="chk_style immediate_kaTalk gray_txt">
+                <input type="checkbox" id="send_talk_since"> 다음에도 사용하기
+              </label>
+            </div>
+          </div>
+          <script>
+            $('#send_talk_since').click(function(){
+              let chk = $(this).prop('checked');
+              if(chk === true) {
+                $(this).parent().removeClass('gray_txt');
+              }
+              else {
+                $(this).parent().addClass('gray_txt');
+              }
+            })
+            $('#guideTalk .area_letterZone').on('keyup',function(){
+              let input = $(this).val().length;
+              let left = 1000 - input;
+              $('#guideTalk .remain_number').text(left);
+          
+              if($(this).val().length > 1000) {
+                alert("글자수는 1,000자 이내로 제한됩니다.");
+                $(this).val($(this).val().substring(0,1000));
+                $('#guideTalk .remain_number').text(0);
+                // left = 0;
+              }
+            })
+          </script>
+        </div>
+      </div>
+      <p class="sendTime_message">* '수업 링크'와 '수업 전 안내 카톡'은 티켓팅 확정된 회원들에게 카카오 알림톡으로 발송됩니다.</p>
     </div>
   </div>
 </div>
@@ -379,6 +305,7 @@
         $('.style_immediate').addClass('gray_txt');
       }
     });
+    
     <? if ($schedule_info->send_link_immediate == 1) { ?>
     $('.chk_immediate').click();
     <? } else { ?>
