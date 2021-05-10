@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css">
   <link rel="stylesheet" href="<?php echo base_url(); ?>template/back/plugins/font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet" href="<?php echo base_url().'template/back/studio/admin.css?v=1.4.0'; ?>">
+  <link rel="stylesheet" href="<?php echo base_url().'template/back/studio/admin.css?v=1.4.1'; ?>">
   
   <!-- font -->
   <link href='https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css' rel='stylesheet' type='text/css'>
