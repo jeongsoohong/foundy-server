@@ -51,6 +51,9 @@
     top: 0;
     left: 0;
     z-index: 25;
+    max-width: 460px;
+    margin: 0 auto;
+    right: 0;
   }
   #serverCheckPopupWrap .pop_transfer {
     position: absolute;
@@ -132,7 +135,7 @@
     <img src="<?= base_url(); ?>template/icon/warning_bar.png" alt="warning_bar" width="288" height="12" class="transfer_warning">
     <div class="transfer_cnt">
       <button class="cnt_close" onclick="fn_close();">
-        <img src="<?= base_url(); ?>template/icon/transfer_close.png" alt="닫기" width="8" height="8" class="close_ic" style="padding-bottom: 2px;">
+        <img src="<?= base_url(); ?>template/icon/transfer_close.png" alt="닫기" width="8" height="8" class="close_ic" style="padding-bottom: 4px;">
         <script>
           function fn_close() {
             let today = new Date();
