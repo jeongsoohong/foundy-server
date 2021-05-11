@@ -152,7 +152,23 @@
           <p class="tit_txt">서버 <span class="status">점검</span> 안내</p>
         </div>
         <div class="alert_daytime">
-          <p class="daytime_data">일시 ㅣ <span id="start_date">12.14</span> (월) <span id="start_time">24</span>시 ~ <span id="end_date">12.15</span> (화) <span id="end_time">06</span>시</p>
+          <p class="daytime_data">일시 ㅣ
+            <span id="start_date">
+              <?= date('m.d', strtotime(SERVER_CHECK_START)) ?>
+            </span>
+            (<?= $this->crud_model->get_week_str(date('w', strtotime(SERVER_CHECK_START))); ?>)
+            <span id="start_time">
+              <?= date('H:i', strtotime(SERVER_CHECK_START)); ?>
+            </span>
+            ~
+            <span id="end_date">
+              <?= date('m.d', strtotime(SERVER_CHECK_END)) ?>
+            </span>
+            (<?= $this->crud_model->get_week_str(date('w', strtotime(SERVER_CHECK_END))); ?>)
+            <span id="end_time">
+              <?= date('H:i', strtotime(SERVER_CHECK_END)); ?>
+            </span>
+          </p>
           <p class="daytime_guide">서버 <span class="status">점검</span>에 대한 일정을 공지하오니 해당<br>시간대에는 접속이 제한됨을 알려드립니다.</p>
         </div>
       </div>

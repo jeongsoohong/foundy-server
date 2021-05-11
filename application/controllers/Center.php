@@ -15,7 +15,15 @@ class Center extends CI_Controller
   {
     parent::__construct();
     $this->load->database();
-    
+  
+    $now = time();
+    if (SERVER_CHECK == true &&
+      strtotime(SERVER_CHECK_START) < $now && $now < strtotime(SERVER_CHECK_END)) {
+      if ($this->uri->segment(2) != 'server' && $this->uri->segment(3) != 'check') {
+        redirect(base_url().'center/server/check');
+      }
+    }
+  
     defined('IMG_PATH_CENTER')   OR define('IMG_PATH_CENTER', '/web/public_html/uploads/center_image/');
     defined('IMG_WEB_PATH_CENTER')   OR define('IMG_WEB_PATH_CENTER', base_url().'uploads/center_image/');
     

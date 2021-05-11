@@ -24,6 +24,14 @@ class Studio extends CI_Controller
     parent::__construct();
     $this->load->database();
   
+    $now = time();
+    if (SERVER_CHECK == true &&
+      strtotime(SERVER_CHECK_START) < $now && $now < strtotime(SERVER_CHECK_END)) {
+      if ($this->uri->segment(2) != 'server' && $this->uri->segment(3) != 'check') {
+        redirect(base_url().'studio/server/check');
+      }
+    }
+  
     /*cache control*/
     $this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
     $this->output->set_header('Pragma: no-cache');

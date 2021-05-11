@@ -10,7 +10,15 @@ class Shop extends CI_Controller
   {
     parent::__construct();
     $this->load->database();
-
+  
+    $now = time();
+    if (SERVER_CHECK == true &&
+      strtotime(SERVER_CHECK_START) < $now && $now < strtotime(SERVER_CHECK_END)) {
+      if ($this->uri->segment(2) != 'server' && $this->uri->segment(3) != 'check') {
+        redirect(base_url().'shop/server/check');
+      }
+    }
+  
     defined('IMG_PATH_SHOP')   OR define('IMG_PATH_SHOP', '/web/public_html/uploads/shop_image/');
     defined('IMG_WEB_PATH_SHOP')   OR define('IMG_WEB_PATH_SHOP', base_url().'uploads/shop_image/');
 

@@ -9,10 +9,14 @@ class Home extends CI_Controller
   function __construct()
   {
     parent::__construct();
-
-//    if ($this->uri->segment(2) != 'server' && $this->uri->segment(3) != 'check') {
-//      redirect(base_url().'home/server/check');
-//    }
+  
+    $now = time();
+    if (SERVER_CHECK == true &&
+      strtotime(SERVER_CHECK_START) < $now && $now < strtotime(SERVER_CHECK_END)) {
+      if ($this->uri->segment(2) != 'server' && $this->uri->segment(3) != 'check') {
+        redirect(base_url().'home/server/check');
+      }
+    }
     
 //   $this->mts_model->send_user_approval_code('01045644126', '123456');
     

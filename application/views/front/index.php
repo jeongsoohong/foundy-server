@@ -331,11 +331,10 @@ include 'includes/bottom/index.php';
   <i class="fa fa-refresh fa-spin fa-5x fa-fw" style="position:relative;top:50%"></i>
 </div>
 <?
-$server_check = false;
 //$this->cookie_model->set_cookie('server_check_popup_time', '0'); // just use only test
 $now = time();
-if ($server_check == true &&
-  strtotime('2020-12-15 19:50:00') < $now && $now < strtotime('2020-12-15 20:50:00') &&
+if (SERVER_CHECK == true &&
+  strtotime(SERVER_CHECK_POPUP_START) < $now && $now < strtotime(SERVER_CHECK_POPUP_END) &&
   $this->cookie_model->get_cookie('server_check_popup_time') < strtotime('-1 day')) {
   include 'others/server_check_popup.php';
 ?>

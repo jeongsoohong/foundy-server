@@ -10,7 +10,15 @@ class Admin extends CI_Controller
     parent::__construct();
     $this->load->database();
     $this->load->library('spreadsheet');
-
+  
+    $now = time();
+    if (SERVER_CHECK == true &&
+      strtotime(SERVER_CHECK_START) < $now && $now < strtotime(SERVER_CHECK_END)) {
+      if ($this->uri->segment(2) != 'server' && $this->uri->segment(3) != 'check') {
+        redirect(base_url().'admin/server/check');
+      }
+    }
+  
     defined('IMG_PATH_PROFILE')  OR define('IMG_PATH_PROFILE', '/web/public_html/uploads/profile_image/');
     defined('IMG_PATH_BLOG')     OR define('IMG_PATH_BLOG', '/web/public_html/uploads/blog_image/');
     defined('IMG_PATH_CENTER')   OR define('IMG_PATH_CENTER', '/web/public_html/uploads/center_image/');
@@ -251,7 +259,7 @@ QUERY;
       $this->load->view('back/login', $page_data);
     }
   }
-
+  
   /* Login into Admin panel */
   function login($para1 = '', $para2 = '')
   {
@@ -464,7 +472,7 @@ QUERY;
       return false;
     }
   }
-
+  
   /* Manage Admin Settings */
   function manage_admin($para1 = "")
   {

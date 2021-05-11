@@ -992,7 +992,8 @@ QUERY;
     }
   }
 
-  function get_product_list($shop_id, $status, $item_name, $cat, $offset, $limit = 10, $order = 'desc', $order_col = 'product_id', $user_id = 0, $order_start = 0) {
+  function get_product_list($shop_id, $status, $item_name, $cat, $offset, $limit = 10,
+                            $order = 'desc', $order_col = 'product_id', $user_id = 0, $order_start = 0) {
     if ($cat == 'wish' || $cat == 'WISH') {
       $query = <<<QUERY
 select a.shop_id,a.status,a.brand_name,b.* from shop_product_id a,shop_product b
@@ -1368,6 +1369,20 @@ QUERY;
   function get_user_auth_type_str($type) {
     switch ($type) {
       case USER_AUTH_TYPE_NICE_CHECK_PLUS_SAFE: return '나이스 안심인증';
+    }
+    return '';
+  }
+  
+  
+  function get_week_str($week) {
+    switch($week) {
+      case 0 : return '일';
+      case 1 : return '월';
+      case 2 : return '화';
+      case 3 : return '수';
+      case 4 : return '목';
+      case 5 : return '금';
+      case 6 : return '토';
     }
     return '';
   }
