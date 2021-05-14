@@ -161,6 +161,7 @@
                 exit: 'animated lightSpeedOut'
               }
             });
+            // alert(data.message);
           }
         } else {
           // console.log(data);
@@ -191,6 +192,43 @@
       $('#loading_set').show();
     }
     $('#' + id).load(url);
+    if (loading) {
+      $("#loading_set").delay(500).fadeOut(500);
+    }
+    if (callback !== null) {
+      callback();
+    }
+  }
+  function get_page2(id, url, loading = true, callback = null) {
+    if (loading) {
+      $('#loading_set').show();
+    }
+    $.get(url, function(data) {
+      // console.log(data);
+      if (IsJsonString(data)) {
+        let title = '<strong>실패하였습니다</strong>';
+        data = JSON.parse(data);
+        $.notify({
+          title: title,
+          message: '<br>' + data.message,
+          icon: 'fa fa-check'
+        }, {
+          type: 'warning',
+          timer: 1000,
+          delay: 5000,
+          animate: {
+            enter: 'animated lightSpeedIn',
+            exit: 'animated lightSpeedOut'
+          }
+        });
+        if (data.redirect !== '') {
+          setTimeout(function() {window.location.href = data.redirect}, 1000);
+        }
+      } else {
+        $('#' + id).html(data);
+      }
+    });
+    // $('#' + id).load(url);
     if (loading) {
       $("#loading_set").delay(500).fadeOut(500);
     }

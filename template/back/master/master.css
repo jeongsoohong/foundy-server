@@ -630,15 +630,24 @@
     text-align: center;
 }
 .li-tit {
+    display: table;
+    width: 100%;
     color: #616161;
     font-size: 13px;
     font-weight: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.tit-compo {
+    display: table-cell;
+    height: 54px;
+    vertical-align: middle;
 }
 #master .li-no {
     color: #111;
-    font-size: 33px;
+    font-size: 24px;
     font-weight: bold;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.03em;
     margin-left: 4px;
 }
 
@@ -650,12 +659,18 @@
     line-height: 36px;
 }
 
+@media(min-width: 942px){
+    .tit-compo {
+        height: 40px;
+    }
+}
+
 @media(min-width: 1025px){
     .li-tit {
         font-size: 14px;
     }
     #master .li-no {
-        letter-spacing: 0.3em;
+        font-size: 27px;
         margin-left: 10px;
     }
     .vertical-h {
@@ -666,6 +681,9 @@
 @media(min-width: 1366px) {
     .vertical-h {
         line-height: unset;
+    }
+    #master .li-no {
+        font-size: 30px;
     }
 }
 
@@ -1606,6 +1624,38 @@ label[class^="chkTip"]:last-child {
     margin: 0;
     width: auto;
 }
+
+#manage_shop_main .chkTip_salesRate,
+#manage_shop_main .chkTip_recent,
+#manage_shop_category .chkTip_salesRate,
+#manage_shop_category .chkTip_recent {
+    display: block;
+    font-size: 12px;
+    margin: 0 0 4px;
+    line-height: unset;
+}
+
+#manage_shop_main .shop--chkTip,
+#manage_shop_category .shop--chkTip {
+    margin-left: 12px;
+}
+
+#master .toggle-seeList {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 220px;
+    width: 72px;
+    height: 36px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 4px;
+    background-color: #433532;
+    vertical-align: top;
+    box-shadow: 0 2px 0 rgb(0 0 0 / 10%);
+}
+
 
 #master .shop--add {
     width: 30%;

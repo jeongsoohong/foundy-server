@@ -11,6 +11,14 @@ class Master extends CI_Controller
     parent::__construct();
     $this->load->database();
   
+    $now = time();
+    if (SERVER_CHECK == true &&
+      strtotime(SERVER_CHECK_START) < $now && $now < strtotime(SERVER_CHECK_END)) {
+      if ($this->uri->segment(2) != 'server' && $this->uri->segment(3) != 'check') {
+        redirect(base_url().'master/server/check');
+      }
+    }
+  
     /*cache control*/
     $this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
     $this->output->set_header('Pragma: no-cache');
@@ -63,7 +71,7 @@ class Master extends CI_Controller
     $this->load->view('front/others/info', $this->page_data);
   }
   
-  private function redirect_error($msg = '', $page = 'mater') {
+  private function redirect_error($msg = '', $page = 'master') {
     redirect(base_url().'studio/error?m='.$msg.'&p='.$page);
   }
   
@@ -72,8 +80,18 @@ class Master extends CI_Controller
   }
   
   private function response($result) {
-    echo json_encode($result);
+    echo json_encode($result, JSON_UNESCAPED_UNICODE);
     exit;
+  }
+  
+  private function response2($status, $msg = '', $redirect = '') {
+    $result['status'] = $status;
+    if ($status == 'done' && $msg == '') {
+      $msg = '성공하였습니다!';
+    }
+    $result['message'] = $msg;
+    $result['redirect'] = $redirect;
+    $this->response($result);
   }
   
   private function alert_exit($msg, $relocate = '') {
@@ -412,6 +430,7 @@ QUERY;
       $this->db->select('sum(total_balance - cancel_price) as sum');
       $this->db->where("purchase_at>='{$date}'");
       $sales3 = $this->db->get('shop_purchase_product')->row()->sum;
+      $sales3 = ($sales3 ? $sales3 : 0);
       
       // 승인대기 제품
       $status = SHOP_PRODUCT_STATUS_REQUEST;
@@ -525,9 +544,276 @@ QUERY;
   public function manage($p1 = '', $p2 = '', $p3 = '')
   {
     if ($this->is_logged() == false) {
-      $this->load->view('back/login', $this->page_data);
-    } else {
+      redirect(base_url().'master');
+    }
+
+    if ($p1 == 'page') {
+  
+      if (isset($_GET['tab']) == false || empty($_GET['tab']) == true) {
+        $this->redirect_error('잘못된 접근입니다.');
+      }
+  
+      $tab = $_GET['tab'];
+  
+      $this->load->view('back/master/manage_' . $tab, $this->page_data);
+  
+    } else if ($p1 == 'shop') {
+  
+      if ($p2 == 'join') {
+    
+        if (isset($_POST['ids']) == false || empty($_POST['ids']) == true) {
+          $this->response2('fail', '잘못된 접근입니다.(ids)');
+        }
+    
+        if (isset($_POST['type']) == false || empty($_POST['type']) == true) {
+          $this->response2('fail', '잘못된 접근입니다.(type)');
+        }
+    
+        if (isset($_POST['mode']) == false || empty($_POST['mode']) == true) {
+          $this->response2('fail', '잘못된 접근입니다.(mode)');
+        }
+    
+        $type = $_POST['type'];
+        if ($type != 'best' && $type != 'new' && $type != 'recommend' &&
+          $type != 'yoga' && $type != 'vegan' && $type != 'healing') {
+          $this->response2('fail', '잘못된 접근입니다.(type:'.$type.')');
+        }
+    
+        if ($type == 'yoga') {
+          $cat = '01';
+          $type = 'best2';
+        } else if ($type == 'vegan') {
+          $cat = '02';
+          $type = 'best2';
+        } else if ($type == 'healing') {
+          $cat = '03';
+          $type = 'best2';
+        } else { // shop main (best, new, recommend)
+          $cat = null;
+        }
+    
+        $mode = $_POST['mode'];
+        if ($mode != 'add' && $mode != 'del') {
+          $this->response2('fail', '잘못된 접근입니다.(mode:' . $mode . ')');
+        }
+    
+        $ids = json_decode($_POST['ids']);
+        foreach ($ids as $product_id) {
+          $product = $this->db->get_where('shop_product_id', array('product_id' => $product_id))->row();
+          if (isset($product) == false || empty($product) == true) {
+            $this->response2('fail', '잘못된 접근입니다.(product_id:' . $product_id . ')');
+          }
+          if ($mode == 'add' && $product->{$type} > 0) {
+            $this->response2('fail', '이미 추가된 상품이 포함되었습니다.(product_code:' . $product->product_code. ')');
+          }
+          if ($mode == 'del' && $product->{$type} == 0) {
+            $this->response2('fail', '이미 추가된 삭제이 포함되었습니다.(product_code:' . $product->product_code. ')');
+          }
+      
+        }
+    
+        if ($mode == 'add') {
+          $status = SHOP_PRODUCT_STATUS_ON_SALE;
+          $this->db->select("max({$type}) as max");
+          $this->db->where("{$type}>0 and status={$status}");
+          if ($cat != null) {
+            $this->db->where("product_code like '{$cat}%'");
+          }
+          $value = $this->db->get('shop_product_id')->row()->max;
+      
+          foreach ($ids as $product_id) {
+            $value++;
+            $this->db->set($type, $value);
+            $this->db->where('product_id', $product_id);
+            $this->db->update('shop_product_id');
+          }
+      
+          $this->response2('done', '추가되었습니다.');
+        } else {
+          $this->db->set($type, '0');
+          $this->db->where_in('product_id', $ids);
+          $this->db->delete('shop_product_id');
+      
+          $this->response2('done', '삭제되었습니다.');
+        }
+    
+      } else if ($p2 == 'order') {
+  
+          if (isset($_POST['type']) == false || empty($_POST['type']) == true) {
+            $this->response2('fail', '잘못된 접근입니다.(type)');
+          }
+  
+          if (isset($_POST['mode']) == false || empty($_POST['mode']) == true) {
+            $this->response2('fail', '잘못된 접근입니다.(mode)');
+          }
+          
+          if (isset($_POST['pid']) == false || empty($_POST['pid']) == true) {
+            $this->response2('fail', '잘못된 접근입니다.(pid)');
+          }
+  
+          $type = $_POST['type'];
+          if ($type != 'best' && $type != 'new' && $type != 'recommend' &&
+            $type != 'yoga' && $type != 'vegan' && $type != 'healing') {
+            $this->response2('fail', '잘못된 접근입니다.(type:'.$type.')');
+          }
+  
+          if ($type == 'yoga') {
+            $cat = '01';
+            $type = 'best2';
+          } else if ($type == 'vegan') {
+            $cat = '02';
+            $type = 'best2';
+          } else if ($type == 'healing') {
+            $cat = '03';
+            $type = 'best2';
+          } else { // sho main (best, new, recommend)
+            $cat = null;
+          }
+          
+          $mode = $_POST['mode'];
+          if ($mode != 'up' && $mode != 'down') {
+            $this->response2('fail', '잘못된 접근입니다.(mode:' . $mode . ')');
+          }
+
+          $pid = $_POST['pid'];
+          $product = $this->db->get_where('shop_product_id', array('product_id' => $pid))->row();
+          if (isset($product) == false || empty($product) == true) {
+            $this->response2('fail', '잘못된 접근입니다.(pid:' . $pid. ')');
+          }
+          
+          if ($product->{$type} == 0) {
+            $this->response2('fail', '메인에 등록되지 않은 아이템입니다.(pid:' . $pid. ',type:'.$type.')');
+          }
+         
+          $status = SHOP_PRODUCT_STATUS_ON_SALE;
+          if ($mode == 'up') {
+            $this->db->limit(1);
+            $this->db->order_by($type, 'desc');
+            $this->db->where("{$type}>0 and {$type}<{$product->{$type}} and status={$status}");
+            if ($cat != null) {
+              $this->db->where("product_code like '{$cat}%'");
+            }
+            $product2 = $this->db->get('shop_product_id')->row();
+            if (isset($product2) == false || empty($product2) == true) {
+              $this->response2('fail', '이미 최상위 상품입니다.');
+            }
+          } else { // down
+            $this->db->limit(1);
+            $this->db->order_by($type, 'asc');
+            $this->db->where("{$type}>{$product->{$type}} and status={$status}");
+            if ($cat != null) {
+              $this->db->where("product_code like '{$cat}%'");
+            }
+            $product2 = $this->db->get('shop_product_id')->row();
+            if (isset($product2) == false || empty($product2) == true) {
+              $this->response2('fail', '이미 최하위 상품입니다.');
+            }
+          }
+          
+          $this->db->set($type, $product->{$type});
+          $this->db->where('product_id', $product2->product_id);
+          $this->db->update('shop_product_id');
+  
+          $this->db->set($type, $product2->{$type});
+          $this->db->where('product_id', $product->product_id);
+          $this->db->update('shop_product_id');
+  
+          $this->response2('done', '성공하였습니다.');
+  
+      } else if ($p2 == 'search') {
+  
+        if (isset($_GET['brand']) == false || empty($_GET['brand']) == true) {
+          $this->response2('fail', '잘못된 접근입니다.(type)');
+        }
+  
+        if (isset($_GET['order']) == false || empty($_GET['order']) == true) {
+          $this->response2('fail', '잘못된 접근입니다.(order)');
+        }
+  
+        if (isset($_GET['type']) == false || empty($_GET['type']) == true) {
+          $this->response2('fail', '잘못된 접근입니다.(type)');
+        }
+  
+        $category = 'all';
+        if (isset($_GET['cat']) == true && empty($_GET['cat']) == false) {
+          $category = $_GET['cat'];
+        }
+  
+        $type = $_GET['type'];
+        if ($type != 'best' && $type != 'new' && $type != 'recommend' &&
+          $type != 'yoga' && $type != 'vegan' && $type != 'healing') {
+          $this->response2('fail', '잘못된 접근입니다.(type:'.$type.')');
+        }
+  
+        $order_col = $_GET['order'];
+        if ($order_col != 'new' && $order_col != 'sell') {
+          $this->response2('fail', '잘못된 접근입니다.(order_col:'.$order_col.')');
+        }
+  
+        if ($order_col == 'new') {
+          $order_col = 'register_at'; // 최신순
+        } else {
+          $order_col = 'sell'; // 판매량순
+        }
+  
+        $shop_name = $_GET['brand'];
+        $shop = $this->db->get_where('shop', array('shop_name' => $shop_name))->row();
+        if (isset($shop) == false || empty($shop) == true) {
+          $this->response2('fail', '해당 브랜드가 존재하지 않습니다.');
+        }
+  
+        $status = SHOP_PRODUCT_STATUS_ON_SALE;
+        $product_list = $this->crud_model->get_product_list($shop->shop_id, $status, null, $category, 0, 100, 'desc', $order_col);
+        if (isset($product_list) == false || empty($product_list) || count($product_list) == 0) {
+          $this->response2('fail', '해당 브랜드의 판매중인 상품이 존재하지 않습니다.');
+        }
+  
+        $this->page_data['type'] = $type;
+        $this->page_data['ordering'] = false;
+        $this->page_data['product_list'] = $product_list;
+        $this->load->view('back/master/manage_shop_list', $this->page_data);
+  
+      } else if ($p2 == 'list') {
+  
+        if (isset($_GET['type']) == false || empty($_GET['type']) == true) {
+          $this->response2('fail', '잘못된 접근입니다.(type)');
+        }
+        
+        $category = 'all';
+        if (isset($_GET['cat']) == true && empty($_GET['cat']) == false) {
+          $category = $_GET['cat'];
+        }
+        
+        $page = 1;
+        $order = 'asc';
+        $limit = 100;
+        $offset = ($page - 1) * $limit;
+        $status = SHOP_PRODUCT_STATUS_ON_SALE;
  
+        $type = $_GET['type'];
+        $order_col = $type;
+        if ($type != 'best' && $type != 'new' && $type != 'recommend' &&
+          $type != 'yoga' && $type != 'vegan' && $type != 'healing') {
+          $this->response2('fail', '잘못된 접근입니다.(type:'.$type.')');
+        }
+        
+        if ($type == 'yoga' || $type == 'vegan' || $type == 'healing') {
+          $order_col = 'best2';
+        }
+  
+        $product_list = $this->crud_model->get_product_list(0, $status, null, $category, $offset, $limit, $order, $order_col);
+  
+        $this->page_data['type'] = $type;
+        $this->page_data['ordering'] = true;
+        $this->page_data['product_list'] = $product_list;
+        $this->load->view('back/master/manage_shop_list', $this->page_data);
+  
+      } else {
+        $this->response2('fail', '잘못된 접근입니다.');
+      }
+    
+    } else {
+      
       $this->page_data['page_name'] = 'manage';
       $this->load->view('back/master/index', $this->page_data);
     

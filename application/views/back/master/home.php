@@ -11,15 +11,21 @@
               <p class="box_tit">유저 현황</p>
               <ul class="box_cnt clearfix">
                 <li class="cnt_li">
-                  <p class="li-tit">현재 접속자(1hour)</p>
+                  <div class="li-tit">
+                    <p class="tit-compo">현재 접속자(1hour)</p>
+                  </div>
                   <p class="li-no"><?= $user1; ?></p>
                 </li>
                 <li class="cnt_li">
-                  <p class="li-tit">일일 접속자</p>
+                  <div class="li-tit">
+                    <p class="tit-compo">일일 접속자</p>
+                  </div>
                   <p class="li-no"><?= $user2; ?></p>
                 </li>
                 <li class="cnt_li">
-                  <p class="li-tit">이달 접속자</p>
+                  <div class="li-tit">
+                    <p class="tit-compo">이달 접속자</p>
+                  </div>
                   <p class="li-no"><?= $user3; ?></p>
                 </li>
               </ul>
@@ -28,15 +34,21 @@
               <p class="box_tit">온라인클래스 예약 현황</p>
               <ul class="box_cnt clearfix">
                 <li class="cnt_li">
-                  <p class="li-tit">당일 예약 신청 현황</p>
+                  <div class="li-tit">
+                    <p class="tit-compo">당일 예약 신청 현황</p>
+                  </div>
                   <p class="li-no"><?= $online_reserve1; ?></p>
                 </li>
                 <li class="cnt_li">
-                  <p class="li-tit">당일 예약 확정 현황</p>
+                  <div class="li-tit">
+                    <p class="tit-compo">당일 예약 확정 현황</p>
+                  </div>
                   <p class="li-no"><?= $online_reserve2; ?></p>
                 </li>
                 <li class="cnt_li">
-                  <p class="li-tit">당월 누적 신청 현황</p>
+                  <div class="li-tit">
+                    <p class="tit-compo">당월 누적 신청 현황</p>
+                  </div>
                   <p class="li-no"><?= $online_reserve3; ?></p>
                 </li>
               </ul>
@@ -89,15 +101,21 @@
               <p class="box_tit">센터 현황</p>
               <ul class="box_cnt clearfix">
                 <li class="cnt_li">
-                  <p class="li-tit">승인대기 센터</p>
+                  <div class="li-tit">
+                    <p class="tit-compo">승인대기 센터</p>
+                  </div>
                   <p class="li-no"><?= $center1; ?></p>
                 </li>
                 <li class="cnt_li">
-                  <p class="li-tit">등록완료 (당일)</p>
+                  <div class="li-tit">
+                    <p class="tit-compo">등록완료 (당일)</p>
+                  </div>
                   <p class="li-no"><?= $center2; ?></p>
                 </li>
                 <li class="cnt_li">
-                  <p class="li-tit">누적 센터 수</p>
+                  <div class="li-tit">
+                    <p class="tit-compo">누적 센터 수</p>
+                  </div>
                   <p class="li-no"><?= $center3; ?></p>
                 </li>
               </ul>
@@ -106,15 +124,21 @@
               <p class="box_tit">강사 현황</p>
               <ul class="box_cnt clearfix">
                 <li class="cnt_li">
-                  <p class="li-tit">승인대기 강사</p>
+                  <div class="li-tit">
+                    <p class="tit-compo">승인대기 강사</p>
+                  </div>
                   <p class="li-no"><?= $teacher1; ?></p>
                 </li>
                 <li class="cnt_li">
-                  <p class="li-tit">등록완료 (당일)</p>
+                  <div class="li-tit">
+                    <p class="tit-compo">등록완료 (당일)</p>
+                  </div>
                   <p class="li-no"><?= $teacher2; ?></p>
                 </li>
                 <li class="cnt_li">
-                  <p class="li-tit vertical-40">누적 강사 수</p>
+                  <div class="li-tit">
+                    <p class="tit-compo">누적 강사 수</p>
+                  </div>
                   <p class="li-no"><?= $teacher3; ?></p>
                 </li>
               </ul>
@@ -123,15 +147,21 @@
               <p class="box_tit">온라인스튜디오 현황</p>
               <ul class="box_cnt clearfix">
                 <li class="cnt_li">
-                  <p class="li-tit">승인대기 스튜디오</p>
+                  <div class="li-tit">
+                    <p class="tit-compo">승인대기 스튜디오</p>
+                  </div>
                   <p class="li-no"><?= $studio1; ?></p>
                 </li>
                 <li class="cnt_li">
-                  <p class="li-tit">등록완료 (당일)</p>
+                  <div class="li-tit">
+                    <p class="tit-compo">등록완료 (당일)</p>
+                  </div>
                   <p class="li-no"><?= $studio2; ?></p>
                 </li>
                 <li class="cnt_li">
-                  <p class="li-tit vertical-40">누적 스튜디오 수</p>
+                  <div class="li-tit">
+                    <p class="tit-compo">누적 스튜디오 수</p>
+                  </div>
                   <p class="li-no"><?= $studio3; ?></p>
                 </li>
               </ul>
@@ -145,16 +175,22 @@
               <p class="box_tit">주문 / 매출 현황</p>
               <ul class="box_cnt clearfix">
                 <li class="cnt_li">
-                  <p class="li-tit">일일 주문건수</p>
+                  <div class="li-tit">
+                    <p class="tit-compo">일일 주문건수</p>
+                  </div>
                   <p class="li-no"><?= $sales1; ?></p>
                 </li>
                 <li class="cnt_li">
-                  <p class="li-tit">당월 주문건수</p>
+                  <div class="li-tit">
+                    <p class="tit-compo">당월 주문건수</p>
+                  </div>
                   <p class="li-no"><?= $sales2; ?></p>
                 </li>
                 <li class="cnt_li">
-                  <p class="li-tit">월 발생매출</p>
-                  <p class="li-no"><?= $sales3; ?></p>
+                  <div class="li-tit">
+                    <p class="tit-compo">월 발생매출</p>
+                  </div>
+                  <p class="li-no"><?= $this->crud_model->get_price_str($sales3); ?></p>
                 </li>
               </ul>
             </div>
@@ -162,29 +198,41 @@
               <p class="box_tit">샵 현황</p>
               <ul class="box_cnt named_cnt clearfix">
                 <li class="cnt_li">
-                  <p class="li-tit">승인대기 제품</p>
+                  <div class="li-tit">
+                    <p class="tit-compo">승인대기 제품</p>
+                  </div>
                   <p class="li-no"><?= $shop1; ?></p>
                 </li>
                 <li class="cnt_li">
-                  <p class="li-tit">판매중 상품</p>
+                  <div class="li-tit">
+                    <p class="tit-compo">판매중 상품</p>
+                  </div>
                   <p class="li-no"><?= $shop2; ?></p>
                 </li>
                 <li class="cnt_li">
-                  <p class="li-tit">판매중지 상품</p>
+                  <div class="li-tit">
+                    <p class="tit-compo">판매중지 상품</p>
+                  </div>
                   <p class="li-no"><?= $shop3; ?></p>
                 </li>
               </ul>
               <ul class="box_cnt clearfix">
                 <li class="cnt_li">
-                  <p class="li-tit">브랜드 미확인 주문건</p>
+                  <div class="li-tit">
+                    <p class="tit-compo">브랜드 미확인 주문건</p>
+                  </div>
                   <p class="li-no"><?= $shop4; ?></p>
                 </li>
                 <li class="cnt_li">
-                  <p class="li-tit">브랜드 미확인 C/S(문의미답변)</p>
+                  <div class="li-tit">
+                    <p class="tit-compo">브랜드 미확인 C/S(문의미답변)</p>
+                  </div>
                   <p class="li-no"><?= $shop5; ?></p>
                 </li>
                 <li class="cnt_li">
-                  <p class="li-tit vertical-h font-futura">1:1 문의</p>
+                  <div class="li-tit font-futura">
+                    <p class="tit-compo">1:1 문의</p>
+                  </div>
                   <p class="li-no"><?= $shop6; ?></p>
                 </li>
               </ul>

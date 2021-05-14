@@ -4,7 +4,7 @@
   <meta name="format-detection" content="telephone=no">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Master | center</title>
+  <title>Master Admin</title>
   
   <!-- Favicon -->
   <link rel="shortcut icon" href="<?= base_url(); ?>uploads/others/favicon.png">
@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css">
   <link rel="stylesheet" href="<?= base_url(); ?>template/back/plugins/font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet" href="<?= base_url(); ?>template/back/master/master.css?v=1.0.0">
+  <link rel="stylesheet" href="<?= base_url(); ?>template/back/master/master.css?v=1.0.2">
   
   <!-- font -->
   <link href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css" rel="stylesheet" type="text/css">

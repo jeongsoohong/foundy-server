@@ -10,13 +10,13 @@
       <div class="menu_wrap clearfix">
         <a href="<?= base_url(); ?>master" class="menu_home">홈</a>
         <a href="<?= base_url(); ?>master/manage" class="menu_manage">관리자</a>
-        <a href="#" class="menu_posting">포스팅</a>
-        <a href="#" class="menu_center">센터관리</a>
-        <a href="#" class="menu_online">온라인관리</a>
-        <a href="#" class="menu_teacher">강사관리</a>
-        <a href="#" class="menu_shop">샵관리</a>
-        <a href="#" class="menu_user">유저관리</a>
-        <a href="#" class="menu_calculate">정산관리</a>
+<!--        <a href="#" class="menu_posting">포스팅</a>-->
+<!--        <a href="#" class="menu_center">센터관리</a>-->
+<!--        <a href="#" class="menu_online">온라인관리</a>-->
+<!--        <a href="#" class="menu_teacher">강사관리</a>-->
+<!--        <a href="#" class="menu_shop">샵관리</a>-->
+<!--        <a href="#" class="menu_user">유저관리</a>-->
+<!--        <a href="#" class="menu_calculate">정산관리</a>-->
       </div>
       <script>
         // 페이지에 해당되는 menu_wrap a addClass 이벤트
