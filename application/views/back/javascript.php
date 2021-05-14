@@ -204,6 +204,9 @@
       $('#loading_set').show();
     }
     $.get(url, function(data) {
+      if (loading) {
+        $("#loading_set").delay(500).fadeOut(500);
+      }
       // console.log(data);
       if (IsJsonString(data)) {
         let title = '<strong>실패하였습니다</strong>';
@@ -226,15 +229,11 @@
         }
       } else {
         $('#' + id).html(data);
+        if (callback !== null) {
+          callback();
+        }
       }
     });
-    // $('#' + id).load(url);
-    if (loading) {
-      $("#loading_set").delay(500).fadeOut(500);
-    }
-    if (callback !== null) {
-      callback();
-    }
   }
 
   function trim(obj) {
