@@ -110,7 +110,7 @@ defined('APIKEY_KAKAO_REST')          OR define('APIKEY_KAKAO_REST', 'c08aebc9e7
 defined('APIKEY_KAKAO_JAVASCRIPT')    OR define('APIKEY_KAKAO_JAVASCRIPT', '8ee901a556539927d58b30a6bf21a781');
 defined('APIKEY_KAKAO_ADMIN')         OR define('APIKEY_KAKAO_ADMIN', 'd2e5f8edf58af4cb5d7d04e14861b0f7');
 
-defined('SERVER_CHECK')               OR define('SERVER_CHECK', true);
+defined('SERVER_CHECK')               OR define('SERVER_CHECK', false);
 defined('SERVER_CHECK_START')         OR define('SERVER_CHECK_START', '2021-05-17 00:00:00');
 defined('SERVER_CHECK_END')           OR define('SERVER_CHECK_END', '2021-05-17 06:00:00');
 defined('SERVER_CHECK_POPUP_START')   OR define('SERVER_CHECK_POPUP_START', '2021-05-11 00:00:00');
