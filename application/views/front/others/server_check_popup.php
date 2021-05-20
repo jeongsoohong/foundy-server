@@ -178,3 +178,26 @@
     </div>
   </article>
 </div>
+<script>
+  function getPlatform() {
+    if(navigator.userAgent.match(/Mobile|iP(hone|od)|BlackBerry|IEMobile|Kindle|NetFront|Silk-Accelerated|(hpw|web)OS|Fennec|Minimo|Opera M(obi|ini)|Blazer|Dolfin|Dolphin|Skyfire|Zune/) {
+      return '모바일';
+    }
+    else if(!navigator.userAgent.match(/Mobile|iP(hone|od)|BlackBerry|IEMobile|Kindle|NetFront|Silk-Accelerated|(hpw|web)OS|Fennec|Minimo|Opera M(obi|ini)|Blazer|Dolfin|Dolphin|Skyfire|Zune/)) {
+      return '태블릿/PC';
+    }
+    
+    $(function() {
+      let p = getPlatform();
+      
+      if (p === '모바일') {
+        // '모바일'일 때 #serverCheckPopupWrap max-width 'unset' 으로
+        $('#serverCheckPopupWrap').css('max-width','unset');
+      }
+      else if (p === '태블릿/PC') {
+        // '태블릿/PC'일 때 #serverCheckPopupWrap max-width '460px' 로
+        $('#serverCheckPopupWrap').css('max-width','460px');
+      }
+    })
+  }
+</script>

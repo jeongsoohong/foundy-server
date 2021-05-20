@@ -328,44 +328,44 @@
     let type = $(e.target).data('id');
     get_check_list(type, check_all(type, $(e.target).prop('checked')));
   });
-  function check_all(type, checked) {
-    let target = $('#'+type+'_chk_all');
-    if (checked === true) {
-      target.prop('checked', true);
-      target.next().addClass('toggleChk')
-    } else {
-      target.prop('checked', false);
-      target.next().removeClass('toggleChk')
-    }
-    return checked;
-  }
-  function check_piece(type) {
-    let l = get_check_list(type);
-    // console.log($('#'+type+'_tbody_list .chkPiece').length);
-    if ($('#'+type+'_tbody_list .chkPiece').length === l.length) {
-      check_all(type, true);
-    } else {
-      check_all(type, false);
-    }
-  }
-  function get_check_list(type, force = null) {
-    let l = [];
-    let cnt = 0;
-    $('#'+type+'_tbody_list').find('.chkPiece').each(function(i,e) {
-      if (force !== null) {
-        $(e).prop('checked', force);
-      }
-      // console.log('i:' + i + ', checked:' + $(e).prop('checked'));
-      if ($(e).prop('checked') === true) {
-        l[cnt++] = $(e).data('id');
-        $(e).next().addClass('toggleChk');
-      } else {
-        $(e).next().removeClass('toggleChk');
-      }
-    });
-    // console.log(l);
-    return l;
-  }
+  // function check_all(type, checked) {
+  //   let target = $('#'+type+'_chk_all');
+  //   if (checked === true) {
+  //     target.prop('checked', true);
+  //     target.next().addClass('toggleChk')
+  //   } else {
+  //     target.prop('checked', false);
+  //     target.next().removeClass('toggleChk')
+  //   }
+  //   return checked;
+  // }
+  // function check_piece(type) {
+  //   let l = get_check_list(type);
+  //   // console.log($('#'+type+'_tbody_list .chkPiece').length);
+  //   if ($('#'+type+'_tbody_list .chkPiece').length === l.length) {
+  //     check_all(type, true);
+  //   } else {
+  //     check_all(type, false);
+  //   }
+  // }
+  // function get_check_list(type, force = null) {
+  //   let l = [];
+  //   let cnt = 0;
+  //   $('#'+type+'_tbody_list').find('.chkPiece').each(function(i,e) {
+  //     if (force !== null) {
+  //       $(e).prop('checked', force);
+  //     }
+  //     // console.log('i:' + i + ', checked:' + $(e).prop('checked'));
+  //     if ($(e).prop('checked') === true) {
+  //       l[cnt++] = $(e).data('id');
+  //       $(e).next().addClass('toggleChk');
+  //     } else {
+  //       $(e).next().removeClass('toggleChk');
+  //     }
+  //   });
+  //   // console.log(l);
+  //   return l;
+  // }
   $('.addBtn, .removeBtn').click(function(e) {
     let target = e.target;
     let type = $(target).closest('.namedBtn').data('type');
@@ -395,20 +395,8 @@
     // console.log(data);
     
     send_post_data(data, url, function() {
-      $.notify({
-        message: '성공하였습니다.',
-        icon: 'fa fa-check'
-      }, {
-        type: 'success',
-        timer: 1000,
-        delay: 2000,
-        animate: {
-          enter: 'animated lightSpeedIn',
-          exit: 'animated lightSpeedOut'
-        }
-      });
       get_product_list(type, true);
-    });
+    }, true);
   }
   function reorder_list(type, mode, pid) {
     let url = '<?php echo base_url()."master/manage/shop/order"; ?>';

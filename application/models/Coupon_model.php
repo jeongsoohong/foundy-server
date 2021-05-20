@@ -4,6 +4,8 @@ if (!defined('BASEPATH'))
 
 class Coupon_model extends CI_Model
 {
+  const COUPON_LIST_PAGE_SIZE = 10;
+  
   function __construct()
   {
     parent::__construct();
@@ -28,6 +30,20 @@ class Coupon_model extends CI_Model
       case COUPON_TYPE_SHOP_FREE_SHIPPING: return '무료배송';
     }
     return '';
+  }
+  function get_server_coupon_list_cnt($page, $where) {
+    $this->db->select('count(*) as cnt');
+    $this->db->where($where);
+    return $this->db->get('server_coupon')->row()->cnt;
+  }
+  
+  function get_server_coupon_list($page, $coupon_type = COUPON_TYPE_DEFAULT, $order_col = 'coupon_id', $order = 'desc') {
+    $limit = COUPON_LIST_PAGE_SIZE;
+    $offset = $limit * ($page - 1);
+    $this->db->limit($limit, $offset);
+    $this->db->order_by($order_col, $order);
+    $this->db->where("coupon_type>{$coupon_type}");
+    return $this->db->get('server_coupon')->result();
   }
 
   function get_user_coupon($user_id, $coupon_id, $used = -1)

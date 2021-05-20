@@ -108,7 +108,7 @@
     });
   }
 
-  function send_post_data(dataArr, url, callback = null) {
+  function send_post_data(dataArr, url, callback = null, notify = false) {
     let formData = new FormData();
     for (let key in dataArr) {
       formData.append(key, dataArr[key]);
@@ -130,9 +130,7 @@
         if (IsJsonString(data)) {
           data = JSON.parse(data);
           if (data.status === 'done') {
-            if (callback !== null) {
-              callback(data);
-            } else {
+            if (notify === true) {
               $.notify({
                 message: '성공하였습니다.',
                 icon: 'fa fa-check'
@@ -145,6 +143,9 @@
                   exit: 'animated lightSpeedOut'
                 }
               });
+            }
+            if (callback !== null) {
+              callback(data);
             }
           } else {
             var title = '<strong>실패하였습니다</strong>';

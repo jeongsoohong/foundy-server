@@ -16,13 +16,13 @@
 <!--          <img src="--><?//= base_url(); ?><!--template/back/center/imgs/icon_next_white.png" width="6" height="auto" style="display: none;" class="next_white">-->
 <!--        </div>-->
 <!--      </a>-->
-<!--      <a href="#" class="tit_theme" data-role="coupon">-->
-<!--        <span class="theme_txt">쿠폰 관리</span>-->
-<!--        <div class="theme_arrow">-->
-<!--          <img src="--><?//= base_url(); ?><!--template/back/center/imgs/icon_next.png" width="6" height="auto">-->
-<!--          <img src="--><?//= base_url(); ?><!--template/back/center/imgs/icon_next_white.png" width="6" height="auto" style="display: none;" class="next_white">-->
-<!--        </div>-->
-<!--      </a>-->
+      <a href="#" class="tit_theme" data-role="coupon">
+        <span class="theme_txt">쿠폰 관리</span>
+        <div class="theme_arrow">
+          <img src="<?= base_url(); ?>template/back/center/imgs/icon_next.png" width="6" height="auto">
+          <img src="<?= base_url(); ?>template/back/center/imgs/icon_next_white.png" width="6" height="auto" style="display: none;" class="next_white">
+        </div>
+      </a>
       <a href="#" class="tit_theme" data-role="shop_main">
         <span class="theme_txt">샵 메인 관리</span>
         <div class="theme_arrow">
@@ -59,8 +59,8 @@
 <!--      </section>-->
 <!--      <section class="contents_type contents_master scroll-y" id="manage_email">-->
 <!--      </section>-->
-<!--      <section class="contents_type contents_master scroll-y" id="manage_coupon">-->
-<!--      </section>-->
+      <section class="contents_type contents_master scroll-y" id="manage_coupon">
+      </section>
       <section class="contents_type contents_master scroll-y" id="manage_shop_main">
       </section>
       <section class="contents_type contents_master scroll-y" id="manage_shop_category">
@@ -321,128 +321,12 @@ $('.val-input').focusout(function(){
           </button>
         </div>
       </div>
-      <div class="named-add add-coupon" style="display: none;">
-        <p class="add-tit">
-          <span class="">쿠폰</span> 상세
-        </p>
-        <div class="add-box scroll-y" style="height: 464px;">
-          <button class="frame_close">
-            <img src="<?= base_url(); ?>template/back/center/imgs/icon_close_black.png" alt="" width="12" height="12" style="opacity: 0.5;">
-          </button>
-          <dl class="add-contents clearfix">
-            <dt class="contents__tit">아이디</dt>
-            <dd class="contents__data">
-              <input type="text" placeholder="아이디를 입력해주세요" class="data_form revise_id">
-            </dd>
-            <dt class="contents__tit">쿠폰명</dt>
-            <dd class="contents__data">
-              <input type="text" placeholder="쿠폰명을 입력해주세요" class="data_form revise_cpName">
-            </dd>
-            <dt class="contents__tit">혜택회원</dt>
-            <dd class="contents__data">
-              <div class="data_form">
-                <select style="width: 100%;">
-                  <option class="revise_cpBenefit" value="adopt">적용회원</option>
-                  <option class="revise_cpBenefit" value="member">회원가입쿠폰</option>
-                  <option class="revise_cpBenefit" value="buying">구매유도쿠폰</option>
-                  <option class="revise_cpBenefit" value="center">센터회원쿠폰</option>
-                  <option class="revise_cpBenefit" value="teacher">강사회원쿠폰</option>
-                </select>
-              </div>
-            </dd>
-            <dt class="contents__tit">쿠폰수</dt>
-            <dd class="contents__data">
-              <input type="text" placeholder="쿠폰수 (0: 무제한)" class="data_form revise_cpCount">
-            </dd>
-            <dt class="contents__tit">쿠폰타입</dt>
-            <dd class="contents__data">
-              <div class="data_form">
-                <select style="width: 100%;">
-                  <option class="revise_cpType" value="dc-type">쿠폰타입</option>
-                  <option class="revise_cpType" value="dc-money">샵할인금액</option>
-                  <option class="revise_cpType" value="dc-percent">샵할인율</option>
-                  <option class="revise_cpType" value="dc-delivery">무료배송</option>
-                </select>
-              </div>
-            </dd>
-            <dt class="contents__tit">할인가격(율)</dt>
-            <dd class="contents__data">
-              <input type="text" placeholder="할인 가격(원) 또는 할일율(%) 또는 무료배송" class="data_form revise_cpDc">
-            </dd>
-            <dt class="contents__tit">쿠폰설명</dt>
-            <dd class="contents__data">
-              <input type="text" placeholder="쿠폰설명" class="data_form revise_cpGuide">
-            </dd>
-            <!--
-                                    <dt class="contents__tit" style="margin-bottom: 20px;">쿠폰설명</dt>
-                                    <dd class="contents__data description__data" style="margin-bottom: 20px;">
-                                        <form>
-                                            <textarea placeholder="쿠폰설명" class="data_form description_form"></textarea>
-                                        </form>
-                                    </dd>
--->
-            <dt class="contents__tit">발급시작시간</dt>
-            <dd class="contents__data">
-              <div class="data_function">
-                <div class="container">
-                  <div class="form-group">
-                    <div class="input-group date datetimepicker1 start_date">
-                      <input type="text" class="form-control revise_issueStart" value="발급시작시간">
-                      <span class="input-group-addon">
-                                                  <span class="glyphicon glyphicon-calendar"></span>
-                                                </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </dd>
-            <dt class="contents__tit">발급종료시간</dt>
-            <dd class="contents__data">
-              <div class="data_function">
-                <div class="container">
-                  <div class="form-group">
-                    <div class="input-group date datetimepicker1 start_date">
-                      <input type="text" class="form-control revise_issueEnd" value="발급종료시간">
-                      <span class="input-group-addon">
-                                                  <span class="glyphicon glyphicon-calendar"></span>
-                                                </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </dd>
-            <dt class="contents__tit">사용종료시간</dt>
-            <dd class="contents__data">
-              <div class="data_function">
-                <div class="container">
-                  <div class="form-group">
-                    <div class="input-group date datetimepicker1 start_date">
-                      <input type="text" class="form-control revise_cpTerminate" value="사용종료시간">
-                      <span class="input-group-addon">
-                                                  <span class="glyphicon glyphicon-calendar"></span>
-                                                </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </dd>
-          </dl>
-        </div>
-        <div class="add-fn clearfix">
-          <button class="fn__upload">
-            <span class="upload--span"><img src="<?= base_url(); ?>template/back/master/icon/pop_ic_upload.png" height="16" width="auto"></span>
-            업로드
-          </button>
-          <button class="fn__refresh">
-            <span class="refresh--span"><img src="<?= base_url(); ?>template/back/master/icon/pop_ic_refresh.png" height="16" width="auto"></span>
-            리셋
-          </button>
-        </div>
+      <div class="named-add add-coupon" style="display: none;" id="coupon_mod">
       </div>
     </div>
     <!-- 상태변경,삭제 클릭 팝업 -->
     <div class="pop:type pop:frame frame:question">
-      <button class="frame_close">
+      <button class="frame_close" onclick="close_question_popup()">
         <img src="<?= base_url(); ?>template/back/center/imgs/icon_close_black.png" alt="" width="12" height="12" style="opacity: 0.5;">
       </button>
       <div class="frame_cnt">
@@ -451,9 +335,14 @@ $('.val-input').focusout(function(){
           inactivate 상태로 변경하시겠습니까?
         </p>
         <div class="cnt_btns confirm_btn">
-          <button class="btn_cancel font-futura">CANCEL</button>
-          <button class="btn_ok font-futura">OK</button>
+          <button class="btn_cancel font-futura" onclick="close_question_popup()">CANCEL</button>
+          <button class="btn_ok font-futura" onclick="req_posture()">OK</button>
         </div>
+        <script>
+          function close_question_popup() {
+            $('.boxwrap__pop').hide().children('div[class*=question]').hide();
+          }
+        </script>
       </div>
     </div>
     <!-- 이메일 보기 팝업 -->
@@ -521,171 +410,377 @@ $('.val-input').focusout(function(){
       </div>
     </div>
     <!-- 쿠폰 보기 팝업 -->
-    <div class="pop:type pop:frame frame:coupon">
-      <button class="frame_close">
-        <img src="<?= base_url(); ?>template/back/center/imgs/icon_close_black.png" alt="" width="12" height="12" style="opacity: 0.5;">
-      </button>
-      <div class="cnt_btns confirm_btn" style="background-color: #fff;">
-        <button class="btn_cancel font-futura">CANCEL</button>
-      </div>
-      <div class="frame_wrap">
-        <div class="frame_tit">
-          <p class="tit_name font-futura">view_profile</p>
-          <div class="tit_display">
-            <p class="display-type">
-              <span class="typeC-Tit">회원가입 쿠폰2</span>
-              <br><span class="type-name">coupon</span>
-            </p>
-            <div class="display-now">발급중</div>
-          </div>
-          <div class="tit_table table_form:coupon">
-            <div class="table_scroll scroll-y" style="height: 243px;">
-              <table class="mail_table">
-                <colgroup>
-                  <col width="16%">
-                  <col width="84%">
-                </colgroup>
-                <tbody>
-                <tr>
-                  <th>아이디</th>
-                  <td class="see__id">2</td>
-                </tr>
-                <tr>
-                  <th>쿠폰명</th>
-                  <td class="see__name"></td>
-                </tr>
-                <tr>
-                  <!-- 내용 = 쿠폰설명  -->
-                  <th>내용</th>
-                  <td class="see__guide">그랜드 오픈 기념 쿠폰</td>
-                </tr>
-                <tr>
-                  <!-- 적용 회원 = 혜택 회원 -->
-                  <th>적용 회원</th>
-                  <td class="see__benefit">회원가입</td>
-                </tr>
-                <tr>
-                  <th>쿠폰수</th>
-                  <td class="see__count">무제한</td>
-                </tr>
-                <tr>
-                  <th>쿠폰타입</th>
-                  <td class="see__type"></td>
-                </tr>
-                <tr>
-                  <!-- 할인 = 할인가격(율) -->
-                  <th>할인</th>
-                  <td class="see__dc">5%</td>
-                </tr>
-                <tr>
-                  <!-- 발급 [ 시작 ~ 종료 ] 시간 -->
-                  <th>발급시간</th>
-                  <td>
-                    <div class="space:layer">
-                      <div class="layer--position scroll-x">
-                        <span class="see__start">2020-08-01 00:00:00</span> ~ <span class="see__end">2021-12-31 00:00:00</span>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <th>사용종료시간</th>
-                  <td class="see__terminate">2022-01-31 00:00:00</td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="pop:type pop:frame frame:coupon" id="coupon_view">
     </div>
   </div>
-  <!-- addBtn 호버이벤트 -->
-  <script>
-    $('.named-fn').on({
-      mousemove: function(e){
-        // console.log(e.pageX);
-        let offset = $(this).offset();
-        // 174     848, 964
-        // console.log(offset.top,offset.left);
-        
-        // named-fn width
-        let w = $(this).width();
-        // console.log(w);   76
-        let h = offset.top + $(this).height();
-        // console.log( w + offset.left );    936, 1052
-        // console.log(h);                    210
-        
-        if(e.pageX >= offset.left || e.pageX <= w || e.pageY >= offset.top || e.pageY <= h) {
-          let has = $(this).hasClass('addBtn');
-          if(has === true){
-            $(this).next().next().addClass('disabledBtn').attr('disabled',true);
-          }
-          else {
-            $(this).prev().prev().addClass('disabledBtn').attr('disabled',true);
-          }
-        }
-      },
-      mouseout: function(e){
-        let offset = $(this).offset();
-        let w = $(this).width();
-        let h = offset.top + $(this).height();
-        
-        
-        if(e.pageX <= offset.left || e.pageX >= w || e.pageY <= offset.top || e.pageY >= h) {
-          // if(e.pageX < 964){
-          // $(this).closest('.namedBtn').find('.named-fn').removeClass('disabledBtn').attr('disabled',false);
-          // $(this).next().next().removeClass('disabledBtn').attr('disabled',false);
-          // }
-          // else {
-          $(this).closest('.namedBtn').find('.named-fn').removeClass('disabledBtn').attr('disabled',false);
-          // }
-        }
-      }
-    })
-  </script>
-  <!-- addBtn 클릭이벤트 -->
-  <script>
-    $('.addBtn').click(function(){
-      let name = $(this).attr('class');
-      // console.log(name);
-      
-      let split = name.split('');
-      // console.log(split);
-      
-      // split 으로 'S','M','C' 값 가져오기
-      let exist_S = split.indexOf('S');
-      let exist_M = split.indexOf('M');
-      let exist_C = split.indexOf('C');
-      // console.log(exist_1,exist_2,exist_3);
-      
-      if(exist_S !== -1){
-        $('.boxwrap__pop').show().children('div[class$=add-wrap]').show().find('.add-slider').show();
-      }
-      else if(exist_M !== -1){
-        $('.boxwrap__pop').show().children('div[class$=add-wrap]').show().find('.add-mail').show();
-      }
-      else if(exist_C !== -1){
-        console.log(3);
-        $('.boxwrap__pop').show().children('div[class$=add-wrap]').show().find('.add-coupon').show();
-      }
-    })
-  </script>
-  <!-- removeBtn 클릭이벤트 -->
-  <script>
-    $('.removeBtn').click(function(){
-      let txt = '정말 삭제하시겠습니까?'
-      $('.boxwrap__pop').show().children('div[class*=question]').show()
-        .find('.cnt_tit').text(txt);
-    });
-  </script>
-  <!-- 각 팝업창 닫기 이벤트 -->
-  <script>
-    // frame_close 클릭
-    $('.frame_close').click(function(){
-      $(this).closest('.named-add').hide().parent('div[class*=type]').hide().parent('.boxwrap__pop').hide();
+</section>
+<!-- addBtn 호버이벤트 -->
+<!--  <script>-->
+<!--    $('.named-fn').on({-->
+<!--      mousemove: function(e){-->
+<!--        // console.log(e.pageX);-->
+<!--        let offset = $(this).offset();-->
+<!--        // 174     848, 964-->
+<!--        // console.log(offset.top,offset.left);-->
+<!--        -->
+<!--        // named-fn width-->
+<!--        let w = $(this).width();-->
+<!--        // console.log(w);   76-->
+<!--        let h = offset.top + $(this).height();-->
+<!--        // console.log( w + offset.left );    936, 1052-->
+<!--        // console.log(h);                    210-->
+<!--        -->
+<!--        if(e.pageX >= offset.left || e.pageX <= w || e.pageY >= offset.top || e.pageY <= h) {-->
+<!--          let has = $(this).hasClass('addBtn');-->
+<!--          if(has === true){-->
+<!--            $(this).next().next().addClass('disabledBtn').attr('disabled',true);-->
+<!--          }-->
+<!--          else {-->
+<!--            $(this).prev().prev().addClass('disabledBtn').attr('disabled',true);-->
+<!--          }-->
+<!--        }-->
+<!--      },-->
+<!--      mouseout: function(e){-->
+<!--        let offset = $(this).offset();-->
+<!--        let w = $(this).width();-->
+<!--        let h = offset.top + $(this).height();-->
+<!--        -->
+<!--        -->
+<!--        if(e.pageX <= offset.left || e.pageX >= w || e.pageY <= offset.top || e.pageY >= h) {-->
+<!--          // if(e.pageX < 964){-->
+<!--          // $(this).closest('.namedBtn').find('.named-fn').removeClass('disabledBtn').attr('disabled',false);-->
+<!--          // $(this).next().next().removeClass('disabledBtn').attr('disabled',false);-->
+<!--          // }-->
+<!--          // else {-->
+<!--          $(this).closest('.namedBtn').find('.named-fn').removeClass('disabledBtn').attr('disabled',false);-->
+<!--          // }-->
+<!--        }-->
+<!--      }-->
+<!--    })-->
+<!--  </script>-->
+<!-- addBtn 클릭이벤트 -->
+<!--  <script>-->
+<!--    $('.addBtn').click(function(){-->
+<!--      let name = $(this).attr('class');-->
+<!--      // console.log(name);-->
+<!--      -->
+<!--      let split = name.split('');-->
+<!--      // console.log(split);-->
+<!--      -->
+<!--      // split 으로 'S','M','C' 값 가져오기-->
+<!--      let exist_S = split.indexOf('S');-->
+<!--      let exist_M = split.indexOf('M');-->
+<!--      let exist_C = split.indexOf('C');-->
+<!--      // console.log(exist_1,exist_2,exist_3);-->
+<!--      -->
+<!--      if(exist_S !== -1){-->
+<!--        console.log(1);-->
+<!--        $('.boxwrap__pop').show().children('div[class$=add-wrap]').show().find('.add-slider').show();-->
+<!--      }-->
+<!--      else if(exist_M !== -1){-->
+<!--        console.log(2);-->
+<!--        $('.boxwrap__pop').show().children('div[class$=add-wrap]').show().find('.add-mail').show();-->
+<!--      }-->
+<!--      else if(exist_C !== -1){-->
+<!--        console.log(3);-->
+<!--        $('.boxwrap__pop').show().children('div[class$=add-wrap]').show().find('.add-coupon').show();-->
+<!--      }-->
+<!--    })-->
+<!--  </script>-->
+<!-- removeBtn 클릭이벤트 -->
+<!--  <script>-->
+<!--    $('.removeBtn').click(function(){-->
+<!--      let txt = '정말 삭제하시겠습니까?'-->
+<!--      $('.boxwrap__pop').show().children('div[class*=question]').show()-->
+<!--        .find('.cnt_tit').text(txt);-->
+<!--    });-->
+<!--  </script>-->
+<!-- 각 팝업창 닫기 이벤트 -->
+<script>
+  // // 보기 버튼 클릭
+  // $('.td-seeing').click(function(){
+  //   let initial =$(this).closest('.type_box').prev().text();
+  //   // alert(initial);
+  //
+  //   let exist_m = initial.indexOf('m');
+  //   let exist_c = initial.indexOf('ou');
+  //
+  //   if(exist_m !== -1){
+  //     // 메일 보기 팝업
+  //     $('.boxwrap__pop').show().children('div[class*="frame:mail"]').show();
+  //
+  //     /* 메일 수정 팝업에 있는 내용 메일 보기 팝업에도 동시적용 */
+  //     let table_type = $(this).closest('tr').find('td:eq(1)').find('.td-span').text();
+  //     let table_tit = $(this).closest('tr').find('td:eq(5)').find('.td-span').text();
+  //     let table_address = $(this).closest('tr').find('td:eq(3)').find('.td-span').text();
+  //     let table_sender = $(this).closest('tr').find('td:eq(2)').find('.td-span').text();
+  //     let table_form = $(this).closest('tr').find('td:eq(4)').find('.td-span').text();
+  //     let table_letter = $(this).closest('.fn-td-btn').next().find('.change_letter').text();
+  //     let table_mail = $(this).closest('.fn-td-btn').next().find('.mail_tag').html();
+  //
+  //     $('.typeE-Tit').text(table_type);
+  //     $('.see__tit').text(table_tit);
+  //     $('.see__address').text(table_address);
+  //     $('.see__sender').text(table_sender);
+  //     $('.see__letter').text(table_letter);
+  //     $('.see__html').html(table_mail);
+  //   }
+  //
+  //   else if(exist_c !== -1){
+  //     // 쿠폰 보기 팝업
+  //     $('.boxwrap__pop').show().children('div[class*="frame:coupon"]').show();
+  //
+  //     /* 쿠폰 수정 팝업에 있는 내용 쿠폰 보기 팝업에도 동시적용 */
+  //     let table_id = $(this).closest('.fn-td-btn').next().find('.cp--id').text();
+  //     let table_name = $(this).closest('.fn-td-btn').next().find('.cp--name').text();
+  //     let table_guide = $(this).closest('.fn-td-btn').next().find('.cp--guide').text();
+  //     let table_benefit = $(this).closest('.fn-td-btn').next().find('.cp--benefit').text();
+  //     let table_count = $(this).closest('.fn-td-btn').next().find('.cp--count').text();
+  //     let table_type = $(this).closest('.fn-td-btn').next().find('.cp--type').text();
+  //     let table_dc = $(this).closest('.fn-td-btn').next().find('.cp--dc').text();
+  //     let table_start = $(this).closest('.fn-td-btn').next().find('.issue--start').text();
+  //     let table_end = $(this).closest('.fn-td-btn').next().find('.issue--end').text();
+  //     let table_terminate = $(this).closest('.fn-td-btn').next().find('.cp--terminate').text();
+  //
+  //     $('.typeC-Tit').text(table_name);
+  //     $('.see__id').text(table_id);
+  //     $('.see__name').text(table_name);
+  //     $('.see__guide').text(table_guide);
+  //     $('.see__benefit').text(table_benefit);
+  //     if(table_count === 0){
+  //       $('.see__count').text('무제한');
+  //     }
+  //     $('.see__type').text(table_type);
+  //     $('.see__dc').text(table_dc);
+  //     $('.see__start').text(table_start);
+  //     $('.see__end').text(table_end);
+  //     $('.see__terminate').text(table_terminate);
+  //   }
+  // })
+  
+  // 수정 버튼 클릭
+  // $('.td-revise').click(function(){
+  //   let name = $(this).closest('.named-wrap').prev().find('.addBtn').attr('class');
+  //   // console.log(name);
+  //
+  //
+  //   let split = name.split('');
+  //   // console.log(split);
+  //
+  //   // split 으로 'S','M','C' 값 가져오기
+  //   let exist_S = split.indexOf('S');
+  //   let exist_M = split.indexOf('M');
+  //   let exist_C = split.indexOf('C');
+  //   // console.log(exist_1,exist_2,exist_3);
+  //
+  //   if(exist_S != -1){
+  //     // console.log(1); ok
+  //     // 슬라이더 수정
+  //     $('.boxwrap__pop').show().children('div[class$=add-wrap]').show()
+  //       .find('.add-slider').show().find('.add-contents').css('padding-bottom','60px');
+  //
+  //     /* 테이블 데이터 값 가져오기 */
+  //
+  //     let table_tit = $(this).closest('tr').find('td:eq(2)').find('.td-span').text();
+  //     let table_cat = $(this).closest('tr').find('td:eq(3)').find('.td-span').text();
+  //     let table_loc = $(this).closest('tr').find('td:eq(6)').find('.td-span').text();
+  //     let table_imgSrc = $(this).closest('tr').find('td:eq(1)').find('img').attr('src');
+  //     let table_description = $(this).closest('tr').find('td:eq(4)').find('.td-span').text();
+  //     let table_link = $(this).closest('tr').find('td:eq(5)').find('.td-span').text();
+  //
+  //     $('.revise_tit').val(table_tit);
+  //     $('.revise_cat').val(table_cat);
+  //     $('.locate_sel option[value='+ table_loc +']').attr('selected','selected');
+  //     $('.file_thumb').css('display','block').find('img').attr('src',table_imgSrc);
+  //     $('.description_form').val(table_description);
+  //     $('.revise_link').val(table_link);
+  //
+  //   }
+  //   else if(exist_M != -1){
+  //     // 이메일 수정
+  //     $('.boxwrap__pop').show().children('div[class$=add-wrap]').show().find('.add-mail').show();
+  //
+  //     /* 테이블 데이터 값 가져오기 */
+  //     let table_type = $(this).closest('tr').find('td:eq(1)').find('.td-span').text();
+  //     let table_tit = $(this).closest('tr').find('td:eq(5)').find('.td-span').text();
+  //     let table_address = $(this).closest('tr').find('td:eq(3)').find('.td-span').text();
+  //     let table_sender = $(this).closest('tr').find('td:eq(2)').find('.td-span').text();
+  //     let table_form = $(this).closest('tr').find('td:eq(4)').find('.td-span').text();
+  //     let table_letter = $(this).closest('.fn-td-btn').next().find('.change_letter').text();
+  //     let table_mail = $(this).closest('.fn-td-btn').next().find('.mail_tag').html();
+  //
+  //     $('.add-mail .val-input').val(table_type);
+  //     $('.revise_mailTit').val(table_tit);
+  //     $('.revise_address').val(table_address);
+  //     $('.revise_sender').val(table_sender);
+  //     $('.revise_letter').val(table_letter);
+  //     $('.mail__html').html(table_mail);
+  //   }
+  //   else if(exist_C != -1){
+  //     // 쿠폰 수정
+  //     $('.boxwrap__pop').show().children('div[class$=add-wrap]').show().find('.add-coupon').show();
+  //
+  //     /* 테이블 데이터 값 가져오기 */
+  //     let table_id = $(this).closest('.fn-td-btn').next().find('.cp--id').text();
+  //     let table_name = $(this).closest('.fn-td-btn').next().find('.cp--name').text();
+  //     let table_guide = $(this).closest('.fn-td-btn').next().find('.cp--guide').text();
+  //     let table_benefit = $(this).closest('.fn-td-btn').next().find('.cp--benefit').text();
+  //     let table_count = $(this).closest('.fn-td-btn').next().find('.cp--count').text();
+  //     let table_type = $(this).closest('.fn-td-btn').next().find('.cp--type').text();
+  //     let table_dc = $(this).closest('.fn-td-btn').next().find('.cp--dc').text();
+  //     let table_start = $(this).closest('.fn-td-btn').next().find('.issue--start').text();
+  //     let table_end = $(this).closest('.fn-td-btn').next().find('.issue--end').text();
+  //     let table_terminate = $(this).closest('.fn-td-btn').next().find('.cp--terminate').text();
+  //
+  //     $('.revise_id').val(table_id);
+  //     $('.revise_cpName').val(table_name);
+  //     $('.revise_cpDc').val(table_dc);
+  //     $('.revise_cpGuide').val(table_guide);
+  //
+  //     // 적용(혜택)회원
+  //     if(table_benefit === '적용회원'){
+  //       $('.revise_cpBenefit:eq(0)').prop('selected',true);
+  //     }
+  //     else if(table_benefit === '회원가입쿠폰'){
+  //       $('.revise_cpBenefit:eq(1)').prop('selected',true);
+  //     }
+  //     else if(table_benefit === '구매유도쿠폰'){
+  //       $('.revise_cpBenefit:eq(2)').prop('selected',true);
+  //     }
+  //     else if(table_benefit === '센터회원쿠폰'){
+  //       $('.revise_cpBenefit:eq(3)').prop('selected',true);
+  //     }
+  //     else if(table_benefit === '강사회원쿠폰'){
+  //       $('.revise_cpBenefit:eq(4)').prop('selected',true);
+  //     }
+  //
+  //     // 쿠폰수
+  //     if(table_count === '0'){
+  //       $('.revise_cpCount').val('무제한');
+  //     }
+  //
+  //     // 쿠폰타입
+  //     if(table_type === '쿠폰타입'){
+  //       $('.revise_cpType:eq(0)').prop('selected',true);
+  //     }
+  //     else if(table_type === '샵할인금액'){
+  //       $('.revise_cpType:eq(1)').prop('selected',true);
+  //     }
+  //     else if(table_type === '샵할인율'){
+  //       $('.revise_cpType:eq(2)').prop('selected',true);
+  //     }
+  //     else if(table_type === '무료배송'){
+  //       $('.revise_cpType:eq(3)').prop('selected',true);
+  //     }
+  //   }
+  // })
+  
+  // 상태변경 버튼 클릭
+  // $('.td-posture').click(function(){
+  //   $('.boxwrap__pop').show().children('div[class*=question]').show();
+  //
+  //   var origin = $(this).closest('td').siblings('.posture').children().text();
+  //   // console.log(origin);    activate inactivate   발급중/발급중지/발급완료   메인 노출/메인미노출,샵 메인노출/샵메인미노출
+  //   var data = '';
+  //
+  //   // 가짓수가 2가지일 때
+  //   /* activate inactivate     발급중/발급중지/발급완료     메인 노출/메인미노출 , 샵 메인노출/샵메인미노출 */
+  //
+  //   console.log(origin);
+  //   /* activate 상태 */
+  //   if(origin === 'activate'){
+  //     data = 'inactivate';
+  //     var txt = data + ' 상태로 변경하시겠습니까?';
+  //     $(this).closest('#master').find('div[class*=question]').find('.cnt_tit').text(txt);
+  //   }
+  //   else if(origin === 'inactivate') {
+  //     data = 'activate';
+  //     var txt = data + ' 상태로 변경하시겠습니까?';
+  //     $(this).closest('#master').find('div[class*=question]').find('.cnt_tit').text(txt);
+  //   }
+  //
+  //   /* 쿠폰 발급 상태 */
+  //   else if(origin === '발급중지'){
+  //     data = '발급중';
+  //     var txt = data + ' 상태로 변경하시겠습니까?';
+  //     $(this).closest('#master').find('div[class*=question]').find('.cnt_tit').text(txt);
+  //   }
+  //   else if(origin === '발급중' || origin === '발급완료'){
+  //     data = '발급중지';
+  //     var txt = data + ' 상태로 변경하시겠습니까?';
+  //     $(this).closest('#master').find('div[class*=question]').find('.cnt_tit').text(txt);
+  //   }
+  //
+  //   /* 메인 노출/미노출 , 샵 메인노출/미노출*/
+  //   else if(origin === '메인노출'){
+  //     data = '메인에 게시를 하시겠습니까?';
+  //     var txt = data;
+  //     $(this).closest('#master').find('div[class*=question]').find('.cnt_tit').text(txt);
+  //   }
+  //   else if(origin === '메인미노출'){
+  //     data = '메인에 게시를 취소하시겠습니까?';
+  //     var txt = data;
+  //     $(this).closest('#master').find('div[class*=question]').find('.cnt_tit').text(txt);
+  //   }
+  //   else if(origin === '샵메인노출'){
+  //     data = '샵메인에 게시를 하시겠습니까?';
+  //     var txt = data;
+  //     $(this).closest('#master').find('div[class*=question]').find('.cnt_tit').text(txt);
+  //   }
+  //   else if(origin === '샵메인미노출'){
+  //     data = '샵메인에 게시를 취소하시겠습니까?';
+  //     var txt = data;
+  //     $(this).closest('#master').find('div[class*=question]').find('.cnt_tit').text(txt);
+  //   }
+  //   // 가짓수가 3가지일 때 셀렉트 박스 show/hide
+  // })
+</script>
+<script>
+  // frame_close 클릭
+  $('.frame_close').click(function(){
+    $(this).closest('.named-add').hide().parent('div[class*=type]').hide().parent('.boxwrap__pop').hide();
+    $(this).closest('div[class*=pop\:frame]').hide().parent('.boxwrap__pop').hide();
+    
+    /* 슬라이드 내용 초기화 */
+    $('.revise_tit').val('');
+    // 카테고리
+    $('.revise_cat').val('');
+    // 위치
+    $('.locate_sel option').removeAttr('selected');
+    // 이미지
+    let noneSrc = '';
+    $('.file_thumb').css('display','none')
+      .find('img').attr('src',noneSrc);
+    // 링크
+    $('.description_form').val('');
+    
+    // named-fn disabledBtn 클래스 제거
+    $('.named-fn').removeClass('disabledBtn').attr('disabled',false);
+    
+    /* 이메일 내용 초기화 */
+    $('.add-mail .val-input').val('');
+    $('.revise_mailTit').val('');
+    $('.revise_address').val('');
+    $('.revise_sender').val('');
+    $('.revise_letter').val('');
+    $('.mail__html').html('');
+    
+    
+    /* 쿠폰 내용 초기화 */
+    $('.revise_id').val('');
+    $('.revise_cpName').val('');
+    $('.revise_cpDc').val('');
+    $('.revise_cpGuide').val('');
+    $('.revise_cpBenefit:eq(0)').prop('selected',true);
+    $('.revise_cpType:eq(0)').prop('selected',true);
+  })
+  // btn_cancel, btn_ok 클릭
+  $('.confirm_btn button').on({
+    click: function(){
+      $(this).closest('div[class*=add]').hide().parent('.boxwrap__pop').hide();
+      // console.log(1) ok;
       $(this).closest('div[class*=pop\:frame]').hide().parent('.boxwrap__pop').hide();
-     
+      
       /* 슬라이드 내용 초기화 */
       $('.revise_tit').val('');
       // 카테고리
@@ -694,14 +789,15 @@ $('.val-input').focusout(function(){
       $('.locate_sel option').removeAttr('selected');
       // 이미지
       let noneSrc = '';
-      $('.file_thumb').css('display','none')
+      $('.file_thumb').css('display','block')
         .find('img').attr('src',noneSrc);
       // 링크
       $('.description_form').val('');
       
       // named-fn disabledBtn 클래스 제거
       $('.named-fn').removeClass('disabledBtn').attr('disabled',false);
-  
+      
+      
       /* 이메일 내용 초기화 */
       $('.add-mail .val-input').val('');
       $('.revise_mailTit').val('');
@@ -718,145 +814,142 @@ $('.val-input').focusout(function(){
       $('.revise_cpGuide').val('');
       $('.revise_cpBenefit:eq(0)').prop('selected',true);
       $('.revise_cpType:eq(0)').prop('selected',true);
-    })
-    // btn_cancel, btn_ok 클릭
-    $('.confirm_btn button').on({
-      click: function(){
-        $(this).closest('div[class*=add]').hide().parent('.boxwrap__pop').hide();
-        // console.log(1) ok;
-        $(this).closest('div[class*=pop\:frame]').hide().parent('.boxwrap__pop').hide();
+    }
+  })
   
-        /* 슬라이드 내용 초기화 */
-        $('.revise_tit').val('');
-        // 카테고리
-        $('.revise_cat').val('');
-        // 위치
-        $('.locate_sel option').removeAttr('selected');
-        // 이미지
-        let noneSrc = '';
-        $('.file_thumb').css('display','block')
-          .find('img').attr('src',noneSrc);
-        // 링크
-        $('.description_form').val('');
-        
-        // named-fn disabledBtn 클래스 제거
-        $('.named-fn').removeClass('disabledBtn').attr('disabled',false);
-        
-        
-        /* 이메일 내용 초기화 */
-        $('.add-mail .val-input').val('');
-        $('.revise_mailTit').val('');
-        $('.revise_address').val('');
-        $('.revise_sender').val('');
-        $('.revise_letter').val('');
-        $('.mail__html').html('');
-        
-        
-        /* 쿠폰 내용 초기화 */
-        $('.revise_id').val('');
-        $('.revise_cpName').val('');
-        $('.revise_cpDc').val('');
-        $('.revise_cpGuide').val('');
-        $('.revise_cpBenefit:eq(0)').prop('selected',true);
-        $('.revise_cpType:eq(0)').prop('selected',true);
-      }
-    })
-    
-    // ESC 키업
-    $(window).keyup(function(e){
-      if(e.keyCode === 27) {
-        $('.boxwrap__pop').hide().children('div[class*=type]').hide()
-          .children('.named-add').hide();
-        
-        /* 슬라이드 내용 초기화 */
-        $('.revise_tit').val('');
-        // 카테고리
-        $('.revise_cat').val('');
-        // 링크
-        $('.revise_link').val('');
-        // 위치
-        $('.locate_sel option').removeAttr('selected');
-        // 이미지
-        let noneSrc = '';
-        $('.file_thumb').css('display','block')
-          .find('img').attr('src',noneSrc);
-        // 링크
-        $('.description_form').val('');
-        
-        // named-fn disabledBtn 클래스 제거
-        $('.named-fn').removeClass('disabledBtn').attr('disabled',false);
-  
-        // 샵 메인 관리 & 샵 카테고리 메인 관리 esc 안 먹게
-        $('#manage_shop_main .addBtn').addClass('disabledBtn').attr('disabled',true);
-        $('#manage_shop_category .addBtn').addClass('disabledBtn').attr('disabled',true);
-  
-        /* 이메일 내용 초기화 */
-        $('.add-mail .val-input').val('');
-        $('.revise_mailTit').val('');
-        $('.revise_address').val('');
-        $('.revise_sender').val('');
-        $('.revise_letter').val('');
-        $('.mail__html').html('');
-        
-        
-        /* 쿠폰 내용 초기화 */
-        $('.revise_id').val('');
-        $('.revise_cpName').val('');
-        $('.revise_cpDc').val('');
-        $('.revise_cpGuide').val('');
-        $('.revise_cpBenefit:eq(0)').prop('selected',true);
-        $('.revise_cpType:eq(0)').prop('selected',true);
-      }
-    })
-    // 팝업창 클릭
-    $(window).click(function(e){
-      let target = e.target.className;
-      // console.log(target);
+  // ESC 키업
+  $(window).keyup(function(e){
+    if(e.keyCode === 27) {
+      $('.boxwrap__pop').hide().children('div[class*=type]').hide()
+        .children('.named-add').hide();
       
-      if(target === 'boxwrap__pop pop:box' || target === 'pop:type pop:add-wrap'){
-        $('.boxwrap__pop').hide().children('div[class*=type]').hide()
-          .children('.named-add').hide();
-        
-        /* 슬라이드 내용 초기화 */
-        $('.revise_tit').val('');
-        // 카테고리
-        $('.revise_cat').val('');
-        // 링크
-        $('.revise_link').val('');
-        // 위치
-        $('.locate_sel option').removeAttr('selected');
-        // 이미지
-        let noneSrc = '';
-        $('.file_thumb').css('display','block')
-          .find('img').attr('src',noneSrc);
-        // 링크
-        $('.description_form').val('');
-        
-        // named-fn disabledBtn 클래스 제거
-        $('.named-fn').removeClass('disabledBtn').attr('disabled',false);
-        
-        
-        /* 이메일 내용 초기화 */
-        $('.add-mail .val-input').val('');
-        $('.revise_mailTit').val('');
-        $('.revise_address').val('');
-        $('.revise_sender').val('');
-        $('.revise_letter').val('');
-        $('.mail__html').html('');
-        
-        
-        /* 쿠폰 내용 초기화 */
-        $('.revise_id').val('');
-        $('.revise_cpName').val('');
-        $('.revise_cpDc').val('');
-        $('.revise_cpGuide').val('');
-        $('.revise_cpBenefit:eq(0)').prop('selected',true);
-        $('.revise_cpType:eq(0)').prop('selected',true);
+      /* 슬라이드 내용 초기화 */
+      $('.revise_tit').val('');
+      // 카테고리
+      $('.revise_cat').val('');
+      // 링크
+      $('.revise_link').val('');
+      // 위치
+      $('.locate_sel option').removeAttr('selected');
+      // 이미지
+      let noneSrc = '';
+      $('.file_thumb').css('display','block')
+        .find('img').attr('src',noneSrc);
+      // 링크
+      $('.description_form').val('');
+      
+      // named-fn disabledBtn 클래스 제거
+      $('.named-fn').removeClass('disabledBtn').attr('disabled',false);
+      
+      // 샵 메인 관리 & 샵 카테고리 메인 관리 esc 안 먹게
+      $('#manage_shop_main .addBtn').addClass('disabledBtn').attr('disabled',true);
+      $('#manage_shop_category .addBtn').addClass('disabledBtn').attr('disabled',true);
+      
+      /* 이메일 내용 초기화 */
+      $('.add-mail .val-input').val('');
+      $('.revise_mailTit').val('');
+      $('.revise_address').val('');
+      $('.revise_sender').val('');
+      $('.revise_letter').val('');
+      $('.mail__html').html('');
+      
+      
+      /* 쿠폰 내용 초기화 */
+      $('.revise_id').val('');
+      $('.revise_cpName').val('');
+      $('.revise_cpDc').val('');
+      $('.revise_cpGuide').val('');
+      $('.revise_cpBenefit:eq(0)').prop('selected',true);
+      $('.revise_cpType:eq(0)').prop('selected',true);
+    }
+  })
+  // 팝업창 클릭
+  $(window).click(function(e){
+    let target = e.target.className;
+    // console.log(target);
+    
+    if(target === 'boxwrap__pop pop:box' || target === 'pop:type pop:add-wrap'){
+      $('.boxwrap__pop').hide().children('div[class*=type]').hide()
+        .children('.named-add').hide();
+      
+      /* 슬라이드 내용 초기화 */
+      $('.revise_tit').val('');
+      // 카테고리
+      $('.revise_cat').val('');
+      // 링크
+      $('.revise_link').val('');
+      // 위치
+      $('.locate_sel option').removeAttr('selected');
+      // 이미지
+      let noneSrc = '';
+      $('.file_thumb').css('display','block')
+        .find('img').attr('src',noneSrc);
+      // 링크
+      $('.description_form').val('');
+      
+      // named-fn disabledBtn 클래스 제거
+      $('.named-fn').removeClass('disabledBtn').attr('disabled',false);
+      
+      
+      /* 이메일 내용 초기화 */
+      $('.add-mail .val-input').val('');
+      $('.revise_mailTit').val('');
+      $('.revise_address').val('');
+      $('.revise_sender').val('');
+      $('.revise_letter').val('');
+      $('.mail__html').html('');
+      
+      
+      /* 쿠폰 내용 초기화 */
+      $('.revise_id').val('');
+      $('.revise_cpName').val('');
+      $('.revise_cpDc').val('');
+      $('.revise_cpGuide').val('');
+      $('.revise_cpBenefit:eq(0)').prop('selected',true);
+      $('.revise_cpType:eq(0)').prop('selected',true);
+    }
+  });
+  
+  function check_all(type, checked) {
+    let target = $('#'+type+'_chk_all');
+    if (checked === true) {
+      target.prop('checked', true);
+      target.next().addClass('toggleChk')
+    } else {
+      target.prop('checked', false);
+      target.next().removeClass('toggleChk')
+    }
+    return checked;
+  }
+  function check_piece(type) {
+    let l = get_check_list(type);
+    console.log(type);
+    console.log(l);
+    console.log($('#'+type+'_tbody_list .chkPiece').length);
+    if ($('#'+type+'_tbody_list .chkPiece').length === l.length) {
+      check_all(type, true);
+    } else {
+      check_all(type, false);
+    }
+  }
+  function get_check_list(type, force = null) {
+    let l = [];
+    let cnt = 0;
+    $('#'+type+'_tbody_list').find('.chkPiece').each(function(i,e) {
+      if (force !== null) {
+        $(e).prop('checked', force);
       }
-    })
-  </script>
-</section>
-<script>
+      // console.log('i:' + i + ', checked:' + $(e).prop('checked'));
+      if ($(e).prop('checked') === true) {
+        l[cnt++] = $(e).data('id');
+        $(e).next().addClass('toggleChk');
+      } else {
+        $(e).next().removeClass('toggleChk');
+      }
+    });
+    return l;
+  }
+  
   // tit_theme 클릭이벤트
   $('.tit_theme').click(function(){
     let role = $(this).data('role');
@@ -870,7 +963,7 @@ $('.val-input').focusout(function(){
     $('.info--contents > section').hide();
     $('.info--contents > section').eq(index).show();
     
-    get_page('manage_' + role, "<?= base_url().'master/manage/page?tab='; ?>" + role);
+    get_page2('manage_' + role, "<?= base_url().'master/manage/page?tab='; ?>" + role);
   });
   // window 로드이벤트
   $(window).load(function(){

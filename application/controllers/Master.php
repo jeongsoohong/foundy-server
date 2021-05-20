@@ -548,14 +548,41 @@ QUERY;
     }
 
     if ($p1 == 'page') {
+      
+      if ($p2 == 'btn') {
   
-      if (isset($_GET['tab']) == false || empty($_GET['tab']) == true) {
-        $this->redirect_error('잘못된 접근입니다.');
+        if (isset($_GET['tab']) == false || empty($_GET['tab']) == true) {
+          $this->redirect_error('잘못된 접근입니다.');
+        }
+        if (isset($_GET['page']) == false || empty($_GET['page']) == true) {
+          $this->redirect_error('잘못된 접근입니다.');
+        }
+  
+        $page = $_GET['page'];
+        
+        $tab = $_GET['tab'];
+        if ($tab == 'coupon') {
+          $coupon_type = COUPON_TYPE_DEFAULT;
+          $where = "coupon_type>{$coupon_type}";
+          $total = $this->coupon_model->get_server_coupon_list_cnt($page, $where);
+          $page_size = $this->coupon_model::COUPON_LIST_PAGE_SIZE;
+        }
+        
+        $this->page_data['tab'] = $tab;
+        $this->page_data['total'] = $total;
+        $this->page_data['page_size'] = $page_size;
+        $this->page_data['page'] = $page;
+        $this->load->view('back/master/manage_page_btn', $this->page_data);
+      } else {
+  
+        if (isset($_GET['tab']) == false || empty($_GET['tab']) == true) {
+          $this->redirect_error('잘못된 접근입니다.');
+        }
+  
+        $tab = $_GET['tab'];
+        $this->load->view('back/master/manage_' . $tab, $this->page_data);
+      
       }
-  
-      $tab = $_GET['tab'];
-  
-      $this->load->view('back/master/manage_' . $tab, $this->page_data);
   
     } else if ($p1 == 'shop') {
   
@@ -811,13 +838,246 @@ QUERY;
       } else {
         $this->response2('fail', '잘못된 접근입니다.');
       }
+  
+    } else if ($p1 == 'coupon') {
+  
+      if ($p2 == 'add') {
     
-    } else {
+        $coupon = $this->db->get_where('server_coupon', array('coupon_type' => COUPON_TYPE_DEFAULT))->row();
+        if (empty($coupon) == true) {
+          $ins = array(
+            'activate' => 0,
+            'user_type' => COUPON_USER_TYPE_DEFAULT,
+            'coupon_type' => COUPON_TYPE_DEFAULT,
+            'coupon_benefit' => 0,
+            'coupon_title' => '',
+            'coupon_desc' => '',
+            'coupon_img_url' => '',
+          );
+          $this->db->set('start_at', 'NOW()', false);
+          $this->db->set('end_at', 'NOW()', false);
+          $this->db->set('use_at', 'NOW()', false);
       
+          $this->db->insert('server_coupon', $ins);
+      
+          $coupon_id = $this->db->insert_id();
+        } else {
+          $coupon_id = $coupon->coupon_id;
+        }
+        $coupon = $this->db->get_where('server_coupon', array('coupon_id' => $coupon_id))->row();
+  
+        $page_data['type'] = 'add';
+        $page_data['coupon'] = $coupon;
+        $this->load->view('back/master/manage_coupon_mod', $page_data);
+    
+      } else if ($p2 == 'do_add') {
+    
+        $coupon_id = $_POST['id'];
+    
+        $data['activate'] = 0;
+        $data['coupon_title'] = $this->input->post('coupon_title');
+        $data['user_type'] = $this->input->post('user_type');
+        $data['coupon_count'] = $this->input->post('coupon_count');
+        $data['coupon_type'] = $this->input->post('coupon_type');
+        $data['coupon_benefit'] = $this->input->post('coupon_benefit');
+        $data['coupon_desc'] = $this->input->post('coupon_desc');
+        $data['start_at'] = date('Y-m-d H:i:s', strtotime($this->input->post('start_at')));
+        $data['end_at'] = date('Y-m-d H:i:s', strtotime($this->input->post('end_at')));
+        $data['use_at'] = date('Y-m-d H:i:s', strtotime($this->input->post('use_at')));
+    
+        if ($data['user_type'] == COUPON_USER_TYPE_DEFAULT || $data['coupon_type'] == COUPON_TYPE_DEFAULT) {
+          $this->response2('fail', '유저 / 쿠폰 타입을 정확히 입력해 주세요.');
+        }
+    
+        if ($data['user_type'] == COUPON_USER_TYPE_SHOP_PURCHASING) {
+          if ($data['coupon_count'] > 0) {
+            $this->response2('fail', $this->coupon_model->get_coupon_user_type_str(COUPON_USER_TYPE_SHOP_PURCHASING).
+              '은 쿠폰수 0(무제한 쿠폰)만 가능합니다.');
+          }
+          if ($data['coupon_type'] == COUPON_TYPE_SHOP_DISCOUNT_PERCENT || $data['coupon_type'] == COUPON_TYPE_SHOP_DISCOUNT_PRICE) {
+            $this->response2('fail', $this->coupon_model->get_coupon_user_type_str(COUPON_USER_TYPE_SHOP_PURCHASING).
+              '은'.$this->coupon_model->get_coupon_type_str(COUPON_TYPE_SHOP_FREE_SHIPPING).' 타입만 가능합니다.');
+          }
+        }
+    
+        if ($data['user_type'] == COUPON_USER_TYPE_REGISTER) {
+          if ($data['coupon_type'] == COUPON_TYPE_SHOP_FREE_SHIPPING) {
+            $this->response2('fail', $this->coupon_model->get_coupon_user_type_str(COUPON_USER_TYPE_REGISTER).
+              '은'.$this->coupon_model->get_coupon_type_str(COUPON_TYPE_SHOP_FREE_SHIPPING).' 타입이 불가능합니다.');
+          }
+        }
+    
+        if ($data['user_type'] == COUPON_USER_TYPE_CENTER ||
+          $data['user_type'] == COUPON_USER_TYPE_TEACHER /* || $data['user_type'] == COUPON_USER_TYPE_CENTER_TEACHER */
+        ) {
+          if ($data['coupon_count'] > 0) {
+            $this->response2('fail', $this->coupon_model->get_coupon_user_type_str($data['user_type']).
+              '은 쿠폰수 0(무제한 쿠폰)만 가능합니다.');
+          }
+          if ($data['coupon_type'] == COUPON_TYPE_SHOP_FREE_SHIPPING) {
+            $this->response2('fail', $this->coupon_model->get_coupon_user_type_str($data['user_type']).
+              '은'.$this->coupon_model->get_coupon_type_str(COUPON_TYPE_SHOP_FREE_SHIPPING).' 타입이 불가능합니다.');
+          }
+        }
+    
+        $where = array('coupon_id' => $coupon_id);
+        $this->db->update('server_coupon', $data, $where);
+
+//      $coupon_desc= $this->input->post('coupon_desc');
+//      $files = 'coupon_'.$coupon_id.'_*.*';
+//      $this->crud_model->del_upload_image(IMG_WEB_PATH_SERVER, IMG_PATH_SERVER, $coupon_desc, $files);
+    
+        // register server notice
+        if ($data['user_type'] == COUPON_USER_TYPE_CENTER ||
+          $data['user_type'] == COUPON_USER_TYPE_TEACHER /* || COUPON_USER_TYPE_CENTER_TEACHER */
+        ) {
+          $this->notice_model->register(SERVER_NOTICE_TYPE_COUPON, $coupon_id, $data['coupon_title']);
+        }
+  
+        $this->response2('done', '성공하였습니다.');
+
+      } elseif ($p2 == 'mod') {
+    
+        $coupon_id = $_GET['id'];
+        $coupon = $this->db->get_where('server_coupon', array('coupon_id' => $coupon_id))->row();
+        
+        $page_data['type'] = 'mod';
+        $page_data['coupon'] = $coupon;
+        $this->load->view('back/master/manage_coupon_mod', $page_data);
+    
+      } elseif ($p2 == 'do_mod') {
+    
+        $coupon_id = $_POST['id'];
+    
+        $data['coupon_title'] = $this->input->post('coupon_title');
+        $data['user_type'] = $this->input->post('user_type');
+        $data['coupon_count'] = $this->input->post('coupon_count');
+        $data['coupon_type'] = $this->input->post('coupon_type');
+        $data['coupon_benefit'] = $this->input->post('coupon_benefit');
+        $data['coupon_desc'] = $this->input->post('coupon_desc');
+        $data['start_at'] = date('Y-m-d H:i:s', strtotime($this->input->post('start_at')));
+        $data['end_at'] = date('Y-m-d H:i:s', strtotime($this->input->post('end_at')));
+        $data['use_at'] = date('Y-m-d H:i:s', strtotime($this->input->post('use_at')));
+    
+        if ($data['user_type'] == COUPON_USER_TYPE_DEFAULT || $data['coupon_type'] == COUPON_TYPE_DEFAULT) {
+          $this->response2('fail', '유저 / 쿠폰 타입을 정확히 입력해 주세요.');
+        }
+    
+        $where = array('coupon_id' => $coupon_id);
+        $this->db->update('server_coupon', $data, $where);
+
+//      $coupon_desc= $this->input->post('coupon_desc');
+//      $files = 'coupon_'.$coupon_id.'_*.*';
+//      $this->crud_model->del_upload_image(IMG_WEB_PATH_SERVER, IMG_PATH_SERVER, $coupon_desc, $files);
+  
+        $this->response2('done', '성공하였습니다.');
+
+//      } else if ($p2 == 'upload_image') {
+//        $coupon_id = $para2;
+//
+//        if (isset($_FILES["file"])) {
+//          $error = $this->crud_model->file_validation($_FILES['file'], false);
+//          if ($error != UPLOAD_ERR_OK) {
+//            echo json_encode(array('success' => false, 'error' => $error));
+//          } else {
+//            $time = gettimeofday();
+//            $file_name = 'coupon_' . $coupon_id . '_' . $time['sec'] . $time['usec'] . '.jpg';
+//            $this->crud_model->upload_image(IMG_PATH_SERVER, $file_name, $_FILES["file"], 400, 0, false, true);
+//            echo json_encode(array('success' => true, 'filename' => $file_name));
+//          }
+//        } else {
+//          echo json_encode(array('success' => false, 'error' => 4));
+//        }
+  
+      } else if ($p2 == 'approval') {
+  
+        if (isset($_POST['id']) == false || empty($_POST['id']) == true) {
+          $this->response2('fail', '잘못된 접근입니다.(id)');
+        }
+  
+        if (isset($_POST['req']) == false || empty($_POST['req']) == true) {
+          $this->response2('fail', '잘못된 접근입니다.(req)');
+        }
+  
+        $approval = $_POST['req'];
+        if ($approval == 'ok') {
+          $data['activate'] = APPROVAL_DATA_ACTIVATE;
+        } else if ($approval == 'no') {
+          $data['activate'] = APPROVAL_DATA_INACTIVATE;
+        } else {
+          $this->response2('fail', '잘못된 접근입니다.(approval:'.$approval.')');
+        }
+
+//        $query = <<<QUERY
+//UPDATE server_coupon set activate={$data['activate']} where coupon_id={$coupon_id}
+//QUERY;
+//        $this->db->query($query);
+  
+        $coupon_id = $_POST['id'];
+        $coupon = $this->coupon_model->get_server_coupon($coupon_id);
+        if (isset($coupon) == false || empty($coupon) == true) {
+          $this->response2('fail', '쿠폰이 존재하지 않습니다.(coupon_id:'.$coupon_id.')');
+        }
+  
+        if ($coupon->activate == $data['activate']) {
+          $this->response2('fail', '이미 상태 변경이 완료되었습니다.(coupon_id:'.
+            $coupon_id.', activate:'.$coupon->activate.')');
+        }
+  
+        $this->db->where('coupon_id', $coupon_id);
+        $this->db->update('server_coupon', $data);
+  
+        if ($this->db->affected_rows() <= 0) {
+          $this->response2('fail', '상태가 정상적으로 변경되지 않았습니다.(coupon_id:'.
+            $coupon_id.', activate:'.$coupon->activate.')');
+        }
+  
+        $this->response2('done', '성공하였습니다.');
+  
+      } elseif ($p2 == 'remove') {
+  
+        if (isset($_POST['ids']) == false || empty($_POST['ids']) == true) {
+          $this->response2('fail', '잘못된 접근입니다.(ids)');
+        }
+        
+        $coupon_ids = json_decode($this->input->post('ids'));
+        if (!is_array($coupon_ids)) {
+          $this->response2('fail', '잘못된 타입입니다.(coupon_ids:'.json_encode($coupon_ids).')');
+        }
+        
+        $this->db->where_in('coupon_id', $coupon_ids);
+        $this->db->delete('server_coupon');
+        
+        $this->response2('done', '성공하였습니다.');
+    
+      } elseif ($p2 == 'view') {
+    
+        $coupon_id = $_GET['id'];
+        $coupon = $this->db->get_where('server_coupon', array('coupon_id' => $coupon_id))->row();
+        $page_data['coupon'] = $coupon;
+        $this->load->view('back/master/manage_coupon_view', $page_data);
+    
+      } elseif ($p2 == 'list') {
+  
+        if (isset($_GET['page']) == false || empty($_GET['page']) == true) {
+          $this->response2('fail', '잘못된 접근입니다.(page)');
+        }
+        
+        $page = $_GET['page'];
+    
+        $page_data['coupons'] = $this->coupon_model->get_server_coupon_list($page);
+        $this->load->view('back/master/manage_coupon_list', $page_data);
+    
+      } else {
+        $this->response2('fail', '잘못된 접근입니다.');
+      }
+  
+    } else {
+  
       $this->page_data['page_name'] = 'manage';
       $this->load->view('back/master/index', $this->page_data);
-    
+  
     }
-    
+  
   }
 }

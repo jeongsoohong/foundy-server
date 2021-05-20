@@ -2520,13 +2520,13 @@ label[class^="chkTip"]:last-child {
 	height: 36px !important;
 }
 .contents__data .glyphicon {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	height: 14px;
-	margin: auto;
+	/*position: absolute;*/
+	/*top: 0;*/
+	/*bottom: 0;*/
+	/*left: 0;*/
+	/*right: 0;*/
+	/*height: 14px;*/
+	/*margin: auto;*/
 }
 
 
@@ -4397,7 +4397,20 @@ div[class*=":situation"] {
     font-weight: bold;
 }
 
+/* display-now  쿠폰발급상태 background-color */
 
+/* 발급중 */
+.display-cpnIng {
+    background-color: #9365b8;
+}
+/* 발급중지 */
+.display-cpnStopped {
+    background-color: rgb(255 0 0 / 65%);
+}
+/* 발급완료 */
+.display-cpnCompleted {
+    background-color: #111;
+}
 
 /* send */
 #master .td_send,
