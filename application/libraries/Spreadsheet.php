@@ -25,7 +25,7 @@ class Spreadsheet {
     
     public function createWrite($spreadsheet, $write_type)
     {
-      return \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($inputFileType);
+      //return \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($inputFileType);
     }
   
 }
