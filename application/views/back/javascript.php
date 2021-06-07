@@ -108,7 +108,7 @@
     });
   }
 
-  function send_post_data(dataArr, url, callback = null, notify = false) {
+  function send_post_data(dataArr, url, callback = null, notify = false, html = false) {
     let formData = new FormData();
     for (let key in dataArr) {
       formData.append(key, dataArr[key]);
@@ -148,7 +148,7 @@
               callback(data);
             }
           } else {
-            var title = '<strong>실패하였습니다</strong>';
+            let title = '<strong>실패하였습니다</strong>';
             $.notify({
               title: title,
               message: '<br>' + data.message,
@@ -166,20 +166,26 @@
           }
         } else {
           // console.log(data);
-          var title = '<strong>실패하였습니다</strong>';
-          $.notify({
-            title: title,
-            message: '<br>' + data,
-            icon: 'fa fa-check'
-          }, {
-            type: 'warning',
-            timer: 1000,
-            delay: 5000,
-            animate: {
-              enter: 'animated lightSpeedIn',
-              exit: 'animated lightSpeedOut'
+          if (html === true) {
+            if (callback !== null) {
+              callback(data);
             }
-          });
+          } else {
+            let title = '<strong>실패하였습니다</strong>';
+            $.notify({
+              title: title,
+              message: '<br>' + data,
+              icon: 'fa fa-check'
+            }, {
+              type: 'warning',
+              timer: 1000,
+              delay: 5000,
+              animate: {
+                enter: 'animated lightSpeedIn',
+                exit: 'animated lightSpeedOut'
+              }
+            });
+          }
         }
       },
       error: function (e) {
@@ -235,6 +241,11 @@
         }
       }
     });
+  }
+
+  function check_number(v) {
+    let regexp = /^[0-9]*$/;
+    return regexp.test(v);
   }
 
   function trim(obj) {

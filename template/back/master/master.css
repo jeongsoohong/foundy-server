@@ -578,7 +578,7 @@
     font-weight: bold;
     padding-bottom: 20px;
     /* 아래 서체가 적용될 수 있도록 futura-pt 적용 부탁드립니다. */
-    font-family: 'Futura PT','Spoqa Han Sans','san-serif' !important;
+    font-family: futura-pt !important;
 }
 #master .home__info {
     box-sizing: border-box;
@@ -1002,6 +1002,19 @@
 	overflow-x: scroll;
 /*	height: 724px;*/
 }
+
+.purchase-code {
+    font-size: 11px;
+    letter-spacing: -0.03em;
+}
+
+#master .view-table .tableBody {
+    margin-bottom: 12px;
+}
+#master .view-table .tableBody:last-child {
+    margin-bottom: 0;
+}
+
 .table-media {
 	width: 100%;
 /*    height: inherit;*/
@@ -1277,6 +1290,26 @@
     -webkit-appearance: auto;
 }
 
+/* shipping-company 셀렉트 박스 너비 스타일 수정 */
+#master .shipping-company {
+    width: 96px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#master .shipping-company option {
+    width: inherit;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+@media(min-width: 1400px) {
+    #master .shipping-company {
+        width: 112px;
+    }
+}
+
 #master .td-waybill-number {
     width: 108px;
     height: 28px;
@@ -1285,12 +1318,16 @@
     border: 1px solid #bdbdbd;
 }
 
+.td-waybill-number::placeholder {
+    color: #9e9e9e;
+}
+
 #master .td-depth {
-    width: 86px;
+    width: 90%;
 }
 
 #master .td-depth button {
-    width: inherit;
+    width: 40px;
     height: 28px;
     line-height: 28px;
     color: #fff;
@@ -1308,8 +1345,13 @@
     background-color: #d32f2f;
 }
 
+.depth__tracking {
+    background-color: #00b794 !important;
+}
 
-
+.depth__return {
+    background-color: #dc0000 !important;
+}
 
 .active {
     color: #0091ea !important;
@@ -3512,7 +3554,7 @@ div[class*="table_form"] th {
     color: #fff;
     font-size: 18px;
     vertical-align: top;
-    /* font-family: futura-pt !important; */
+    font-family: futura-pt !important;
 }
 
 @media(min-width: 1080px) {
@@ -4111,13 +4153,13 @@ span[class*="represent__"] {
     vertical-align: top;
 }
 .data_box .glyphicon {
-    position: absolute;
-    height: 14px;
-    margin: auto;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
+    /*position: absolute;*/
+    /*height: 14px;*/
+    /*margin: auto;*/
+    /*left: 0;*/
+    /*top: 0;*/
+    /*bottom: 0;*/
+    /*right: 0;*/
 }
 
 .order_delay {
@@ -4203,6 +4245,11 @@ span[class*="represent__"] {
 }
 #master .btn_elements:first-child {
     margin-right: 6px;
+}
+
+#master #order-cancel-btn {
+    margin-right: 6px;
+    background-color: #d32f2f;
 }
 
 .qna-tip, .qna-search {
@@ -4345,6 +4392,18 @@ div[class*=":situation"] {
 }
 .subscribeWait {
   background-color: #e0e0e0;
+}
+
+/* 정보 팝업 주문취소 박스너비 스타일 추가 */
+#master .orderDisplay {
+    width: 140px;
+    height: 36px;
+    line-height: 36px;
+    margin: 12px auto 0 !important;
+    color: #fff;
+    font-size: 12px;
+    font-weight: normal;
+    border-radius: 4px 0 4px 0;
 }
 
 .sch_status .table_head tr th {
@@ -4650,3 +4709,426 @@ td[class*="view__reg"] .span-img {
 }
 
 
+/* id="fd-shop" */
+
+/* pop-wrap */
+#fd-infoExcel,
+#fd-itemStatus,
+#fd-changeRecall,
+#fd-return,
+#fd-shop {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    z-index: 20;
+    background-color: rgba(0,0,0,30%);
+}
+#fd-shop, #fd-changeRecall, #fd-itemStatus, #fd-infoExcel {
+    display: none;
+}
+
+/* 정보 팝업 테이블 td white-space */
+#fd-itemStatus td {
+    white-space: inherit;
+}
+
+/*.pop-wrap p, .pop-wrap table tr th,*/
+/*.pop-wrap table tr td, .pop-wrap textarea {*/
+/*    font-family: 'Spoqa Han Sans Neo', 'sans-serif' !important;*/
+/*}*/
+#fd-infoExcel .pop__cnt,
+#fd-changeRecall .pop__cnt,
+#fd-return .pop__cnt,
+#fd-shop .pop__cnt {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0 16px 16px;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgb(0 0 0 / 12%);
+}
+
+#fd-infoExcel .main--tit {
+    color: #000;
+    font-size: 21px;
+    font-weight: normal;
+    text-align: center;
+    padding-bottom: 24px;
+    border-bottom: 1px dotted #e0e0e0;
+    margin-bottom: 28px;
+}
+
+#fd-infoExcel .tit-excel-count {
+    color: #3bb5e8;
+    display: inline-block;
+    padding: 0 8px;
+}
+
+#fd-infoExcel .details-compo {
+    margin-bottom: 16px;
+}
+
+#fd-infoExcel .details-compo:last-child {
+    margin-bottom: 0;
+}
+
+#fd-infoExcel .compo-conts {
+    color: #616161;
+    font-size: 13px;
+    font-weight: normal;
+}
+
+#fd-infoExcel .compo-title {
+    width: 72px;
+    color: #000;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+#fd-infoExcel .pop__cnt {
+    width: 406px;
+    height: 294px;
+    padding: 40px 40px 0;
+}
+#fd-shop .pop__cnt {
+    width: 380px;
+    height: 592px;
+}
+#fd-return .pop__cnt {
+    width: 380px;
+    height: 320px;
+    padding: 0 16px;
+}
+#fd-changeRecall .pop__cnt {
+    width: 480px;
+    height: 380px;
+    padding: 16px;
+}
+#fd-shop .cnt--tit {
+    height: 44px;
+    line-height: 44px;
+    box-sizing: content-box;
+    padding: 8px 0;
+}
+#fd-changeRecall .cnt-tit {
+    color: #816661;
+    font-size: 21px;
+    padding: 12px 0;
+}
+#fd-changeRecall .txtForm--area {
+    height: 236px;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    color: #616161;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.75;
+}
+#fd-changeRecall .cnt-confirmEnroll {
+    width: 100%;
+    height: 44px;
+    background-color: #433532;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 14px;
+    margin-top: 12px;
+}
+#fd-shop .tit-case {
+    margin: 0;
+    color: #ad796d;
+    font-size: 21px;
+    font-weight: bold;
+}
+#fd-shop .cnt--table {
+    padding: 16px 0 24px;
+    border: 1px dashed #ddd;
+    border-width: 1px 0 0;
+}
+#fd-shop .table-price {
+    width: 100%;
+}
+.table-price tr {
+    height: 40px;
+}
+.table-price tr th {
+    color: #000;
+    font-size: 14px;
+    text-align: left;
+}
+.table-price tr td {
+    color: #000;
+    font-size: 14px;
+    text-align: right;
+}
+#fd-shop .table-border-stripe {
+    height: 1px;
+    background: #000;
+    margin: 10px 0;
+}
+.price-normal tr th, .price-normal tr td {
+    font-weight: normal;
+}
+.price-bold tr th, .price-bold tr td {
+    font-size: 18px;
+    font-weight: bold;
+}
+#fd-shop .cancel-reason-tit {
+    color: #9e9e9e;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+#fd-shop .write-form {
+    border: 1px solid #bdbdbd;
+    border-radius: 4px;
+    margin: 0px;
+    width: 100%;
+    color: #757575;
+    line-height: 1.75;
+    padding: 12px;
+    height: 160px;
+}
+#fd-changeRecall .cnt-close,
+#fd-return .cnt-close,
+#fd-shop .cnt-close {
+    position: absolute;
+    top: 4px;
+    right: 0;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    background-color: transparent;
+    padding: 0;
+}
+#fd-shop .cnt--cancel-confirm {
+    width: 100%;
+    height: 44px;
+    line-height: 44px;
+    background-color: #433532;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 16px;
+}
+
+#page-content .shop-fn-wrap {
+    width: 32%;
+    float: right;
+    padding: 0;
+}
+#page-content .fn-tip-cancel {
+    width: 48%;
+    margin-right: 2.5%;
+    vertical-align: top;
+}
+#page-content .fn-tip-status {
+    width: 48%;
+}
+
+
+/* fd-return */
+#fd-return * {
+    padding: 0;
+    border: 0;
+    margin: 0;
+}
+
+#fd-return input[type="text"],
+#fd-return input[type="password"],
+#fd-return input[type="email"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+#fd-return input[type="checkbox"],
+#fd-return input[type="radio"] {
+    vertical-align: middle;
+    margin: 0;
+}
+#fd-return textarea {
+    display: block;
+    outline: none;
+    resize: none;
+    border: 0;
+}
+#fd-return img {
+    vertical-align: middle;
+}
+#fd-return a {
+    text-decoration: none;
+}
+#fd-return li {
+    list-style: none;
+}
+#fd-return p {
+    word-break: keep-all;
+}
+#fd-return a:hover {
+    text-decoration: none;
+}
+#fd-return button {
+    outline: none;
+    cursor: pointer;
+    border: 0;
+    padding: 0;
+}
+#fd-return input {
+    background: transparent;
+    outline: none;
+
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+}
+#fd-return table {
+    width: 100%;
+    border-collapse: collapse;
+}
+#fd-return select {
+    background: none;
+    outline: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    border-radius: 0;
+    border: 0;
+    cursor: pointer;
+}
+
+#fd-return .clearfix::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+.reason-refundArea, .reason-refundTip {
+    display: none;
+}
+
+#fd-return .cnt-wrap {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 142px;
+}
+#fd-return .cnt-close {
+    top: 0;
+}
+#fd-return .cnt--tit {
+    color: #ad796d;
+    font-size: 21px;
+    font-weight: bold;
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+#fd-return .cnt--return-reason {
+    width: 280px;
+    margin: 0 auto;
+    text-align: center;
+}
+#fd-return .reason-conts {
+    margin-bottom: 20px;
+    line-height: 36px;
+}
+#fd-return .conts-opinion {
+    float: left;
+    color: #333;
+    font-size: 15px;
+    font-weight: normal;
+    margin-right: 33px;
+    line-height: inherit;
+}
+#fd-return .conts-slctWrap {
+    float: left;
+    position: relative;
+    width: 188px;
+}
+#fd-return .conts-opt {
+    position: absolute;
+    width: 100%;
+    line-height: inherit;
+    height: 36px;
+    background-color: #fff;
+    padding: 0 12px;
+    z-index: 1;
+}
+#fd-return .conts-slct {
+    height: 36px;
+    position: relative;
+    z-index: 1;
+    font-size: 0;
+    vertical-align: top;
+}
+#fd-return .reason-refundArea {
+    line-height: 36px;
+}
+#fd-return .refundArea-price {
+    color: #333;
+    font-size: 15px;
+    font-weight: normal;
+    line-height: inherit;
+}
+#fd-return .refundArea-price input {
+    margin: 0 8px 0 16px;
+    width: 162px;
+    padding: 0 12px;
+}
+#fd-return .reason-refundTip {
+    color: #616161;
+    font-size: 12px;
+    font-weight: normal;
+    padding-top: 16px;
+    margin-top: 16px;
+    border-top: 1px dashed #eee;
+}
+#fd-return .cnt--returnCompleted {
+    width: 200px;
+    height: 36px;
+    display: block;
+    margin: 20px auto 0;
+    background-color: #333;
+    font-size: 13px;
+    font-weight: bold;
+    color: #fff;
+    border-radius: 4px;
+}
+#fd-return .slctWrap_arrow {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border: 1px solid #ccc;
+    transform: rotate(45deg);
+    border-width: 0 2px 2px 0;
+    top: 12px;
+    right: 10px;
+    z-index: 2;
+}
+
+/* manageSearch */
+#master #manageSearch {
+    width: 80px;
+}
+
+#master #manageExcel {
+    background-color: #4caf50;
+    vertical-align: top;
+    margin-left: 8px;
+    width: 98px;
+}
+
+@media(min-width: 1025px) {
+    #master #manageSearch {
+        width: 100px;
+    }
+    #master #manageExcel {
+        width: 116px;
+    }
+}

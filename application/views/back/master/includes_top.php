@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css">
   <link rel="stylesheet" href="<?= base_url(); ?>template/back/plugins/font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet" href="<?= base_url(); ?>template/back/master/master.css?v=1.0.4">
+  <link rel="stylesheet" href="<?= base_url(); ?>template/back/master/master.css?v=1.1.1">
   
   <!-- font -->
   <link href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css" rel="stylesheet" type="text/css">
@@ -66,7 +66,7 @@
           font-style: normal !important;
           font-weight: 400 !important;
           /* futura-pt 적용되면 아래 폰트 스타일 지워주세요 */
-          font-family: 'Futura PT','san-serif' !important;
+          /*font-family: 'Futura PT','san-serif' !important;*/
       }
       .footer1 {
           margin: 0 !important;

@@ -17,6 +17,10 @@ class Shop_model extends CI_Model
     return $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
   }
   
+  function get_list() {
+    return $this->db->get_where('shop', array('activate' => APPROVAL_DATA_ACTIVATE))->result();
+  }
+  
   function get_shop_ids_for_purchase_product($shipping_status, $modified_at)
   {
     $query = <<<QUERY
@@ -75,7 +79,7 @@ QUERY;
     $ins = array(
       'purchase_product_id' => $purchase_product->purchase_product_id,
       'shipping_status' => $next_status,
-      'shipping_status_code' => $this->shop_model->get_shipping_status_str($next_status),
+      'shipping_status_code' => $this->get_shipping_status_str($next_status),
     );
     $this->db->set('modified_at', 'NOW()', false);
     $this->db->insert('shop_purchase_product_status', $ins);
@@ -367,7 +371,8 @@ QUERY;
   
   function get_shipping_status_str($status) {
     switch ($status) {
-      case SHOP_SHIPPING_STATUS_WAIT: return '입금대기';
+      case SHOP_SHIPPING_STATUS_WAIT:
+      case SHOP_SHIPPING_STATUS_NONE: return '주문상태';
       case SHOP_SHIPPING_STATUS_ORDER_COMPLETED: return '주문완료';
       case SHOP_SHIPPING_STATUS_ORDER_CANCELED: return '주문취소';
       case SHOP_SHIPPING_STATUS_PREPARE: return '배송준비중';

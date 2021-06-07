@@ -5,7 +5,7 @@ $last_page = (int)(($total % $page_size == 0) ? ($total / $page_size) : ($total 
 <p class="list_tableList font-futura">
   <!-- Showing 1 to 10 of 'N' rows, 1:start 10: max 'N':all -->
   Showing <?= $page_size * ($page - 1) + 1; ?> to
-  <span class="tableList-Max"><?= $total - $page_size * $page >= $page_size ? $page_size * $page : $total; ?></span> of
+  <span class="tableList-Max"><?= $total >= $page_size * $page ? $page_size * $page : $total; ?></span> of
   <span class="tableList-All"><?= $total ; ?></span> rows
 </p>
 <div class="list_tableBtns clearfix">

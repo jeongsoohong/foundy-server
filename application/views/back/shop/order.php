@@ -53,7 +53,7 @@
 <!--                  <option --><?php //if ($ship_status == SHOP_SHIPPING_STATUS_WAIT) echo 'selected'; ?>
 <!--                    value="--><?php //echo SHOP_SHIPPING_STATUS_WAIT; ?><!--">-->
 <!--                  --><?php //echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_WAIT); ?>
-                  </option>
+<!--                  </option>-->
                   <option <?php if ($ship_status == SHOP_SHIPPING_STATUS_ORDER_COMPLETED) echo 'selected'; ?>
                     value="<?php echo SHOP_SHIPPING_STATUS_ORDER_COMPLETED; ?>">
                     <?php echo $this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_ORDER_COMPLETED); ?>
@@ -609,7 +609,7 @@
     <div class="cnt-wrap" id="cancel-popup-wrap">
     </div>
     <button class="pop__close" onclick="close_cancel_popup()">
-      <img class="close--symbol" src="https://dev.foundy.me/template/front/header/imgs/icon_close_black.png" width="12" height="12" alt="닫기" style="opacity: 0.2;">
+      <img class="close--symbol" src="<?= base_url(); ?>template/front/header/imgs/icon_close_black.png" width="12" height="12" alt="닫기" style="opacity: 0.2;">
     </button>
   </div>
 </div>
@@ -724,11 +724,6 @@
       // $('#order-status-change-btn').attr('disabled', false);
       // $('#order-cancel-btn').attr('disabled', false);
     }
-  }
-
-  function check_number(v) {
-    let regexp = /^[0-9]*$/;
-    return regexp.test(v);
   }
 
   function get_shipping_infos(check) {

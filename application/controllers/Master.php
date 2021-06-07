@@ -573,7 +573,8 @@ QUERY;
         $this->page_data['page_size'] = $page_size;
         $this->page_data['page'] = $page;
         $this->load->view('back/master/manage_page_btn', $this->page_data);
-      } else {
+      
+      } else { // page
   
         if (isset($_GET['tab']) == false || empty($_GET['tab']) == true) {
           $this->redirect_error('잘못된 접근입니다.');
@@ -659,7 +660,7 @@ QUERY;
         } else {
           $this->db->set($type, '0');
           $this->db->where_in('product_id', $ids);
-          $this->db->delete('shop_product_id');
+          $this->db->update('shop_product_id');
       
           $this->response2('done', '삭제되었습니다.');
         }
@@ -1079,5 +1080,720 @@ QUERY;
   
     }
   
+  }
+  
+  public function shop($p1 = '', $p2 = '', $p3 = '')
+  {
+    if ($this->is_logged() == false) {
+      redirect(base_url().'master');
+    }
+    
+    if ($p1 == 'page') {
+  
+      if ($p2 == 'btn') {
+    
+        if (isset($_GET['tab']) == false || empty($_GET['tab']) == true) {
+          $this->redirect_error('잘못된 접근입니다.');
+        }
+        if (isset($_GET['page']) == false || empty($_GET['page']) == true) {
+          $this->redirect_error('잘못된 접근입니다.');
+        }
+    
+        $page = $_GET['page'];
+    
+        $tab = $_GET['tab'];
+        if ($tab == 'order') {
+          $coupon_type = COUPON_TYPE_DEFAULT;
+          $where = "coupon_type>{$coupon_type}";
+          $total = $this->coupon_model->get_server_coupon_list_cnt($page, $where);
+          $page_size = $this->coupon_model::COUPON_LIST_PAGE_SIZE;
+        }
+    
+        $this->page_data['tab'] = $tab;
+        $this->page_data['total'] = $total;
+        $this->page_data['page_size'] = $page_size;
+        $this->page_data['page'] = $page;
+        $this->load->view('back/master/manage_page_btn', $this->page_data);
+    
+      } else { // page
+    
+        if (isset($_GET['tab']) == false || empty($_GET['tab']) == true) {
+          $this->redirect_error('잘못된 접근입니다.');
+        }
+  
+        $tab = $_GET['tab'];
+        if ($tab == 'order') {
+  
+          $shops = $this->shop_model->get_list();
+          $ship_status = SHOP_SHIPPING_STATUS_NONE;
+          $this->page_data['shops'] = $shops;
+          $this->page_data['shop_id'] = 0;
+//            $this->page_data['page'] = 0;
+          $this->page_data['ship_status'] = $ship_status;
+          $this->page_data['start_date'] = '';
+          $this->page_data['end_date'] = '';
+          $this->page_data['confirm_delay'] = 0;
+        
+        }
+    
+        $this->load->view('back/master/shop_' . $tab, $this->page_data);
+  
+      }
+  
+    } else if ($p1 == 'order') {
+      
+      $this->shop_order($p1, $p2, $p3);
+  
+    } else {
+  
+      $this->page_data['page_name'] = 'shop';
+      $this->load->view('back/master/index', $this->page_data);
+  
+    }
+  
+  }
+  
+  private function shop_order($p1 = '', $p2 = '', $p3 = '')
+  {
+  
+    if ($p2 == 'list') {
+  
+      $page = 1;
+      if (isset($_GET['page'])) {
+        $page = $_GET['page'];
+      }
+      $shop_id = 0;
+      if (isset($_GET['shop_id'])) {
+        $shop_id = $_GET['shop_id'];
+      }
+      $ship_status = SHOP_SHIPPING_STATUS_NONE;
+      if (isset($_GET['ship_status'])) {
+        $ship_status = $_GET['ship_status'];
+      }
+      $start_date = '';
+      $start_date_kor = '';
+      if (isset($_GET['start_date'])) {
+        $start_date = $_GET['start_date'];
+        $start_date_kor = date('Y-m-d H:i:s', strtotime($_GET['start_date']));
+      }
+      $end_date = '';
+      $end_date_kor = '';
+      if (isset($_GET['end_date'])) {
+        $end_date = $_GET['end_date'];
+        $end_date_kor = date('Y-m-d H:i:s', strtotime($_GET['end_date']));
+      }
+      $confirm_delay = false;
+      if (isset($_GET['confirm_delay'])) {
+        $confirm_delay = ($_GET['confirm_delay'] == '1');
+      }
+  
+      $size = SHOP_ADMIN_ITEM_LIST_PAGE_SIZE;
+      $offset = $size * ($page - 1);
+  
+      $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
+      $shop_shipping_company = $this->db->get_where('shop_shipping_company', array('shop_id' => $shop_id))->result();
+  
+      $select = "select a.shop_id,a.shop_name,c.item_name,d.*";
+      $from = "from shop a, shop_product c, shop_purchase_product d";
+      $order_by = "order by purchase_product_id desc";
+      $limit = "limit {$offset},{$size}";
+      $where = "where a.shop_id=d.shop_id and c.product_id=d.product_id and d.shop_id={$shop_data->shop_id} and d.shipping_status={$ship_status}";
+      if (($ship_status == SHOP_SHIPPING_STATUS_ORDER_COMPLETED || $ship_status == SHOP_SHIPPING_STATUS_PREPARE) && $confirm_delay == true) {
+        $purchase_date = date('Y-m-d', strtotime('-' . $this->shop_model::CONFIRM_DELAY_DAYS . ' days'));
+//      $this->crud_model->alert_exit($purchase_date);
+        $where .= " and d.purchase_at <= '{$purchase_date}'";
+      } else if (!empty($start_date) && !empty($end_date)) {
+        $where .= " and '{$start_date_kor}' <= d.purchase_at and d.purchase_at <= '{$end_date_kor}'";
+      } else {
+        $start_date = '';
+        $end_date = '';
+      }
+      $query = $select . ' ' . $from . ' ' . $where . ' ' . $order_by . ' ' . $limit;
+      $order_data = $this->db->query($query)->result();
+  
+      $select = "select count(*) as cnt";
+      $query = $select . ' ' . $from . ' ' . $where . ' ';
+  
+      $total_cnt = $this->db->query($query)->row()->cnt;
+  
+      if ($ship_status == SHOP_SHIPPING_STATUS_ORDER_COMPLETED) {
+        $next_status = SHOP_SHIPPING_STATUS_PREPARE;
+      } else if ($ship_status == SHOP_SHIPPING_STATUS_PREPARE) {
+        $next_status = SHOP_SHIPPING_STATUS_IN_PROGRESS;
+      } else if ($ship_status == SHOP_SHIPPING_STATUS_IN_PROGRESS) {
+        $next_status = SHOP_SHIPPING_STATUS_COMPLETED;
+      } else if ($ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CANCELING) {
+        $next_status = SHOP_SHIPPING_STATUS_PURCHASE_CANCELED;
+      } else if ($ship_status == SHOP_SHIPPING_STATUS_PURCHASE_CHANGING) {
+        $next_status = SHOP_SHIPPING_STATUS_PURCHASE_CHANGED;
+      } else {
+        $next_status = SHOP_SHIPPING_STATUS_WAIT;
+      }
+
+//        log_message('debug', '[master] shop[' . json_encode($shop_data) . ']');
+  
+      $this->page_data['tab'] = 'order';
+      $this->page_data['total'] = $total_cnt;
+      $this->page_data['page_size'] = $size;
+      $this->page_data['page'] = $page;
+  
+      $this->page_data['ship_status'] = $ship_status;
+      $this->page_data['next_status'] = $next_status;
+      $this->page_data['start_date'] = $start_date;
+      $this->page_data['end_date'] = $end_date;
+      $this->page_data['confirm_delay'] = $confirm_delay == true ? '1' : '0';
+  
+      $this->page_data['order_data'] = $order_data;
+      $this->page_data['shop_data'] = $shop_data;
+      $this->page_data['shop_id'] = $shop_data->shop_id;
+      $this->page_data['shop_shipping_company'] = $shop_shipping_company;
+      $this->load->view('back/master/shop_order_list', $this->page_data);
+  
+    } else if ($p2 == 'excel') {
+      
+      if ($p3 == 'info') {
+  
+        $shop_id = 0;
+        if (isset($_GET['shop_id'])) {
+          $shop_id = $_GET['shop_id'];
+        }
+        $ship_status = SHOP_SHIPPING_STATUS_NONE;
+        if (isset($_GET['ship_status'])) {
+          $ship_status = $_GET['ship_status'];
+        }
+        $start_date = '';
+        $start_date_kor = '';
+        if (isset($_GET['start_date'])) {
+          $start_date = $_GET['start_date'];
+          $start_date_kor = date('Y-m-d H:i:s', strtotime($_GET['start_date']));
+        }
+        $end_date = '';
+        $end_date_kor = '';
+        if (isset($_GET['end_date'])) {
+          $end_date = $_GET['end_date'];
+          $end_date_kor = date('Y-m-d H:i:s', strtotime($_GET['end_date']));
+        }
+        $confirm_delay = false;
+        if (isset($_GET['confirm_delay'])) {
+          $confirm_delay = ($_GET['confirm_delay'] == '1');
+        }
+  
+        $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
+        if (isset($shop_data) == false || empty($shop_data) == true) {
+          $this->response2('fail', '브랜드 아이디가 잘못되었습니다.(shop_id:'.$shop_id.')');
+        }
+  
+        $select = "select a.shop_id,a.shop_name,c.item_name,d.*";
+        $from = "from shop a, shop_product c, shop_purchase_product d";
+        $order_by = "order by purchase_product_id desc";
+        $where = "where a.shop_id=d.shop_id and c.product_id=d.product_id and d.shop_id={$shop_id} and d.shipping_status={$ship_status}";
+        if (($ship_status == SHOP_SHIPPING_STATUS_ORDER_COMPLETED || $ship_status == SHOP_SHIPPING_STATUS_PREPARE) && $confirm_delay == true) {
+          $purchase_date = date('Y-m-d', strtotime('-' . $this->shop_model::CONFIRM_DELAY_DAYS . ' days'));
+//      $this->crud_model->alert_exit($purchase_date);
+          $where .= " and d.purchase_at <= '{$purchase_date}'";
+        } else if (!empty($start_date) && !empty($end_date)) {
+          $where .= " and '{$start_date_kor}' <= d.purchase_at and d.purchase_at <= '{$end_date_kor}'";
+        } else {
+          $start_date = '';
+          $end_date = '';
+        }
+//        $query = $select . ' ' . $from . ' ' . $where . ' ' . $order_by . ' ';
+//      $order_data = $this->db->query($query)->result();
+  
+        $select = "select count(*) as cnt";
+        $query = $select . ' ' . $from . ' ' . $where . ' ';
+  
+        $total_cnt = $this->db->query($query)->row()->cnt;
+  
+        if ($total_cnt <= 0) {
+          $this->response2('fail', '<'.$this->shop_model->get_shipping_status_str($ship_status)
+            . '> 주문상태인 데이터가 0건 입니다.');
+        }
+
+//        log_message('debug', '[master] shop[' . json_encode($shop_data) . ']');
+  
+        $this->page_data['total'] = $total_cnt;
+        $this->page_data['ship_status'] = $ship_status;
+        $this->page_data['start_date'] = $start_date;
+        $this->page_data['end_date'] = $end_date;
+        $this->page_data['confirm_delay'] = $confirm_delay == true ? '1' : '0';
+        $this->page_data['shop_data'] = $shop_data;
+        $this->load->view('back/master/shop_order_excel', $this->page_data);
+  
+      } else if ($p3 == 'download') {
+  
+        $shop_id = 0;
+        if (isset($_GET['shop_id'])) {
+          $shop_id = $_GET['shop_id'];
+        }
+        $ship_status = SHOP_SHIPPING_STATUS_NONE;
+        if (isset($_GET['ship_status'])) {
+          $ship_status = $_GET['ship_status'];
+        }
+        $start_date = '';
+        $start_date_kor = '';
+        if (isset($_GET['start_date'])) {
+          $start_date = $_GET['start_date'];
+          $start_date_kor = date('Y-m-d H:i:s', strtotime($_GET['start_date']));
+        }
+        $end_date = '';
+        $end_date_kor = '';
+        if (isset($_GET['end_date'])) {
+          $end_date = $_GET['end_date'];
+          $end_date_kor = date('Y-m-d H:i:s', strtotime($_GET['end_date']));
+        }
+        $confirm_delay = false;
+        if (isset($_GET['confirm_delay'])) {
+          $confirm_delay = ($_GET['confirm_delay'] == '1');
+        }
+  
+        $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
+        if (isset($shop_data) == false || empty($shop_data) == true) {
+          $this->response2('fail', '브랜드 아이디가 잘못되었습니다.(shop_id:'.$shop_id.')');
+        }
+  
+        $select = "select a.shop_id,a.shop_name,c.item_name,d.*";
+        $from = "from shop a, shop_product c, shop_purchase_product d";
+        $order_by = "order by purchase_product_id desc";
+        $where = "where a.shop_id=d.shop_id and c.product_id=d.product_id and d.shop_id={$shop_id} and d.shipping_status={$ship_status}";
+        if (($ship_status == SHOP_SHIPPING_STATUS_ORDER_COMPLETED || $ship_status == SHOP_SHIPPING_STATUS_PREPARE) && $confirm_delay == true) {
+          $purchase_date = date('Y-m-d', strtotime('-' . $this->shop_model::CONFIRM_DELAY_DAYS . ' days'));
+//      $this->crud_model->alert_exit($purchase_date);
+          $where .= " and d.purchase_at <= '{$purchase_date}'";
+        } else if (!empty($start_date) && !empty($end_date)) {
+          $where .= " and '{$start_date_kor}' <= d.purchase_at and d.purchase_at <= '{$end_date_kor}'";
+        } else {
+          $start_date = '';
+          $end_date = '';
+        }
+        $query = $select . ' ' . $from . ' ' . $where . ' ' . $order_by . ' ';
+        $order_data = $this->db->query($query)->result();
+  
+        if (isset($order_data) == false || empty($order_data) == true) {
+          $this->response2('fail', '<' . $this->shop_model->get_shipping_status_str($ship_status)
+            . '> 주문상태인 데이터가 0건 입니다.');
+        }
+
+//        log_message('debug', '[master] shop[' . json_encode($shop_data) . ']');
+  
+      } else {
+        $this->response2('fail', '잘못된 접근입니다.');
+      }
+  
+    } else if ($p2 == 'view') {
+  
+      if (isset($_GET['id']) == false || empty($_GET['id']) == true) {
+        $this->redirect_error('잘못된 접근입니다.');
+      }
+  
+      $purchase_product_id = $_GET['id'];
+  
+      $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $purchase_product_id))->row();
+      $purchase_info = $this->db->get_where('shop_purchase', array('purchase_id' => $purchase_product->purchase_id))->row();
+      $purchase_status = $this->db->order_by('history_id', 'asc')->get_where('shop_purchase_product_status', array('purchase_product_id' => $purchase_product_id))->result();
+      $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
+      $product_id_info = $this->db->get_where('shop_product_id', array('product_id' => $purchase_product->product_id))->row();
+      $shop_info = $this->db->get_where('shop', array('shop_id' => $product_info->shop_id))->row();
+
+//      $this->crud_model->alert_exit(json_encode($product_info));
+  
+      $this->page_data['purchase_product'] = $purchase_product;
+      $this->page_data['purchase_info'] = $purchase_info;
+      $this->page_data['purchase_status'] = $purchase_status;
+      $this->page_data['product_info'] = $product_info;
+      $this->page_data['product_id_info'] = $product_id_info;
+      $this->page_data['shop_info'] = $shop_info;
+      $this->load->view('back/master/shop_order_view', $this->page_data);
+  
+    } else if ($p2 == 'update') {
+  
+      if ($p3 == 'ship') {
+    
+        $purchase_product_id = $_POST['purchase_product_id'];
+        $shipping_data = json_decode($_POST['shipping_data']);
+    
+        $shipping_data->shipping_company_name = $this->db->get_where('shipping_company',
+          array('company_code' => $shipping_data->shipping_company))->row()->company_name;
+        $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $purchase_product_id))->row();
+        $ins = array(
+          'purchase_product_id' => $purchase_product->purchase_product_id,
+          'shipping_status' => $purchase_product->shipping_status,
+          'shipping_status_code' => $this->shop_model->get_shipping_status_str($purchase_product->shipping_status),
+          'shipping_data' => json_encode($shipping_data),
+        );
+        $this->db->set('modified_at', 'NOW()', false);
+        $this->db->insert('shop_purchase_product_status', $ins);
+    
+        $this->db->set('shipping_data', json_encode($shipping_data));
+        $this->db->set('modified_at', 'NOW()', false);
+        $this->db->where('purchase_product_id', $purchase_product_id);
+        $this->db->update('shop_purchase_product');
+    
+        // 송장변경 알림톡이 필요함
+        // send kakao alim talk
+        $purchase_info = $this->db->get_where('shop_purchase',
+          array('purchase_code' => $purchase_product->purchase_code))->row();
+        if ($purchase_info->user_id > 0) {
+          $user_data = $this->db->get_where('user', array('user_id' => $purchase_info->user_id))->row();
+          $phone = $user_data->phone;
+          $email = $user_data->email;
+        } else {
+          $phone = $purchase_info->sender_phone;
+          $email = $purchase_info->sender_email;
+        }
+        $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
+        $this->mts_model->send_shop_shipping($phone, SHOP_SHIPPING_STATUS_IN_PROGRESS,
+          $purchase_info->purchase_code, $product_info->item_name, $shipping_data->shipping_company_name, $shipping_data->shipping_code);
+        $this->email_model->get_user_shipping_status_data($this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_IN_PROGRESS),
+          $purchase_info->purchase_code, $product_info->item_name, $shipping_data->shipping_company_name, $shipping_data->shipping_code,
+          $product_info->item_image_url_0, $email);
+    
+        $this->response2('done', '성공하였습니다.');
+  
+      } else {
+    
+//        $shop_id = $_POST['shop_id'];
+        $ship_status = $_POST['ship_status'];
+        $next_status = $_POST['next_status'];
+        $shipping_infos = json_decode($_POST['shipping_infos']);
+    
+        if ($next_status == SHOP_SHIPPING_STATUS_IN_PROGRESS) {
+          foreach ($shipping_infos as $info) {
+            $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $info->purchase_product_id))->row();
+            if ($purchase_product->shipping_status != $ship_status) {
+              continue;
+            }
+            $shipping_data = new stdClass();
+            $shipping_data->shipping_company = $info->shipping_company;
+            $shipping_data->shipping_code = $info->shipping_code;
+            $shipping_data->shipping_company_name = $this->db->get_where('shipping_company', array('company_code' => $shipping_data->shipping_company))->row()->company_name;
+        
+            $ins = array(
+              'purchase_product_id' => $purchase_product->purchase_product_id,
+              'shipping_status' => $next_status,
+              'shipping_status_code' => $this->shop_model->get_shipping_status_str($next_status),
+              'shipping_data' => json_encode($shipping_data),
+            );
+            $this->db->set('modified_at', 'NOW()', false);
+            $this->db->insert('shop_purchase_product_status', $ins);
+        
+            $this->db->set('shipping_status', $next_status);
+            $this->db->set('shipping_status_code', $this->shop_model->get_shipping_status_str($next_status));
+            $this->db->set('shipping_data', json_encode($shipping_data));
+            $this->db->set('modified_at', 'NOW()', false);
+            $this->db->where('purchase_product_id', $info->purchase_product_id);
+            $this->db->update('shop_purchase_product');
+        
+            // send kakao alim talk
+            $purchase_info = $this->db->get_where('shop_purchase',
+              array('purchase_code' => $purchase_product->purchase_code))->row();
+            if ($purchase_info->user_id > 0) {
+              $user_data = $this->db->get_where('user', array('user_id' => $purchase_info->user_id))->row();
+              $email = $user_data->email;
+              $phone = $user_data->phone;
+            } else {
+              $email = $purchase_info->sender_email;
+              $phone = $purchase_info->sender_phone;
+            }
+            $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
+            $this->mts_model->send_shop_shipping($phone, SHOP_SHIPPING_STATUS_IN_PROGRESS,
+              $purchase_info->purchase_code, $product_info->item_name, $shipping_data->shipping_company_name, $shipping_data->shipping_code);
+            $this->email_model->get_user_shipping_status_data($this->shop_model->get_shipping_status_str(SHOP_SHIPPING_STATUS_IN_PROGRESS),
+              $purchase_info->purchase_code, $product_info->item_name, $shipping_data->shipping_company_name, $shipping_data->shipping_code,
+              $product_info->item_image_url_0, $email);
+          }
+      
+          $this->response2('done', '성공하였습니다.');
+  
+        } else if ($next_status == SHOP_SHIPPING_STATUS_ORDER_CANCELED) {
+          // 주문취소 - 결제 취소가 필요한 부분
+      
+          if (isset($_POST['only_info']) == false) {
+            $this->response2('fail', '잘못된 접근입니다.');
+          }
+      
+          $only_info = $_POST['only_info'] == '1';
+      
+          if (isset($_POST['cancel_reason']) == false) {
+            $this->response2('fail', '잘못된 접근입니다.');
+          }
+          $cancel_reason = $_POST['cancel_reason'];
+          if ($only_info == false && mb_strlen($cancel_reason) < 5) {
+            $this->response2('fail', '취소 사유는 최소 5자 입력바랍니다.');
+          }
+      
+          $cancel_items = array();
+          $purchase_code = null;
+          $shop_id = 0;
+          foreach ($shipping_infos as $info) {
+            $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $info->purchase_product_id))->row();
+            if ($purchase_product->shipping_status != $ship_status) {
+              $this->response2('fail', '잘못된 접근입니다.(ship_status:'.$purchase_product->shipping_status.')');
+            }
+        
+            if ($shop_id == 0) {
+              $shop_id = $purchase_product->shop_id;
+              $purchase_code = $purchase_product->purchase_code;
+            } else if ($purchase_code != $purchase_product->purchase_code) {
+              $this->response2('fail', '주문취소는 하나의 구매코드에 대해서 가능합니다!');
+            }
+        
+//            if ($shop_id != $this->session->userdata('shop_id')) {
+//              $this->crud_model->alert_exit("상품 브랜드 관리자가 아닙니다!");
+//            }
+//
+            $cancel_items[] = $purchase_product;
+          }
+      
+          if (count($cancel_items) <= 0) {
+            $this->response2('fail', '취소상품이 존재하지 않습니다!');
+          }
+      
+          $this->db->where(array('purchase_code' => $purchase_code, 'shop_id' => $shop_id));
+          $total_items = $this->db->get('shop_purchase_product')->result();
+      
+          $total_balance = 0;
+          $total_discount = 0;
+          $total_shipping_fee = 0;
+          $no_cancel_items = array();
+          foreach ($total_items as $item1) {
+            $cancel_item = false;
+            foreach ($cancel_items as $item2) {
+              if ($item1->purchase_product_id == $item2->purchase_product_id) {
+                $cancel_item = true;
+                break;
+              }
+            }
+            if ($cancel_item == false && $item1->shipping_status != SHOP_SHIPPING_STATUS_ORDER_CANCELED) {
+              $no_cancel_items[] = $item1;
+            }
+            if ($item1->shipping_status != SHOP_SHIPPING_STATUS_ORDER_CANCELED) {
+              $total_balance += $item1->total_balance;
+              $total_discount += $item1->discount;
+              $total_shipping_fee += $item1->total_shipping_fee;
+            }
+          }
+
+//          log_message('debug', '[order] only_info['.$only_info.'] purchase_code['.$purchase_code.'] shop_id['.$shop_id.
+//            '] no_cancel_items['.json_encode($no_cancel_items).'] cancel_items['.json_encode($cancel_items).']');
+      
+          $no_cancel_info = new stdClass();
+          $no_cancel_info->total_price = 0;
+          $no_cancel_info->total_shipping_fee = 0;
+          $no_cancel_info->total_additional_price = 0;
+          $no_cancel_info->total_purchase_cnt = 0;
+          $no_cancel_info->total_balance = 0;
+          $no_cancel_info->total_discount = 0;
+      
+          if ($only_info == true) {
+        
+            if (count($no_cancel_items)) {
+              $this->shop_model->get_no_cancel_info($no_cancel_items, $no_cancel_info, false);
+            }
+
+//            $cancel_items = $this->shop_model->get_cancel_items($cancel_items, $result, false);
+//            log_message('debug', '[shop] result['.json_encode($result).']');
+        
+            $final_balance = ($total_balance - $total_discount) - ($no_cancel_info->total_balance - $no_cancel_info->total_discount);
+        
+            $page_data['total_balance'] = $total_balance;
+            $page_data['total_discount'] = $total_discount;
+            $page_data['total_shipping_fee'] = $total_shipping_fee;
+            $page_data['final_balance'] = $final_balance;
+            $page_data['no_cancel_info'] = $no_cancel_info;
+            $page_data['page_name'] = "order";
+            $this->load->view('back/master/shop_order_cancel', $page_data);
+        
+          } else {
+        
+            if (count($no_cancel_items)) {
+              $this->shop_model->get_no_cancel_info($no_cancel_items, $no_cancel_info, false);
+            }
+        
+            $cancel_shipping_fee = $total_shipping_fee - $no_cancel_info->total_shipping_fee;
+        
+            $charge_shipping_fee = false;
+            $cancel_total_balance = 0;
+            foreach ($cancel_items as $cancel_item) {
+              if ($charge_shipping_fee == false) {
+                $cancel_item->total_shipping_fee = $cancel_shipping_fee;
+                $charge_shipping_fee = true;
+              } else {
+                $cancel_item->total_shipping_fee = 0;
+              }
+              $cancel_item->total_balance = $cancel_item->total_price + $cancel_item->total_shipping_fee + $cancel_item->total_additional_price;
+              $cancel_total_balance += ($cancel_item->total_balance - $cancel_item->discount);
+            }
+        
+            if ($cancel_total_balance <= 0) {
+              $this->response2('fail', '취소 확정 금액이 0원이므로 취소하실 수 없습니다. 관리자에게 문의바랍니다.');
+            }
+        
+            if (count($no_cancel_items)) {
+              $this->shop_model->get_no_cancel_info($no_cancel_items, $no_cancel_info, true);
+            }
+        
+            foreach ($cancel_items as $cancel_item) {
+              $upd = array(
+                'total_shipping_fee' => $cancel_item->total_shipping_fee,
+                'total_balance' => $cancel_item->total_balance,
+              );
+              $this->db->update('shop_purchase_product', $upd, array('purchase_product_id' => $cancel_item->purchase_product_id));
+            }
+        
+            $this->shop_model->cancel_payment($purchase_code, $cancel_items, $cancel_reason, $next_status, false, null);
+        
+            $this->response2('done', '성공하였습니다.');
+          }
+
+        } else {
+          
+          $purchase_product_ids = array();
+          foreach ($shipping_infos as $info) {
+            $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $info->purchase_product_id))->row();
+            if ($purchase_product->shipping_status != $ship_status) {
+              continue;
+            }
+        
+            $ins = array(
+              'purchase_product_id' => $purchase_product->purchase_product_id,
+              'shipping_status' => $next_status,
+              'shipping_status_code' => $this->shop_model->get_shipping_status_str($next_status),
+            );
+            $this->db->set('modified_at', 'NOW()', false);
+            $this->db->insert('shop_purchase_product_status', $ins);
+        
+            // send kakao alim talk
+            $purchase_info = $this->db->get_where('shop_purchase', array('purchase_code' => $purchase_product->purchase_code))->row();
+            if ($purchase_info->user_id > 0) {
+              $user_data = $this->db->get_where('user', array('user_id' => $purchase_info->user_id))->row();
+              $email = $user_data->email;
+              $phone = $user_data->phone;
+            } else {
+              $email = $purchase_info->sender_email;
+              $phone = $purchase_info->sender_phone;
+            }
+            if ($purchase_info->user_id > 0) {
+              $redirect_url = base_url() . "home/shop/order/detail?c={$purchase_info->purchase_code}";
+            } else {
+              $redirect_url = base_url() . "home/shop/order/detail?c={$purchase_info->purchase_code}&a={$purchase_info->session_id}";
+            }
+            $payment_info =  json_decode($purchase_info->bootpay_done_data);
+            $this->mts_model->send_shop_order($phone, $next_status, $purchase_info->purchase_code,
+              $payment_info->item_name, $payment_info->purchased_at, $redirect_url);
+            $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
+            $this->email_model->get_user_order_status_data(
+              $this->shop_model->get_shipping_status_str($next_status), $purchase_info->purchase_code,
+              $product_info->item_name, date('Y-m-d H:i:s'), $redirect_url, $product_info->item_image_url_0, $email);
+        
+            $purchase_product_ids[] = $info->purchase_product_id;
+          }
+          if (count($purchase_product_ids) > 0) {
+            $this->db->where_in('purchase_product_id', $purchase_product_ids);
+            $this->db->set('shipping_status', $next_status);
+            $this->db->set('shipping_status_code', $this->shop_model->get_shipping_status_str($next_status));
+            $this->db->set('modified_at', 'NOW()', false);
+            $this->db->update('shop_purchase_product');
+          }
+          
+          $this->response2('done', '성공하였습니다.');
+        
+        }
+    
+      }
+  
+    } else if ($p2 == 'req') {
+  
+      $purchase_product_id = $_POST['req_id'];
+      $req_type  = $_POST['req_type'];
+      $req_reason = $_POST['req_reason'];
+  
+      if (mb_strlen($req_reason) < 5) {
+        $this->response2('fail', '사유는 최소 5자 입력바랍니다.');
+      }
+  
+      $purchase_product = $this->db->get_where('shop_purchase_product', array('purchase_product_id' => $purchase_product_id))->row();
+  
+      if ($req_type == SHOP_ORDER_REQ_TYPE_CANCEL) {
+        $next_status = SHOP_SHIPPING_STATUS_ORDER_CANCELED;
+        $canceled = 1;
+    
+        if ($purchase_product->shipping_status != SHOP_SHIPPING_STATUS_ORDER_COMPLETED && $purchase_product->shipping_status != SHOP_SHIPPING_STATUS_PREPARE) {
+          $this->response2('fail', '잘못된 접근입니다.(ship_status:'.$purchase_product->shipping_status.')');
+        }
+    
+      } else if ($req_type == SHOP_ORDER_REQ_TYPE_CHANGE) {
+        $next_status = SHOP_SHIPPING_STATUS_PURCHASE_CHANGING;
+        $canceled = 0;
+    
+        if ($purchase_product->shipping_status != SHOP_SHIPPING_STATUS_COMPLETED) {
+          $this->response2('fail', '잘못된 접근입니다.(ship_status:'.$purchase_product->shipping_status.')');
+        }
+    
+      } else if ($req_type == SHOP_ORDER_REQ_TYPE_RETURN) {
+        $next_status = SHOP_SHIPPING_STATUS_PURCHASE_CANCELING;
+        $canceled = 1;
+    
+        if ($purchase_product->shipping_status != SHOP_SHIPPING_STATUS_COMPLETED) {
+          $this->response2('fail', '잘못된 접근입니다.(ship_status:'.$purchase_product->shipping_status.')');
+        }
+    
+      } else {
+        $this->response2('fail', '잘못된 접근입니다.');
+      }
+  
+      if ($req_type == SHOP_ORDER_REQ_TYPE_CANCEL) { // 결제 취소가 필요한 부분
+        $this->response2('fail', '잘못된 접근입니다.');
+//        $this->shop_model->cancel_payment($purchase_product->purchase_product_id, $req_reason,
+//          SHOP_SHIPPING_STATUS_ORDER_CANCELED, false, null);
+      } else {
+        $ins = array(
+          'purchase_product_id' => $purchase_product_id,
+          'shipping_status' => $next_status,
+          'shipping_status_code' => $this->shop_model->get_shipping_status_str($next_status),
+          'shipping_data' => $req_reason,
+        );
+        $this->db->set('modified_at', 'NOW()', false);
+        $this->db->insert('shop_purchase_product_status', $ins);
+    
+        $upd = array(
+          'shipping_status' => $next_status,
+          'shipping_status_code' => $this->shop_model->get_shipping_status_str($next_status),
+          'canceled' => $canceled,
+          'cancel_reason' => $req_reason,
+        );
+        $this->db->set('canceled_at', 'NOW()', false);
+        $this->db->where('purchase_product_id', $purchase_product_id);
+        $this->db->update('shop_purchase_product', $upd);
+    
+        // send kakao alim talk
+        $purchase_info = $this->db->get_where('shop_purchase', array('purchase_code' => $purchase_product->purchase_code))->row();
+        if ($purchase_info->user_id > 0) {
+          $user_data = $this->db->get_where('user', array('user_id' => $purchase_info->user_id))->row();
+          $email = $user_data->email;
+          $phone = $user_data->phone;
+        } else {
+          $email = $purchase_info->sender_email;
+          $phone = $purchase_info->sender_phone;
+        }
+        if ($purchase_info->user_id > 0) {
+          $redirect_url = base_url() . "home/shop/order/detail?c={$purchase_info->purchase_code}";
+        } else {
+          $redirect_url = base_url() . "home/shop/order/detail?c={$purchase_info->purchase_code}&a={$purchase_info->session_id}";
+        }
+        $payment_info =  json_decode($purchase_info->bootpay_done_data);
+        $this->mts_model->send_shop_order($phone, $next_status, $purchase_info->purchase_code,
+          $payment_info->item_name, $payment_info->purchased_at, $redirect_url);
+        $product_info = $this->db->get_where('shop_product', array('product_id' => $purchase_product->product_id))->row();
+        $this->email_model->get_user_order_status_data(
+          $this->shop_model->get_shipping_status_str($next_status), $purchase_info->purchase_code,
+          $product_info->item_name, date('Y-m-d H:i:s'), $redirect_url, $product_info->item_image_url_0, $email);
+      }
+  
+      $this->response2('done', '성공하였습니다.');
+  
+    } else {
+      $this->response2('fail', '잘못된 접근입니다.');
+    }
   }
 }

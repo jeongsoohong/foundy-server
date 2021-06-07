@@ -14,7 +14,7 @@
 <!--        <a href="#" class="menu_center">센터관리</a>-->
 <!--        <a href="#" class="menu_online">온라인관리</a>-->
 <!--        <a href="#" class="menu_teacher">강사관리</a>-->
-<!--        <a href="#" class="menu_shop">샵관리</a>-->
+        <a href="<?= base_url(); ?>master/shop" class="menu_shop">샵관리</a>
 <!--        <a href="#" class="menu_user">유저관리</a>-->
 <!--        <a href="#" class="menu_calculate">정산관리</a>-->
       </div>
