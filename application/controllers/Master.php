@@ -1313,6 +1313,7 @@ QUERY;
 //        log_message('debug', '[master] shop[' . json_encode($shop_data) . ']');
   
         $this->page_data['total'] = $total_cnt;
+        $this->page_data['shop_id'] = $shop_id;
         $this->page_data['ship_status'] = $ship_status;
         $this->page_data['start_date'] = $start_date;
         $this->page_data['end_date'] = $end_date;
@@ -1367,14 +1368,74 @@ QUERY;
           $end_date = '';
         }
         $query = $select . ' ' . $from . ' ' . $where . ' ' . $order_by . ' ';
-        $order_data = $this->db->query($query)->result();
+        $order_data = $this->db->query($query)->result_array();
   
         if (isset($order_data) == false || empty($order_data) == true) {
           $this->response2('fail', '<' . $this->shop_model->get_shipping_status_str($ship_status)
             . '> 주문상태인 데이터가 0건 입니다.');
         }
 
-//        log_message('debug', '[master] shop[' . json_encode($shop_data) . ']');
+        $file_name = $order_data[0]['shop_name'].'_'.$this->shop_model->get_shipping_status_str($ship_status).
+          '_주문정보';
+        if (empty($start_date) == false && empty($end_date) == false) {
+          $file_name .= "_{$start_date}_{$end_date}";
+        }
+        $title = $order_data[0]['shop_name'].'_'.$this->shop_model->get_shipping_status_str($ship_status);
+        $subject = $title;
+        $desc = $title."\n".'주문확인지연:'.($confirm_delay ? 'YES' : 'NO')."\n";
+        if (empty($start_date) == false && empty($end_date) == false) {
+          $desc .= "{$start_date} - {$end_date}";
+        }
+        
+        $header = array(
+          '샵아이디(서버)',
+          '브랜드이름',
+          '상품명',
+          '구매상품아이디(서버)',
+          '구매아이디(서버)',
+          '구매코드',
+          '유저아이디(서버)',
+          '세션아이디(서버)',
+          '상품아이디(서버)',
+          '과세여부',
+          '정상가',
+          '할인율(%)',
+          '판매가',
+          '마진율(%)',
+          '공급가',
+          '무료배송여부',
+          '무료배송가격',
+          '배송비',
+          '묶음배송갯수',
+          '구매갯수',
+          '전체상품가격',
+          '전체배송비',
+          '전체추가금액',
+          '총금액',
+          '필수옵션갯수',
+          '필수옵션정보',
+          '선택옵션갯수',
+          '선택옵션정보',
+          '구매날짜',
+          '상태변경날짜',
+          '배송상태코드',
+          '배송상태',
+          '배송정보',
+          '리뷰작성여부',
+          '구매취소여부',
+          '구매취소날짜',
+          '구매취소사유',
+          '할인금액',
+          '쿠폰사용아이디(서버)',
+          '구매취소금액',
+          '구매취소정보(서버)',
+          '정산완료금액',
+        );
+
+        log_message('debug', '[master] header[' . json_encode($header, JSON_UNESCAPED_UNICODE) . ']');
+  
+        $this->load->library('excel');
+        $this->excel->write($file_name, $header, $title, $subject, $desc, $order_data);
   
       } else {
         $this->response2('fail', '잘못된 접근입니다.');

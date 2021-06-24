@@ -25,7 +25,7 @@
     <? } ?>
     <div class="details-compo clearfix">
       <p class="compo-title pull-left">주문확인지연</p>
-      <p class="compo-conts pull-left"><?= ($confirm_delay ? 'yes' : 'no'); ?></p>
+      <p class="compo-conts pull-left"><?= ($confirm_delay ? 'YES' : 'NO'); ?></p>
     </div>
   </div>
   <button class="main--close frame_close">
@@ -41,7 +41,10 @@
   </button>
   <div class="main--reply cnt_btns confirm_btn">
     <button class="btn_cancel font-futura">CANCEL</button>
-    <button class="btn_ok font-futura">OK</button>
+    <a href="<?= base_url(); ?>master/shop/order/excel/download?ship_status=<?= $ship_status; ?>&start_date=<?= $start_date; ?>&end_date=<?= $end_date; ?>&confirm_delay=<?= $confirm_delay; ?>&shop_id=<?= $shop_id; ?>">
+      <button class="btn_ok font-futura" onclick="do_download_excel()">OK</button>
+    </a>
+<!--    <button class="btn_ok font-futura" onclick="do_download_excel()">OK</button>-->
     <script>
       // .main--reply button 클릭시 팝업창 닫기
       $(function(){

@@ -343,6 +343,10 @@
     padding: 0 0 0 12px;
     position: absolute;
     top: 0;
+    white-space: nowrap;
+    width: 70%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 
@@ -4784,16 +4788,19 @@ td[class*="view__reg"] .span-img {
 }
 
 #fd-infoExcel .compo-title {
-    width: 72px;
+    width: 96px;
     color: #000;
     font-size: 13px;
     font-weight: bold;
 }
 
 #fd-infoExcel .pop__cnt {
-    width: 406px;
-    height: 294px;
-    padding: 40px 40px 0;
+    width: 490px;
+    padding: 50px 40px 100px;
+    left: 50%;
+    margin-left: -245px;
+    top: 0;
+    height: max-content;
 }
 #fd-shop .pop__cnt {
     width: 380px;

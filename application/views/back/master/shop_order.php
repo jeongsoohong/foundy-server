@@ -60,7 +60,7 @@
         </div>
         <div class="line--component clearfix">
           <p class="component-name">검색정보</p>
-          <div class="component-slcwrap component-slcbox">
+          <div class="component-slcwrap component-slcbox" style="float: left;">
             <span class="file_arrow" style="right: unset; left: 84px;"></span>
             <select class="query-opt form-control gray_bg gray_txt" disabled>
               <option value="1">주문번호</option>
@@ -228,7 +228,7 @@
     let _sd = $('#start-date').val();
     let _ed = $('#end-date').val();
     let _cd = ($('#confirm-delay').prop('checked') === true ? '1' : '0');
-    let _url = encodeURI("<?php echo base_url();?>master/shop/order/excel?ship_status=" + _st
+    let _url = encodeURI("<?php echo base_url();?>master/shop/order/excel/info?ship_status=" + _st
       + "&start_date=" + _sd + "&end_date=" + _ed + "&confirm_delay=" + _cd + '&shop_id=' + _id);
     if (_st <= 0) {
       alert('주문상태를 선택해주세요.');
@@ -241,6 +241,27 @@
     get_page2('fd-infoExcel', _url, true, function() {
       $('#fd-infoExcel').show();
     });
+  }
+  function do_download_excel() {
+    let _st = parseInt($('#shipping-status').find('option:selected').val());
+    let _id = parseInt($('#shop-id').find('option:selected').val());
+    let _sd = $('#start-date').val();
+    let _ed = $('#end-date').val();
+    let _cd = ($('#confirm-delay').prop('checked') === true ? '1' : '0');
+    let _url = encodeURI("<?php echo base_url();?>master/shop/order/excel/download?ship_status=" + _st
+      + "&start_date=" + _sd + "&end_date=" + _ed + "&confirm_delay=" + _cd + '&shop_id=' + _id);
+    if (_st <= 0) {
+      alert('주문상태를 선택해주세요.');
+      return false;
+    }
+    if (_id <= 0) {
+      alert('브랜드를 선택해주세요.');
+      return false;
+    }
+    console.log('download');
+    // send_post_data(null, _url, true, function() {
+    //   $('#fd-infoExcel').hide();
+    // });
   }
 
   function search_order_page() {

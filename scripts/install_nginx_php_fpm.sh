@@ -30,7 +30,7 @@ mv /etc/nginx /etc/nginx.org
 ln -s /web/config/nginx /etc/nginx
 
 # php-fpm 설치 버전에 맞게 repo를 바꿔줄 것
-yum --enablerepo=remi-php73 install -y php-fpm php-cli php-common php-devel php php-gd php-ldap php-mbstring php-mcrypt php-mysqlnd php-odbc php-pdo php-pear php-pecl-geoip php-pecl-igbinary php-pecl-memcache php-pecl-redis php-xml php-opcache php-pecl-apc
+yum --enablerepo=remi-php73 install -y php-fpm php-cli php-common php-devel php php-gd php-ldap php-mbstring php-mcrypt php-mysqlnd php-odbc php-pdo php-pear php-pecl-geoip php-pecl-igbinary php-pecl-memcache php-pecl-redis php-xml php-opcache php-pecl-apc php-zip
 
 # config 설정
 mkdir -p /web/config/php/php.d
