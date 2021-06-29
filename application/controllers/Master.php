@@ -1409,12 +1409,18 @@ QUERY;
             . '> 주문상태인 데이터가 0건 입니다.');
         }
 
-        $file_name = $order_data[0]['shop_name'].'_'.$this->shop_model->get_shipping_status_str($ship_status).
-          '_주문정보';
+        if ($shop_id == 0) {
+          $file_name = '전체브랜드_'.$this->shop_model->get_shipping_status_str($ship_status).
+            '_주문정보';
+          $title = '전체브랜드_'.$this->shop_model->get_shipping_status_str($ship_status);
+        } else {
+          $file_name = $order_data[0]['shop_name'].'_'.$this->shop_model->get_shipping_status_str($ship_status).
+            '_주문정보';
+          $title = $order_data[0]['shop_name'].'_'.$this->shop_model->get_shipping_status_str($ship_status);
+        }
         if (empty($start_date) == false && empty($end_date) == false) {
           $file_name .= "_{$start_date}_{$end_date}";
         }
-        $title = $order_data[0]['shop_name'].'_'.$this->shop_model->get_shipping_status_str($ship_status);
         $subject = $title;
         $desc = $title."\n".'주문확인지연:'.($confirm_delay ? 'YES' : 'NO')."\n";
         if (empty($start_date) == false && empty($end_date) == false) {
