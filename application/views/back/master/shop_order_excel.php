@@ -10,7 +10,7 @@
     </div>
     <div class="details-compo clearfix">
       <p class="compo-title pull-left">브랜드</p>
-      <p class="compo-conts pull-left"><?= $shop_data->shop_name; ?></p>
+      <p class="compo-conts pull-left"><?= isset($shop_data) ? $shop_data->shop_name : "전체브랜드"; ?></p>
     </div>
     <? if (empty($start_date) == false && empty($end_date) == false) { ?>
       <div class="details-compo clearfix">

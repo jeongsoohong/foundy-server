@@ -82,7 +82,8 @@
           <p class="component-name">브랜드</p>
           <span class="file_arrow"></span>
           <select class="component-slcwrap form-control media-control" id="shop-id">
-            <option value="0" disabled selected hidden>브랜드선택</option>
+            <option value="-1" disabled selected hidden>브랜드선택</option>
+            <option value="0">전체브랜드</option>
             <? foreach ($shops as $shop) { ?>
               <option value="<?= $shop->shop_id ?>"
                 <? if(isset($shop_data) == true && $shop->shop_id == $shop_data->shop_id) echo 'selected'; ?>>
@@ -202,7 +203,7 @@
       alert('주문상태를 선택해주세요.');
       return false;
     }
-    if (id <= 0) {
+    if (id < 0) {
       alert('브랜드를 선택해주세요.');
       return false;
     }
@@ -234,7 +235,7 @@
       alert('주문상태를 선택해주세요.');
       return false;
     }
-    if (_id <= 0) {
+    if (_id < 0) {
       alert('브랜드를 선택해주세요.');
       return false;
     }
@@ -254,7 +255,7 @@
       alert('주문상태를 선택해주세요.');
       return false;
     }
-    if (_id <= 0) {
+    if (_id < 0) {
       alert('브랜드를 선택해주세요.');
       return false;
     }

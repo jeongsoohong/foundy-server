@@ -9,7 +9,7 @@ class Admin extends CI_Controller
   {
     parent::__construct();
     $this->load->database();
-    $this->load->library('spreadsheet');
+    //$this->load->library('spreadsheet');
   
     $now = time();
     if (SERVER_CHECK == true &&

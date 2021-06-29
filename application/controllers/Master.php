@@ -1189,15 +1189,23 @@ QUERY;
   
       $size = SHOP_ADMIN_ITEM_LIST_PAGE_SIZE;
       $offset = $size * ($page - 1);
-  
-      $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
-      $shop_shipping_company = $this->db->get_where('shop_shipping_company', array('shop_id' => $shop_id))->result();
+
+      $shop_data = null;
+      $shop_shipping_company = null;
+      if ($shop_id > 0) {
+        $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
+        $shop_shipping_company = $this->db->get_where('shop_shipping_company', array('shop_id' => $shop_id))->result();
+      }
   
       $select = "select a.shop_id,a.shop_name,c.item_name,d.*";
       $from = "from shop a, shop_product c, shop_purchase_product d";
       $order_by = "order by purchase_product_id desc";
       $limit = "limit {$offset},{$size}";
-      $where = "where a.shop_id=d.shop_id and c.product_id=d.product_id and d.shop_id={$shop_data->shop_id} and d.shipping_status={$ship_status}";
+      if ($shop_id > 0) {
+        $where = "where a.shop_id=d.shop_id and c.product_id=d.product_id and d.shop_id={$shop_data->shop_id} and d.shipping_status={$ship_status}";
+      } else {
+        $where = "where a.shop_id=d.shop_id and c.product_id=d.product_id and d.shipping_status={$ship_status}";
+      }
       if (($ship_status == SHOP_SHIPPING_STATUS_ORDER_COMPLETED || $ship_status == SHOP_SHIPPING_STATUS_PREPARE) && $confirm_delay == true) {
         $purchase_date = date('Y-m-d', strtotime('-' . $this->shop_model::CONFIRM_DELAY_DAYS . ' days'));
 //      $this->crud_model->alert_exit($purchase_date);
@@ -1210,6 +1218,18 @@ QUERY;
       }
       $query = $select . ' ' . $from . ' ' . $where . ' ' . $order_by . ' ' . $limit;
       $order_data = $this->db->query($query)->result();
+      
+      if ($shop_id == 0) {
+        foreach ($order_data as $order) {
+          $order->shop_data = $this->db->get_where('shop', array('shop_id' => $order->shop_id))->row();
+          $order->shop_shipping_company = $this->db->get_where('shop_shipping_company', array('shop_id' => $order->shop_id))->result();
+        }
+      } else {
+        foreach ($order_data as $order) {
+          $order->shop_data = $shop_data;
+          $order->shop_shipping_company = $shop_shipping_company;
+        }
+      }
   
       $select = "select count(*) as cnt";
       $query = $select . ' ' . $from . ' ' . $where . ' ';
@@ -1245,8 +1265,8 @@ QUERY;
   
       $this->page_data['order_data'] = $order_data;
       $this->page_data['shop_data'] = $shop_data;
-      $this->page_data['shop_id'] = $shop_data->shop_id;
-      $this->page_data['shop_shipping_company'] = $shop_shipping_company;
+      $this->page_data['shop_id'] = $shop_id;
+//      $this->page_data['shop_shipping_company'] = $shop_shipping_company;
       $this->load->view('back/master/shop_order_list', $this->page_data);
   
     } else if ($p2 == 'excel') {
@@ -1277,16 +1297,23 @@ QUERY;
         if (isset($_GET['confirm_delay'])) {
           $confirm_delay = ($_GET['confirm_delay'] == '1');
         }
-  
-        $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
-        if (isset($shop_data) == false || empty($shop_data) == true) {
-          $this->response2('fail', '브랜드 아이디가 잘못되었습니다.(shop_id:'.$shop_id.')');
+
+        $shop_data = null;
+        if ($shop_id > 0) {
+          $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
+          if (isset($shop_data) == false || empty($shop_data) == true) {
+            $this->response2('fail', '브랜드 아이디가 잘못되었습니다.(shop_id:'.$shop_id.')');
+          }
         }
   
         $select = "select a.shop_id,a.shop_name,c.item_name,d.*";
         $from = "from shop a, shop_product c, shop_purchase_product d";
         $order_by = "order by purchase_product_id desc";
-        $where = "where a.shop_id=d.shop_id and c.product_id=d.product_id and d.shop_id={$shop_id} and d.shipping_status={$ship_status}";
+        if ($shop_id > 0) {
+          $where = "where a.shop_id=d.shop_id and c.product_id=d.product_id and d.shop_id={$shop_data->shop_id} and d.shipping_status={$ship_status}";
+        } else {
+          $where = "where a.shop_id=d.shop_id and c.product_id=d.product_id and d.shipping_status={$ship_status}";
+        }
         if (($ship_status == SHOP_SHIPPING_STATUS_ORDER_COMPLETED || $ship_status == SHOP_SHIPPING_STATUS_PREPARE) && $confirm_delay == true) {
           $purchase_date = date('Y-m-d', strtotime('-' . $this->shop_model::CONFIRM_DELAY_DAYS . ' days'));
 //      $this->crud_model->alert_exit($purchase_date);
@@ -1348,15 +1375,22 @@ QUERY;
           $confirm_delay = ($_GET['confirm_delay'] == '1');
         }
   
-        $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
-        if (isset($shop_data) == false || empty($shop_data) == true) {
-          $this->response2('fail', '브랜드 아이디가 잘못되었습니다.(shop_id:'.$shop_id.')');
+        $shop_data = null;
+        if ($shop_id > 0) {
+          $shop_data = $this->db->get_where('shop', array('shop_id' => $shop_id))->row();
+          if (isset($shop_data) == false || empty($shop_data) == true) {
+            $this->response2('fail', '브랜드 아이디가 잘못되었습니다.(shop_id:'.$shop_id.')');
+          }
         }
   
         $select = "select a.shop_id,a.shop_name,c.item_name,d.*";
         $from = "from shop a, shop_product c, shop_purchase_product d";
         $order_by = "order by purchase_product_id desc";
-        $where = "where a.shop_id=d.shop_id and c.product_id=d.product_id and d.shop_id={$shop_id} and d.shipping_status={$ship_status}";
+        if ($shop_id > 0) {
+          $where = "where a.shop_id=d.shop_id and c.product_id=d.product_id and d.shop_id={$shop_data->shop_id} and d.shipping_status={$ship_status}";
+        } else {
+          $where = "where a.shop_id=d.shop_id and c.product_id=d.product_id and d.shipping_status={$ship_status}";
+        }
         if (($ship_status == SHOP_SHIPPING_STATUS_ORDER_COMPLETED || $ship_status == SHOP_SHIPPING_STATUS_PREPARE) && $confirm_delay == true) {
           $purchase_date = date('Y-m-d', strtotime('-' . $this->shop_model::CONFIRM_DELAY_DAYS . ' days'));
 //      $this->crud_model->alert_exit($purchase_date);
@@ -1432,7 +1466,7 @@ QUERY;
           '정산완료금액',
         );
 
-        log_message('debug', '[master] header[' . json_encode($header, JSON_UNESCAPED_UNICODE) . ']');
+//        log_message('debug', '[master] header[' . json_encode($header, JSON_UNESCAPED_UNICODE) . ']');
   
         $this->load->library('excel');
         $this->excel->write($file_name, $header, $title, $subject, $desc, $order_data);

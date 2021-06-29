@@ -113,6 +113,7 @@
                 <!-- 상품명 (옵션) -->
                 <span class="td-span">
                   <?= $order->item_name; ?>
+                  <? if ($shop_id == 0) { echo "<{$order->shop_data->shop_name}>"; } ?>
                 </span>
               </td>
               <td>
@@ -243,6 +244,7 @@
                 <!-- 상품명 (옵션) -->
                 <span class="td-span">
                   <?= $order->item_name; ?>
+                  <? if ($shop_id == 0) { echo "<{$order->shop_data->shop_name}>"; } ?>
                 </span>
               </td>
               <td>
@@ -268,7 +270,7 @@
                 <span class="td-span">
                   <select class="deliver__slct shipping-company">
                       <!-- option 수: 지정한 배송사 개수만큼  -->
-                    <?php foreach ($shop_shipping_company as $company) { ?>
+                    <?php foreach ($order->shop_shipping_company as $company) { ?>
                       <option value="<?php echo $company->shipping_company_code; ?>"><?php echo $company->shipping_company_name; ?></option>
                     <?php } ?>
                   </select>
@@ -393,6 +395,7 @@
                 <!-- 상품명 (옵션) -->
                 <span class="td-span">
                   <?= $order->item_name; ?>
+                  <? if ($shop_id == 0) { echo "<{$order->shop_data->shop_name}>"; } ?>
                 </span>
               </td>
               <td>
@@ -418,7 +421,7 @@
                 <span class="td-span">
                   <select class="deliver__slct shipping-company">
                     <!-- option 수: 지정한 배송사 개수만큼  -->
-                    <?php foreach ($shop_shipping_company as $company) { ?>
+                    <?php foreach ($order->shop_shipping_company as $company) { ?>
                       <option <?php if ($company->shipping_company_code == $order->shipping_data->shipping_company) echo 'selected'; ?>
                       value="<?php echo $company->shipping_company_code; ?>"><?php echo $company->shipping_company_name; ?></option>
                     <?php } ?>
@@ -547,6 +550,7 @@
                 <!-- 상품명 (옵션) -->
                 <span class="td-span">
                   <?= $order->item_name; ?>
+                  <? if ($shop_id == 0) { echo "<{$order->shop_data->shop_name}>"; } ?>
                 </span>
               </td>
               <td>
@@ -572,7 +576,7 @@
                 <span class="td-span">
                   <select class="deliver__slct gray_bg gray_txt shipping-company" disabled>
                     <!-- option 수: 지정한 배송사 개수만큼  -->
-                    <?php foreach ($shop_shipping_company as $company) { ?>
+                    <?php foreach ($order->shop_shipping_company as $company) { ?>
                       <option <?php if ($company->shipping_company_code == $order->shipping_data->shipping_company) echo 'selected'; ?>
                         value="<?php echo $company->shipping_company_code; ?>"><?php echo $company->shipping_company_name; ?></option>
                     <?php } ?>
@@ -717,6 +721,7 @@
                 <!-- 상품명 (옵션) -->
                 <span class="td-span">
                   <?= $order->item_name; ?>
+                  <? if ($shop_id == 0) { echo "<{$order->shop_data->shop_name}>"; } ?>
                 </span>
               </td>
               <td>
