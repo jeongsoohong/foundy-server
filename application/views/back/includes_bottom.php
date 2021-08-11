@@ -25,7 +25,7 @@
 
 
 	<!--Demo script [ DEMONSTRATION ]-->
-	<script src="<?php echo base_url(); ?>template/back/js/ajax_method.js"></script>
+	<script src="<?php echo base_url(); ?>template/back/js/ajax_method.js?v=1.2"></script>
 
 
 	<!--Demo script [ DEMONSTRATION ]-->

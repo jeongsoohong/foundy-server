@@ -371,7 +371,7 @@ $('#fol').on('click','.submitter', function(){
 });
 
 
-function form_submit(form_id,noty,e){
+function form_submit(form_id,noty,style=null){
 
 	var alerta = $('#form'); // alert div for show alert message
 	var form = $('#'+form_id);
@@ -379,9 +379,14 @@ function form_submit(form_id,noty,e){
 	if(!extra){
 		var extra = '';
 	}
+	
 	form.find('.summernotes').each(function() {
 		var now = $(this);
-		now.closest('div').find('.val').val(now.code());
+		if (style === null) {
+			now.closest('div').find('.val').val(now.code());
+		} else {
+			now.closest('div').find('.val').val(style + now.code());
+		}
 	});
 
 	//var form = $(this);

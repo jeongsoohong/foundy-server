@@ -84,7 +84,7 @@
           </span>
         </div>
         <div class="col-md-1">
-          <span class="btn btn-success btn-md btn-labeled fa fa-upload pull-right enterer" onclick="form_submit('blog_add','<?php echo ('정상적으로 업로드되었습니다!'); ?>');proceed('to_add');" ><?php echo ('업로드');?></span>
+          <span class="btn btn-success btn-md btn-labeled fa fa-upload pull-right enterer" onclick="form_submit('blog_add','<?php echo ('정상적으로 업로드되었습니다!'); ?>', styleCode);proceed('to_add');" ><?php echo ('업로드');?></span>
         </div>
       </div>
     </div>
@@ -97,6 +97,77 @@
 
 <input type="hidden" id="option_count" value="-1">
 <script type="text/javascript">
+  var styleCode = '<style>'
+    + '/* ============================================= */'
+    + '/* 웹폰트 스타일 */'
+    + '@import url(\'https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;400;500;700&display=swap\');'
+    + '/* 웹폰트 적용 */'
+    + '.writeBlog p, .writeBlog h2, .writeBlog h3, .writeBlog h4, .writeBlog h5, .writeBlog h6 {font-family: \'Noto Sans KR\', sans-serif !important;}'
+    + '/* ============================================= */'
+    + '/* === 소제목 스타일 === */'
+    + '.writeBlog .contMajorhead {margin-bottom: 0; padding-bottom: 0;}'
+    + '/* 1차 소제목 - 제목 */'
+    + '.writeBlog .majorhead-tit {font-size: 27px; font-weight: bold; line-height: 1.33; padding-bottom: 8px; margin-bottom: 0; word-break: keep-all;}'
+    + '/* 1차 소제목 - 본문 */'
+    + '.writeBlog .majorhead-txt {font-size: 16px; font-weight: normal; line-height: 1.5; margin-bottom: 0; word-break: keep-all;}'
+    + '/* 2차 소제목 - 제목 */'
+    + '.writeBlog .subhead-tit {font-size: 21px; font-weight: bold; line-height: 1.33; word-break: keep-all;}'
+    + '/* === 본문 스타일 === */'
+    + '.writeBlog .txt {color: #333; font-size: 16px; font-weight: normal; margin-bottom: 36px; line-height: 1.85;}'
+    + '.writeBlog .txt:last-child {margin-bottom: 0;}'
+    + '/* ============================================= */'
+    + '/* 목차 대분류 스타일 */'
+    + '.writeBlog .index-lg {font-size: 20px; letter-spacing: -0.03em; line-height: 1.5; margin-bottom: 0;}'
+    + '@media(min-width: 375px) {'
+    + '.writeBlog .index-lg {font-size: 25px;}'
+    + '}'
+    + '/* 목차 대분류 설명 스타일  */'
+    + '.writeBlog .index-desc {display: block; font-size: 15px; line-height: 1.5; padding-top: 8px;}'
+    + '@media(min-width: 375px) {'
+    + '.writeBlog .index-desc {font-size: 18px;}'
+    + '}'
+    + '/* 좌측 선 꾸밈 요소 */'
+    + '.inner-deco {border-left: 2px solid #bbae9d; padding-left: 12px;}'
+    + '  /* === 블로그 작성공간 여백,간격 (고정) === */'
+    + '  /* 상단선 */'
+    + '.writeBlog {border-top: 1px solid #eee;}'
+    + '  /* 문단 여백 */'
+    + '.blogCont {padding: 16px; margin: 52px 0;}'
+    + '  /* .blogCont:first-child {margin-top: 40px;} */'
+    + '  /* 회색 테두리 박스 */'
+    + '.deco-blogCont {box-sizing: border-box; padding: 16px; margin: 52px 16px 16px; border: 1px solid #e0e0e0;}'
+    + '  /* 회색 테두리 박스 폰트 크기 */'
+    + '.deco-blogCont .txt {font-size: 15px; margin-bottom: 12px;}'
+    + '  /* 이미지 박스 (이미지 1개 = content 1(문단 한 개)로 표기할 경우) 여백 */'
+    + '.cont-img {margin: 52px 0 40px;}'
+    + '  /* ============================================= */'
+    + '  /* 폰트 굵기 스타일 */'
+    + '  p[class*="Normal"], span[class*="Normal"] {font-weight: normal;}'
+    + '  p[class*="Heavy"], span[class*="Heavy"] {font-weight: bold;}'
+    + '  /* === 폰트 색상 스타일 === */'
+    + '  /* 제목(블랙) */'
+    + '.writeBlog .titColor {color: #000;}'
+    + '  /* 본문(옅은 블랙) */'
+    + '.writeBlog .txtColor {color: #333;}'
+    + '  /* 오렌지 하이라이트 */'
+    + '.writeBlog .orangeColor {color: #ff6633;}'
+    + '  /* ============================================= */'
+    + '  /* 밑줄 오렌지 */'
+    + '.orangeLine {border-bottom: 2px solid #ff6633;}'
+    + '  /* 배경색에 흰색 글씨 */'
+    + '.highlighted {display:inline-block; background-color: #ff6633; padding: 0 4px; color: #fff; font-weight: bold;}'
+    + '  /* 이탤릭체 */'
+    + '.italic { font-style: oblique; font-style: italic; }'
+    + '  /* 이탤릭체 가장 마지막에 적용되게끔, 이탤릭체 없으면 oblique 적용되게끔 */'
+    + '  /* 사진 주석 */'
+    + '.imgDesc {width: 85%; margin: 0 auto; padding-top: 12px; text-align: center; color: #bdbdbd; font-size: 14px; font-weight: bold; word-break: keep-all; line-height: 1.5;}'
+    + '  /* 인용구문 */'
+    + '  div.quote {text-align: center;}'
+    + '  div.quote p {color: #44484b; font-size: 21px; font-weight: 500; line-height: 1.5; word-break: keep-all; margin: 0;}'
+    + '  div.quote::before {content: "‘‘"; display: block; color: #e0e0e0;  font-size: 60px; font-weight: 700; margin-bottom: 4px; letter-spacing:  -0.05em;}'
+    + '  div.quote::after {content: "’’"; display: block; color: #e0e0e0;  font-size: 60px; font-weight: 700; margin-top: 36px; letter-spacing:  -0.05em;}'
+    + '</style>';
+  
   window.preview = function (input) {
     if (input.files && input.files[0]) {
       $("#previewImg").html('');
@@ -178,10 +249,11 @@
           deleteImage(target[0].src);
         },
         onChange: function() {
-          now.closest('div').find('.val').val(now.code());
+          now.closest('div').find('.val').val(styleCode + now.code());
         },
       });
-      now.closest('div').find('.val').val(now.code());
+      now.closest('div').find('.val').val(styleCode + now.code());
+      $('.note-editable').before(styleCode);
     });
   }
 
