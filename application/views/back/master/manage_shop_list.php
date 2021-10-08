@@ -2,13 +2,13 @@
 foreach ($product_list as $item) {
   $no++;
   ?>
-  <tr>
+  <tr id="<?= 'tr-'.$item->product_id; ?>">
     <td class="td-label chkTd">
       <input class="chkPiece" type="checkbox" name="chkPiece" onclick="check_piece('<?= $type; ?>')" data-id="<?= $item->product_id; ?>">
       <label class="chkLabel"></label>
     </td>
     <td>
-      <span class="td-span"><?= $no; ?></span>
+      <span class="td-span" id="span-no"><?= $no; ?></span>
     </td>
     <td>
       <span class="td-span"><?= $item->product_code; ?></span>
@@ -28,8 +28,8 @@ foreach ($product_list as $item) {
     <td>
       <div class="td-span">
         <? if ($ordering == true) { ?>
-          <button class="go__toUp" onclick="reorder_list('<?= $type; ?>', 'up', <?= $item->product_id; ?>)"></button>
-          <button class="go__toDown" onclick="reorder_list('<?= $type; ?>', 'down', <?= $item->product_id; ?>)"></button>
+          <button class="go__toUp" onclick="swap_list($(this).closest('tr'), 'up', '<?= $type; ?>')"></button>
+          <button class="go__toDown" onclick="swap_list($(this).closest('tr'), 'down', '<?= $type; ?>')"></button>
         <? } ?>
       </div>
     </td>

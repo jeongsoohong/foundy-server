@@ -363,6 +363,10 @@ class Center extends CI_Controller
           $towel = $this->input->post('towel');
           $parking = $this->input->post('parking');
           $valet = $this->input->post('valet');
+          $dawn = $this->input->post('dawn');
+          $weekend = $this->input->post('weekend');
+          $private = $this->input->post('private');
+          $small = $this->input->post('small');
     
           if (!empty(($this->input->post('category_yoga_etc')))) {
             if (isset($categories_yoga) && count($categories_yoga)) {
@@ -395,23 +399,27 @@ class Center extends CI_Controller
     
           if (empty($shower) || strlen($shower) == 0) {
             $shower = 0;
-          } else {
-            $shower = 1;
           }
           if (empty($towel) || strlen($towel) == 0) {
             $towel = 0;
-          } else {
-            $towel = 1;
           }
           if (empty($parking) || strlen($parking) == 0) {
             $parking = 0;
-          } else {
-            $parking = 1;
           }
           if (empty($valet) || strlen($valet) == 0) {
             $valet = 0;
-          } else {
-            $valet = 1;
+          }
+          if (empty($dawn) || strlen($dawn) == 0) {
+            $dawn = 0;
+          }
+          if (empty($weekend) || strlen($weekend) == 0) {
+            $weekend = 0;
+          }
+          if (empty($private) || strlen($private) == 0) {
+            $private = 0;
+          }
+          if (empty($small) || strlen($small) == 0) {
+            $small = 0;
           }
     
           $cats = $this->db->get_where('center_category', array('center_id' => $center_id, 'type' => CENTER_TYPE_YOGA))->result();
@@ -486,6 +494,10 @@ class Center extends CI_Controller
             'towel' => $towel,
             'parking' => $parking,
             'valet' => $valet,
+            'dawn' => $dawn,
+            'weekend' => $weekend,
+            'private' => $private,
+            'small' => $small,
           );
           $where = array (
             'center_id' => $center_id

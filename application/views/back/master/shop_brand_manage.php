@@ -1250,9 +1250,11 @@
                       
                       if(spell !== -1){
                         $('.slideSpot').css('left','4px');
+                        $('.slideSpot').parent().removeClass('slideActiveBtn');
                       }
                       else {
                         $('.slideSpot').css('left','36px');
+                        $('.slideSpot').parent().addClass('slideActiveBtn');
                       }
                     })
                     

@@ -969,4 +969,6 @@ $('.val-input').focusout(function(){
   $(window).load(function(){
     $('.tit_theme:first').click();
   });
+ 
+  let shop_tbody_html = new Map();
 </script>

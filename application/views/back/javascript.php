@@ -43,6 +43,15 @@
     $('#' + target).animate({scrollTop : offset}, delay); // target : 움직일 요소, delay : 속도
   }
 
+  jQuery.fn.swapWith = function(to) {
+    return this.each(function() {
+      let copy_to = $(to).clone(true);
+      let copy_from = $(this).clone(true);
+      $(to).replaceWith(copy_from);
+      $(this).replaceWith(copy_to);
+    });
+  };
+
   function send_post(dataArr, url, reload = true, relocation = '', callback = null) {
     let formData = new FormData();
     for (let key in dataArr) {
@@ -206,7 +215,7 @@
       callback();
     }
   }
-  function get_page2(id, url, loading = true, callback = null) {
+  function get_page2(id, url, loading = true, callback = null, append = false) {
     if (loading) {
       $('#loading_set').show();
     }
@@ -235,7 +244,11 @@
           setTimeout(function() {window.location.href = data.redirect}, 1000);
         }
       } else {
-        $('#' + id).html(data);
+        if (append === true) {
+          $('#' + id).append(data);
+        } else {
+          $('#' + id).html(data);
+        }
         if (callback !== null) {
           callback();
         }

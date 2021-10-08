@@ -10,6 +10,8 @@ class Studio_model extends CI_Model
     parent::__construct();
   }
   
+  const STUDIO_LIST_PAGE_SIZE = 10;
+  
   function get_img_web_path()
   {
     return base_url().'uploads/studio_image/';
@@ -22,8 +24,27 @@ class Studio_model extends CI_Model
   function get($studio_id) {
     return $this->db->get_where('studio', array('studio_id' => $studio_id))->row();
   }
+  
   function get_from_user_id($user_id) {
     return $this->db->get_where('studio', array('user_id' => $user_id, 'activate' => 1))->row();
+  }
+  
+  function get_studio_list($activate, $count, $offset = 0, $limit = self::STUDIO_LIST_PAGE_SIZE) {
+    if ($activate == APPROVAL_DATA_NOT_ACTIVATE) {
+      $activate1 = APPROVAL_DATA_INACTIVATE;
+      $activate2 = APPROVAL_DATA_REJECT;
+      $this->db->where("activate={$activate1} or activate={$activate2}");
+    } else {
+      $this->db->where(array('activate' => $activate));
+    }
+    if ($count) {
+      $this->db->select('count(*) as cnt');
+      return $this->db->get('studio')->row()->cnt;
+    } else {
+      $this->db->order_by('studio_id desc');
+      $this->db->limit($limit, $offset);
+      return $this->db->get('studio')->result();
+    }
   }
   
   function get_studios($teacher_id) {
@@ -255,9 +276,13 @@ QUERY;
     return $result;
   }
   
-  function get_schedule_info($schedule_info_id)
+  function get_schedule_info($schedule_info_id, $activate = 1)
   {
-    return $this->db->get_where('studio_schedule_info', array('schedule_info_id' => $schedule_info_id, 'activate' => 1))->row();
+    if ($activate != APPROVAL_DATA_NONE) {
+      $this->db->where('activate', $activate);
+    }
+    $this->db->where('schedule_info_id', $schedule_info_id);
+    return $this->db->get('studio_schedule_info')->row();
   }
   
   function register($user_id, $teacher_id, $center_id, $title, $instagram, $youtube, $email, $payment_page,
@@ -596,6 +621,48 @@ QUERY;
     $this->db->order_by('register_at', 'desc');
     $this->db->limit($limit, $offset);
     return $this->db->get()->result();
+  }
+
+  const MAX_GROUP_COUNT = 2;
+  const MAX_GROUP_SCHEDULE_COUNT = 8;
+  function get_schedule_groups()
+  {
+    return $this->db->get_where('studio_schedule_group', array('deleted' => 0))->result();
+  }
+  function get_group($schedule_group_id)
+  {
+    return $this->db->get_where('studio_schedule_group', array('schedule_group_id' => $schedule_group_id))->row();
+  }
+  function delete_group($schedule_group_id)
+  {
+    $this->db->set('deleted', 1);
+    $this->db->where('schedule_group_id', $schedule_group_id);
+    $this->db->update('studio_schedule_group');
+    return $this->db->affected_rows();
+  }
+  function set_group($group, $group_id, $upd)
+  {
+    if (is_array($group) == false) {
+      return -1;
+    }
+    if ($upd == true) {
+      $this->db->set('modified_at', 'NOW()', false);
+      $this->db->where('schedule_group_id', $group_id);
+      $this->db->update('studio_schedule_group', $group);
+    } else {
+      $this->db->insert('studio_schedule_group', $group);
+    }
+    return $this->db->affected_rows();
+  }
+  
+  function search_schedule_info($keyword)
+  {
+    $today = date('Y-m-d');
+    $time = date('H:i:s');
+    $this->db->where("(schedule_date = '{$today}' and start_time > '$time' and activate = 1 and schedule_title like '%{$keyword}%')");
+    $this->db->or_where("(schedule_date > '{$today}' and activate = 1 and schedule_title like '%{$keyword}%')");
+    $this->db->order_by('schedule_date,start_time asc');
+    return $this->db->get('studio_schedule_info')->result();
   }
   
 }

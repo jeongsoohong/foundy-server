@@ -129,6 +129,14 @@
 #master .keepall {
     word-break: keep-all;
 }
+#master .margin-auto {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
 
 .meaning {
     overflow: hidden;
@@ -894,6 +902,67 @@
     right: 0;
 }
 
+#master .addLesson {
+    margin-right: 0;
+    background-color: #52beeb;
+    width: 110px;
+    border-radius: 4px;
+    right: 0;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+}
+#master .setLesson {
+    bottom: unset;
+    top: 0px;
+    right: 16px;
+}
+#master .removeLesson {
+    margin-right: 0;
+    background-color: #d32f2f;
+    width: 110px;
+    border-radius: 4px;
+    float: right;
+}
+
+.longBtn {
+    width: 120px;
+}
+.shortBtn {
+    width: 110px;
+}
+#master .lessonBtn {
+    position: unset;
+    margin-right: 8px;
+}
+#master .removeGroup {
+    background-color: #8c241a;
+    border-radius: 4px;
+}
+#master .saveLesson {
+    padding: 0;
+    position: relative;
+    border-radius: 4px;
+    background-color: #fff;
+    width: 110px;
+    float: left;
+}
+#master .saveLesson-div {
+    padding-right: 36px;
+    height: 36px;
+    line-height: 36px;
+}
+#master .saveLesson-btn {
+    width: 36px;
+    height: 36px;
+    background-color: #0091ea;
+    border-radius: 0 4px 4px 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+
 /* addClass  */
 .disabledBtn {
     background-color: #fcfafa !important;
@@ -1581,6 +1650,10 @@
     font-size: 21px;
     padding-bottom: 12px;
 }
+#master .modify__shopTit {
+    padding-bottom: 0;
+    color: #9e9e9e;
+}
 
 .type__shopCnt {
     position: relative;
@@ -1589,15 +1662,15 @@
 
 /* zoomCnt */
 #master .zoom--cnts {
-    padding-top: 40px;
+    padding-top: 28px;
 }
 #master .zoomcnt-name {
     position: relative;
     margin-bottom: 12px;
 }
-.name_rewrite {
-    margin-bottom: 12px;
-    width: 60%;
+#master .name_rewrite {
+    margin-right: 32px;
+    width: calc(100% - 394px);
     position: relative;
 }
 
@@ -1646,10 +1719,10 @@
     height: 36px;
 }
 
-.search\:zoom {
-    margin-bottom: 24px;
+#master .search\:zoom {
+    margin-bottom: 0;
+    width: 100%;
 }
-
 
 #master .shop--chkTip {
     margin-left: 24px;
@@ -1690,7 +1763,7 @@ label[class^="chkTip"]:last-child {
     display: block;
     position: absolute;
     top: 0;
-    right: 220px;
+    right: 280px;
     width: 72px;
     height: 36px;
     color: #fff;
@@ -1701,7 +1774,38 @@ label[class^="chkTip"]:last-child {
     vertical-align: top;
     box-shadow: 0 2px 0 rgb(0 0 0 / 10%);
 }
+#master .catNamedBtn {
+    right: 64px;
+}
 
+/* 샵 메인/카테고리 관리 '저장' 버튼 관련 스타일 */
+#master #manage_shop_main .saveLesson, #master #manage_shop_category .saveLesson {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 36px;
+}
+#master #manage_shop_main .saveLesson-btn, #master #manage_shop_category .saveLesson-btn {
+    border-radius: 4px;
+}
+
+@media(min-width: 1080px) {
+    #master #manage_shop_main .saveLesson, #master #manage_shop_category .saveLesson {
+        width: 90px;
+    }
+    #master #manage_shop_main .saveLesson-btn, #master #manage_shop_category .saveLesson-btn {
+        border-radius: 0 4px 4px 0;
+    }
+    #master .toggle-seeList {
+        right: 330px;
+    }
+    #master .catNamedBtn {
+        right: 114px;
+    }
+    #master .category--search {
+        width: 40% !important;
+    }
+}
 
 #master .shop--add {
     width: 30%;
@@ -1760,6 +1864,19 @@ label[class^="chkTip"]:last-child {
     margin-bottom: 12px;
 }
 
+#master .shop--searchLesson {
+    color: #111;
+    font-size: 16px;
+    font-weight: normal;
+    padding-top: 20px;
+}
+#master .modify--searchBox {
+    margin: 0;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed #bdbdbd;
+    margin-bottom: 20px;
+}
+
 /* go__toUp, go__toDown */
 #master .go__toUp {
     border-top: 16px solid transparent;
@@ -1780,6 +1897,9 @@ label[class^="chkTip"]:last-child {
     left: 32px;
 }
 
+#master .tableBox-wrapper .tableBox {
+    padding-bottom: 28px;
+}
 
 /* 문자 발송 관리 */
 #master .sendTit {
@@ -2471,7 +2591,8 @@ label[class^="chkTip"]:last-child {
 #master .data_form {
     box-sizing: border-box;
     border: 1px dotted #ccc;
-	border-width: 0 0 1px 0;
+    /*border-width: 0 0 1px 0;*/
+    border-width: 0;
     padding: 0 10px;
     color: #616161; 
     /* color: #424242; */
@@ -3085,6 +3206,9 @@ div[class*="table_form"] th {
     position: relative;
     cursor: pointer;
 }
+#master .slideActiveBtn {
+    background-color: #4caf50;
+}
 #master .slideSpot {
     display: block;
     position: absolute;
@@ -3282,7 +3406,9 @@ div[class*="table_form"] th {
     border-bottom: 1px solid #e0e0e0;
 }
 
-
+.result-type-data {
+    display: none;
+}
 
 
 /* frame:shop */
@@ -3380,12 +3506,21 @@ div[class*="table_form"] th {
     .classify_box {
         max-width: 70%;
     }
-    #master .shop--search,
-    .name_rewrite {
+    #master .shop--search {
         width: 70%;
+    }
+    #master .zoomcnt-name {
+        max-width: 70%;
     }
     #master .shop--add {
         width: 50%;
+    }
+    #master .name_rewrite {
+        width: calc(100% - 276px);
+    }
+    #master .saveLesson {
+        position: absolute;
+        right: -43%;
     }
 }
 
@@ -3451,8 +3586,8 @@ div[class*="table_form"] th {
 
 
 #master .step_wrap {
-    padding: 28px 0 0;
-    border-top: 1px solid #000;
+    padding: 16px 0 0;
+    border-top: 0;
     position: relative;
 }
 
@@ -3463,7 +3598,7 @@ div[class*="table_form"] th {
   padding: 12px 16px;
   margin-bottom: 12px;
 }
-.detail_step:last-child {
+#master .detail_step:last-child {
     margin-bottom: 0;
 }
 
@@ -3472,6 +3607,10 @@ div[class*="table_form"] th {
     float: left;
     line-height: 32px;
     padding: 0 0 8px;
+}
+#master .modify_course {
+    position: relative;
+    padding-bottom: 0;
 }
 #master .step_dateTime {
     float: left;
@@ -3516,6 +3655,11 @@ div[class*="table_form"] th {
     text-overflow: ellipsis;
     vertical-align: top;
 }
+
+.course_hidden_info {
+    display: none;
+}
+
 #master .book_proceed {
     display: inline-block;
     color: #000;
@@ -3569,9 +3713,9 @@ div[class*="table_form"] th {
     #master .step_wrap {
         max-width: 70%;
     }
-    #master .step_course {
+    /*#master .step_course {
         width: auto;
-    }
+    }*/
     #master .book\:proceed,
     #master .step__select {
         width: 100px;
@@ -3609,8 +3753,8 @@ div[class*="table_form"] th {
 
 /* manage yotube-class */
 #master .video__type {
-  max-width: 708px;
-  padding-left: 40px;
+    max-width: unset;
+    /*padding-left: 40px;*/
 }
 .video__chkwrap {
 	position: absolute;
@@ -3658,10 +3802,12 @@ div[class*="table_form"] th {
   margin-bottom: 16px;
   border-bottom: 1px dashed #e0e0e0;
   position: relative;
-  height: 156px;    
+  height: 120px;
 }
 #master .video__type > div:last-child {
-  border: 0;
+    border: 0;
+    padding: 0;
+    margin: 0;
 }
 .video__type .media-btn {
   position: absolute;
@@ -3727,17 +3873,31 @@ div[class*="table_form"] th {
   display: none;
 }
 #master .video__type .video-title {
-  margin: 0 0 12px;
-  line-height: 1.5;
-  font-size: 15px;
-  font-weight: normal;
-  color: #111;
+    margin: 0 0 12px;
+    line-height: 1.75;
+    font-size: 15px;
+    font-weight: normal;
+    color: #111;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    width: 100%;
+    height: 26px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .video__type .classType {
   color: saddlebrown;
-  display:block;
+  /*display:block;*/
   font-size: 13px;
-  line-height: 1.5;
+    line-height: 1.75;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    width: 100%;
+    height: 22px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 #master .video__type .footprint {
   display: block;
@@ -3746,6 +3906,16 @@ div[class*="table_form"] th {
   font-weight: normal;
   line-height: 1.5 !important;
   padding-top: 6px;
+}
+
+#master .setBorder {
+    border-top: 1px dashed #bdbdbd;
+    margin-top: 28px;
+}
+@media(min-width: 1080px) {
+    #master .setBorder {
+        max-width: 70%;
+    }
 }
 
 
@@ -3779,9 +3949,6 @@ div[class*="table_form"] th {
     #master .video__type .media-body {
         width: calc(100% - 196px);
         /* margin-right: 0; */
-    }
-    #master .video__type > div {
-        height: 144px;
     }
     .video__chkwrap .chkTd {
         margin-bottom: 132px;
@@ -4544,25 +4711,29 @@ div[class*=":situation"] {
 }
 
 /* 수업 링크 등록 */
-#master #zoom {
+#master #zoom,
+#master #zoom2 {
   padding-top: 22px;
   border-top: 1px dashed #eee;
 }
 
-#zoom .zoom_tit {
+#zoom .zoom_tit,
+#zoom2 .zoom_tit {
   color: #2d8cff;
   font-size: 21px;
   font-weight: normal;
   padding-bottom: 20px;
 }
-#zoom .zoom_cnt {
+#zoom .zoom_cnt,
+#zoom2 .zoom_cnt {
   box-sizing: border-box;
   border: 1px solid #2d8cff;
   border-radius: 4px;
   background-color: #fff;
   padding: 28px;
 }
-#zoom .cnt_url {
+#zoom .cnt_url,
+#zoom2 .cnt_url {
   text-align: center;
   position: relative;
   margin-bottom: 28px;
@@ -4570,7 +4741,8 @@ div[class*=":situation"] {
 .url_box, .url_enroll {
   float: left;
 }
-#zoom .url_box {
+#zoom .url_box,
+#zoom2 .url_box {
   position: relative;
   box-sizing: border-box;
   width: 100%;
@@ -4585,19 +4757,21 @@ div[class*=":situation"] {
   padding: 0 10px;
   border: 1px solid #eee;
 }
-#zoom .url_write {
+#zoom .url_write,
+#zoom2 .url_write {
   background-color: #fff;
   border-radius: 4px;
   border: 1px solid #e0e0e0;
 }
-#zoom .url_show {
+#zoom .url_show,
+#zoom2 .url_show {
   background-color: #f4f7ff;
   margin-top: 8px;
   border-radius: 4px;
   border: 0;
   background-color: #ebf0fc;
 }
-.url_enroll {
+#master .url_enroll {
   position: absolute;
   top: 0;
   right: 0;
@@ -4611,7 +4785,8 @@ div[class*=":situation"] {
 }
 
 /* 링크 자동 발송 시간 */
-#zoom .cnt_sendTime {
+#zoom .cnt_sendTime,
+#zoom2 .cnt_sendTime {
   text-align: left;
   box-sizing: border-box;
   padding-right: 88px;
@@ -4665,7 +4840,8 @@ div[class*=":situation"] {
   color: #616161;
   font-weight: normal;
 }
-#zoom .sendTime_message {
+#zoom .sendTime_message,
+#zoom2 .sendTime_message {
   color: #9e9e9e;
   font-size: 12px;
   font-weight: normal;
@@ -5138,4 +5314,1015 @@ td[class*="view__reg"] .span-img {
     #master #manageExcel {
         width: 116px;
     }
+}
+
+#master .confirmGroup {
+    margin-bottom: 20px;
+    padding-right: 16px;
+}
+.confirmGroup--tit {
+    color: #111;
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 38px;
+}
+.confirmGroup--addBtn {
+    width: auto;
+    position: unset;
+}
+#master .addGroup {
+    margin-right: 0;
+    background-color: #4caf50;
+    width: 110px;
+    border-radius: 4px;
+    position: unset;
+    float: left;
+}
+@media(min-width: 1080px) {
+    #master .confirmGroup {
+        max-width: 70%;
+    }
+}
+
+#master .btn-tip-detail {
+    margin: 0;
+    color: #000;
+    font-size: 11px;
+    font-weight: bold;
+    text-align: center;
+}
+#master .detail-fontStyle {
+    font-size: 12px;
+    font-weight: normal;
+}
+
+/* 온라인 스케줄 예약현황 스타일 */
+#schedule_list2 .step_book {
+    float: left;
+    padding-top: 16px;
+    border-top: 1px dashed #bdbdbd;
+    margin-top: 12px;
+    width: 384px;
+    text-align: right;
+}
+#schedule_list2 .step_course {
+    width: 46%;
+    padding-bottom: 0;
+}
+.course-date-detail {
+    color: #bdbdbd;
+    font-size: 12px;
+    font-weight: bold;
+}
+.status_type_tit {
+    position: relative;
+}
+.type_fn_sch {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+#master .sch__btn {
+    padding: 0;
+    position: relative;
+    border-radius: 4px;
+    background-color: #fff;
+}
+.type_fn_sch button {
+    height: 32px;
+    line-height: 32px;
+    box-shadow: 0 2px 0 rgb(0 0 0 / 28%);
+}
+#master .btn-tip-detail {
+    margin: 0;
+    color: #000;
+    font-size: 11px;
+    font-weight: bold;
+    text-align: center;
+}
+.sch-seeAll-btn {
+    width: 100px;
+}
+.sch-search-btn {
+    width: 110px;
+}
+
+#master .type\:btn-div {
+    padding-right: 32px;
+}
+.txt-tip-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
+}
+.txt-tip-icon img {
+    position: absolute;
+    margin: auto;
+    height: 16px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+#master .search-btn-icon {
+    background-color: #0091ea;
+    border-radius: 0 4px 4px 0;
+}
+#master .seeAll-btn-icon {
+    background-color: #d32f2f;
+    border-radius: 0 4px 4px 0;
+}
+
+/* search-btn-pop */
+.type_fn_sch {
+    font-size: 0;
+}
+#master .sch-search-btn {
+    margin-right: 8px;
+}
+.search-btn-pop {
+    display: none;
+    width: 258px;
+    box-shadow: 0 4px 8px rgb(0 0 0 / 12%);
+    position: absolute;
+    right: 108px;
+    top: 48px;
+    z-index: 20;
+    border-radius: 4px;
+}
+#master .searchSch_example {
+    height: 32px;
+    line-height: 32px;
+    padding: 0 12px;
+    color: #000;
+    font-size: 12px;
+    font-weight: normal;
+    background-color: #f5f5f5;
+    border-radius: 4px 4px 0 0;
+}
+.searchSch_term {
+    position: relative;
+    width: 100%;
+    height: 32px;
+}
+#master .term_search_tip {
+    width: 100%;
+    height: inherit;
+    border: 0;
+    padding: 0 32px 0 12px;
+    color: #616161;
+    font-size: 12px;
+    font-weight: normal;
+    background-color: #fff;
+    border-radius: 0 0 4px 4px;
+}
+.term_search_btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
+    background-color: transparent;
+    padding: 0;
+}
+
+#schedule_list2 .course-wrap {
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    height: 32px;
+    width: 180%;
+}
+#schedule_list2 .course_time {
+    vertical-align: top;
+}
+#schedule_list2 .course_teacher {
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 64%;
+}
+
+
+#stuBook .table_head tr th {
+    background-color: #F2E9DB;
+}
+
+#send-zoom-link {
+    /*display: none;*/
+}
+#master .sendConts {
+    position: absolute;
+    width: 680px;
+    height: 500px;
+    border: 0;
+    padding: 20px;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    border-radius: 4px;
+}
+#master #send-zoom-link .detail_zoom {
+    border: 0;
+    padding-top: 0;
+}
+#master #send-zoom-link .zoom_tit {
+    padding: 12px 0 20px;
+}
+#master #send-kaTalk-link .guideTalk_tit {
+    padding: 12px 0 20px;
+    border: 0;
+    margin: 0;
+}
+
+
+.fn_sch_wrap {
+    width: 120px;
+}
+.tip-detail-case {
+    width: 88px;
+}
+#master .detail-fontStyle {
+    font-size: 12px;
+    font-weight: normal;
+}
+.filter-class-icon {
+    background-color: #0091ea;
+    border-radius: 0 4px 4px 0;
+}
+.filter-class-type {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 120px;
+    height: 64px;
+    z-index: 60;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    background-color: #fff;
+    border-radius: 4px;
+}
+#master .type-chkArrow {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: transparent;
+    position: absolute;
+    top: 0;
+    right: 0;
+    box-shadow: none;
+}
+#master .type-cat-class, #master .type-cat-time {
+    width: 100%;
+    height: 32px;
+    line-height: 32px;
+    color: #000;
+    font-size: 12px;
+    font-weight: normal;
+    padding: 0 15px;
+    cursor: pointer;
+}
+#master .type-cat-class:hover, #master .type-cat-time:hover {
+    background-color: #feffce;
+    color: #ff6633;
+    font-weight: bold;
+}
+#master .type-cat-class {
+    border: 1px solid #eee;
+    border-width: 0 0 1px;
+    background-color: #fff;
+    border-radius: 4px 4px 0 0;
+}
+#master .type-cat-time {
+    border: 0;
+    border-radius: 0 0 4px 4px;
+}
+#stuBook {
+    position: relative;
+}
+.stuBook__class, .stuBook__realTime {
+    display: none;
+}
+#master .class--inStatus {
+    color: #816661;
+    font-size: 16px;
+    font-weight: normal;
+    padding: 6px 0 28px;
+}
+#master .realTime--inStatus {
+    color: #816661;
+    font-size: 16px;
+    font-weight: normal;
+    padding: 6px 0 28px;
+}
+.realTime--inView {
+    overflow-x: scroll;
+}
+#master .realTime--inView .situation_table {
+    padding-bottom: 20px;
+}
+
+#master .detail_table_more {
+    padding: 0;
+    width: 100%;
+    height: 44px;
+    border: 1px solid #B7A6A4;
+    background-color: #fff;
+    color: #B7A6A4;
+    font-size: 14px
+}
+
+#stuBook .table_body tr td:first-child {
+    padding: 8px;
+    color: #0091ea;
+}
+
+@media(min-width: 968px){
+    #schedule_list2 .step_book {
+        padding: 0;
+        border: 0;
+    }
+}
+
+@media(min-width: 996px){
+    #schedule_list2 .course-wrap {
+        width: 100%;
+    }
+}
+
+@media(min-width: 1025px){
+    /* #schedule_list2 .step_course {
+        border-right: 1px dashed #bdbdbd;
+    }*/
+    #schedule_list2 .step_book {
+        float: right;
+        margin: 8px 0;
+    }
+    .course-wrap {
+        height: 28px;
+        line-height: 28px;
+    }
+    .course-date-detail {
+        height: 20px;
+        line-height: 20px;
+    }
+}
+
+@media(min-width: 1200px) {
+    #stuBook .table_body tr td:first-child {
+        padding: 10px;
+    }
+}
+
+
+
+/* popScheduleRewrite */
+#popScheduleRewrite {
+    display: none;
+}
+#popScheduleRewrite .input-group.date .input-group-addon {
+    position: unset;
+}
+#popScheduleRewrite .personnel {
+    float: left;
+    width: 58%;
+    line-height: 32px;
+}
+#master #popScheduleRewrite {
+    width: 900px;
+    height: 686px;
+    border-radius: 4px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+#popScheduleEdit .popup_cnt,
+#popScheduleRewrite .popup_cnt {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+#popScheduleRewrite .type_box {
+    position: relative;
+    height: auto;
+    padding: 28px 20px;
+    background-color: #fff;
+    border-radius: 4px;
+    margin-bottom: 28px;
+}
+#popScheduleRewrite .type_tit {
+    padding: 4px 0 24px;
+    color: #111;
+    font-size: 21px;
+}
+#popScheduleRewrite .type_detail {
+    max-width: 1080px;
+}
+#popScheduleRewrite .area_tit {
+    float: left;
+    width: 132px;
+    color: #816661;
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 34px;
+}
+#popScheduleRewrite .area_data {
+    padding-left: 132px;
+    box-sizing: border-box;
+    margin-bottom: 16px;
+}
+#popScheduleRewrite .data_function > .container, .data_function .row {
+    width: 100% !important;
+    padding: 0;
+    margin: 0;
+}
+#popScheduleRewrite .data_function .col-sm-6 {
+    width: 100%;
+    padding: 0;
+}
+#popScheduleRewrite .input-group {
+    width: 100%;
+}
+
+#popScheduleRewrite .data_hyphen {
+    display: inline-block;
+    color: #616161;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 34px;
+    padding: 0 2%;
+    box-sizing: border-box;
+    width: 6%;
+    text-align: center;
+}
+#popScheduleRewrite .data_function,
+#popScheduleRewrite .data_hyphen {
+    float: left;
+}
+#popScheduleRewrite .data_function {
+    width: 47%;
+    display: inline-block;
+    vertical-align: middle;
+}
+#popScheduleRewrite .selbox-name {
+    width: 58%;
+    font-size: 0;
+    /* width: 47%; */
+}
+#popScheduleRewrite .selbox-wrap {
+    position: relative;
+    width: 36%;
+    height: 32px;
+    margin-right: 6%;
+    /* width: 47%; */
+}
+#popScheduleRewrite .selbox-wrap,
+#popScheduleRewrite .selbox-name {
+    float: left;
+}
+#popScheduleRewrite .selbox-name p {
+    display: inline-block;
+    color: #616161;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 32px;
+    margin-right: 22px;
+}
+#popScheduleRewrite .name_form {
+    height: 32px;
+    line-height: 32px;
+    padding: 0 10px;
+    color: #616161;
+    font-size: 14px;
+    font-weight: normal;
+    width: calc(100% - 62px);
+}
+#popScheduleRewrite .data_limit {
+    color: #bdbdbd;
+    font-size: 13px;
+    font-weight: bold;
+}
+#popScheduleRewrite .class_data .class_name {
+    line-height: 34px;
+}
+#popScheduleRewrite .tit_sm {
+    color: #816661;
+    font-size: 13px;
+    font-weight: normal;
+}
+#popScheduleRewrite .chkbox_line {
+    height: 32px;
+    line-height: 32px;
+}
+#popScheduleRewrite .col_sp {
+    width: 13.78%;
+}
+#popScheduleRewrite .chkbox_line label {
+    color: #616161;
+    font-size: 12px;
+    font-weight: normal;
+    margin: 0;
+}
+
+#popScheduleRewrite .class_data .col_sp:last-child {
+    width: 34%;
+}
+#popScheduleRewrite input[type="checkbox"],
+#popScheduleRewrite  input[type="radio"] {
+    vertical-align: middle;
+    margin: 0;
+}
+#popScheduleRewrite .write_padding {
+    display: inline-block;
+    padding-left: 12px;
+}
+#popScheduleRewrite .ticket-chk {
+    width: 100%;
+    margin-bottom: 20px;
+    vertical-align: top;
+    color: #da6547;
+    font-size: 14px;
+}
+#popScheduleRewrite .ticket-send {
+    width: 100%;
+}
+#popScheduleRewrite .ticket-chk,
+#popScheduleRewrite .ticket-send {
+    float: left;
+}
+
+#popScheduleRewrite .how_wrap span:last-child {
+    margin-right: 0;
+}
+#popScheduleRewrite .how_wrap span {
+    float: left;
+    display: block;
+    height: 32px;
+    line-height: 32px;
+    margin-right: 20px;
+}
+#popScheduleRewrite .how_wrap span input {
+    width: 100%;
+    height: 32px;
+    line-height: 32px;
+    padding: 0 10px;
+    color: #616161;
+    font-size: 14px;
+}
+#popScheduleRewrite .how_holder {
+    width: 120px;
+}
+#popScheduleRewrite .how_account {
+    width: auto;
+    margin-right: 8px;
+}
+#popScheduleRewrite .form-chk {
+    float: left;
+    box-sizing: border-box;
+    /* padding: 0 0.4%; */
+}
+#popScheduleRewrite .option__account {
+    margin-bottom: 20px;
+}
+#popScheduleRewrite .sendInfo-account {
+    margin-bottom: 16px;
+}
+#popScheduleRewrite .send-txt {
+    color: #9e9e9e;
+    font-size: 13px;
+    font-weight: normal;
+    margin-bottom: 12px;
+}
+#popScheduleRewrite .payGuide {
+    color: #9e9e9e;
+    font-size: 13px;
+    margin: 0 0 12px;
+}
+#popScheduleRewrite .pay--url .form_time {
+    height: 32px;
+    line-height: 32px;
+    color: #616161;
+    font-size: 14px;
+    font-weight: normal;
+}
+#popScheduleRewrite .addinfo_textbox {
+    box-sizing: border-box;
+    border-radius: 0;
+    margin: 0;
+}
+#popScheduleRewrite .choice__wrap {
+    padding: 0 16px 16px;
+    border: 1px solid #eee;
+    border-width: 0 1px 1px 1px;
+    border-radius: 0 0 4px 4px;
+}
+#popScheduleRewrite .remain_textarea {
+    padding: 0 16px;
+    height: 40px;
+    line-height: 40px;
+    background-color: #f7f5fd;
+    border-bottom: 1px solid #ccc;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+#popScheduleRewrite .about_textarea2 {
+    width: 100%;
+    height: 100px;
+    padding: 16px;
+    color: #616161;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 1.75;
+    word-break: keep-all;
+    box-sizing: border-box;
+    border: 1px solid #eee;
+    border-bottom: 0;
+    border-radius: 0;
+}
+#popScheduleRewrite .remain_val {
+    color: #0091ea;
+    font-size: 18px;
+    margin: 0 8px;
+}
+#popScheduleRewrite .start_time {
+    display: inline-block;
+    width: 80px;
+    margin: 0 4px;
+}
+#popScheduleRewrite .form_time {
+    width: inherit;
+    height: inherit;
+    padding: 0 10px;
+}
+
+#popScheduleRewrite .timewrap p {
+    font-size: 13.5px;
+    margin-bottom: 8px;
+}
+#popScheduleRewrite .timewrap p:last-child {
+    margin-bottom: 0;
+}
+@media(min-width: 968px) {
+    #popScheduleRewrite .timewrap p {
+        font-size: 14px;
+    }
+}
+
+#popScheduleRewrite .ready-chk {
+    color: #333;
+    float: left;
+    width: 40%;
+    height: 34px;
+    line-height: 34px;
+}
+@media (min-width: 816px) {
+    #popScheduleRewrite .ready-chk {
+        width: 42%;
+    }
+}
+
+#popScheduleRewrite .timebox_a {
+    float: left;
+    width: 36%;
+    line-height: 32px;
+}
+@media (min-width: 816px) {
+    #popScheduleRewrite .timebox_a {
+        width: 58%;
+    }
+}
+
+#popScheduleRewrite .txtGuide {
+    display: block;
+    color: #bdbdbd;
+    margin-top: 2px;
+    font-size: 10px;
+    font-weight: bold;
+}
+#popScheduleRewrite .img_guide {
+    min-width: 410px;
+    word-break: keep-all;
+    line-height: 1.75;
+    font-weight: normal;
+    font-size: 11px;
+    padding: 6px 0 8px;
+}
+#popScheduleRewrite .img_guideTip {
+    color: #0091ea;
+    font-size: 10px;
+    display: block;
+    line-height: 1.75;
+    min-width: 410px;
+    margin: 4px 0 8px;
+}
+#popScheduleRewrite input[type="file"] {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    z-index: 2;
+}
+#popScheduleRewrite .file_form {
+    position: relative;
+    width: 100%;
+    text-align: left;
+    font-weight: normal;
+    color: #757575;
+    background-color: #fff;
+    margin: 0;
+    font-size: 12px;
+    line-height: 32px;
+    padding: 0 10px;
+    border: 1px solid #ccc;
+}
+#popScheduleRewrite .file_alert {
+    display: inline-block;
+    font-size: 10px;
+    margin-left: 12px;
+}
+#popScheduleRewrite .file_arrow {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border: 1px solid #ccc;
+    transform: rotate(45deg);
+    border-width: 0 2px 2px 0;
+    top: 10px;
+    right: 10px;
+}
+#popScheduleRewrite .arrow_hover {
+    top: 14px;
+}
+#popScheduleRewrite .file_thumb {
+    display: none;
+}
+#popScheduleRewrite .choice {
+    display: block;
+    position: relative;
+    margin: 0;
+    width: 100%;
+    /* border-top: 1px dashed #eee; */
+    padding-top: 16px;
+}
+#popScheduleRewrite .choice--slc {
+    position: relative;
+    left: 0;
+    width: 100%;
+    height: 32px;
+    line-height: 32px;
+    -webkit-appearance: auto;
+    -moz-appearance: auto;
+    padding: 0 10px;
+    color: #616161;
+    font-size: 11.5px;
+    font-weight: bold;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    /* color: #B0957A; */
+    /* border: 1px solid #B0957A; */
+}
+#popScheduleRewrite .btn_wrap {
+    position: absolute;
+    top: 28px;
+    right: 20px;
+}
+#popScheduleRewrite button[class*=":fn_"] {
+    width: 60px;
+    margin-right: 4px;
+}
+#popScheduleRewrite .btn_wrap button {
+    color: #fff;
+    font-size: 12px;
+    background-color: #424242 !important;
+    vertical-align: bottom;
+    border-radius: 4px;
+    height: 36px;
+}
+#popScheduleRewrite .form_teacher_image {
+    color: #111;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* popScheduleRemove, Edit */
+#master #popScheduleRemove,
+#master #popScheduleEdit {
+    display: none;
+    width: 360px;
+    height: 212px;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    z-index: 10;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+}
+#popScheduleRemove .lessonEdit_btn,
+#popScheduleEdit .lessonEdit_btn {
+    width: 100%;
+    height: 48px;
+    box-sizing: border-box;
+    border-top: 1px solid #eee;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    font-size: 0;
+}
+#popScheduleRemove .guide_icon,
+#popScheduleEdit .guide_icon {
+    margin-right: 12px;
+    vertical-align: top;
+}
+#popScheduleRemove .guide_box .confirm_message,
+#popScheduleEdit .guide_box .confirm_message {
+    padding: 0;
+    text-align: left;
+}
+#popScheduleRemove .guide_exist,
+#popScheduleRemove .confirm_message,
+#popScheduleEdit .guide_exist,
+#popScheduleEdit .confirm_message {
+    display: inline-block;
+    color: #616161;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: left;
+}
+#popScheduleRemove button[class^="btn_cancel"],
+#popScheduleEdit button[class^="btn_cancel"] {
+    color: #d32f2f;
+    border-bottom-left-radius: 4px;
+}
+#popScheduleRemove .lessonEdit_btn button,
+#popScheduleEdit .lessonEdit_btn button {
+    display: inline-block;
+    width: 50%;
+    height: calc(48px - 1px);
+    font-size: 14px;
+    vertical-align: top;
+    background-color: transparent;
+}
+
+
+/* 스튜디오 예약현황 guideTalk */
+#schedule_status .detail_guideTalk {
+    padding-top: 28px;
+    border-top: 1px dotted #bdbdbd;
+    margin-top: 20px;
+}
+#schedule_status .guideTalk_tit {
+    color: #333;
+    font-size: 21px;
+    font-weight: normal;
+    padding-bottom: 16px;
+}
+.txtBox-territory {
+    position: relative;
+}
+.txtBox--send {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 80px;
+    height: 40px;
+    background-color: #2d8cff;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 4px;
+}
+#schedule_status .txtBox--area {
+    text-align: left;
+    box-sizing: border-box;
+    padding-bottom: 16px;
+}
+#schedule_status .area_letterBox {
+    padding: 0 16px;
+    height: 40px;
+    line-height: 40px;
+    background-color: #f7f5fd;
+    border-bottom: 1px solid #ccc;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+#schedule_status .remain_number {
+    color: #0091ea;
+    font-size: 18px;
+    margin: 0 8px;
+}
+#schedule_status .area_letterZone {
+    width: 100%;
+    height: 168px;
+    padding: 16px;
+    color: #616161;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 2;
+    word-break: keep-all;
+    box-sizing: border-box;
+    border: 1px solid #eee;
+    border-radius: 0;
+}
+
+#schedule_status .area_letterZone::placeholder {
+    color: #9e9e9e;
+}
+
+.linkTimer_setting {
+    width: 50%;
+    text-align: left;
+}
+
+#schedule_status .chk_next {
+    color: #333;
+    display: block;
+    margin-bottom: 12px;
+}
+#schedule_status .chk_next:last-child {
+    margin-bottom: 0;
+}
+#schedule_status .immediate_kaTalk {
+    color: #2d8cff;
+}
+
+/* 수업링크발송 '발송' 클릭 팝업 */
+#send-zoom-link {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+#send-zoom-link .detail_guideTalk {
+    padding-top: 28px;
+    border-top: 1px dotted #bdbdbd;
+    margin-top: 20px;
+}
+#send-zoom-link .guideTalk_tit {
+    color: #333;
+    font-size: 21px;
+    font-weight: normal;
+    padding-bottom: 16px;
+}
+#send-zoom-link .txtBox--area {
+    text-align: left;
+    box-sizing: border-box;
+    padding-bottom: 16px;
+}
+#send-zoom-link .area_letterBox {
+    padding: 0 16px;
+    height: 40px;
+    line-height: 40px;
+    background-color: #f7f5fd;
+    border-bottom: 1px solid #ccc;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+#send-zoom-link .remain_number {
+    color: #0091ea;
+    font-size: 18px;
+    margin: 0 8px;
+}
+#send-zoom-link .area_letterZone {
+    width: 100%;
+    height: 168px;
+    padding: 16px;
+    color: #616161;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 2;
+    word-break: keep-all;
+    box-sizing: border-box;
+    border: 1px solid #eee;
+    border-radius: 0;
+}
+
+#send-zoom-link .area_letterZone::placeholder {
+    color: #9e9e9e;
+}
+
+#send-zoom-link .chk_next {
+    color: #333;
+    display: block;
+    margin-bottom: 12px;
+}
+#send-zoom-link .chk_next:last-child {
+    margin-bottom: 0;
+}
+#send-zoom-link .immediate_kaTalk {
+    color: #2d8cff;
 }

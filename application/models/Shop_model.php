@@ -53,6 +53,15 @@ QUERY;
     return $this->db->query($query)->result();
   }
   
+  function get_product_lists($product_ids)
+  {
+    $this->db->select('a.shop_id,a.status,a.brand_name,b.*', false);
+    $this->db->from('shop_product_id a,shop_product b');
+    $this->db->where_in('a.product_id', $product_ids);
+    $this->db->where('a.product_id=b.product_id');
+    return $this->db->get()->result();
+  }
+  
   function get_shipping_data($shipping_data)
   {
     $url = sprintf('https://info.sweettracker.co.kr/api/v1/trackingInfo?t_key=%s&t_code=%s&t_invoice=%s',

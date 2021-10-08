@@ -11,12 +11,13 @@
 <style>
   .note-editable{
     resize: none !important;
-    *overflow-y: hidden !important; /* 스크롤이 생성되는것을 막아준다. */
+    /*overflow-y: hidden !important; !* 스크롤이 생성되는것을 막아준다. *!*/
     padding-top: .8em !important; /*엔터키로 인한 상단의 텍스트 깨짐 현상을 막아준다. */
     padding-bottom: 0.2em !important;
     padding-left: .25em !important;
     padding-right: .25em !important;
-    line-height: 1.6 !important;
+    line-height: 2.0 !important;
+    font-size: 14px !important;
     min-height: 300px !important;
   }
   .note-editable iframe, .note-editable img {
@@ -234,6 +235,22 @@
                 <input <?php if ($center->valet) {echo 'checked';} ?> type="checkbox" id="valet" name="valet">
                 발렛
               </label>
+              <label class="form-chk col_sp">
+                <input <?php if ($center->dawn) {echo 'checked';} ?> type="checkbox" id="dawn" name="dawn">
+                새벽수업
+              </label>
+              <label class="form-chk col_sp">
+                <input <?php if ($center->weekend) {echo 'checked';} ?> type="checkbox" id="weekend" name="weekend">
+                주말수업
+              </label>
+              <label class="form-chk col_sp">
+                <input <?php if ($center->private) {echo 'checked';} ?> type="checkbox" id="private" name="private">
+                1:1레슨
+              </label>
+              <label class="form-chk col_sp">
+                <input <?php if ($center->small) {echo 'checked';} ?> type="checkbox" id="small" name="small">
+                소규모
+              </label>
             </div>
           </div>
         </div>
@@ -371,6 +388,10 @@
     let towel = $('#towel').prop('checked') === true ? '1' : '0';
     let parking = $('#parking').prop('checked') === true ? '1' : '0';
     let valet = $('#valet').prop('checked') === true ? '1' : '0';
+    let dawn = $('#dawn').prop('checked') === true ? '1' : '0';
+    let weekend = $('#weekend').prop('checked') === true ? '1' : '0';
+    let private = $('#private').prop('checked') === true ? '1' : '0';
+    let small = $('#small').prop('checked') === true ? '1' : '0';
   
     $.each($('.centerArea_yoga').find("[name='category_yoga']"), function(index, item) {
       if ($(item).prop('checked') === true) {
@@ -442,39 +463,77 @@
     data['towel'] = towel;
     data['parking'] = parking;
     data['valet'] = valet;
+    data['dawn'] = dawn;
+    data['weekend'] = weekend;
+    data['private'] = private;
+    data['small'] = small;
     
     console.log(data);
   
     send_post(data, url, true, '');
   }
+  
 
   function set_summer(){
+  
+    var orangeButton = function (context) {
+      var ui = $.summernote.ui;
+    
+      // create button
+      var button = ui.button({
+        contents: "<button style='background-color:orange; width: 10px; height: 10px;'/></button>",
+        tooltip: '오렌지색',
+        click: function () {
+          // invoke insertText method with 'hello' on editor module.
+          context.invoke('editor.foreColor', 'orange');
+        }
+      });
+    
+      return button.render();   // return button as jquery object
+    }
+    var blackButton = function (context) {
+      var ui = $.summernote.ui;
+    
+      // create button
+      var button = ui.button({
+        contents: "<button style='background-color:black; width: 10px; height: 10px;'/></button>",
+        tooltip: '검은색',
+        click: function () {
+          // invoke insertText method with 'hello' on editor module.
+          context.invoke('editor.foreColor', 'black');
+        }
+      });
+    
+      return button.render();   // return button as jquery object
+    }
+  
+  
     $('#summernotes').each(function() {
       var now = $(this);
       var h = now.data('height');
       var n = now.data('name');
-      // $(this).closest('div').append('<input type="hidden" class="val" name="description">');
+      
       now.closest('div').append('<input type="hidden" class="val" name="'+n+'">');
     
       $('#summernotes').summernote({
         toolbar: [
           ['style', ['style']],
-          ['font', ['bold', 'underline', 'clear']],
-          ['fontsize', ['fontsize']],
-          // ['fontname', ['fontname']],
-          ['color', ['color']],
+          ['font', ['bold', 'underline']],
+          ['mybutton', ['blackcolor', 'orangecolor']],
           ['para', ['ul', 'ol', 'paragraph']],
-          ['table', ['table']], // 추가
-          ['insert', ['link', 'picture', 'video']], // 추가
-          // ['view', ['codeview', 'help']],
+          ['insert', ['link', 'picture', 'video', 'hr']], // 추가
+          ['misc', ['undo', 'redo']],
           // ['view', ['fullscreen', 'codeview', 'help']],
         ],
         // fontNames: ['Noto Sans KR', 'Quicksand', 'Patua One'],
         height: h,
         lang: "ko-KR",
+        styleTags: ['p', 'blockquote', 'h2', 'h3'],
+        fontSizeUnits: ['px'],
         dialogsInBody: true,
         dialogsFade: true,
         disableDragAndDrop: false,
+        buttons: {orangecolor: orangeButton, blackcolor: blackButton},
         callbacks: {
           onImageUpload : function(files) {
             // console.log('image upload:', files);
@@ -493,9 +552,6 @@
         },
       });
       now.closest('div').find('.val').val('<?php echo $center->info; ?>');
-      // console.log(now.closest('div').find('.val').val());
-      // now.closest('div').find('.val').val(now.summernote('code'));
-      // console.log($('#summernotes').summernote('fullscreen.isFullscreen'));
     });
   }
 

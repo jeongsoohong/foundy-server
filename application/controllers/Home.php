@@ -2622,6 +2622,8 @@ QUERY;
       $end_date = date("Y-m-d", $end_time);
 //      $week = date('w', $start_time);
       
+      $schedule_cnt = $this->center_model->get_schedule_count($center_id, $start_date, $end_date);
+      
       if ($sdate == null) {
         $sdate = $start_date;
       }
@@ -2656,6 +2658,7 @@ QUERY;
       $this->page_data['teacher_data'] = $teacher_data;
       $this->page_data['start_date'] = $start_date;
       $this->page_data['end_date'] = $end_date;
+      $this->page_data['schedule_cnt'] = $schedule_cnt;
 //      $this->page_data['schedule_data'] = $schedule_data;
       $this->page_data['liked'] = $liked;
       $this->page_data['bookmarked'] = $bookmarked;

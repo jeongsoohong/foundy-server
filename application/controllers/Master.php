@@ -84,10 +84,13 @@ class Master extends CI_Controller
     exit;
   }
   
-  private function response2($status, $msg = '', $redirect = '') {
+  private function response2($status, $msg = '', $redirect = '', $data = null) {
     $result['status'] = $status;
     if ($status == 'done' && $msg == '') {
       $msg = '성공하였습니다!';
+    }
+    if ($data != null) {
+      $result['data'] = $data;
     }
     $result['message'] = $msg;
     $result['redirect'] = $redirect;
@@ -631,16 +634,16 @@ QUERY;
           if (isset($product) == false || empty($product) == true) {
             $this->response2('fail', '잘못된 접근입니다.(product_id:' . $product_id . ')');
           }
-          if ($mode == 'add' && $product->{$type} > 0) {
-            $this->response2('fail', '이미 추가된 상품이 포함되었습니다.(product_code:' . $product->product_code. ')');
-          }
-          if ($mode == 'del' && $product->{$type} == 0) {
-            $this->response2('fail', '이미 추가된 삭제이 포함되었습니다.(product_code:' . $product->product_code. ')');
-          }
-      
+//          if ($mode == 'add' && $product->{$type} > 0) {
+//            $this->response2('fail', '이미 추가된 상품이 포함되었습니다.(product_code:' . $product->product_code. ')');
+//          }
+//          if ($mode == 'del' && $product->{$type} == 0) {
+//            $this->response2('fail', '이미 삭제된 상품이 포함되었습니다.(product_code:' . $product->product_code. ')');
+//          }
         }
-    
+        
         if ($mode == 'add') {
+          /*
           $status = SHOP_PRODUCT_STATUS_ON_SALE;
           $this->db->select("max({$type}) as max");
           $this->db->where("{$type}>0 and status={$status}");
@@ -655,98 +658,160 @@ QUERY;
             $this->db->where('product_id', $product_id);
             $this->db->update('shop_product_id');
           }
-      
+          
           $this->response2('done', '추가되었습니다.');
+          */
+          
+          $product_list = $this->shop_model->get_product_lists($ids);
+//          log_message('debug', '[shop] lists['.json_encode($product_list).']');
+  
+          $this->page_data['type'] = $type;
+          $this->page_data['ordering'] = true;
+          $this->page_data['product_list'] = $product_list;
+          $this->load->view('back/master/manage_shop_list', $this->page_data);
+        
         } else {
+          /*
           $this->db->set($type, '0');
           $this->db->where_in('product_id', $ids);
           $this->db->update('shop_product_id');
+          */
       
           $this->response2('done', '삭제되었습니다.');
         }
-    
-      } else if ($p2 == 'order') {
+        
+      } else if ($p2 == 'reorder') {
   
-          if (isset($_POST['type']) == false || empty($_POST['type']) == true) {
-            $this->response2('fail', '잘못된 접근입니다.(type)');
-          }
+        if (isset($_POST['type']) == false || empty($_POST['type']) == true) {
+          $this->response2('fail', '잘못된 접근입니다.(type)');
+        }
   
-          if (isset($_POST['mode']) == false || empty($_POST['mode']) == true) {
-            $this->response2('fail', '잘못된 접근입니다.(mode)');
-          }
-          
-          if (isset($_POST['pid']) == false || empty($_POST['pid']) == true) {
-            $this->response2('fail', '잘못된 접근입니다.(pid)');
-          }
+        if (isset($_POST['pids']) == false || empty($_POST['pids']) == true) {
+          $this->response2('fail', '잘못된 접근입니다.(pids)');
+        }
   
-          $type = $_POST['type'];
-          if ($type != 'best' && $type != 'new' && $type != 'recommend' &&
-            $type != 'yoga' && $type != 'vegan' && $type != 'healing') {
-            $this->response2('fail', '잘못된 접근입니다.(type:'.$type.')');
-          }
+        $type = $_POST['type'];
+        if ($type != 'best' && $type != 'new' && $type != 'recommend' &&
+          $type != 'yoga' && $type != 'vegan' && $type != 'healing') {
+          $this->response2('fail', '잘못된 접근입니다.(type:'.$type.')');
+        }
   
-          if ($type == 'yoga') {
-            $cat = '01';
-            $type = 'best2';
-          } else if ($type == 'vegan') {
-            $cat = '02';
-            $type = 'best2';
-          } else if ($type == 'healing') {
-            $cat = '03';
-            $type = 'best2';
-          } else { // sho main (best, new, recommend)
-            $cat = null;
-          }
-          
-          $mode = $_POST['mode'];
-          if ($mode != 'up' && $mode != 'down') {
-            $this->response2('fail', '잘못된 접근입니다.(mode:' . $mode . ')');
-          }
-
-          $pid = $_POST['pid'];
-          $product = $this->db->get_where('shop_product_id', array('product_id' => $pid))->row();
-          if (isset($product) == false || empty($product) == true) {
-            $this->response2('fail', '잘못된 접근입니다.(pid:' . $pid. ')');
-          }
-          
-          if ($product->{$type} == 0) {
-            $this->response2('fail', '메인에 등록되지 않은 아이템입니다.(pid:' . $pid. ',type:'.$type.')');
-          }
-         
-          $status = SHOP_PRODUCT_STATUS_ON_SALE;
-          if ($mode == 'up') {
-            $this->db->limit(1);
-            $this->db->order_by($type, 'desc');
-            $this->db->where("{$type}>0 and {$type}<{$product->{$type}} and status={$status}");
-            if ($cat != null) {
-              $this->db->where("product_code like '{$cat}%'");
-            }
-            $product2 = $this->db->get('shop_product_id')->row();
-            if (isset($product2) == false || empty($product2) == true) {
-              $this->response2('fail', '이미 최상위 상품입니다.');
-            }
-          } else { // down
-            $this->db->limit(1);
-            $this->db->order_by($type, 'asc');
-            $this->db->where("{$type}>{$product->{$type}} and status={$status}");
-            if ($cat != null) {
-              $this->db->where("product_code like '{$cat}%'");
-            }
-            $product2 = $this->db->get('shop_product_id')->row();
-            if (isset($product2) == false || empty($product2) == true) {
-              $this->response2('fail', '이미 최하위 상품입니다.');
-            }
-          }
-          
-          $this->db->set($type, $product->{$type});
-          $this->db->where('product_id', $product2->product_id);
+        if ($type == 'yoga') {
+          $cat = '01';
+          $type = 'best2';
+        } else if ($type == 'vegan') {
+          $cat = '02';
+          $type = 'best2';
+        } else if ($type == 'healing') {
+          $cat = '03';
+          $type = 'best2';
+        } else { // shop main (best, new, recommend)
+          $cat = null;
+        }
+        
+        $pids = json_decode($_POST['pids']);
+        if (!is_array($pids)) {
+          $this->response2('fail', '잘못된 접근입니다.(pids:'.$_POST['pids'].')');
+        }
+  
+        $this->db->trans_start();
+        
+        $this->db->set($type, 0);
+        $this->db->where($type.'>0');
+        $this->db->update('shop_product_id');
+        
+        for ($i = 0; $i < count($pids); $i++) {
+          $this->db->set($type, $i + 1);
+          $this->db->where('product_id', $pids[$i]);
           $this->db->update('shop_product_id');
+        }
   
-          $this->db->set($type, $product2->{$type});
-          $this->db->where('product_id', $product->product_id);
-          $this->db->update('shop_product_id');
+        $this->db->trans_complete();
+        
+        $this->response2('done', '성공하였습니다.');
   
-          $this->response2('done', '성공하였습니다.');
+//      } else if ($p2 == 'order') {
+//
+//          if (isset($_POST['type']) == false || empty($_POST['type']) == true) {
+//            $this->response2('fail', '잘못된 접근입니다.(type)');
+//          }
+//
+//          if (isset($_POST['mode']) == false || empty($_POST['mode']) == true) {
+//            $this->response2('fail', '잘못된 접근입니다.(mode)');
+//          }
+//
+//          if (isset($_POST['pid']) == false || empty($_POST['pid']) == true) {
+//            $this->response2('fail', '잘못된 접근입니다.(pid)');
+//          }
+//
+//          $type = $_POST['type'];
+//          if ($type != 'best' && $type != 'new' && $type != 'recommend' &&
+//            $type != 'yoga' && $type != 'vegan' && $type != 'healing') {
+//            $this->response2('fail', '잘못된 접근입니다.(type:'.$type.')');
+//          }
+//
+//          if ($type == 'yoga') {
+//            $cat = '01';
+//            $type = 'best2';
+//          } else if ($type == 'vegan') {
+//            $cat = '02';
+//            $type = 'best2';
+//          } else if ($type == 'healing') {
+//            $cat = '03';
+//            $type = 'best2';
+//          } else { // shop main (best, new, recommend)
+//            $cat = null;
+//          }
+//
+//          $mode = $_POST['mode'];
+//          if ($mode != 'up' && $mode != 'down') {
+//            $this->response2('fail', '잘못된 접근입니다.(mode:' . $mode . ')');
+//          }
+//
+//          $pid = $_POST['pid'];
+//          $product = $this->db->get_where('shop_product_id', array('product_id' => $pid))->row();
+//          if (isset($product) == false || empty($product) == true) {
+//            $this->response2('fail', '잘못된 접근입니다.(pid:' . $pid. ')');
+//          }
+//
+//          if ($product->{$type} == 0) {
+//            $this->response2('fail', '메인에 등록되지 않은 아이템입니다.(pid:' . $pid. ',type:'.$type.')');
+//          }
+//
+//          $status = SHOP_PRODUCT_STATUS_ON_SALE;
+//          if ($mode == 'up') {
+//            $this->db->limit(1);
+//            $this->db->order_by($type, 'desc');
+//            $this->db->where("{$type}>0 and {$type}<{$product->{$type}} and status={$status}");
+//            if ($cat != null) {
+//              $this->db->where("product_code like '{$cat}%'");
+//            }
+//            $product2 = $this->db->get('shop_product_id')->row();
+//            if (isset($product2) == false || empty($product2) == true) {
+//              $this->response2('fail', '이미 최상위 상품입니다.');
+//            }
+//          } else { // down
+//            $this->db->limit(1);
+//            $this->db->order_by($type, 'asc');
+//            $this->db->where("{$type}>{$product->{$type}} and status={$status}");
+//            if ($cat != null) {
+//              $this->db->where("product_code like '{$cat}%'");
+//            }
+//            $product2 = $this->db->get('shop_product_id')->row();
+//            if (isset($product2) == false || empty($product2) == true) {
+//              $this->response2('fail', '이미 최하위 상품입니다.');
+//            }
+//          }
+//
+//          $this->db->set($type, $product->{$type});
+//          $this->db->where('product_id', $product2->product_id);
+//          $this->db->update('shop_product_id');
+//
+//          $this->db->set($type, $product2->{$type});
+//          $this->db->where('product_id', $product->product_id);
+//          $this->db->update('shop_product_id');
+//
+//          $this->response2('done', '성공하였습니다.');
   
       } else if ($p2 == 'search') {
   
@@ -811,20 +876,20 @@ QUERY;
         if (isset($_GET['cat']) == true && empty($_GET['cat']) == false) {
           $category = $_GET['cat'];
         }
-        
-        $page = 1;
-        $order = 'asc';
-        $limit = 100;
-        $offset = ($page - 1) * $limit;
-        $status = SHOP_PRODUCT_STATUS_ON_SALE;
- 
+  
         $type = $_GET['type'];
         $order_col = $type;
         if ($type != 'best' && $type != 'new' && $type != 'recommend' &&
           $type != 'yoga' && $type != 'vegan' && $type != 'healing') {
           $this->response2('fail', '잘못된 접근입니다.(type:'.$type.')');
         }
-        
+  
+        $page = 1;
+        $order = 'asc';
+        $limit = 100;
+        $offset = ($page - 1) * $limit;
+        $status = SHOP_PRODUCT_STATUS_ON_SALE;
+  
         if ($type == 'yoga' || $type == 'vegan' || $type == 'healing') {
           $order_col = 'best2';
         }
@@ -1100,7 +1165,9 @@ QUERY;
         }
     
         $page = $_GET['page'];
-    
+  
+        $total = 0;
+        $page_size = 0;
         $tab = $_GET['tab'];
         if ($tab == 'order') {
           $coupon_type = COUPON_TYPE_DEFAULT;
@@ -1896,5 +1963,290 @@ QUERY;
     } else {
       $this->response2('fail', '잘못된 접근입니다.');
     }
+    
   }
+  
+  public function studio($p1 = '', $p2 = '', $p3 = '')
+  {
+    if ($this->is_logged() == false) {
+      redirect(base_url().'master');
+    }
+    
+    if ($p1 == 'page') {
+      
+      if ($p2 == 'btn') {
+        
+        if (isset($_GET['tab']) == false || empty($_GET['tab']) == true) {
+          $this->redirect_error('잘못된 접근입니다.');
+        }
+        if (isset($_GET['page']) == false || empty($_GET['page']) == true) {
+          $this->redirect_error('잘못된 접근입니다.');
+        }
+        
+        $page = $_GET['page'];
+  
+        $total = 0;
+        $page_size = 0;
+        $tab = $_GET['tab'];
+        if ($tab == 'unapproved') {
+          $tab = 'studio';
+          $total = $this->studio_model->get_studio_list(APPROVAL_DATA_NOT_ACTIVATE, true);
+          $page_size = $this->studio_model::STUDIO_LIST_PAGE_SIZE;
+        } else if ($tab == 'approval') {
+          $tab = 'studio';
+          $total = $this->studio_model->get_studio_list(APPROVAL_DATA_ACTIVATE, true);
+          $page_size = $this->studio_model::STUDIO_LIST_PAGE_SIZE;
+        } else if ($tab == 'class') {
+        
+        }
+        
+        $this->page_data['tab'] = $tab;
+        $this->page_data['total'] = $total;
+        $this->page_data['page_size'] = $page_size;
+        $this->page_data['page'] = $page;
+        $this->load->view('back/master/manage_page_btn', $this->page_data);
+        
+      } else { // page
+        
+        if (isset($_GET['tab']) == false || empty($_GET['tab']) == true) {
+          $this->redirect_error('잘못된 접근입니다.');
+        }
+        
+        $tab = $_GET['tab'];
+        $page_name = $tab;
+        if ($tab == 'unapproved') {
+          $page_name = 'approval';
+          $activate = APPROVAL_DATA_NOT_ACTIVATE;
+          $this->page_data['activate'] = $activate;
+        } else if ($tab == 'approval') {
+          $page_name = 'approval';
+          $activate = APPROVAL_DATA_ACTIVATE;
+          $this->page_data['activate'] = $activate;
+        } else if ($tab == 'class') {
+          $schedule_groups = $this->studio_model->get_schedule_groups();
+//          log_message('debug', '[studio] groups['.json_encode($schedule_groups).']');
+          if (isset($schedule_groups) == true && empty($schedule_groups) == false) {
+            for ($i = 0; $i < count($schedule_groups); $i++) {
+              $schedule_groups[$i]->schedule_infos = [];
+              for ($j = 0; $j < $schedule_groups[$i]->schedule_count; $j++) {
+                $idx= $j + 1;
+                $var = 'schedule_info_id_'.$idx;
+                $schedule_groups[$i]->schedule_infos[$j] = new stdClass();
+                $schedule_groups[$i]->schedule_infos[$j] = $this->studio_model->get_schedule_info($schedule_groups[$i]->{$var}, APPROVAL_DATA_NONE);
+              }
+            }
+          }
+          $this->page_data['schedule_groups'] = $schedule_groups;
+        }
+  
+        $this->page_data['tab'] = $tab;
+        $this->load->view('back/master/studio_' . $page_name, $this->page_data);
+        
+      }
+      
+    } else if ($p1 == 'approval') {
+      
+      if ($p2 == 'list') {
+  
+        if (isset($_GET['activate']) == false || empty($_GET['activate']) == true) {
+          $this->redirect_error('잘못된 접근입니다.');
+        }
+  
+        if (isset($_GET['page']) == false || empty($_GET['page']) == true) {
+          $this->redirect_error('잘못된 접근입니다.');
+        }
+ 
+        $activate = $_GET['activate'];
+        $page = $_GET['page'];
+        $size = $this->studio_model::STUDIO_LIST_PAGE_SIZE;
+        $offset = $size * ($page - 1);
+  
+        $studios = $this->studio_model->get_studio_list($activate, false, $offset, $size);
+        
+        $this->page_data['page'] = $page;
+        $this->page_data['activate'] = $activate;
+        $this->page_data['studios'] = $studios;
+        $this->load->view('back/master/studio_approval_list', $this->page_data);
+  
+      } else if ($p2 == 'popup' || $p2 == 'profile') {
+  
+        if (isset($_GET['id']) == false || empty($_GET['id']) == true) {
+          $this->response2('fail', '잘못된 접근입니다.(id)');
+        }
+  
+        $studio_id = $_GET['id'];
+        $studio = $this->studio_model->get($studio_id);
+        if (isset($studio) == false || empty($studio)) {
+          $this->response2('fail', '잘못된 접근입니다.(studio)');
+        }
+  
+        $user = $this->db->get_where('user', array('user_id' => $studio->user_id))->row();
+        if (isset($user) == false || empty($user)) {
+          $this->response2('fail', '잘못된 접근입니다.(user)');
+        }
+  
+        $this->page_data['studio'] = $studio;
+        $this->page_data['user'] = $user;
+        $this->load->view('back/master/studio_approval_' . $p2, $this->page_data);
+  
+      } else if ($p2 == 'set') {
+  
+        if (isset($_POST['id']) == false || empty($_POST['id']) == true) {
+          $this->response2('fail', '잘못된 접근입니다.(id)');
+        }
+  
+        $studio_id = $_POST['id'];
+        $studio = $this->studio_model->get($studio_id);
+        if (isset($studio) == false || empty($studio)) {
+          $this->response2('fail', '잘못된 접근입니다.(studio)');
+        }
+  
+        if($studio->activate == APPROVAL_DATA_ACTIVATE) {
+          $this->db->set('activate', APPROVAL_DATA_REJECT);
+        } else {
+          $this->db->set('activate', APPROVAL_DATA_ACTIVATE);
+        }
+        $this->db->set('approval_at', 'NOW()', false);
+        $this->db->where('studio_id', $studio_id);
+        $this->db->update('studio');
+        
+        if ($this->db->affected_rows() <= 0) {
+          $this->response2('fail', '정상적으로 반영되지 않았습니다.');
+        }
+        
+        $this->response2('done', '성공하였습니다.');
+  
+      } else if ($p2 == 'del') {
+  
+        if (isset($_POST['ids']) == false || empty($_POST['ids']) == true) {
+          $this->response2('fail', '잘못된 접근입니다.(ids)');
+        }
+  
+        $studio_ids = json_decode($_POST['ids']);
+        foreach ($studio_ids as $studio_id) {
+          $this->db->where('studio_id', $studio_id);
+          $this->db->delete('studio');
+        }
+  
+        $this->response2('done', '성공하였습니다.');
+      
+      } else {
+        $this->response2('fail', '잘못된 접근입니다.');
+      }
+    
+    } else if ($p1 == 'class') {
+      
+      if ($p2 == 'search') {
+        
+        if (isset($_POST['keyword']) == false || empty($_POST['keyword']) == true) {
+          $this->response2('fail', '잘못된 접근입니다.(keyword)');
+        }
+        
+        $keyword = $_POST['keyword'];
+        $schedule_infos = $this->studio_model->search_schedule_info($keyword);
+        if (isset($schedule_infos) == false or empty($schedule_infos) == true) {
+          $this->response2('fail', '클래스가 존재하지 않습니다.');
+        }
+        
+//        log_message('debug', '[studio] search research['.json_encode($schedule_infos).']');
+        
+  
+        $this->page_data['schedule_infos'] = $schedule_infos;
+        $this->load->view('back/master/studio_class_search', $this->page_data);
+        
+      } else if ($p2 == 'group') {
+        
+        if ($p3 == 'apply') {
+  
+          if (isset($_POST['id']) == false || empty($_POST['id']) == true) {
+            $this->response2('fail', '잘못된 접근입니다.(id)');
+          }
+          
+          if (isset($_POST['name']) == false || empty($_POST['name']) == true) {
+            $this->response2('fail', '잘못된 접근입니다.(name)');
+          }
+  
+          if (isset($_POST['count']) == false || empty($_POST['count']) == true) {
+            $this->response2('fail', '잘못된 접근입니다.(count)');
+          }
+  
+          if (isset($_POST['schedule_ids']) == false || empty($_POST['schedule_ids']) == true) {
+            $this->response2('fail', '잘못된 접근입니다.(schedule_ids)');
+          }
+ 
+          $group_id = $_POST['id'];
+         
+          $schedule_group_name = $_POST['name'];
+          $schedule_count = $_POST['count'];
+          $schedule_info_ids = json_decode($_POST['schedule_ids']);
+          if ($schedule_info_ids == false) {
+            $this->response2('fail', '잘못된 접근입니다.(schedule_ids is not array)');
+          }
+  
+          if ($schedule_count != count($schedule_info_ids)) {
+            $this->response2('fail', '잘못된 접근입니다.(invalid count)');
+          }
+  
+          $group = array(
+            'schedule_group_name' => $schedule_group_name,
+            'schedule_count' => $schedule_count,
+          );
+          for ($i = 1; $i <= $schedule_count; $i++) {
+            $group["schedule_info_id_{$i}"] = $schedule_info_ids[$i - 1];
+          }
+          for (; $i <= $this->studio_model::MAX_GROUP_SCHEDULE_COUNT; $i++) {
+            $group["schedule_info_id_{$i}"] = null;
+          }
+          
+          if ($group_id > 0) {
+            $cnt = $this->studio_model->set_group($group, $group_id, true);
+          } else {
+            $cnt = $this->studio_model->set_group($group, $group_id, false);
+          }
+          
+          if ($cnt <= 0) {
+            $this->response2('fail', '그룹이 정상적으로 반영되지 않았습니다.');
+          }
+
+          if ($group_id <= 0) {
+            $group_id = $this->db->insert_id();
+          }
+          $data = new stdClass();
+          $data->id = $group_id;
+          
+          $this->response2('done', '성공하였습니다.', '', $data);
+        
+        } else if ($p3 == 'delete') {
+  
+          if (isset($_POST['id']) == false || empty($_POST['id']) == true) {
+            $this->response2('fail', '잘못된 접근입니다.(id)');
+          }
+          
+          $group_id = $_POST['id'];
+          $group = $this->studio_model->get_group($group_id);
+          if (isset($group) == false || empty($group) == true || $group->deleted == true) {
+            $this->response2('fail', '이미 삭제된 그룹입니다.');
+          }
+          
+          if ($this->studio_model->delete_group($group_id) <= 0) {
+            $this->response2('fail', '이미 삭제된 그룹입니다.');
+          }
+  
+          $this->response2('done', '성공하였습니다.');
+          
+        } else {
+          $this->response2('fail', '잘못된 접근입니다.');
+        }
+  
+      }
+    
+    } else {
+      
+      $this->page_data['page_name'] = 'studio';
+      $this->load->view('back/master/index', $this->page_data);
+      
+    }
+    
+  }
+  
 }

@@ -12,6 +12,15 @@ class Center_model extends CI_Model
     
   }
   
+  function get_schedule_count($center_id, $start_at, $end_at)
+  {
+    $this->db->where('center_id', $center_id);
+    $this->db->where('activate', 1);
+    $this->db->where("schedule_date>='{$start_at}' and schedule_date<='{$end_at}'");
+    $this->db->select('count(*) as cnt');
+    return $this->db->get('center_schedule_info')->row()->cnt;
+  }
+  
   function get_ticket_type_str($ticket_type)
   {
     switch ($ticket_type)

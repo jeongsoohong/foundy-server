@@ -360,7 +360,8 @@
                   </div>
                 </div>
               </div>
-              <p class="file_volume">이미지(.jpg) 3장 이내 장당 300KB 까지</p>
+              <p class="file_volume">이미지(.jpg) 3장 이내 장당 300KB 까지
+                <br>최대 사이즈는  1,000 x 1,000px 이내</p>
             </dd>
             <!--
                                             <dt class="detailTit">파일목록</dt>

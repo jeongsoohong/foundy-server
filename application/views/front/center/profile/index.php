@@ -422,168 +422,173 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-12" id="schedule">
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="profile">
-                    <table class="col-md-12" style="width: 100%">
-                      <tbody>
-                      <tr>
-                        <td style="width: 20%">
-                        </td>
-                        <td>
-                          <b class="font-futura">schedule</b>
-                        </td>
-                        <td style="width: 20%">
-                        </td>
-                      </tr>
-                      </tbody>
-                    </table>
-                  </div>
-<!--                  <div class="col-md-12" style="padding: 10px 0px 10px 0px !important; border: none;">-->
-                  <div class="col-md-12" style="padding: 10px 0px 10px 0px !important; border-bottom: 1px solid #eee;">
-                    <div class="col-md-12 recent-post" style="background: #fff; padding-left: 5px; padding-right: 5px; /* border: 1px solid #e0e0e0; */">
-                      <div class="media">
-                        <p style="color: #6D6D6D; font-size: medium; height: 30px; text-align: center; font-weight: 600; margin-bottom: 0px !important; padding: 0 5px 0 5px">
+            <? if ($schedule_cnt > 0) { ?>
+              <div class="col-md-12" id="schedule">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="profile">
+                      <table class="col-md-12" style="width: 100%">
+                        <tbody>
+                        <tr>
+                          <td style="width: 20%">
+                          </td>
+                          <td>
+                            <b class="font-futura">schedule</b>
+                          </td>
+                          <td style="width: 20%">
+                          </td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="col-md-12" style="padding: 10px 0px 10px 0px !important; border-bottom: 1px solid #eee;">
+                      <div class="col-md-12 recent-post" style="background: #fff; padding-left: 5px; padding-right: 5px; /* border: 1px solid #e0e0e0; */">
+                        <div class="media">
+                          <p style="color: #6D6D6D; font-size: medium; height: 30px; text-align: center; font-weight: 600; margin-bottom: 0px !important; padding: 0 5px 0 5px">
                           <span class="schedule-month font-futura">
                             <?php
                             echo $this->crud_model->get_month(date('n', strtotime($start_date)));
                             ?>
                           </span>
-                        </p>
-                        <table class="col-md-12" style="width: 100%; text-align: center; font-size: 16px">
-                          <tbody>
-                          <tr>
-                            <td style="width: 12.8%"><div class="font-futura" style="margin: 0 0 0 0;">S</div></td>
-                            <td style="width: 12.8%"><div class="font-futura" style="margin: 0 0 0 0;">M</div></td>
-                            <td style="width: 12.8%"><div class=font-futura" style="margin: 0 0 0 0;">T</div></td>
-                            <td style="width: 12.8%"><div class=font-futura" style="margin: 0 0 0 0;">W</div></td>
-                            <td style="width: 12.8%"><div class=font-futura" style="margin: 0 0 0 0;">T</div></td>
-                            <td style="width: 12.8%"><div class=font-futura" style="margin: 0 0 0 0;">F</div></td>
-                            <td style="width: 12.8%"><div class=font-futura" style="margin: 0 0 0 0;">S</div></td>
-                          </tr>
-                          </tbody>
-                        </table>
-                        <div class="schedule slick" style="height: 40px; font-size: 16px; /* padding-bottom: 10px; */">
-                          <?php
-                          $current = strtotime($start_date);
-                          $last = strtotime($end_date);
-                          $months = array();
-                          $w = date('w', $current);
-                          $start = -1 * $w;
-                          $current = strtotime("{$start} day", $current);
-                          $slide = (int)(((int) (strtotime($sdate) - $current) / ONE_DAY) / 7) * 7;
-                          while ($current <= $last) {
-                            $date = date('Y-m-d', $current);
-                            $day = date('j', $current); // 0 제거
-                            $months[] = date('n', $current);
-                            ?>
-                            <div class="schedule slick-content<?php if ($date == $start_date) { echo ' active'; } else if ($date < $start_date) { echo ' before'; } ?>" id="<?php echo $date; ?>" style="width: 12.8%">
-                              <div style="width: 40px; height: 40px; text-align: center; margin: 0 auto; line-height: 40px; border-radius: 20px;">
-                                <?php echo $day; ?>
+                          </p>
+                          <table class="col-md-12" style="width: 100%; text-align: center; font-size: 16px">
+                            <tbody>
+                            <tr>
+                              <td style="width: 12.8%"><div class="font-futura" style="margin: 0 0 0 0;">S</div></td>
+                              <td style="width: 12.8%"><div class="font-futura" style="margin: 0 0 0 0;">M</div></td>
+                              <td style="width: 12.8%"><div class=font-futura" style="margin: 0 0 0 0;">T</div></td>
+                              <td style="width: 12.8%"><div class=font-futura" style="margin: 0 0 0 0;">W</div></td>
+                              <td style="width: 12.8%"><div class=font-futura" style="margin: 0 0 0 0;">T</div></td>
+                              <td style="width: 12.8%"><div class=font-futura" style="margin: 0 0 0 0;">F</div></td>
+                              <td style="width: 12.8%"><div class=font-futura" style="margin: 0 0 0 0;">S</div></td>
+                            </tr>
+                            </tbody>
+                          </table>
+                          <div class="schedule slick" style="height: 40px; font-size: 16px; /* padding-bottom: 10px; */">
+                            <?php
+                            $current = strtotime($start_date);
+                            $last = strtotime($end_date);
+                            $months = array();
+                            $w = date('w', $current);
+                            $start = -1 * $w;
+                            $current = strtotime("{$start} day", $current);
+                            $slide = (int)(((int) (strtotime($sdate) - $current) / ONE_DAY) / 7) * 7;
+                            while ($current <= $last) {
+                              $date = date('Y-m-d', $current);
+                              $day = date('j', $current); // 0 제거
+                              $months[] = date('n', $current);
+                              ?>
+                              <div class="schedule slick-content<?php if ($date == $start_date) { echo ' active'; } else if ($date < $start_date) { echo ' before'; } ?>" id="<?php echo $date; ?>" style="width: 12.8%">
+                                <div style="width: 40px; height: 40px; text-align: center; margin: 0 auto; line-height: 40px; border-radius: 20px;">
+                                  <?php echo $day; ?>
+                                </div>
                               </div>
+                              <?php
+                              $current = strtotime('+1 day', $current);
+                            }
+                            ?>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 widget schedule-detail" style="margin-top: 16px; padding: 0; border-top: 1px solid #eee;">
+                        <!--  ajax schedule  -->
+                        <!--  /ajax schedule  -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <? } ?>
+            <? if ($teacher_data != null) { ?>
+              <div class="col-md-12" id="instructors">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="profile">
+                      <table class="col-md-12" style="width: 100%">
+                        <tbody>
+                        <tr>
+                          <td style="width: 20%">
+                          </td>
+                          <td>
+                            <b class="font-futura">instructors</b>
+                          </td>
+                          <td style="width: 20%">
+                          </td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="col-md-12" style="padding: 10px 0px 10px 0px !important; border: none;">
+                      <div class="recent-post" style="background: #fff;/* border: 1px solid #e0e0e0; */">
+                        <div class="media">
+                          <?php
+                          //                        if ($center_data->teacher_cnt > 0) {
+                          if (isset($teacher_data) == true && empty($teacher_data) == false) {
+                            ?>
+                            <div class="instructor slick" style="height: 100px; /* padding-bottom: 10px; */">
+                              <?php
+                              foreach ($teacher_data as $teacher) {
+                                $teacher = $this->db->get_where('teacher', array('teacher_id' => $teacher->teacher_id))->row();
+                                $teacher_name = $teacher->name;
+                                $profile_image_url = $user_data->profile_image_url;
+                                if (empty($profile_image_url) or strlen($profile_image_url) == 0) {
+                                  $profile_image_url = base_url().'uploads/icon/profile_icon.png';
+                                }
+                                ?>
+                                <div class="instructor slick-content active" id="1" style="margin-top: 10px; text-align: center">
+                                  <a href="<?php echo base_url().'home/teacher/profile/'.$teacher->teacher_id; ?>">
+                                    <p>
+                                      <span><img src="<?php echo $profile_image_url; ?>" style="width:60px; height: 60px; margin: auto; border-radius: 30px"></span>
+                                      <span><?php echo $teacher_name; ?></span>
+                                    </p>
+                                  </a>
+                                </div>
+                                <?php
+                              }
+                              ?>
                             </div>
                             <?php
-                            $current = strtotime('+1 day', $current);
                           }
                           ?>
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-12 widget schedule-detail" style="margin-top: 16px; padding: 0; border-top: 1px solid #eee;">
-                    <!--  ajax schedule  -->
-                    <!--  /ajax schedule  -->
-                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="col-md-12" id="instructors">
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="profile">
-                    <table class="col-md-12" style="width: 100%">
-                      <tbody>
-                      <tr>
-                        <td style="width: 20%">
-                        </td>
-                        <td>
-                          <b class="font-futura">instructors</b>
-                        </td>
-                        <td style="width: 20%">
-                        </td>
-                      </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <div class="col-md-12" style="padding: 10px 0px 10px 0px !important; border: none;">
-                    <div class="recent-post" style="background: #fff;/* border: 1px solid #e0e0e0; */">
-                      <div class="media">
-                        <?php
-//                        if ($center_data->teacher_cnt > 0) {
-                        if (isset($teacher_data) == true && empty($teacher_data) == false) {
-                          ?>
-                          <div class="instructor slick" style="height: 100px; /* padding-bottom: 10px; */">
-                            <?php
-                            foreach ($teacher_data as $teacher) {
-                              $teacher = $this->db->get_where('teacher', array('teacher_id' => $teacher->teacher_id))->row();
-                              $teacher_name = $teacher->name;
-                              $profile_image_url = $user_data->profile_image_url;
-                              if (empty($profile_image_url) or strlen($profile_image_url) == 0) {
-                                $profile_image_url = base_url().'uploads/icon/profile_icon.png';
-                              }
-                              ?>
-                              <div class="instructor slick-content active" id="1" style="margin-top: 10px; text-align: center">
-                                <a href="<?php echo base_url().'home/teacher/profile/'.$teacher->teacher_id; ?>">
-                                  <p>
-                                    <span><img src="<?php echo $profile_image_url; ?>" style="width:60px; height: 60px; margin: auto; border-radius: 30px"></span>
-                                    <span><?php echo $teacher_name; ?></span>
-                                  </p>
-                                </a>
-                              </div>
-                              <?php
-                            }
-                            ?>
+            <? } ?>
+            <? if ($center_data->info != null) { ?>
+              <div class="col-md-12" id="info">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="profile">
+                      <table class="col-md-12" style="width: 100%">
+                        <tbody>
+                        <tr>
+                          <td style="width: 20%">
+                          </td>
+                          <td>
+                            <b class="font-futura">info</b>
+                          </td>
+                          <td style="width: 20%">
+                          </td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="col-md-12" style="padding: 10px 0px 10px 0px !important; border: none;">
+                      <div class="recent-post" style="background: #fff;/* border: 1px solid #e0e0e0; */">
+                        <div class="media">
+                          <div>
+                            <?php echo $center_data->info; ?>
                           </div>
-                          <?php
-                        }
-                        ?>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-12" id="info">
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="profile">
-                    <table class="col-md-12" style="width: 100%">
-                      <tbody>
-                      <tr>
-                        <td style="width: 20%">
-                        </td>
-                        <td>
-                          <b class="font-futura">info</b>
-                        </td>
-                        <td style="width: 20%">
-                        </td>
-                      </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <div class="col-md-12" style="padding: 10px 0px 10px 0px !important; border: none;">
-                    <div class="recent-post" style="background: #fff;/* border: 1px solid #e0e0e0; */">
-                      <div class="media">
-                        <div>
-                          <?php echo $center_data->info; ?>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            <? } ?>
           </div>
         </div>
       </div>
@@ -897,6 +902,7 @@
   });
 
 </script>
+<? if ($schedule_cnt > 0) { ?>
 <script type="text/javascript">
   var month = [<?php foreach ($months as $m) {echo '"'.$this->crud_model->get_month($m).'",';} ?>];
 
@@ -991,11 +997,12 @@
       easing: 'swing',
       initialSlide: <?= $slide; ?>,
     });
-
+  
     get_schedule_content('<?= $sdate; ?>');
-    
+  
   });
 </script>
+<? } ?>
 
 <?php
 //if ($center_data->teacher_cnt > 0) {

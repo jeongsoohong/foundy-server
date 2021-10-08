@@ -517,13 +517,15 @@
                 let left = $('.slideSpot').css('left');
                 
                 $(document).on('click','.slideBtn',function(){
-                  if(left == '4px'){
+                  if(left === '4px'){
                     // 승인으로 될 때
-                    $(this).children('.slideSpot').animate({left : '36px'})
+                    $(this).children('.slideSpot').animate({left : '36px'});
+                    $(this).addClass('slideActiveBtn');
                   }
-                  else if(left == '36px'){
+                  else if(left === '36px'){
                     // 미승인으로 될 때
-                    $(this).children('.slideSpot').animate({left : '4px'})
+                    $(this).children('.slideSpot').animate({left : '4px'});
+                    $(this).removeClass('slideActiveBtn');
                   }
                 })
               })
@@ -1137,7 +1139,7 @@
   $('.tit_theme').click(function(){
     let role = $(this).data('role');
   
-    console.log(role);
+    // console.log(role);
     
     if (role === 'modify') {
       return false;

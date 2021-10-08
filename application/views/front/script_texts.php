@@ -194,7 +194,7 @@
 
   }
 
-  function form_submit(form_id){
+  function form_submit(form_id) {
     var form = $('#'+form_id);
     var button = form.find('.submit_button');
     var prv = button.html();
@@ -212,7 +212,6 @@
     if (window.FormData){
       formdata = new FormData(form[0]);
     }
-
 
     $.ajax({
       url: form.attr('action'), // form action url
